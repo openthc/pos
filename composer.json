@@ -1,0 +1,42 @@
+{
+	"name": "openthc/pos",
+	"description": "Cannabis Retail Point of Sale",
+	"license": "GPL-3.0-only",
+	"autoload": {
+		"psr-4": {
+			"App\\": "./lib",
+			"Custom\\": "./Custom"
+		}
+	},
+	"repositories": [
+		{
+			"type": "vcs",
+			"url": "ssh://git@gitlab.com/openthc/common.git"
+		}
+	],
+	"require": {
+		"php": ">=7.2.0",
+		"ext-curl": "*",
+		"ext-date": "*",
+		"ext-imap": "*",
+		"ext-json": "*",
+		"ext-PDO": "*",
+		"ext-session": "*",
+		"ext-sockets": "*",
+		"casbin/casbin": "0.2.1",
+		"edoceo/radix": "dev-master",
+		"erusev/parsedown": "1.7.1",
+		"league/oauth2-client": "2.4.1",
+		"openthc/common": "dev-master",
+		"pear/net_smtp": "1.8.1",
+		"plivo/plivo-php": "4.3.3",
+		"slim/slim": "3.12.0",
+		"slim/twig-view": "2.4.0",
+		"tuupola/base32": "0.1.1",
+		"twig/twig": "2.6.2",
+		"twilio/sdk": "5.32.0",
+		"tecnickcom/tcpdf": "6.2.26"
+	},
+	"require-dev": {
+	}
+}
