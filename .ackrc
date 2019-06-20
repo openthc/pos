@@ -1,0 +1,30 @@
+#
+# OpenTHC .ackrc
+#
+
+# @see
+# https://gist.github.com/bracke/6183737
+# https://gist.github.com/chapati23/2988102
+# https://gist.github.com/kevinold/4749656
+
+# --nominifiedjs
+# --pager="less --long-prompt --no-init --no-lessopen --quiet --quit-if-one-screen --RAW-CONTROL-CHARS --line-numbers"
+# --pager="less -R"
+# --type-set=minifiedjs=.min.js
+
+--break
+
+--heading
+
+--sort-files
+
+--ignore-dir=.git
+--ignore-dir=doxygen
+--ignore-dir=node_modules
+--ignore-dir=var
+--ignore-dir=vendor
+--ignore-dir=webroot/doc
+--ignore-dir=webroot/dox
+--ignore-dir=webroot/sdk
+
+--ignore-file=is:composer.lock
