@@ -18,7 +18,7 @@ That is, connect to the government CRE if you have one - configure license infor
 ## Features
 
  * Point of Sale (POS)
- * Menu w/Order Placement
+ * Instore Menu (TV, iPad)
  * Online Ordering
  * Customer Loyalty Program (CRM)
 
@@ -45,9 +45,11 @@ Allows a Retail business to create their own Vendor Portal
 Vendor can visit and see when their Sample Day is / could be, sees instructions, request a time to stop by.
 Vendor can be rejected with a simple button press.
 
+
 ## Vendor Database
 
 Just supplemental data on the main dir.openthc.com
+
 
 ## Relationships
 
@@ -76,6 +78,7 @@ here are other offerings.
 * BioTrackTHC - https://www.biotrack.com/
 * Cova - https://www.covasoftware.com/pos
 * GreenBits - https://www.greenbits.com/
+* KlickTrack - https://getklicktrack.io
 
 
 ### Loyalty Offering
@@ -83,6 +86,7 @@ here are other offerings.
 * 420 Solutions - https://www.4twentysolutions.com/
 * CannaReward - http://www.cannareward.com/
 * SpringBig - https://www.springbig.com/
+* SproutCannabis - http://www.sprout.online
 * TokeIn - https://tokein.com/
 
 

@@ -1,0 +1,49 @@
+;
+; OpenTHC POS Configuration
+;
+
+;
+; Database
+[database_main]
+	hostname = "127.0.0.1"
+	database = "openthc"
+	username = "openthc"
+	password = ""
+
+
+;
+; Using oAuth2?
+[oauth]
+	client_id = "pos.openthc.org"
+	client_secret = ""
+	scope = "pos"
+
+
+;
+; Email Integration?
+[email]
+	smtp = "tls://user:pass@host.name:465"
+	imap = ""
+
+
+;
+;
+[phone-text]
+	engine = "plivo"
+	engine = "twilio"
+
+
+;
+; Plivo Account Keys
+[plivo]
+	key = ""
+	secret = ""
+	number = ""
+
+
+;
+; Twilio Account Keys
+[twilio]
+	key = ""
+	secret = ""
+	number = ""
