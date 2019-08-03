@@ -1,5 +1,18 @@
 # Cannabis Retail Softare
 
+It's a pretty simple web-based point-of-sale, customer loyalty, online-menu system.
+It integrates with BioTrack, MJ Freeway/LeafData and Franwell/METRC or can be used stand-alone.
+
+## Installation
+
+    git clone {this repo}
+    composer update
+    [ update apache config ]
+    certbot
+    [ update apache config for ssl ]
+
+Once the system is installed you'll have to configure it for your environment.
+That is, connect to the government CRE if you have one - configure license information, etc.
 
 
 ## Features
@@ -53,25 +66,27 @@ Shared Inventory between Retailer and Supplier
 
 ## Alternatives
 
-In case free & open-source software is not to your taste, 
+In case free & open-source software is not to your taste,
 or maybe you're just looking for more information,
 here are other offerings.
 
 
 ### Point of Sale
 
- * BioTrackTHC - https://www.biotrack.com/
- * Cova - https://www.covasoftware.com/pos
- * GreenBits - https://www.greenbits.com/
+* BioTrackTHC - https://www.biotrack.com/
+* Cova - https://www.covasoftware.com/pos
+* GreenBits - https://www.greenbits.com/
 
 
 ### Loyalty Offering
 
- * CannaReward - http://www.cannareward.com/
- * SpringBig - https://www.springbig.com/
- * TokeIn - https://tokein.com/
+* 420 Solutions - https://www.4twentysolutions.com/
+* CannaReward - http://www.cannareward.com/
+* SpringBig - https://www.springbig.com/
+* TokeIn - https://tokein.com/
 
 
 ### Online Ordering
 
- * WoahStork - https://www.woahstork.com/
+* Eaze - https://www.eaze.com/
+* WoahStork - https://www.woahstork.com/

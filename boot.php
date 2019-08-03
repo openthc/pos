@@ -7,6 +7,7 @@ define('APP_NAME', getenv('APP_NAME') ?: 'OpenTHC | POS');
 define('APP_HOST', getenv('APP_HOST') ?: 'pos.openthc.dev');
 define('APP_SITE', 'https://' . APP_HOST);
 define('APP_ROOT', __DIR__);
+define('APP_SALT', ''); // put 16 to 32 characters here
 
 openlog('openthc-pos', LOG_ODELAY|LOG_PID, LOG_LOCAL0);
 

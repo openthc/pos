@@ -3,8 +3,6 @@
  * OpenTHC Retail Front Controller
  */
 
-use Edoceo\Radix;
-use Edoceo\Radix\Session;
 use Edoceo\Radix\DB\SQL;
 
 require_once(dirname(dirname(__FILE__)) . '/boot.php');
@@ -12,11 +10,10 @@ require_once(dirname(dirname(__FILE__)) . '/boot.php');
 $cfg = array('debug' => true);
 $app = new \OpenTHC\App($cfg);
 
-// Containers
+// Container
 $con = $app->getContainer();
 $con['DB'] = function($c) {
-	// $cfg = \OpenTHC\Config::get('database_main');
-	$cfg = json_decode(_decrypt($_SESSION['dsn']));
+	$cfg = \OpenTHC\Config::get('database_main');
 	$c = sprintf('pgsql:host=%s;dbname=%s', $cfg['hostname'], $cfg['database']);
 	$u = $cfg['username'];
 	$p = $cfg['password'];
