@@ -1,0 +1,45 @@
+:toc: left
+:doctype: book
+:source-highlighter: pygments
+:pygments-style: rainbow_dash
+:icons: font
+:revealjsdir: https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.8.0
+
+
+= OpenTHC POS
+
+The OpenTHC POS Package is a web-based point of sale integrated with BioTrack, LeafData and METRC.
+
+== Installation
+
+Clone the repo onto your web-platform.
+This can be a remote host, or a computer running on site, it has been known to operate from a Raspberry Pi.
+
+Connect the system to a database, a schema is not included here, one is available from the CRE package.
+
+Update the configuration to connect to the proper CRE.
+
+Process sales!
+
+
+== Overview
+
+# Retail Management System
+
+ * Point-of-Sale/Terminal
+ * Regulatory Integration (BT, LD, M)
+ * Product Intake
+ * ID Verification
+ * Sales Limits
+ * Discounts
+ * Customer Checkin
+ * Loyalty Programs
+ * Online Ordering and Menus
+
+## Requirements
+
+Runs on Android tables, Apple iPad, Desktop.
+Linux and Windows.
+
+Handheld Scanner
+ - Any

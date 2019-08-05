@@ -14,7 +14,7 @@
 ;
 ; Using oAuth2?
 [oauth]
-	client_id = "pos.openthc.org"
+	client_id = "pos.openthc.dev"
 	client_secret = ""
 	scope = "pos"
 
