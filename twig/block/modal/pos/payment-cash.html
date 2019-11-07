@@ -1,0 +1,276 @@
+{#
+	The Payment Modal
+#}
+
+{% extends "block/modal.html" %}
+
+{% set modal_id = "pos-modal-payment" %}
+{% set modal_title = "Collect Payment" %}
+
+{% block body %}
+<div class="container">
+<div class="row">
+	<div class="col-md-4">
+		<h4>Sub-Total: $<span class="pos-checkout-sub" data-amount="0">-.--</span></h4>
+	</div>
+	<!--
+	<div class="pure-u-1-4" style="text-align:center;">
+		<h4>I-502 Tax: $<span class="pos-checkout-tax-i502" data-amount="<?=$tax_i502?>"><?=number_format($tax_i502, 2)?></span></h4>
+	</div>
+	-->
+	<div class="col-md-4">
+		<h4>Sales Tax: $<span class="pos-checkout-tax-sale" data-amount="0">-.--</span></h4>
+	</div>
+	<div class="col-md-4">
+		<h4 style="color:#f00000;">Total Due: $<span class="pos-checkout-sum"></span></h4>
+		<!-- <input name="bill-due" type="hidden" value="<?=$due; ?>"> -->
+	</div>
+</div>
+
+<div class="row mb-4">
+<div class="col-md-12">
+
+	<div class="row">
+		<div class="col-md-6">
+			<button class="btn btn-lg btn-block btn-outline-secondary mb-2 pp-cash" data-amount="100">$100</button>
+		</div>
+		<div class="col-md-6">
+			<button class="btn btn-lg btn-block btn-outline-secondary mb-2 pp-cash" data-amount="50">$50</button>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-6">
+			<button class="btn btn-lg btn-block btn-outline-secondary mb-2 pp-cash" data-amount="20">$20</button>
+		</div>
+		<div class="col-md-6">
+			<button class="btn btn-lg btn-block btn-outline-secondary mb-2 pp-cash" data-amount="10">$10</button>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-6">
+			<button class="btn btn-lg btn-block btn-outline-secondary mb-2 pp-cash" data-amount="5">$5</button>
+		</div>
+		<div class="col-md-6">
+			<button class="btn btn-lg btn-block btn-outline-secondary mb-2 pp-cash" data-amount="1">$1</button>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-3">
+			<button class="btn btn-block btn-outline-secondary pp-cash" data-amount="0.25">0.25</button>
+		</div>
+		<div class="col-md-3">
+			<button class="btn btn-block btn-outline-secondary pp-cash" data-amount="0.10">0.10</button>
+		</div>
+		<div class="col-md-3">
+			<button class="btn btn-block btn-outline-secondary pp-cash" data-amount="0.05">0.05</button>
+		</div>
+		<div class="col-md-3">
+			<button class="btn btn-block btn-outline-secondary pp-cash" data-amount="0.01">0.01</button>
+		</div>
+	</div>
+
+</div>
+</div> <!-- /.row -->
+
+<div class="row mb-4">
+	<div class="col-md-6" style="text-align:center;">
+		<span style="font-size:32px;">Paid:</span>
+		<div style="padding: 4px 8px;">
+			<input class="form-control psi-item-size r" id="pp-cash-pay" name="payment-made" readonly step="0.01" style="width: 98%;" type="number" value="0.00">
+		</div>
+	</div>
+	<div class="col-md-6" style="text-align:center;">
+		<span style="font-size:32px;">Due:</span>
+		<div style="padding: 4px 8px;">
+			<input class="form-control psi-item-size r" id="payment-need" name="payment-need" readonly step="0.01" style="width: 98%;" type="number" value="0.00">
+		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-12">
+		<h2 id="pos-payment-over" style="font-size:32px; text-align:center;">Change: $<span id="pos-back-due">0.00</span></h2>
+	</div>
+</div> <!-- /.row -->
+</div> <!-- /.container -->
+
+{% endblock %}
+
+
+{% block foot %}
+<div class="col-md-6">
+	<button class="btn btn-outline-secondary" data-dismiss="modal" id="pos-pay-back" type="button"><i class="fas fa-times"></i> Cancel</button>
+	<button class="btn btn-warning" disabled="disabled" id="pos-pay-undo" type="button"><i class="fas fa-undo"></i> Undo</button>
+</div>
+<div class="col-md-6 r">
+	<button class="btn btn-primary" disabled id="pos-payment-commit" name="a" type="submit" value="pos-done"><i class="fas fa-check-square-o"></i> Complete</button>
+</div>
+{% endblock %}
+
+
+{% block post_script %}
+<script>
+
+var ppCashPaid_List = new Array();
+
+
+function ppFormUpdate()
+{
+	var full = Weed.POS.sale.due;
+	var cash = parseFloat($('#pp-cash-pay').val(), 10);
+	var need = (full - cash);
+	var back = (cash - full);
+
+	console.log('ppFormUpdate(' + cash + ', ' + full + ')');
+
+	$('#pos-payment-over').hide();
+
+	if (cash < full) {
+
+		$('#payment-need').val(need.toFixed(2));
+
+	} else if (cash === full) {
+
+		$('#pos-back-due').html('0.00');
+		$('#payment-need').val('0.00');
+
+		$('.pos-cost-due').addClass('text-success').removeClass('text-warning');
+		$('#pp-cash-pay').addClass('text-success').removeClass('text-danger').removeClass('text-warning');
+
+		$('#pos-payment-over').show().addClass('alert alert-success');
+		$('#pos-payment-commit').removeAttr('disabled');
+
+	} else if (cash > full) {
+
+		// Making Change
+		$('#payment-need').val('0.00');
+		$('#pos-back-due').html( back.toFixed(2) )
+
+		$('.pos-cost-due').addClass('text-warning').removeClass('text-success');
+		$('#pp-cash-pay').addClass('text-warning').removeClass('text-danger').removeClass('text-success');
+		$('#pp-card-pay').removeClass('text-danger').removeClass('text-success').removeClass('text-warning');
+
+		//$('#pos-back-due').addClass('text-warning').removeClass('text-danger').removeClass('text-success');
+		$('#pos-payment-over').show().addClass('alert alert-danger');
+		$('#pos-payment-commit').removeAttr('disabled');
+
+	}
+
+	if (ppCashPaid_List.length == 0) {
+		$('#pos-pay-back').show();
+		$('#pos-pay-undo').prop('disabled', true);
+	} else {
+		// $('#pos-pay-back').hide();
+		$('#pos-pay-undo').prop('disabled', false);
+	}
+
+}
+
+
+function ppAddCash(n)
+{
+	console.log('ppAddCash');
+
+	var full = $('#pos-cost-due').data('amount');
+
+	var add = parseFloat( $(n).data('amount'), 10 );
+	var cur = parseFloat( $('#pp-cash-pay').val(), 10 );
+	if (!cur) cur = 0;
+
+	var cash = (cur + add);
+	$('#pp-cash-pay').val( cash.toFixed(2)  );
+
+	var card = full - cash;
+	$('#pp-card-pay').val( card.toFixed(2)  );
+
+	ppCashPaid_List.push(add);
+
+	ppFormUpdate();
+
+}
+
+function ppAddCard()
+{
+	console.log('ppAddCard');
+
+	var need = $('#payment-need').val();
+	$('#pp-card-confirm').val(need);
+
+	//Weed.modal('shut');
+
+	// var arg = $('#psi-form').serializeArray();
+	// $('#modal-content-wrap').load('/pos/pay', arg, function() {
+	// $.post('/pos/pay', arg, function(res) {
+
+	// var x = $('#card-modal').clone();
+	// $(x).find('#pp-card-confirm').attr('id', 'pp-card-prompt');
+	//Weed.modal( $('#card-modal') );
+	//$('#card-modal').show();
+
+
+	// Weed.modal('#card-modal');
+	// $('#pp-card-confirm').val( $('#pp-card-pay').val() );
+	// Weed.modal('#card-modal');
+	// });
+}
+
+$(function() {
+
+	$('.pp-cash').on('click touchend', function(e) {
+		ppAddCash(this);
+		e.preventDefault();
+		e.stopPropagation();
+		return false;
+	});
+
+	$('.pp-card').on('click touchend', function(e) {
+		ppAddCard();
+		e.preventDefault();
+		e.stopPropagation();
+		return false;
+	});
+
+	// Focus on Select!
+	// $('#pp-cash-pay').on('focus', function(e) {
+	// 	console.log('focus');
+	// 	$(this).select();
+	// });
+	// $('#pp-cash-pay').on('mouseup', function(e) {
+	// 	console.log('mouseup');
+	// 	e.preventDefault();
+	// 	return false;
+	// });
+
+	$('#pp-cash-pay').on('keyup', function() {
+		ppFormUpdate();
+	});
+
+	// Reset my Form
+	$('#pos-pay-undo').on('click', function() {
+		$('#pp-cash-pay').val('0.00');
+		$('#pp-card-pay').val('0.00');
+		ppFormUpdate();
+	});
+
+	$(document.body).on('click', '#pos-card-back', function() {
+		//Weed.modal('shut');
+	});
+
+	$(document.body).on('click', '#pos-card-done', function() {
+		//Weed.modal('shut');
+	});
+
+	$('#pos-pay-back').on('click', function() {
+		//Weed.modal('shut');
+	});
+
+	// $('#pp-cash-pay').focus().select();
+	var ppcp = document.getElementById('pp-cash-pay');
+	ppcp.focus();
+	ppcp.select();
+
+});
+</script>
+{% endblock %}
