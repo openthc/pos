@@ -64,22 +64,10 @@ $app->group('/report', 'App\Module\Report')
 $app->group('/menu', 'App\Module\Menu')
 ->add('OpenTHC\Middleware\Session');
 
-
-
-// Manage Interface
-$app->group('/manage', function() {
-
-	$this->get('', function($REQ, $RES, $ARG) {
-		$data = array();
-		$this->view->render($RES, 'page/manage/index.html', $data);
-	});
-
-	// Reports
-	$this->group('/report', 'App\Module\Report');
-
-})
-->add('App\Middleware\Menu')
-->add('OpenTHC\Middleware\Session');
+// Settings Interface
+$app->group('/settings', 'App\Module\Settings')
+	->add('App\Middleware\Menu')
+	->add('OpenTHC\Middleware\Session');
 
 
 // Retailer
