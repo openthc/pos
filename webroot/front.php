@@ -7,23 +7,28 @@ use Edoceo\Radix\DB\SQL;
 
 require_once(dirname(dirname(__FILE__)) . '/boot.php');
 
+$cfg = [];
 $cfg = array('debug' => true);
 $app = new \OpenTHC\App($cfg);
 
 // Container
 $con = $app->getContainer();
 $con['DB'] = function($c) {
+
 	$cfg = \OpenTHC\Config::get('database_main');
 	$c = sprintf('pgsql:host=%s;dbname=%s', $cfg['hostname'], $cfg['database']);
 	$u = $cfg['username'];
 	$p = $cfg['password'];
 	$dbc = new SQL($c, $u, $p);
+
+	SQL::init($c, $u, $p); // Shitty Global Static One
+
 	return $dbc;
 };
 
 
 // Main Page
-$app->get('/dashboard', 'App\Controller\Dashboard')
+$app->group('/dashboard', 'App\Module\Dashboard')
 	->add('App\Middleware\Menu')
 	->add('OpenTHC\Middleware\Session');
 
@@ -39,16 +44,26 @@ $app->group('/crm', 'App\Module\CRM')
 	->add('App\Middleware\Menu')
 	->add('OpenTHC\Middleware\Session');
 
-
-// Onsite & Online menus
-$app->group('/menu', 'App\Module\Menu')
+// Inventory Management
+$app->group('/inventory', 'App\Module\Inventory')
+	->add('App\Middleware\Menu')
 	->add('OpenTHC\Middleware\Session');
 
-
-$app->group('/transfer', 'App\Module\Transfer')
+// B2B Operations
+$app->group('/b2b', 'App\Module\B2B')
 	->add('App\Middleware\Menu')
 	//->add('App\Middleware\Auth')
 	->add('OpenTHC\Middleware\Session');
+
+// B2B Operations
+$app->group('/report', 'App\Module\Report')
+	->add('App\Middleware\Menu')
+	->add('OpenTHC\Middleware\Session');
+
+// Onsite & Online menus
+$app->group('/menu', 'App\Module\Menu')
+->add('OpenTHC\Middleware\Session');
+
 
 
 // Manage Interface

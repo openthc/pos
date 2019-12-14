@@ -18,8 +18,8 @@ That is, connect to the government CRE if you have one - configure license infor
 ## Features
 
  * Point of Sale (POS)
- * Instore Menu (TV, iPad)
- * Online Ordering
+ * Instore Signage (ChromeCast, Tablet)
+ * Online Ordering, In-Store Kiosk
  * Customer Loyalty Program (CRM)
 
 
