@@ -1,0 +1,44 @@
+{% extends "layout/html.html" %}
+
+{% block body %}
+
+<h1>Inventory Managemnt</h1>
+
+<div>
+    <ul class="nav nav-tabs">
+        <li class="nav-item">
+            <a class="nav-link {{ view_mode == "100" ? "active" }}" href="?view=100">Unpriced</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link {{ view_mode == "flower" ? "active" }}" href="?view=flower">Flower</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link {{ view_mode == "extract" ? "active" }}" href="?view=extract">Extract</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link {{ view_mode == "edible" ? "active" }}" href="?view=edible">Edibles</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link {{ view_mode == "samples" ? "active" }}" href="/inventory/samples">Samples</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link {{ view_mode == "misc" ? "active" }}" href="?view=misc">Other Stuff</a>
+        </li>
+    </ul>
+</div>
+
+<div id="inventory-list"></div>
+
+{% endblock %}
+
+{% block foot_script %}
+{{ parent() }}
+<script>
+$(function() {
+    $('#inventory-list').html('<i class="fas fa-sync fa-spin"></i> Loading...');
+    $('#inventory-list').load('/inventory/ajax', {
+        view: '{{ view_mode }}'
+    });
+});
+</script>
+{% endblock %}
