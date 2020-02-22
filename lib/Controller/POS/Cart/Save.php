@@ -19,6 +19,8 @@ class Save extends \OpenTHC\Controller\Base
 		switch ($_POST['a']) {
 		case 'save':
 
+			$dbc = $this->_container->DB;
+
 			$idx_item = 0;
 			foreach ($_POST as $k => $v) {
 				if (preg_match('/^qty\-(\d+)$/', $k, $m)) {
@@ -33,7 +35,7 @@ class Save extends \OpenTHC\Controller\Base
 			// $_SESSION['uid']
 			$sql = 'INSERT INTO sale_hold (uid, meta) VALUES (?, ?) RETURNING id';
 			$arg = array(2, json_encode($_POST));
-			$hid = SQL::fetch_one($sql, $arg);
+			$hid = $dbc->fetchOne($sql, $arg);
 			if (empty($hid)) {
 				Session::flash('fail', 'Failed to place hold');
 				Radix::redirect();

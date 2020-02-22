@@ -15,6 +15,20 @@ class Home extends \OpenTHC\Controller\Base
 			$_SESSION['pos-terminal-id'] = \uniqid();
 		}
 
+		$_GET['v'] = 'auth';
+
+		if ('auth' == $_GET['v']) {
+			$data = [];
+			$data['Page'] = [ 'title' => 'PIN Authentication'];
+			return $this->_container->view->render($RES, 'page/pos/open.html', $data);
+		}
+
+		if ('scan' == $_GET['v']) {
+			$data = [];
+			$data['Page'] = [ 'title' => 'ID Scanner'];
+			return $this->_container->view->render($RES, 'page/pos/scan-id.html', $data);
+		}
+
 		$data = array(
 			'Page' => array('title' => 'POS :: #' . $_SESSION['pos-terminal-id']),
 		);
@@ -43,6 +57,7 @@ class Home extends \OpenTHC\Controller\Base
 				$data['cart_item_list'] = array();
 
 				$Cart = $this->_container->DB->fetchRow('SELECT * FROM sale_hold WHERE id = ?', array($_GET['t']));
+				if (!empty($Cart['id'])) {
 				$Cart['meta'] = json_decode($Cart['meta'], true);
 
 				foreach ($Cart['meta'] as $k => $v) {
@@ -58,13 +73,18 @@ class Home extends \OpenTHC\Controller\Base
 						);
 					}
 				}
+				}
 			}
 		}
 
 		//var_dump($data);
 
-		return $this->_container->view->render($RES, 'page/pos/home.html', $data);
+		return $this->_container->view->render($RES, 'page/pos/checkout.html', $data);
 
+	}
+
+	private function openCart()
+	{
 	}
 
 }

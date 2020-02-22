@@ -14,7 +14,7 @@ class Ajax extends \OpenTHC\Controller\Base
 		switch ($_GET['a']) {
 		case 'hold-list':
 			$data = array('hold_list' => array());
-			$res = $this->_container->DB->fetchAll('SELECT * FROM sale_hold ORDER BY cts');
+			$res = $this->_container->DB->fetchAll('SELECT * FROM sale_hold'); // ORDER BY cts');
 			//var_dump($res);
 			foreach ($res as $rec) {
 
@@ -58,6 +58,8 @@ class Ajax extends \OpenTHC\Controller\Base
 		$sql = <<<SQL
 SELECT inventory.*
 , product.name AS product_name
+, product.package_unit_qom
+, product.package_unit_uom
 , product_type.id AS product_type_id
 , product_type.name AS product_type_name
 , product_type.mode AS product_type_mode
@@ -275,7 +277,6 @@ $(function() {
  */
 function _draw_inventory_grid($res)
 {
-
 	echo '<div class="pos-item-grid">';
 
 	echo '<div class="pos-item-grid-head text-center">';
@@ -373,8 +374,8 @@ function _draw_inventory_list($res)
 		echo '<div class="inv-item row"';
 		echo ' data-id="' . $rec['id'] . '"';
 		echo ' data-name="' . substr($rec['guid'], -4) . ': ' . h($rec['name']) . '"';
-		echo ' data-count="' . sprintf('%0.2f', $rec['unit_onhand']) . '"';
-		echo ' data-weight="' . sprintf('%0.2f', $rec['unit_weight']) . '"';
+		echo ' data-count="' . sprintf('%d', $rec['qty']) . '"';
+		echo ' data-weight="' . sprintf('%0.1f', $rec['package_unit_qom']) . '"';
 		echo ' data-price="' . sprintf('%0.2f', $rec['sell']) . '"';
 		echo ' id="inv-item-' . $rec['id'] . '">';
 
@@ -390,13 +391,13 @@ function _draw_inventory_list($res)
 		echo '<div class="col-md-2">';
 		switch (sprintf('%s/%s', $rec['product_type_mode'], $rec['product_type_unit'])) {
 		case 'each/ea':
-			echo '<h4 style="text-align:right;">' . sprintf('%0.2f', $rec['unit_weight']) . ' ea</h4>';
+			echo '<h4 style="text-align:right;">' . sprintf('%0.2f', $rec['package_unit_qom']) . ' ea</h4>';
 			break;
 		case 'each/g':
-			echo '<h4 style="text-align:right;">' . sprintf('%0.2f', $rec['unit_weight']) . ' g</h4>';
+			echo '<h4 style="text-align:right;">' . sprintf('%0.2f', $rec['package_unit_qom']) . ' g</h4>';
 			break;
 		default:
-			echo '<h4 style="text-align:right;">' . sprintf('%d * %0.2f g', $rec['unit_onhand'], $rec['unit_weight']) . '/' . $rec['product_name'] . '</h4>';
+			echo '<h4 style="text-align:right;">' . sprintf('%d * %0.2f g', $rec['qty'], $rec['package_unit_qom']) . '/' . $rec['product_name'] . '</h4>';
 			break;
 		}
 		echo '</div>';
