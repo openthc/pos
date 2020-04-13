@@ -1,0 +1,9 @@
+*** EDIT etc/receipt-tail.txt ***
+
+THANKS FOR SHOPPING AT $license_name
+
+1234 Fake St #145
+Big City, ST, 12345
+store@cannabis.example.com
+http://domain.example.com/
++1 (555) 555-5555
