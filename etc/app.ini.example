@@ -12,14 +12,6 @@
 
 
 ;
-; Using oAuth2?
-[oauth]
-	client_id = "pos.openthc.dev"
-	client_secret = ""
-	scope = "pos"
-
-
-;
 ; Email Integration?
 [email]
 	smtp = "tls://user:pass@host.name:465"
@@ -47,3 +39,11 @@
 	key = ""
 	secret = ""
 	number = ""
+
+;
+;
+[openthc_sso]
+  url = "https://sso.openthc.dev"
+  scope = "pos"
+  client = "$YOUR_CLIENT"
+  secret = "$YOUR_SECRET"

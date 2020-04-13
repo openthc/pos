@@ -1,0 +1,45 @@
+{% extends "layout/html.html" %}
+
+{% block body %}
+
+<form method="post">
+<div class="container mt-2">
+
+
+
+<div class="row card-wrap">
+
+<div class="col">
+<div class="card">
+	<div class="card-header">Sign In</div>
+		<div class="card-body">
+			<h4>Authenticate via OpenTHC</h4>
+			<p>To use the VRM service you must sign in through your OpenTHC Account</p>
+			<a class="btn btn-primary" href="{{ open_url }}">Connect</a>
+		</div>
+</div>
+</div>
+
+<div class="col">
+<div class="card">
+	<div class="card-header">Pipe Key</div>
+	<div class="card-body">
+		<h4>Connection Key</h4>
+		<p>Once the Pipe service has connected you it will share a key to use here</p>
+		<form method="post">
+		<div class="input-group">
+			<input class="form-control"name="pipe-token" value="{{ pipe_token }}">
+			<div class="input-group-append">
+				<button class="btn btn-outline-primary" name="a" type="submit" value="open">Go</button>
+			</div>
+		</div>
+		</form>
+	</div>
+</div>
+</div>
+
+</div>
+</div> <!-- /.container -->
+</form>
+
+{% endblock %}
