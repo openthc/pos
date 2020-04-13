@@ -68,7 +68,7 @@ class Back extends \App\Controller\Auth\oAuth2
 			return $RES->withRedirect($r);
 
 		} catch (\Exception $e) {
-			Session::flash('fail', $e->getMessage());
+			_exit_text($e->getMessage() . ' [AOB#071]', 500);
 		}
 
 		return $RES->withRedirect($r);

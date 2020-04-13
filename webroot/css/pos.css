@@ -1,0 +1,546 @@
+/**
+	OpenTHC Point of Sale Stylesheet
+	:mode=css:
+*/
+/*
+@import "_.less";
+*/
+/**
+ * Bootstrap Overrides
+ * @type {[type]}
+ */
+html {
+  height: 100%;
+}
+footer {
+  background: #000c00;
+  border-top: 4px solid #007000;
+  color: #f8fffa;
+  margin-top: 2vh;
+}
+footer a {
+  color: inherit;
+}
+footer div.fl {
+  padding: 8px 0 16px 16px;
+}
+footer div.fr {
+  padding: 8px 16px 16px 0;
+  text-align: right;
+}
+footer .link-list p {
+  font-size: 90%;
+  margin: 0;
+  padding: 16px;
+  text-align: center;
+}
+div.c,
+td.c,
+th.c {
+  text-align: center;
+}
+div.r,
+input.r,
+td.r,
+th.r {
+  text-align: right;
+}
+a u,
+button u {
+  text-decoration-color: #000;
+  text-decoration-line: underline;
+  text-decoration-skip: edges;
+  text-decoration-style: solid;
+}
+/**
+	Bootstrap Overrides
+*/
+.table-hover > tbody > tr:hover {
+  background: #ff0;
+}
+/* Fix Select Widths on List pages */
+.filter-input-wrap select {
+  max-width: 20em;
+}
+/*
+	@see https://github.com/twbs/bootstrap/issues/18786
+	and then look at how the style for <select> works
+*/
+input[type=color] {
+  height: calc(2.25rem + 2px);
+}
+/**
+	Radix
+*/
+div#session-flash-v1,
+.alert-wrap {
+  border: none;
+  margin: 0 auto 1em auto;
+  padding: 0;
+  max-width: 1024px;
+}
+div#session-flash-v1 div,
+.alert-wrap div {
+  background: none;
+  border-color: #333;
+  border-radius: 0.25em;
+  border-style: solid;
+  border-width: 1px;
+  color: #111;
+  font-size: 150%;
+  font-weight: 700;
+  margin: 0 0 0.5em 0;
+}
+div#session-flash-v1 div p,
+.alert-wrap div p {
+  margin: 0.5em 0 0.5em 1em;
+  padding: 0;
+}
+div#session-flash-v1 div ul,
+.alert-wrap div ul {
+  list-style-type: none;
+  margin: 0.5em 0 0.5em 1em;
+  padding: 0;
+}
+/**
+	App Stuff
+*/
+.math-input,
+input[type=number] {
+  width: 6em;
+}
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+dl.hint {
+  color: #999;
+}
+dl.hint:active,
+dl.hint:focus,
+dl.hint:hover {
+  color: #000;
+}
+input:focus::placeholder {
+  color: transparent;
+}
+/* CSS4+ */
+input:focus::-moz-placeholder {
+  color: transparent;
+}
+/* FF 19+ */
+input:focus::-webkit-input-placeholder {
+  color: transparent;
+}
+input:focus:-ms-input-placeholder {
+  color: transparent;
+}
+/* IE 10+ */
+/**
+	Buttons and Alerts
+*/
+.no-select {
+  user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+}
+.form-actions {
+  border: 1px solid #333333;
+  border-radius: 0.25em;
+  margin: 1em 0 1em 0;
+  padding: 1em 2em 0 1em;
+}
+.form-actions .btn {
+  min-width: 8em;
+  margin: 0 1em 1em 0;
+}
+.form-actions div.btn-group .btn {
+  min-width: 7em;
+  margin: 0 0 1em 0;
+}
+.form-actions div.btn-group .btn.dropdown-toggle {
+  min-width: 1em;
+  margin: 0 1em 1em 0;
+}
+div.grid-head {
+  background: #AAAAAA;
+  width: 100%;
+}
+div.grid-head div {
+  vertical-align: middle;
+}
+div.grid-head h4 {
+  margin: 0;
+  padding: 0;
+}
+/*
+	@deprecated
+*/
+div.highlight-item,
+tr.highlight-item {
+  cursor: pointer;
+  width: 100%;
+}
+div.highlight-item:active,
+div.highlight-item:focus,
+div.highlight-item:hover,
+tr.highlight-item:active,
+tr.highlight-item:focus,
+tr.highlight-item:hover {
+  background: #ffff00;
+}
+.table-striped > tbody > tr:nth-of-type(odd).pick,
+div.highlight-item.pick,
+tr.highlight-item.pick {
+  background: rgba(255, 255, 0, 0.5);
+}
+tr.sel-item-live {
+  background: rgba(255, 255, 0, 0.4) !important;
+}
+p.head {
+  font-size: 130%;
+}
+#table-config-options {
+  background: #f0f0f0;
+  border: 1px solid #333;
+  font-size: 110%;
+  margin: 0;
+  padding: 0.5em;
+  position: absolute;
+  right: 0;
+  text-align: left;
+  top: 0;
+}
+/**
+	Clue is a floaty pulsing widget
+*/
+.clue {
+  position: relative;
+}
+div.clue-star {
+  animation: clue_pulse linear 2.5s infinite;
+  background: #00000077;
+  /* transparent; */
+  border-radius: 50%;
+  cursor: help;
+  color: #ff851bf0;
+  /* #ff851b77; */
+  font-family: sans-serif;
+  font-size: 32px;
+  font-weight: 700;
+  height: 32px;
+  line-height: 32px;
+  /* opacity: 0.9; */
+  position: absolute;
+  text-align: center;
+  user-select: none;
+  vertical-align: middle;
+  width: 32px;
+  z-index: 100000;
+  /*
+	// Tiffany hates these two, got back to pulse
+	http://stackoverflow.com/questions/4910963/how-to-create-a-pulse-effect-using-webkit-animation-outward-rings
+	http://jsfiddle.net/Fy8vD/
+	http://cssdeck.com/labs/simple-css3-heart-pulsing-animations
+	*/
+}
+@keyframes clue_pulse {
+  0% {
+    -webkit-transform: scale(1);
+    transform: scale(1);
+  }
+  50% {
+    -webkit-transform: scale(1.5);
+    transform: scale(1.5);
+  }
+  100% {
+    -webkit-transform: scale(1);
+    transform: scale(1);
+  }
+}
+@-webkit-keyframes clue_pulse {
+  0% {
+    -webkit-transform: scale(1);
+    transform: scale(1);
+  }
+  50% {
+    -webkit-transform: scale(1.5);
+    transform: scale(1.5);
+  }
+  100% {
+    -webkit-transform: scale(1);
+    transform: scale(1);
+  }
+}
+/**
+	Hero a large, page-top banner
+*/
+div.hero {
+  background: #eee;
+  border: 1px solid #ccc;
+  border-radius: 0.5em;
+  margin: 1em 0 2em 0;
+  padding: 2em 4em;
+  position: relative;
+}
+div.hero a:not(.btn) {
+  color: #e00;
+}
+div.hero h1 {
+  font-size: 320%;
+  margin: 0;
+  padding: 0;
+}
+div.hero h2 {
+  font-size: 280%;
+  margin: 0;
+  padding: 0;
+}
+div.hero p {
+  font-size: 160%;
+}
+div.hero div.hero-tool {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+}
+/**
+	Stuff For Sorting
+*/
+body.dragging,
+body.dragging * {
+  cursor: move !important;
+}
+.dragged {
+  position: absolute;
+  opacity: 0.5;
+  z-index: 2000;
+}
+ol.sortable li.placeholder {
+  position: relative;
+  /** More li styles **/
+}
+ol.sortable li.placeholder:before {
+  position: absolute;
+  /** Define arrowhead **/
+}
+#flash-alert,
+.flash-alert {
+  left: 10%;
+  position: absolute;
+  right: 10%;
+  top: 64px;
+  z-index: 1000;
+}
+#core {
+  margin: 0.5em 1em 4em 1em;
+  min-height: 600px;
+}
+/**
+	jQuery UI Rules
+*/
+.ui-menu .ui-menu-item {
+  list-style-image: none;
+}
+.ui-menu .ui-menu-item a.ui-state-focus {
+  background: none;
+  border: none;
+  color: #04c809;
+  margin: 0;
+}
+.ui-widget-content {
+  border: 1px solid #333333;
+  background: #eee;
+}
+ul.ui-widget-content.ui-autocomplete {
+  font-size: 120%;
+}
+/**
+	Page Specific Rules
+*/
+body.auth-sign-in #auth-pin-input .row {
+  margin-bottom: 1em;
+}
+body.auth-sign-in #auth-pin-input .btn {
+  font-size: 200%;
+  font-weight: 700;
+}
+.nav-item.dropdown .nav-link:hover {
+  color: var(--blue);
+}
+/**
+	@see https://css-tricks.com/snippets/css/media-queries-for-standard-devices/
+*/
+@media (min-width: 768px) {
+  #main-nav-small {
+    display: none;
+  }
+}
+/**
+	POS Stylesheet
+	:mode=css:
+*/
+body.pos {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  align-item: stretch;
+  height: 100%;
+}
+body.pos #pos-menu-wrap {
+  flex: 1 1 auto;
+}
+body.pos #pos-main-wrap {
+  flex: 2 1 100%;
+  overflow: hidden;
+  position: relative;
+}
+body.pos .pos-foot-wrap {
+  flex: 1 1 auto;
+}
+.pos-item-sale-wrap .inv-item {
+  background: #fefefe;
+  border-bottom: 3px solid #333;
+  cursor: pointer;
+  margin: 0;
+  word-wrap: break-word;
+  user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+.pos-item-sale-wrap .inv-item:active,
+.pos-item-sale-wrap .inv-item:focus {
+  background: #ccc;
+}
+.pos-item-sale-wrap .inv-item h3 {
+  margin: 0;
+  padding: 0;
+}
+.pos-item-sale-wrap .inv-item h4 {
+  margin: 0.25em 0;
+}
+#pos-item-list {
+  flex: 2 1 100%;
+  overflow-y: auto;
+  padding: 0 0 3em 0;
+}
+#pos-item-list h3 {
+  background: #aaa;
+  margin: 0;
+  text-align: center;
+}
+#pos-2col-wrap {
+  position: relative;
+  /*
+	bottom: (@cmd_wrap_h + @sub_wrap_h);
+	overflow: hidden;
+	left: 0;
+
+	right: 0;
+	top: 60px;
+	*/
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+/*
+	Point of Sale Footer
+*/
+.pos-foot-wrap {
+  background: #343a40;
+  color: #f0f0f0;
+}
+.pos-foot-wrap #pos-terminal-sub-wrap {
+  display: flex;
+}
+.pos-foot-wrap #pos-terminal-sub-wrap .sub-info-item-wrap {
+  flex: 1 1 33%;
+}
+.pos-foot-wrap #pos-terminal-sub-wrap .sub-info-item-wrap h3 {
+  line-height: 48px;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+.pos-foot-wrap #pos-terminal-cmd-wrap {
+  display: flex;
+}
+.pos-foot-wrap #pos-terminal-cmd-wrap .cmd-item {
+  flex: 1 1 33%;
+  text-align: center;
+}
+.pos-foot-wrap #pos-terminal-cmd-wrap .cmd-item button {
+  font-weight: 700;
+  margin: 4px auto;
+  width: 80%;
+}
+/** Checkout Terminal Price Footer Stuff */
+#pos-modal-number-input {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+#pos-modal-number-input button.digit {
+  font-size: 48px;
+  font-weight: bold;
+  width: 100%;
+}
+#barcode-input {
+  background: #ccc;
+  border: 2px inset #003300;
+  font-size: 24px;
+  margin: 0 auto;
+  outline: none;
+}
+#barcode-input:active,
+#barcode-input:focus {
+  background: #ffffff;
+  border: 2px solid #009900;
+}
+/**
+	Items on Left, Sale on Right
+*/
+.pos-item-sale-wrap {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  height: 100%;
+  /* max-height: 80vh; */
+}
+.pos-item-sale-wrap .pos-item-wrap {
+  border-right: 1px solid #333;
+  flex: 1 1 60%;
+  overflow: hidden;
+}
+.pos-item-sale-wrap .pos-sale-wrap {
+  border-left: 1px solid #333;
+  flex: 1 1 40%;
+}
+/**
+ * Grid Layout of POS Items
+ */
+.pos-item-grid .pos-item-grid-head {
+  border-bottom: 1px solid #333;
+}
+.pos-item-grid .pos-item-grid-body {
+  display: flex;
+  flex-wrap: wrap;
+}
+.pos-item-grid .pos-item-grid-body .pos-item-grid-item {
+  border-bottom: 1px solid #333;
+  flex: 1 0 25%;
+  margin: 0 0 0.5em 0;
+}
