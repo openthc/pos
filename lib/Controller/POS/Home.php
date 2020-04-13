@@ -5,7 +5,7 @@
 
 namespace App\Controller\POS;
 
-use Edoceo\Radix\DB\SQL;
+use Edoceo\Radix\Session;
 
 class Home extends \OpenTHC\Controller\Base
 {
@@ -15,11 +15,10 @@ class Home extends \OpenTHC\Controller\Base
 			$_SESSION['pos-terminal-id'] = \uniqid();
 		}
 
-		$_GET['v'] = 'auth';
-
-		if ('auth' == $_GET['v']) {
+		// if ('auth' == $_GET['v']) {
+		if (empty($_SESSION['pos-terminal-contact'])) {
 			$data = [];
-			$data['Page'] = [ 'title' => 'PIN Authentication'];
+			$data['Page'] = [ 'title' => 'Terminal Authentication'];
 			return $this->_container->view->render($RES, 'page/pos/open.html', $data);
 		}
 
@@ -79,7 +78,26 @@ class Home extends \OpenTHC\Controller\Base
 
 		//var_dump($data);
 
-		return $this->_container->view->render($RES, 'page/pos/checkout.html', $data);
+		return $this->_container->view->render($RES, 'page/pos/terminal/main.html', $data);
+
+	}
+
+	/**
+	 * POST Handler
+	 */
+	function post($REQ, $RES, $ARG)
+	{
+		switch ($_POST['a']) {
+		case 'auth-code':
+			$code = $_POST['code'];
+			// Lookup Contact by this Auth Code
+			// Assign to Register Session
+			// Set Expiration in T minutes?
+			$_SESSION['pos-terminal-contact'] = 'CONTACT';
+			Session::expire('pos-terminal-contact', 300);
+			return $RES->withRedirect('/pos');
+			break;
+		}
 
 	}
 

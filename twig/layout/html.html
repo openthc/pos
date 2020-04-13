@@ -1,0 +1,77 @@
+{% extends "layout/base.html" %}
+
+{% block html_head_link %}
+{{ parent() }}
+<link href="/css/pos.css" rel="stylesheet">
+{% endblock %}
+
+{% block html_body %}
+<body>
+
+
+{% include "block/menu-zero.html" %}
+
+
+{% if alert %}
+	<div class="container">
+	<div class="alert-wrap">
+		{{ alert }}
+	</div>
+	</div>
+{% endif %}
+
+
+<div class="container-fluid" style="min-height:80vh;">
+
+{% block body %}{% endblock %}
+
+</div>
+
+{% include "block/footer-pub.html" %}
+
+{% block foot_script %}
+{{ parent() }}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.19/js/jquery.dataTables.min.js" integrity="sha256-t5ZQTZsbQi8NxszC10CseKjJ5QeMw5NINtOXQrESGSU=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.19/js/dataTables.bootstrap4.min.js" integrity="sha256-hJ44ymhBmRPJKIaKRf3DSX5uiFEZ9xB/qx8cNbJvIMU=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/riot/4.1.1/riot.min.js" integrity="sha256-mtOlmzRdidEKTY3OZ1CN1HEHFTe3UAlZBuLpjFad6/M=" crossorigin="anonymous"></script>
+<script src="https://cdn.openthc.dev/lodash/4.17.15/lodash.js" integrity="sha256-VeNaFBVDhoX3H+gJ37DpT/nTuZTdjYro9yBruHjVmoQ=" crossorigin="anonymous"></script>
+<script src="https://weedtraqr.com/js/app.js"></script>
+<script src="/js/pos.js"></script>
+
+<script>
+Weed.Scanner = {};
+Weed.Scanner.done = function(code) {
+	alert('A Code As Been Scanned: ' + code);
+};
+
+$(function() {
+	// Weed.POS.ping();
+
+	//$('#exec-full-screen').on('click', function() {
+	//      var el = document.documentElement;
+	//      var rfs = el.requestFullScreen
+	//                      || el.webkitRequestFullScreen
+	//                      || el.mozRequestFullScreen;
+	//      rfs.call(el);
+	//});
+
+	// $('#pos-terminal-id').on('click', function() {
+	// 	// Weed.bodyDim();
+	// 	//$.get('/pos/ajax/tid', function() {
+	// 	var html = '';
+	// 	html+= '<div style="background: #fdfdfd; border:4px solid #000; height: 400px; margin: 0px auto; width: 400px;">';
+	// 	// html+= '<img src="http://chart.apis.google.com/chart?cht=qr&chs=400x400&chl=<?= rawurlencode('https://weedtraqr.com/pos/front?t=' . $_SESSION['pos-terminal-id']) ?>&chld=H|0">';
+	// 	html+= '</div>';
+	// 	Weed.modal(html);
+	// });
+
+	// $('#pos-sign-out').on('click', function() {
+	// 	window.location = '/auth/pin';
+	// });
+
+});
+</script>
+{% endblock %}
+
+</body>
+{% endblock %}
