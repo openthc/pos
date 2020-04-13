@@ -8,7 +8,7 @@ use Edoceo\Radix\DB\SQL;
 require_once(dirname(dirname(__FILE__)) . '/boot.php');
 
 $cfg = [];
-$cfg = array('debug' => true);
+// $cfg['debug'] = true;
 $app = new \OpenTHC\App($cfg);
 
 // Container
@@ -21,9 +21,23 @@ $con['DB'] = function($c) {
 	$p = $cfg['password'];
 	$dbc = new SQL($c, $u, $p);
 
-	SQL::init($c, $u, $p); // Shitty Global Static One
-
 	return $dbc;
+};
+
+// Get Current Company Object
+$con['Company'] = function($c0) {
+
+	static $C;
+
+	if (empty($C)) {
+
+		$dbc = $c0->DB;
+		$C = new \OpenTHC\Company($dbc, $_SESSION['Company']);
+
+	}
+
+	return $C;
+
 };
 
 
@@ -54,6 +68,7 @@ $app->group('/b2b', 'App\Module\B2B')
 	->add('App\Middleware\Menu')
 	//->add('App\Middleware\Auth')
 	->add('OpenTHC\Middleware\Session');
+
 
 // B2B Operations
 $app->group('/report', 'App\Module\Report')
@@ -92,9 +107,9 @@ $app->group('/settings', 'App\Module\Settings')
 
 
 // Supplier
-$app->group('/supplier', 'App\Module\Supplier')
-	->add('App\Middleware\Menu')
-	->add('OpenTHC\Middleware\Session');
+// $app->group('/supplier', 'App\Module\Supplier')
+// 	->add('App\Middleware\Menu')
+// 	->add('OpenTHC\Middleware\Session');
 
 
 // Authentication
