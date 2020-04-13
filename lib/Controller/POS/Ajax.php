@@ -14,7 +14,7 @@ class Ajax extends \OpenTHC\Controller\Base
 		switch ($_GET['a']) {
 		case 'hold-list':
 			$data = array('hold_list' => array());
-			$res = $this->_container->DB->fetchAll('SELECT * FROM sale_hold'); // ORDER BY cts');
+			$res = $this->_container->DB->fetchAll('SELECT * FROM b2c_sale_hold ORDER BY created_at');
 			//var_dump($res);
 			foreach ($res as $rec) {
 

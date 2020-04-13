@@ -33,7 +33,7 @@ class Home extends \OpenTHC\Controller\Base
 		);
 
 		// Splice in Holds
-		$chk = $this->_container->DB->fetchAll('SELECT count(id) FROM sale_hold');
+		$chk = $this->_container->DB->fetchAll('SELECT count(id) FROM b2c_sale_hold');
 		if ($chk) {
 			$menu = $this->_container->view['menu'];
 			$idx = 0;
@@ -55,7 +55,7 @@ class Home extends \OpenTHC\Controller\Base
 
 				$data['cart_item_list'] = array();
 
-				$Cart = $this->_container->DB->fetchRow('SELECT * FROM sale_hold WHERE id = ?', array($_GET['t']));
+				$Cart = $this->_container->DB->fetchRow('SELECT * FROM b2c_sale_hold WHERE id = ?', array($_GET['t']));
 				if (!empty($Cart['id'])) {
 				$Cart['meta'] = json_decode($Cart['meta'], true);
 

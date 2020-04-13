@@ -33,7 +33,7 @@ class Save extends \OpenTHC\Controller\Base
 			}
 
 			// $_SESSION['uid']
-			$sql = 'INSERT INTO sale_hold (uid, meta) VALUES (?, ?) RETURNING id';
+			$sql = 'INSERT INTO b2c_sale_hold (contact_id, meta) VALUES (?, ?) RETURNING id';
 			$arg = array(2, json_encode($_POST));
 			$hid = $dbc->fetchOne($sql, $arg);
 			if (empty($hid)) {

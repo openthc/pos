@@ -14,7 +14,7 @@ class Drop extends \OpenTHC\Controller\Base
 
 			$dbc = $this->_container->DB;
 
-			$sql = 'DELETE FROM sale_hold WHERE id = ?';
+			$sql = 'DELETE FROM b2c_sale_hold WHERE id = ?';
 			$arg = [ $_POST['cart'] ];
 			$dbc->query($sql, $arg);
 
