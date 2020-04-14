@@ -5,21 +5,21 @@
 
 namespace App\Controller\B2B;
 
-use Edoceo\Radix\DB\SQL;
-
 class Home extends \OpenTHC\Controller\Base
 {
 	function __invoke($REQ, $RES, $ARG)
 	{
+		$dbc = $this->_container->DB;
+
 		// Load Transfer Data
 		$sql = 'SELECT * FROM b2b_incoming WHERE license_id_target = :l ORDER BY created_at DESC';
 		$arg = array(':l' => $_SESSION['License']['id']);
-		$res = $this->_container->DB->fetch_all($sql, $arg);
+		$res = $dbc->fetchAll($sql, $arg);
 		foreach ($res as $rec) {
 			$rec['meta'] = json_decode($rec['meta'], true);
 			$rec['date'] = strftime('%m/%d', strtotime($rec['meta']['created_at']));
-			$rec['origin_license'] = SQL::fetch_row('SELECT * FROM license WHERE id = ?', array($rec['license_id_origin'])); // \OpenTHC\License::findBy(array('ulid' => $rec['license_id_origin']));
-			$rec['target_license'] = SQL::fetch_row('SELECT * FROM license WHERE id = ?', array($rec['license_id_target'])); // new \OpenTHC\License($rec['license_id_target']);
+			$rec['origin_license'] = $dbc->fetchRow('SELECT * FROM license WHERE id = ?', array($rec['license_id_source']));
+			$rec['target_license'] = $dbc->fetchRow('SELECT * FROM license WHERE id = ?', array($rec['license_id_target']));
 			$transfer_list[] = $rec;
 		}
 
