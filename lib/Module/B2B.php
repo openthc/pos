@@ -12,9 +12,9 @@ class B2B extends \OpenTHC\Module\Base
 		$a->get('', 'App\Controller\B2B\Home');
 
 		// $a->get('/incoming');
-		$a->get('/incoming/create', function($REQ, $RES, $ARG) {
-			return $this->view->render($RES, 'page/b2b/incoming/create.html', []);
-		});	
+		$a->get('/incoming/create', 'App\Controller\B2B\Incoming\Create');
+		$a->post('/incoming/create', 'App\Controller\B2B\Incoming\Create:post');
+
 		$a->map(['GET','POST'], '/sync', 'App\Controller\B2B\Sync');
 		// $a->map(['GET', 'POST'], '/{id}/sync', 'App\Controller\B2B\Sync');
 
