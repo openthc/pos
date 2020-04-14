@@ -5,8 +5,6 @@
 
 namespace App;
 
-use Edoceo\Radix\DB\SQL;
-
 class Lot extends \OpenTHC\SQL\Record
 {
 	protected $_table = 'inventory';
@@ -18,7 +16,7 @@ class Lot extends \OpenTHC\SQL\Record
 			':id' => $this->_data['id'],
 			':d' => $x
 		);
-		$res = SQL::query($sql, $arg);
+		$res = $this->_dbc->query($sql, $arg);
 		if (empty($res)) {
 			throw new Exception("Could not Decrement Inventory");
 		}

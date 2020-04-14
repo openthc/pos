@@ -18,8 +18,12 @@ class View extends \OpenTHC\Controller\Base
 			Session::flash('fail', 'No Inventory Specified');
 			return(0);
 		}
+		$L['unit_price'] = $L['sell'];
+
 		$P = new \App\Product($L['product_id']);
 		$PT = new \App\Product\Type($P['product_type_id']);
+		$V = new \App\Variety($L['strain_id']);
+		$Z = new \App\Zone($L['room_id']);
 
 		$data = [];
 		$data['Page'] = [ 'title' => 'Inventory :: View '];
@@ -44,6 +48,8 @@ class View extends \OpenTHC\Controller\Base
 		$data['Lot'] = $L;
 		$data['Product'] = $P;
 		$data['Product_Type'] = $PT;
+		$data['Variety'] = $V;
+		$data['Zone'] = $Z;
 
 		return $this->_container->view->render($RES, 'page/inventory/view.html', $data);
 	}

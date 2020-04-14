@@ -1,0 +1,13 @@
+{#
+	All the Twig macros should go in here
+#}
+
+{% macro bs_card(head, body, foot) %}
+    <div class="card">
+    	<div class="card-header">{{ head|raw }}</div>
+    	<div class="card-body">{{ body|raw }}</div>
+    	{% if foot %}
+    		<div class="card-footer">{{ foot|raw }}</div>
+    	{% endif %}
+    </div>
+{% endmacro %}

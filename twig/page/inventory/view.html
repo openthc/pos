@@ -36,8 +36,8 @@
 	<tr>
 	<td>Product:</td>
 	<td>
-		<a href="/inventory?product=<?= $this->Product['id'] ?>">{{ Product.name }}</a>
-		<!-- <small>[<a href="/settings/product/edit?id=<?= $this->Product['id'] ?>"><?= UI_GUID::format($this->Product['guid'], true) ?></a>]</small> -->
+		<a href="/inventory?product={{ Product.id }}">{{ Product.name }}</a>
+		<small>[<a href="/settings/product/edit?id={{ Product.id }}">{{ Product.guid }}</a>]</small>
 	</td>
 	</tr>
 	<tr>
@@ -46,16 +46,13 @@
 	</tr>
 	<tr>
 		<td>Strain:</td>
-		<td>{{ Strain.name }}
+		<td>{{ Variety.name }}
 		<!-- <?php
-		if (!empty($this->Strain['id'])) {
-			echo sprintf('<a href="/inventory?strain=%d">%s</a>', $this->Strain['id'], h($this->Strain['name']));
+		if (!empty($this->Variety['id'])) {
+			echo sprintf('<a href="/inventory?strain=%d">%s</a>', $this->Variety['id'], h($this->Strain['name']));
 			if (!empty($this->Strain['guid'])) {
-				echo ' <small>[<a href="/settings/strains/edit?id=' . $this->Strain['id'] . '">' . UI_GUID::format($this->Strain['guid'], true) . '</a>]</small>';
+				echo ' <small>[<a href="/settings/strains/edit?id=' . $this->Variety['id'] . '">' . UI_GUID::format($this->Strain['guid'], true) . '</a>]</small>';
 			}
-		} else {
-			echo h($this->Inventory['name_strain']);
-		}
 		?> -->
 		</td>
 	</tr>
@@ -66,7 +63,7 @@
 </tr>
 	<tr>
 		<td>Quantity:</td>
-		<td>{{ Lot.qty }}</td>
+		<td class="r"><strong>{{ Lot.qty }}</strong></td>
 	</tr>
 
 	<tr>
@@ -75,8 +72,8 @@
 			<div class="input-group input-group-sm">
 				<input
 					class="form-control form-control-sm math-input r"
-					data-value-current="<?=floatval($this->Inventory['sell'])?>"
-					data-value-initial="<?=floatval($this->Inventory['sell'])?>"
+					data-value-current=""
+					data-value-initial=""
 					id="price" min="0.00" type="number" step="0.01"
 					value="{{ Lot.unit_price }}">
 				<div class="input-group-append">
@@ -85,10 +82,10 @@
 			</div>
 		</td>
 	</tr>
-	<tr>
+	<!-- <tr>
 		<td>Load More...</td>
 		<td></td>
-	</tr>
+	</tr> -->
 </table>
 
 <form enctype="multipart/form-data" id="form-inventory-edit" method="post">
@@ -137,9 +134,12 @@
 </div> <!-- /.col-md-6 -->
 
 <div class="col-md-6">
-	<h2>Laboratory Results</h2>
-	<div id="inventory-qa-results" style="margin-bottom:1em;">
-		<h2 id="inventory-qa-results-load"><i class="fas fa-sync fa-spin"></i> Checking QA Results...</h2>
+	<div class="card">
+	<h2 class="card-header">Laboratory Results</h2>
+	<div class="card-body">
+		<div id="inventory-qa-results"></div>
+		<div id="inventory-qa-results-load"></div>
+	</div>
 	</div>
 </div>
 
@@ -176,7 +176,7 @@ function _init_qa_data()
 
 		var arg = {
 			a: a,
-			i: <?=intval($this->Inventory['id']) ?>,
+			i: '{{ Lot.id }}',
 		};
 
 		$('#inventory-qa-results').empty();
@@ -221,7 +221,7 @@ function _draw_date_inline($node, action)
 
 			var arg = {
 				'a': action,
-				'id': <?= $this->Inventory['id'] ?>,
+				'id': null,
 				'date': val,
 			};
 
@@ -286,34 +286,34 @@ $(function() {
 	});
 
 	$('#print-exec').on('click', function(e) {
-		Weed.Printer.openModal('Inventory', { list: [ <?= $this->Inventory['id'] ?> ]});
+		Weed.Printer.openModal('Inventory', { list: [ '{{ Lot.id }}' ]});
 	});
 
-	$('#price').on('blur change keyup', _.debounce(function() {
+	// $('#price').on('blur change keyup', _.debounce(function() {
 
-		var cur = parseFloat($(this).data('value-current'), 10) || 0;
-		var now = parseFloat(this.value, 10) || 0;
+	// 	var cur = parseFloat($(this).data('value-current'), 10) || 0;
+	// 	var now = parseFloat(this.value, 10) || 0;
 
-		if (now != cur) {
+	// 	if (now != cur) {
 
-			$('#price-proc-icon').html('<i class="fas fa-sync fa-spin"></i>');
+	// 		$('#price-proc-icon').html('<i class="fas fa-sync fa-spin"></i>');
 
-			var arg = {
-				a: 'price',
-				i: <?=intval($this->Inventory['id']) ?>,
-				p: now,
-			};
+	// 		var arg = {
+	// 			a: 'price',
+	// 			i: '{{ Lot.id }}',
+	// 			p: now,
+	// 		};
 
-			$.post('/inventory/ajax', arg, function() {
-				$('#price').data('value-current', arg.p);
-				$('#price-proc-icon').empty();
-			});
+	// 		$.post('/inventory/ajax', arg, function() {
+	// 			$('#price').data('value-current', arg.p);
+	// 			$('#price-proc-icon').empty();
+	// 		});
 
-			$('#price-proc-icon').empty();
+	// 		$('#price-proc-icon').empty();
 
-		}
+	// 	}
 
-	}, 500));
+	// }, 500));
 
 	$('#inventory-wet-date-edit').on('click', function() {
 		_draw_date_inline($(this), 'update-wet-collect-date');
@@ -354,7 +354,7 @@ $(function() {
 	// Load Parents
 	var arg = {
 		a: 'parents',
-		id: <?= intval($this->Inventory['id']) ?>,
+		id: '{{ Lot.id }}',
 	};
 	$('#inventory-parent-wrap').load('/inventory/ajax', arg);
 
