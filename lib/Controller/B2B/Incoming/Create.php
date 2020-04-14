@@ -5,10 +5,6 @@
 
 namespace App\Controller\B2B\Incoming;
 
-// use Edoceo\Radix;
-// use Edoceo\Radix\Session;
-// use Edoceo\Radix\Layout;
-
 class Create extends \OpenTHC\Controller\Base
 {
 	function __invoke($REQ, $RES, $ARG)
