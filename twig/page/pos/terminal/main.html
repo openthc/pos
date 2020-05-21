@@ -34,19 +34,20 @@
 	<div class="pos-item-sale-wrap">
 	<div class="pos-item-wrap">
 		<div style="display:flex; flex-direction: column; flex-wrap: nowrap; height:100%;">
-		<div id="pos-scanner-read">
-			<!-- @todo this should be in our Main Scanner Box -->
-			<!-- Barcode Scanner Input -->
-			<div style="background: #ccc; flex: 1 0 auto;">
-				<div style="padding: 0.5em;">
+
+			<!-- Scanner/Search Input Area -->
+			<div id="pos-scanner-read" style="background: #ccc; flex: 1 0 auto; padding: 0.5rem;">
+				<div class="input-group">
 					<input class="form-control" id="barcode-input" name="barcode" type="text">
+					<div class="input-group-append">
+						<button class="btn btn-outline-secondary"><i class="fas fa-search"></i></button>
+					</div>
 				</div>
 			</div>
-		</div>
 
-		<div id="pos-item-list">
-			<!-- Filled by AJAX -->
-		</div>
+			<div id="pos-item-list">
+				<!-- Filled by AJAX -->
+			</div>
 		</div>
 	</div>
 	<div class="pos-sale-wrap">
@@ -81,7 +82,7 @@
 		</div>
 		<div class="cmd-item">
 			<button class="btn btn-secondary" data-toggle="modal" data-target="#pos-modal-sale-hold" disabled id="pos-shop-save" type="button">
-				<i class="fas fa-sync"></i><span class="btn-text"> Save</span></button>
+				<i class="fas fa-save"></i><span class="btn-text"> Save</span></button>
 		</div>
 		<div class="cmd-item">
 			<button class="btn btn-secondary" data-toggle="modal" data-target="#pos-modal-discount" disabled id="pos-shop-disc" type="button">
@@ -144,7 +145,10 @@ function searchInventory(x)
 	}).fail(function(jxhr, stat) {
 		if ('error' === stat) {
 			if (404 === jxhr.status) {
-				// Not Found
+				// Show some Message
+				// $('#barcode-auto-complete').data('failure')
+				$('#barcode-input').val('');
+				$('#pos-item-list').html('<div class="alert alert-danger">No priced items were found</div>');
 			}
 		}
 	});

@@ -56,33 +56,23 @@ class Ajax extends \OpenTHC\Controller\Base
 		// Starts or Ends with the Code
 		// $res = \App\POS::listInventory("%{$q}%");
 		$sql = <<<SQL
-SELECT inventory.*
-, product.name AS product_name
-, product.package_unit_qom
-, product.package_unit_uom
-, product_type.id AS product_type_id
-, product_type.name AS product_type_name
-, product_type.mode AS product_type_mode
-, product_type.unit AS product_type_unit
-FROM inventory
-JOIN product ON product.id = inventory.product_id
-JOIN product_type ON product.product_type_id = product_type.id
-WHERE inventory.license_id = :l0 AND inventory.stat IN (1, 200) AND inventory.qty > 0 AND (inventory.sell IS NOT NULL AND inventory.sell > 0)
+SELECT lot_full.*
+FROM lot_full
+WHERE license_id = :l0
+  AND stat IN (1, 200)
+  AND qty > 0
+  AND (sell IS NOT NULL AND sell > 0)
 SQL;
 		$arg = array(
 			':l0' => $_SESSION['License']['id'],
 		);
 
-		//$sql.= ' AND inventory.sell > 0 ';
-		//$sql.= ' AND inventory.sell_each';
-		//$sql.= ' AND inventory.sell_full';
-
 		if (!empty($q)) {
-			$sql.= ' AND (inventory.name_strain LIKE :q0 OR inventory.guid LIKE :q1)';
-			$arg[':q0'] = $q;
-			$arg[':q1'] = $q;
+			$sql.= ' AND guid LIKE :q1';
+			// $arg[':q0'] = $q;
+			$arg[':q1'] = sprintf('%%%s%%', $q);
 		}
-		$sql.= ' ORDER BY product_type.name, product.name';
+		$sql.= ' ORDER BY product_type_name, product_name';
 		$res = $this->_container->DB->fetchAll($sql, $arg);
 
 		switch (count($res)) {
@@ -96,13 +86,6 @@ SQL;
 
 			if (1 == count($res)) {
 				$rec = $res[0];
-				//echo '<script>';
-				////echo 'Cart_addItem(document.getElementById("inv-item-' . $rec['id'] . '"));';
-				////echo '$("#barcode-auto-complete").empty();';
-				////echo '$("#barcode-auto-complete").hide();';
-				////echo '$("#barcode-input").val("");';
-				////echo 'searchInventory("");';
-				//echo '</script>';
 			}
 		}
 

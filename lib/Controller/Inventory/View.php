@@ -13,17 +13,21 @@ class View extends \OpenTHC\Controller\Base
 	function __invoke($REQ, $RES, $ARG)
 	{
 		$dbc = $this->_container->DB;
-		$L = new \App\Lot($_GET['id']);
+
+		$L = new \App\Lot($dbc, $_GET['id']);
 		if (empty($L['id'])) {
 			Session::flash('fail', 'No Inventory Specified');
 			return(0);
 		}
 		$L['unit_price'] = $L['sell'];
+		if (empty($L['created_at'])) {
+			$L['created_at'] = $L['ts_created']; // @deprecated
+		}
 
-		$P = new \App\Product($L['product_id']);
-		$PT = new \App\Product\Type($P['product_type_id']);
-		$V = new \App\Variety($L['strain_id']);
-		$Z = new \App\Zone($L['room_id']);
+		$P = new \App\Product($dbc, $L['product_id']);
+		$PT = new \App\Product\Type($dbc, $P['product_type_id']);
+		$V = new \App\Variety($dbc, $L['strain_id']);
+		$Z = new \App\Zone($dbc, $L['room_id']);
 
 		$data = [];
 		$data['Page'] = [ 'title' => 'Inventory :: View '];

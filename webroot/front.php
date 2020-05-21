@@ -15,11 +15,19 @@ $app = new \OpenTHC\App($cfg);
 $con = $app->getContainer();
 $con['DB'] = function($c) {
 
-	$cfg = \OpenTHC\Config::get('database_main');
-	$c = sprintf('pgsql:host=%s;dbname=%s', $cfg['hostname'], $cfg['database']);
-	$u = $cfg['username'];
-	$p = $cfg['password'];
-	$dbc = new SQL($c, $u, $p);
+	if (!empty($_SESSION['dsn'])) {
+
+		$dbc = new SQL($_SESSION['dsn']);
+
+	} else {
+
+		$cfg = \OpenTHC\Config::get('database_main');
+		$c = sprintf('pgsql:host=%s;dbname=%s', $cfg['hostname'], $cfg['database']);
+		$u = $cfg['username'];
+		$p = $cfg['password'];
+		$dbc = new SQL($c, $u, $p);
+
+	}
 
 	return $dbc;
 };
@@ -117,7 +125,7 @@ $app->group('/auth', function() {
 
 	$this->get('/open', 'App\Controller\Auth\oAuth2\Open');
 	$this->get('/back', 'App\Controller\Auth\oAuth2\Back');
-	$this->get('/fail', 'OpenTHC\Controller\Auth\Fail');
+	$this->get('/init', 'App\Controller\Auth\Init')->setName('auth/init');
 	$this->get('/ping', 'OpenTHC\Controller\Auth\Ping');
 	$this->get('/shut', 'OpenTHC\Controller\Auth\Shut');
 
@@ -126,4 +134,13 @@ $app->group('/auth', function() {
 
 $app->group('/api', 'App\Module\API');
 
+// Custom Middleware?
+$f = sprintf('%s/Custom/boot.php', APP_ROOT);
+if (is_file($f)) {
+	require_once($f);
+}
+
+// Go!
 $app->run();
+
+exit(0);

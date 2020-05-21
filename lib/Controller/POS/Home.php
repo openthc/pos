@@ -11,6 +11,18 @@ class Home extends \OpenTHC\Controller\Base
 {
 	function __invoke($REQ, $RES, $ARG)
 	{
+		$dbc = $this->_container->DB;
+
+		$sql = 'SELECT count(id) FROM lot_full WHERE license_id = :l0 AND stat = 200 AND qty > 0 AND sell IS NOT NULL and sell > 0';
+		$arg = [
+			':l0' => $_SESSION['License']['id']
+		];
+		$chk = $dbc->fetchOne($sql, $arg);
+		if (empty($chk)) {
+			_exit_html('Inventory Lots need to be present and priced for the POS to operate [CPH#020]', 400);
+		}
+
+
 		if (empty($_SESSION['pos-terminal-id'])) {
 			$_SESSION['pos-terminal-id'] = \uniqid();
 		}
@@ -33,7 +45,7 @@ class Home extends \OpenTHC\Controller\Base
 		);
 
 		// Splice in Holds
-		$chk = $this->_container->DB->fetchAll('SELECT count(id) FROM b2c_sale_hold');
+		$chk = $dbc->fetchAll('SELECT count(id) FROM b2c_sale_hold');
 		if ($chk) {
 			$menu = $this->_container->view['menu'];
 			$idx = 0;

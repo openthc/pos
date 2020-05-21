@@ -23,10 +23,10 @@ class Menu extends \OpenTHC\Middleware\Base
 		);
 
 		$auth = false;
-		if (!empty($_SESSION['uid'])) {
+		if (!empty($_SESSION['Contact'])) {
 			$auth = true;
 		}
-		if (!empty($_SESSION['pipe-token'])) {
+		if (!empty($_SESSION['pipe-token'])) { // @deprecated
 			$auth = true;
 		}
 

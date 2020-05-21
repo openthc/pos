@@ -23,8 +23,7 @@ class Sale extends \App\SQL\Record
 		if (empty($res)) {
 			$S = new Sale();
 			$S['id'] = $id;
-			$S['uid'] = $_SESSION['uid'];
-			$S['ts_created'] = strftime('%Y-%m-%d %H:%M:%S', $x['sessiontime']);
+			$S['uid'] = $_SESSION['Contact']['id'];
 			$S['license_id'] = $License['id'];
 			$S->save();
 		} else {

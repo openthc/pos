@@ -32,9 +32,11 @@ class Save extends \OpenTHC\Controller\Base
 				Radix::redirect('/pos');
 			}
 
-			// $_SESSION['uid']
-			$sql = 'INSERT INTO b2c_sale_hold (contact_id, meta) VALUES (?, ?) RETURNING id';
-			$arg = array(2, json_encode($_POST));
+			$sql = 'INSERT INTO b2c_sale_hold (contact_id, meta) VALUES (:c0, :m1) RETURNING id';
+			$arg = [
+				':c0' => $_SESSION['Contact']['id'],
+				':m1' => json_encode($_POST),
+			];
 			$hid = $dbc->fetchOne($sql, $arg);
 			if (empty($hid)) {
 				Session::flash('fail', 'Failed to place hold');
