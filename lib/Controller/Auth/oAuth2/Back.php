@@ -18,6 +18,8 @@ class Back extends \App\Controller\Auth\oAuth2
 		// Check State
 		$this->checkState();
 
+		$tok = null;
+
 		// Try to get an access token using the authorization code grant.
 		try {
 			$tok = $p->getAccessToken('authorization_code', [
@@ -31,17 +33,17 @@ class Back extends \App\Controller\Auth\oAuth2
 			_exit_text('Invalid Access Token [AOB#031]', 400);
 		}
 
-		//echo 'Access Token: ' . $res->getToken() . "\n";
-		//echo 'Refresh Token: ' . $res->getRefreshToken() . "\n";
-		//echo 'Expired in: ' . $res->getExpires() . "\n";
-		//echo 'Already expired? ' . ($res->hasExpired() ? 'expired' : 'not expired') . "\n";
-		$tok_a = json_decode(json_encode($tok), true);
-
-		if (empty($tok_a['access_token'])) {
-			_exit_text('Invalid Access Token [AOB#041]', 400);
+		$chk = json_decode(json_encode($tok), true);
+		if (empty($chk['access_token'])) {
+			_exit_text('Invalid Access Token [AOB#036]', 400);
 		}
-
-		if (empty($tok_a['token_type'])) {
+		if (empty($chk['scope'])) {
+			_exit_text('Invalid Access Token [AOB#039]', 400);
+		}
+		if (empty($chk['token_type'])) {
+			_exit_text('Invalid Access Token [AOB#042]', 400);
+		}
+		if ('bearer' != $chk['token_type']) {
 			_exit_text('Invalid Access Token [AOB#045]', 400);
 		}
 
@@ -49,30 +51,21 @@ class Back extends \App\Controller\Auth\oAuth2
 		// resource owner.
 		try {
 
-			$x = $p->getResourceOwner($tok);
-			$x = $x->toArray();
-			$x['scope'] = explode(',', $x['scope']);
+			$x = $p->getResourceOwner($tok)->toArray();
 
-			$_SESSION['AppUser'] = $x['Contact'];
+			$_SESSION['Contact'] = $x['Contact'];
 			$_SESSION['Company'] = $x['Company'];
-
-			$_SESSION['uid'] = $x['Contact']['id'];
-			$_SESSION['gid'] = $x['Company']['id'];
 			$_SESSION['email'] = $x['Contact']['username'];
 
-			$r = $_GET['r'];
-			if (empty($r)) {
-				$r = '/dashboard';
-			}
-
-			return $RES->withRedirect($r);
+			return $RES->withRedirect('/auth/init?' . http_build_query([
+				'r' => $_GET['r']
+			]));
 
 		} catch (\Exception $e) {
 			_exit_text($e->getMessage() . ' [AOB#071]', 500);
 		}
 
-		return $RES->withRedirect($r);
-
+		_exit_text('Invalid Request [AOB#072]', 400);
 	}
 
 }
