@@ -6,19 +6,49 @@
 <meta name="application-name" content="OpenTHC">
 <meta name="mobile-web-app-capable" content="yes">
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
-<link rel="stylesheet" href="https://cdn.openthc.dev/bootstrap/4.4.1/bootstrap.css" integrity="sha256-L/W5Wfqfa0sdBNIKN9cG6QA5F2qx4qICmU2VgLruv9Y=" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdn.openthc.com/bootstrap/4.4.1/bootstrap.css" integrity="sha256-L/W5Wfqfa0sdBNIKN9cG6QA5F2qx4qICmU2VgLruv9Y=" crossorigin="anonymous">
 <link href="/css/pos.css" rel="stylesheet">
 <style>
 #pos-modal-payment {
 	user-select: none;
 }
+
+#menu-left {
+	display: none;
+	width: 0;
+}
+#menu-left.open {
+	background: #ffffff99;
+	display: flex;
+	flex-direction: column;
+	flex-wrap: wrap;
+	height: 100vh;
+	left: 0;
+	position:absolute ;
+	top:0;
+	width: 20vw;
+}
+
 </style>
 
-<script src="https://cdn.openthc.dev/lodash/4.17.15/lodash.js" integrity="sha256-VeNaFBVDhoX3H+gJ37DpT/nTuZTdjYro9yBruHjVmoQ=" crossorigin="anonymous"></script>
-<script src="https://cdn.openthc.dev/jquery/3.4.1/jquery.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
-<script src="https://cdn.openthc.dev/jqueryui/1.12.1/jqueryui.js" integrity="sha256-KM512VNnjElC30ehFwehXjx1YCHPiQkOPmqnrWtpccM=" crossorigin="anonymous"></script>
-<script src="https://cdn.openthc.dev/bootstrap/4.4.1/bootstrap.js" integrity="sha256-OUFW7hFO0/r5aEGTQOz9F/aXQOt+TwqI1Z4fbVvww04=" crossorigin="anonymous"></script>
+<script src="https://cdn.openthc.com/lodash/4.17.15/lodash.js" integrity="sha256-VeNaFBVDhoX3H+gJ37DpT/nTuZTdjYro9yBruHjVmoQ=" crossorigin="anonymous"></script>
+<script src="https://cdn.openthc.com/jquery/3.4.1/jquery.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+<script src="https://cdn.openthc.com/jqueryui/1.12.1/jqueryui.js" integrity="sha256-KM512VNnjElC30ehFwehXjx1YCHPiQkOPmqnrWtpccM=" crossorigin="anonymous"></script>
+<script src="https://cdn.openthc.com/bootstrap/4.4.1/bootstrap.js" integrity="sha256-OUFW7hFO0/r5aEGTQOz9F/aXQOt+TwqI1Z4fbVvww04=" crossorigin="anonymous"></script>
 <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/riot/4.1.1/riot.min.js" integrity="sha256-mtOlmzRdidEKTY3OZ1CN1HEHFTe3UAlZBuLpjFad6/M=" crossorigin="anonymous"></script> -->
+<title>{{ Page.title }}</title>
+</head>
+<body class="pos">
+{% block body %}{% endblock %}
+<div class="shut" id="menu-left">
+	<div>
+		<input >
+	</div>
+	<ul>
+		<li>Menu Item</li>
+	</ul>
+</div>
+{% block foot_script %}
 <script src="/js/pos.js"></script>
 <script src="/js/pos-scanner.js"></script>
 <script src="/js/pos-printer.js"></script>
@@ -26,12 +56,8 @@
 <script src="/js/pos-modal-discount.js"></script>
 <script src="/js/pos-modal-loyalty.js"></script>
 <script src="/js/pos-modal-payment.js"></script>
-<title>{{ Page.title }}</title>
-</head>
-<body class="pos">
-{% include "block/menu-zero.html" %}
-{% block body %}{% endblock %}
-{% block foot_script %}{% endblock %}
+{% endblock %}
+<!--
 <script>
 Weed.Scanner = {};
 Weed.Scanner.done = function(code) {
@@ -39,5 +65,6 @@ alert('A Code As Been Scanned: ' + code);
 $('#barcode-input').val(code)
 };
 </script>
+-->
 </body>
 </html>
