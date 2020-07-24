@@ -4,6 +4,15 @@
 
 ;
 ; Database
+[database_auth]
+	hostname = "127.0.0.1"
+	database = "openthc"
+	username = "openthc"
+	password = ""
+
+
+;
+; Database
 [database_main]
 	hostname = "127.0.0.1"
 	database = "openthc"

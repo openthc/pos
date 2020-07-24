@@ -1,6 +1,6 @@
 <?php
 /**
- *
+ * oAuth2 Starts Here, redirects to oAuth provider
  */
 
 namespace App\Controller\Auth\oAuth2;
@@ -24,13 +24,14 @@ class Open extends \App\Controller\Auth\oAuth2
 		}
 
 		$p = $this->getProvider($r);
-		$_SESSION['oauth2-state'] = $p->getState();
-
 		$cfg = \OpenTHC\Config::get('openthc_sso');
 		$arg = array(
 			'scope' => $cfg['scope'],
 		);
 		$url = $p->getAuthorizationUrl($arg);
+
+		// Get the state generated for you and store it to the session.
+		$_SESSION['oauth2-state'] = $p->getState();
 
 		return $RES->withRedirect($url);
 
