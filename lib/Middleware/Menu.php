@@ -32,7 +32,7 @@ class Menu extends \OpenTHC\Middleware\Base
 
 		if ($auth) {
 
-			$menu['home_link'] = '/dashboard';
+			$menu['home_link'] = '/home';
 			$menu['main'] = array(
 				array(
 					'link' => '/pos',

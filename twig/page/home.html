@@ -15,14 +15,14 @@
 		  <!-- Icon Cards-->
 		  <div class="row">
 			<div class="col-xl-3 col-sm-6 mb-3">
-			  <div class="card border-primary o-hidden h-100">
+			  <div class="card border-success o-hidden h-100">
 				<div class="card-body">
 				  <div class="card-body-icon">
-					<i class="fas fa-truck"></i> B2B Sales
+					<i class="fas fa-truck"></i> Retail Sales
 				  </div>
-				  <p>Incoming and Outgoing sales <small>(transfers, manifests)</small></p>
+				  <p>Recently Completed Transactions</p>
 				</div>
-				<a class="card-footer text-white bg-primary clearfix small z-1" href="/b2b">
+				<a class="card-footer text-white bg-success clearfix small z-1" href="/report/b2c/recent">
 				  <span class="float-left">View Details</span>
 				  <span class="float-right">
 					<i class="fas fa-angle-right"></i>
@@ -30,7 +30,7 @@
 				</a>
 			  </div>
 			</div>
-			<div class="col-xl-3 col-sm-6 mb-3">
+			<!-- <div class="col-xl-3 col-sm-6 mb-3">
 			  <div class="card border-warning o-hidden h-100">
 				<div class="card-body">
 				  <div class="card-body-icon">
@@ -45,16 +45,16 @@
 				  </span>
 				</a>
 			  </div>
-			</div>
+			</div> -->
 			<div class="col-xl-3 col-sm-6 mb-3">
-			  <div class="card border-success o-hidden h-100">
+			  <div class="card border-warning o-hidden h-100">
 				<div class="card-body">
 				  <div class="card-body-icon">
 					<i class="fas fa-fw fa-shopping-cart"></i> Delivery
 				  </div>
 				  <p>Delivery Management</p>
 				</div>
-				<a class="card-footer text-white bg-success clearfix small z-1" href="/pos/delivery">
+				<a class="card-footer text-white bg-warning clearfix small z-1" href="/pos/delivery">
 				  <span class="float-left">View Details</span>
 				  <span class="float-right">
 					<i class="fas fa-angle-right"></i>
@@ -158,7 +158,7 @@ $(function() {
 			window.Chart1 = new Chart(ctx, body);
 		});
 
-	$.get('/dashboard/ajax?a=sale-recent')
+	$.get('/home/ajax?a=sale-recent')
 		.done(function(body) {
 			$('#pos-sale-table-recent').empty();
 			$('#pos-sale-table-recent').html(body);

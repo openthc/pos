@@ -78,7 +78,7 @@ $app->group('/api', 'App\Module\API');
 
 
 // Main Page
-$app->group('/dashboard', 'App\Module\Dashboard')
+$app->group('/home', 'App\Module\Home')
 	->add('App\Middleware\Menu')
 	->add('OpenTHC\Middleware\Session');
 
