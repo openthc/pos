@@ -121,17 +121,10 @@
 
 
 {% block foot %}
-<div class="d-flex" style="width: 100%;">
-<div style="flex: 1 1 auto;">
-	<button class="btn btn-lg btn-outline-secondary" data-dismiss="modal" id="pos-pay-back" type="button"><i class="fas fa-times"></i> Cancel</button>
-	<button class="btn btn-lg btn-warning" disabled="disabled" id="pos-pay-undo" type="button"><i class="fas fa-undo"></i> Undo</button>
-</div>
-<div class="r" style="flex: 1 1 auto;">
-	<button class="btn btn-lg btn-primary" disabled id="pos-payment-commit" name="a" type="submit" value="pos-done">
-		<i class="fas fa-check-square"></i> Complete
-	</button>
-</div>
-</div>
+<button class="btn btn-warning" disabled="disabled" id="pos-pay-undo" type="button"><i class="fas fa-undo"></i> Undo</button>
+<button class="btn btn-primary" disabled id="pos-payment-commit" name="a" type="submit" value="pos-done">
+	<i class="fas fa-check-square"></i> Complete
+</button>
 {% endblock %}
 
 
@@ -202,10 +195,8 @@ function ppFormUpdate()
 	}
 
 	if (ppCashPaid_List.length == 0) {
-		$('#pos-pay-back').show();
 		$('#pos-pay-undo').prop('disabled', true);
 	} else {
-		// $('#pos-pay-back').hide();
 		$('#pos-pay-undo').prop('disabled', false);
 	}
 
@@ -302,10 +293,6 @@ $(function() {
 	});
 
 	$(document.body).on('click', '#pos-card-done', function() {
-		//Weed.modal('shut');
-	});
-
-	$('#pos-pay-back').on('click', function() {
 		//Weed.modal('shut');
 	});
 

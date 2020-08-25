@@ -67,11 +67,6 @@
 
 
 {% block foot %}
-<div class="col-md-6">
-	<button class="btn btn-outline-secondary" data-dismiss="modal" id="pos-pay-back" type="button"><i class="fas fa-times"></i> Cancel</button>
-	<button class="btn btn-warning" data-dismiss="modal" id="pos-pay-undo" style="display: none;" type="button"><i class="fas fa-undo"></i> Undo</button>
-</div>
-<div class="col-md-6 r">
-	<button class="btn btn-primary" disabled id="pos-payment-commit" name="a" type="submit" value="pos-done"><i class="fas fa-check-square-o"></i> Complete</button>
-</div>
+<button class="btn btn-warning" data-dismiss="modal" id="pos-pay-undo" style="display: none;" type="button"><i class="fas fa-undo"></i> Undo</button>
+<button class="btn btn-primary" disabled id="pos-payment-commit" name="a" type="submit" value="pos-done"><i class="fas fa-check-square-o"></i> Complete</button>
 {% endblock %}

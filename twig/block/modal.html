@@ -16,7 +16,14 @@
 </div>
 
 <div class="modal-footer">
-	{% block foot %}{% endblock %}
+<div class="d-flex" style="width: 100%;">
+	<div style="flex: 1 1 auto;">
+		<button class="btn btn-outline-secondary" data-dismiss="modal" taborder="-1" type="button"><i class="fas fa-times"></i> Cancel</button>
+	</div>
+	<div class="r" style="flex: 1 1 auto;">
+		{% block foot %}{% endblock %}
+	</div>
+</div>
 </div>
 
 </div>
