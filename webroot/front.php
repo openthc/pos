@@ -1,12 +1,27 @@
 <?php
 /**
- * OpenTHC Retail Front Controller
+ * Front Controller
+ *
+ * This file is part of OpenTHC POS
+ *
+ * OpenTHC POS is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 3 as
+ * published by the Free Software Foundation.
+ *
+ * OpenTHC POS is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with OpenTHC POS.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 use Edoceo\Radix\DB\SQL;
 
 require_once(dirname(dirname(__FILE__)) . '/boot.php');
 
+// Slim Application
 $cfg = [];
 // $cfg['debug'] = true;
 $app = new \OpenTHC\App($cfg);
@@ -16,10 +31,12 @@ $app = new \OpenTHC\App($cfg);
 $con = $app->getContainer();
 $con['DB'] = function($c) {
 
+	$dbc = null;
+
 	if (!empty($_SESSION['dsn'])) {
 		$dbc = new SQL($_SESSION['dsn']);
 	} else {
-		$cfg = \OpenTHC\Config::get('database_main');
+		$cfg = \OpenTHC\Config::get('database/main');
 		$c = sprintf('pgsql:host=%s;dbname=%s', $cfg['hostname'], $cfg['database']);
 		$u = $cfg['username'];
 		$p = $cfg['password'];
@@ -111,21 +128,22 @@ $app->group('/settings', 'App\Module\Settings')
 $app->group('/auth', function() {
 	$this->get('/open', 'App\Controller\Auth\oAuth2\Open');
 	$this->get('/back', 'App\Controller\Auth\oAuth2\Back');
-	$this->get('/connect', 'App\Controller\Auth\Connect'); // would like to merge with Open or Back
 	$this->get('/init', 'App\Controller\Auth\Init')->setName('auth/init');
+	$this->get('/connect', 'App\Controller\Auth\Connect'); // would like to merge with Open or Back
 	$this->get('/ping', 'OpenTHC\Controller\Auth\Ping');
 	$this->get('/shut', 'OpenTHC\Controller\Auth\Shut');
 })
-->add('OpenTHC\Middleware\Session');
+	->add('OpenTHC\Middleware\Session');
 
 
 // Custom Middleware?
 $f = sprintf('%s/Custom/boot.php', APP_ROOT);
 if (is_file($f)) {
-	require_once($f);
+	// require_once($f);
 }
 
-// Go!
+
+// Execute
 $app->run();
 
 exit(0);

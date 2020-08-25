@@ -19,7 +19,7 @@ class Init extends \App\Controller\Auth\oAuth2
 		}
 
 		// Lookup the DSN
-		$cfg = \OpenTHC\Config::get('database_auth');
+		$cfg = \OpenTHC\Config::get('database/auth');
 		if (empty($cfg)) {
 			return $RES->withJSON([
 				'data' => [],
