@@ -17,17 +17,24 @@
 		"ext-PDO": "*",
 		"ext-session": "*",
 		"ext-sockets": "*",
-		"casbin/casbin": "2.1.3",
+		"casbin/casbin": "2.2.0",
 		"edoceo/radix": "dev-master",
 		"erusev/parsedown": "1.7.4",
-		"league/oauth2-client": "2.4.1",
+		"league/oauth2-client": "2.5.0",
 		"openthc/common": "dev-master",
 		"pear/net_smtp": "1.8.1",
-		"plivo/plivo-php": "4.7.1",
+		"plivo/plivo-php": "4.10.0",
 		"tuupola/base32": "1.0.0",
-		"twilio/sdk": "6.2.0",
+		"twilio/sdk": "6.10.0",
 		"tecnickcom/tcpdf": "6.3.5"
 	},
 	"require-dev": {
+		"behat/behat": "3.7.0",
+		"php-webdriver/webdriver": "1.8.2",
+		"phpmd/phpmd": "2.8.2",
+		"phpstan/phpstan": "0.12.40",
+		"phpunit/phpunit": "9.3.8",
+		"sebastian/phpcpd": "6.0.2"
+
 	}
 }
