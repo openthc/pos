@@ -52,7 +52,7 @@ class Receipt extends \OpenTHC\Controller\Base
 		case 'send-print':
 			return $this->print($RES);
 		case 'send-blank':
-			return $RES->withRedirect('/pos#home');
+			return $RES->withRedirect('/pos');
 		case 'send-email':
 			$_POST['receipt-email'] = trim(strtolower($_POST['receipt-email']));
 			if (empty($_POST['receipt-email'])) {
@@ -83,13 +83,17 @@ class Receipt extends \OpenTHC\Controller\Base
 		$S = new \App\B2C\Sale($dbc, $_GET['s']);
 
 		$b2c_item_list = $S->getItems();
+		foreach ($b2c_item_list as $i => $b2ci) {
+			$b2c_item_list[$i]['Inventory'] = new \App\Lot($dbc, $b2ci['inventory_id']);
+		}
 
 		$pdf = new \App\PDF\Receipt();
 		$pdf->setCompany( new \OpenTHC\Company($dbc, $_SESSION['Company'] ));
 		$pdf->setLicense( new \OpenTHC\Company($dbc, $_SESSION['License'] ));
 		$pdf->setItems($b2c_item_list);
 		$pdf->render();
-		$pdf->Output('Receipt.pdf', 'I');
+		$name = sprintf('receipt_%s.pdf', $S['id']);
+		$pdf->Output($name, 'I');
 
 		exit(0);
 	}
@@ -180,6 +184,9 @@ EOM;
 
 	}
 
+	/**
+	 *
+	 */
 	function _send_phone($RES)
 	{
 		$dbc = $this->_container->DB;

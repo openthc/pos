@@ -7,6 +7,9 @@ namespace App\PDF;
 
 class Receipt extends \App\PDF\Base
 {
+	protected $Company;
+	protected $License;
+
 	private $_item_list = [];
 
 	function __construct($orientation='P', $unit='mm', $format=array(72, 1000), $unicode=true, $encoding='UTF-8', $diskcache=false, $pdfa=false)
@@ -14,6 +17,16 @@ class Receipt extends \App\PDF\Base
 		parent::__construct($orientation, $unit, $format, $unicode, $encoding, $diskcache, $pdfa);
 		$this->setTitle(sprintf('Receipt #%d', $_GET['s']));
 		$this->setAutoPageBreak(false);
+	}
+
+	function setCompany($x)
+	{
+		$this->Company = $x;
+	}
+
+	function setLicense($x)
+	{
+		$this->License = $x;
 	}
 
 	function setItems($b2c_item_list)
@@ -140,7 +153,7 @@ class Receipt extends \App\PDF\Base
 
 		// TAIL
 		// New Company Object?
-		$tail = $this->Company->opt('pos-receipt-tail');
+		// $tail = $this->Company->opt('pos-receipt-tail');
 		if (empty($tail)) {
 			$file = sprintf('%s/etc/receipt-tail.txt', APP_ROOT);
 			if (is_file($file)) {
@@ -158,7 +171,7 @@ class Receipt extends \App\PDF\Base
 	function drawFoot()
 	{
 		// FOOT
-		$foot = $this->Company->opt('pos-receipt-foot');
+		// $foot = $this->Company->opt('pos-receipt-foot');
 		if (empty($foot)) {
 			$file = sprintf('%s/etc/receipt-foot.txt', APP_ROOT);
 			if (is_file($file)) {
@@ -210,7 +223,7 @@ class Receipt extends \App\PDF\Base
 		$y = 20;
 		foreach ($this->_item_list as $SI) {
 
-			$I = new \App\Lot($SI['inventory_id']);
+			$I = $SI['Inventory'];
 
 			$this->setXY(1, $y);
 			$this->cell(70, 5, $I['name'] . ' ' . $I['name_strain']);

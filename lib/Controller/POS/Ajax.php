@@ -35,8 +35,20 @@ class Ajax extends \OpenTHC\Controller\Base
 			}
 			return $this->_container->view->render($RES, 'block/hold-list.html', $data);
 
-		case 'search':
-			return $this->_search($RES);
+			case 'push':
+
+				$k = sprintf('pos-terminal-card', $_SESSION['pos-terminal-id']);
+				$this->_container->Redis->del($k);
+				$x = $this->_container->Redis->set($k, json_encode($_POST));
+
+				return $RES->withJSON(array(
+					'data' => null,
+					'meta' => [ 'detail' => 'success' ],
+				));
+
+			break;
+			case 'search':
+				return $this->_search($RES);
 			break;
 		}
 
@@ -77,6 +89,7 @@ SQL;
 
 		switch (count($res)) {
 		case 0:
+			_draw_ajax_search_error();
 			return $RES->withStatus(404);
 			exit(0);
 		default:
@@ -85,7 +98,17 @@ SQL;
 			_draw_inventory_list($res);
 
 			if (1 == count($res)) {
+
 				$rec = $res[0];
+
+				//echo '<script>';
+				////echo 'addSaleItem(document.getElementById("inv-item-' . $rec['id'] . '"));';
+				////echo '$("#barcode-auto-complete").empty();';
+				////echo '$("#barcode-auto-complete").hide();';
+				////echo '$("#barcode-input").val("");';
+				////echo 'searchInventory("");';
+				//echo '</script>';
+
 			}
 		}
 
@@ -112,18 +135,17 @@ function __old_ajax_shit($RES)
 
 		if (!empty($_SESSION['pos-terminal-id'])) {
 			$k = "pos-terminal-{$_SESSION['pos-terminal-id']}";
-			Service_Redis::hset($k, 'ping', $_SERVER['REQUEST_TIME']);
+			$this->_container->Redis->hset($k, 'ping', $_SERVER['REQUEST_TIME']);
 		}
 
-		// Service_Redis::get();
-		header('Content-Type: application/javascript');
+		header('content-type: application/javascript');
 		die('// pong');
 
 		break;
 
 	case 'pull':
 
-		$chk = Service_Redis::hget('pos-terminal-' . $_SESSION['pos-terminal-id'] . '-cart');
+		$chk = $this->_container->Redis->hget('pos-terminal-' . $_SESSION['pos-terminal-id'] . '-cart');
 		if (empty($chk)) {
 			echo '<div class="col-md-12">';
 			echo '<h1>Cart is Empty</h1>';
@@ -143,7 +165,7 @@ function __old_ajax_shit($RES)
 			if (preg_match('/^item\-(\d+)$/', $k , $m)) {
 
 				$I = new Inventory($m[1]);
-				$si = Service_Redis::hget('strain/' . strtolower($I['name']));
+				$si = $this->_container->Redis->hget('strain/' . strtolower($I['name']));
 
 				echo '<div class="col-md-9">';
 				echo '<h2>';
@@ -211,18 +233,6 @@ function __old_ajax_shit($RES)
 		echo '</div>';
 
 		$_SESSION['pos-last-cart-draw-hash'] = $hash;
-
-		break;
-
-	case 'push':
-
-		//Service_Redis::del('pos-terminal-' . $_SESSION['pos-terminal-id'] . '-cart');
-		//$x = Service_Redis::hset('pos-terminal-' . $_SESSION['pos-terminal-id'] . '-cart', $_POST);
-		// die(print_r($x, true));
-
-		return $RES->withJSON(array(
-			'status' => 'success',
-		));
 
 		break;
 

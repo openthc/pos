@@ -5,7 +5,7 @@
 
 namespace App\B2C;
 
-class Sale extends \App\SQL\Record
+class Sale extends \OpenTHC\SQL\Record
 {
 	protected $_table = 'b2c_sale';
 

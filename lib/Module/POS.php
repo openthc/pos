@@ -26,6 +26,8 @@ class POS extends \OpenTHC\Module\Base
 
 		$a->get('/delivery', 'App\Controller\POS\Delivery');
 		$a->get('/online', 'App\Controller\POS\Online');
+
+		$a->get('/shut', 'App\Controller\POS\Shut');
 	}
 
 }

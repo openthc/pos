@@ -22,9 +22,9 @@ $(function() {
 		$.post('/pos/cart/ajax', arg, function(body, stat) {
 			Cart_addItem({
 				id: 0,
-				name: body.result.name,
+				name: body.data.name,
 				weight: '-',
-				price: body.result.score,
+				price: body.data.rank,
 				size: 1,
 			});
 			$('#pos-modal-loyalty').modal('hide');

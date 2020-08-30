@@ -47,7 +47,9 @@ class Home extends \OpenTHC\Controller\Base
 		// Splice in Holds
 		$chk = $dbc->fetchAll('SELECT count(id) FROM b2c_sale_hold');
 		if ($chk) {
+			// Get Current Meny
 			$menu = $this->_container->view['menu'];
+			// Find Index of the Spot I want
 			$idx = 0;
 			foreach ($menu['main'] as $i => $m) {
 				if ('/pos' == $m['link']) {
@@ -55,10 +57,12 @@ class Home extends \OpenTHC\Controller\Base
 					break;
 				}
 			}
+			// Splice my HOLDS item in there
 			$x = array_splice($menu['main'], $idx, 0, array(array(
 				'link' => '#',
 				'html' => '<span data-toggle="modal" data-target="#pos-modal-sale-hold-list"><i class="fas fa-tags"></i> Holds</span>',
 			)));
+			// Update Data for Render
 			$this->_container->view['menu'] = $menu;
 		}
 
@@ -88,8 +92,6 @@ class Home extends \OpenTHC\Controller\Base
 			}
 		}
 
-		//var_dump($data);
-
 		return $this->_container->view->render($RES, 'page/pos/terminal/main.html', $data);
 
 	}
@@ -101,13 +103,21 @@ class Home extends \OpenTHC\Controller\Base
 	{
 		switch ($_POST['a']) {
 		case 'auth-code':
-			$code = $_POST['code'];
+
 			// Lookup Contact by this Auth Code
+			$code = $_POST['code'];
+
 			// Assign to Register Session
 			// Set Expiration in T minutes?
-			$_SESSION['pos-terminal-contact'] = 'CONTACT';
-			Session::expire('pos-terminal-contact', 300);
+			$R = $this->_container->Redis;
+			$k = sprintf('/%s/pos-terminal', $_SESSION['Contact']['id']);
+			$v = $_SESSION['Contact']['id'];
+			$R->set($k, $v, [ 'ttl' => 600 ]);
+
+			$_SESSION['pos-terminal-contact'] = $_SESSION['Contact']['id'];
+
 			return $RES->withRedirect('/pos');
+
 			break;
 		}
 
