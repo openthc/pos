@@ -3,84 +3,85 @@
 <head>
 <meta charset="utf-8">
 <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
-<title>Loading</title>
+<title>Document Loading</title>
 <style>
 body {
 	background: #101010;
 	font-family: sans-serif;
+	font-size: 100%;
+	height: 100vh;
+	margin: 0;
+	padding: 0;
+	width: 100vw;
+}
+main {
+	align-items: center;
+	display: flex;
+	flex-direction: column;
+	height: 100vh;
+	width: 100vw;
+}
+main > header {
+	flex: 1 0 auto;
 	margin: 0;
 	padding: 0;
 }
-h1 {
-	color: #f0f0f0;
+main > header > h1 {
+	color:#f9f9f9;
+	font-size: 2.5rem;
 	text-align: center;
-	margin: 2em 0 1em 0;
+	margin: 1em 0;
 }
-#img-wrap {
-	margin: 0;
-	padding: 0;
-	text-align: center;
+main > section {
+	flex: 1 1 100%;
 }
-#txt-hint {
-	bottom: 1em;
+main > footer {
+	flex: 1 0 auto;
+	font-family: monospace;
 	color: #e0e0e0;
-	left: 0;
-	position: absolute;
-	text-align: center;
-	width: 100%;
+	padding: 1em 0;
 }
 </style>
 </head>
 <body>
-<h1>Loading...</h1>
-<div id="img-wrap">
-	<!-- <img src="https://cdn.openthc.com/img/icon/icon-256.png"> -->
-	<!-- Index, Optimize -->
-	<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAMAAABrrFhUAAABs1BMVEUgAAA2NEQ2NEU1NUQ1NUU2NUQ2NUUBkFUBkFYBkVUBkVYBklYBklcCklcBk1cBlFcBlFgBlVgClVgBllkBl1kBl1oBmFoCmFoBmVoBmVsBmlsBm1wCm1wBnFwBnF0BnV0BnV4BnlwBnl0Bnl4Bnl8Cnl4Dnl4Dnl8Bn14Dn14Dn18BoF8CoF8DoF8DoGABoV8BoWADoV8DoWABomABomEComADomADomEBo2ECo2EDo2EBpGECpGECpGIBpWICpWIapzcapzgbpzcbpzgaqDcaqDgbqDcbqDgbqTgbqjgbqjkbqzkbrDkcrDkcrDocrTkcrTocrjocrzocsDodsDsdsTsdsjsdszwdtDwdtTwetTwetj0etz0euD0euD4euT4fuT4guUAeuj0euj4euj8fuj4fuj8guj4fuz4fuz8fu0Aguz4guz8gu0AfvD8fvEAgvD8fvT8gvT8gvUAgvUEhvT8fvkAgvkAhvkAhvkEgv0Agv0Ehv0Ahv0EgwEAgwEEhwEEiwEEgwUEhwUIiwUIhwkEhwkIiwkIhw0Ehw0Iiw0Iiw0MhxEIhxUIixUMhxkMixkPDqmYPAAAAAXRSTlMAQObYZgAAAAFiS0dEAIgFHUgAAAg+SURBVHja7Zz5exRFEIZ7Z3cn7ASBCEYQAwoeIGKQoGxA0oAksxEPQDmUyysqeBBAjQY5jERMSGL/ySYxQHazM9NHdXf1TH+/wpPO905VdVV3PyHEy8vLy8vLy8vLy8vLy7yCYtuvhPMqrv3wkYppvxwuU/HsV8MWlYuX+60qFS/3W1Uptv1iFIMwS5Vi2891FJRDXuWyHJZCEeUuESqhqKrFS/3c1oJKKK1ycb9+XuphqKygUmj7TheDEE6VYtt3MArKoQbltenLHYJKEGpTtXip71gUVEIDCor79XHviqFBBUGh7SOck6qhBVWL+/VR1YKgGtpUIfY9vAiCIMSgXE087iCohqhUdjX34QKp5OC+t9TPBY5FgYZGJoAl6oT9sp4fW3HEvs5zJAf2Pd0tNe6TvrRSFeBFUDZUppBGgckqXcGHwPivhKs9hLJfsrHblNDseyGSfsPSrxFYLDxlBACsrm4dQMVyAbIMwP4ObBUAhh7MIgAcXbgtALCjedk5AHgmcRsANJ1KuAJA47mUCwA0n0xiB2DgbLqCGIChc+kqUgBIb+VMAUB7L2sGAOKbeRMAbN3O4wBg9Z2KfQDWXyrZBYDiuZ5NAMQD8AA8AA/AA/AAPAAPwAPwADwAD8AD8AA8AA/AA/AAPAAPwAPwADwAD8AD8AA8gHwAIM4DUL69D9wGALFA4CyAoKR7CdwAAN+ulB0EUDGxCl4AVTProAVQNbQSUgDaXiyX3ACgc7EyfgBGl8MHwMTDvSpeAIbeLZaxAjC/JioAZv+YVBUdACvrogGg7c327vQpEQuAlH/9alTph1O6M21pHADSxp677KYiANq/jTirm4ypA6D0bUft/zDHYABQuttF/w8ZAwNAD73imv17jEECoHRfj0v2rzEGDYDSve4k/zTTAcCZUjDJmCYAtO7AlnibMX0AKD2A3P7oHNMLAHcp+PohY9oBUPoSVv/3GTMCgPZvxWj/d8ZMAaC0D539G3PMJABKd6GyPzLNmGEAlL6Gx/84YxYA0PqLeIZeKwBwbImjM8weAATd8QPGrAKgh3Zi6nstAKB0v7WzgmuMQz8rLfEODwHaa8X+d9M8/tkNpUX6KZ92IEz+JV1RWuUtTgC033ApGGO8+lxpndcpt0wOyqNz3P7ZeaWVXqYCegNX8i/pjNJaz1MhGemO/2JC+lBpsWfFANC69kH5NzH7bOao0nJPU1HpvUb6cU7QPxtXA/DUQWECGrvjL6eYsC6rAYh2UAlpKgV/MgmdVgSwWQYAPbDd5s7fpOOKALqonKBLwfczcv4nYkUAUV2SAGwp+JtJ6qIygK2yAABvlG8zaZ1SBrCByqv+AoT9X+Tts39iZQDyObCgN5Xtt7vs4dclAABbqJIUp8T7TEknVAHUIul94PGgrHBWcEvNPrsTx/GQKoBolyIBut9Y39uqsyAAuqmypPLggap9NtWYB0BUa0AU9akTEO+Lrip/fsbOxzAANqoDoP2CC99Qt89mhtUBgIUApUI9wTiAf3YhhgLQDQGACgxItyH8L1aAeBACQNQLQsDs92fnFgNgSBFAbRFA1wAEgEOQFz6ZutuAyIClCFAYicRPzq+C+GcnYxAASwQ66yAEuHZDGP+XY1AASkOhWEc0BeJ/ogEMIOqhZgrhryD+Z09C+ScdSwA6YXaCrLngC5gE+DQGA/A4BNbAlIGM2XAaxP/II/+DgACiroP6k2AMxP94AzAAlhHYANIN7NW+A9wdjvUAiLoHNA8FtyD8Tx6PYQF0PCHwzIDedgjk+0P7Xx4C0XqIOtADevfVorEn8Q8GoLaMwNo9GvtBAP+XGvD+m0Ig6twyoGsjUB+Cp07HsQ4Ay0NgPg2Uz0d6NQXAyLAe/80hMK9NB3WEwE3V3f9kk33lk4CEjWBRqxXz4NV2izxUi/6zcYtAb6drLQSidUq3BfugM2D2QiPWCqA1CRZ6gj7YHFAZA396P9bsvw2AqPM5+VLQ5hHNjHzrcyrW7r9NEiwMiFsH4KZi6eQ/F8cmALSLgfkJsRcqByRvQmYvDRvy3zYEFgYkuWOCFZcEk1L+r38Qm/KfSKBzs0wp2AWRAROfxAb9JxKI1mxXvyv8RuLq77NGgv9jmgCQKEnre1WLwBXxvve9BPuKb0LkCEQb62oA/hCdek/EiSLEBoHOHrEtcYfKQ8DJ08n2jxGtqiUjWCf0rrjlHaXIc4jZ841k/0eJZnUkE4g29EmPxAL+rxyP7YQ/RxBE/N1xnySA1qFX2wQsVQgEuuMDUgBWDr2mP382gi6+QbkuAaDd0Gus+gkg6O4T7oRGZIdeG58/GwHPoNwcAd9KDr2Gk5+/GGaXAkEAM+dSon+QWFIagqxBWQjAv5eHUz7/u8SeUktBHQrA9Y9QJT83gdRBmR9A4tCLwH5WHqzdrgwgeejFYT8Lwfo9agBG0vreQYJFaYmwqS4PIG3oxfL5/9eqFAKr2w7KHAAmz7hiPysP2g3KmQDS+16CUJHQoJwFIHXoPUpwSmRQTgdw51Ts2OfPLgUt3XEaACxDLzSCpkE5GQCmoRf6zGzZoJwIIHXoPUJcEFd3nABg4mN3o5/zzGxbCoDUodcZ+3yDchsA6UPvIHFLWYPySgBjaUPvYeKcMgblVgBplz1uRT/noNz8V8ovpl32DBFnlUKg1vw/c5T8nAh4ARwmjiuqqQAYJDmQPIBc2E+qhhwAjpH8SALAEMmVVokCILmTEIAhkkd18AI4QvIqPgAkx+IAQHKuWjqAQZJ/rUoGUAT7C8WwlgCAFEZtAZBCaQWAIeLl5eXl5eXl5eXl5eXlZUj/AXrKES/R2LYbAAAAAElFTkSuQmCC">
-</div>
-
-<pre id="txt-hint"></pre>
-
+<main>
+<header>
+	<h1>Document Loading...</h1>
+</header>
+<section>
+	<img src="https://cdn.openthc.com/img/icon.png">
+</section>
+<footer>Loading...</footer>
+</main>
 <script>
-
-var arg_page = {};
-
-var u = window.location.search.toString();
-
-if (u.length) {
-	// First Char is a '?'
-	u = u.substring(1);
-}
-if (u.length) {
-	var kv_idx = 0;
-	var kv_arr = u.split('&');
-	var kv_max = kv_arr.length;
-	for (kv_idx=0; kv_idx<kv_max; kv_idx++) {
-		var kvp = kv_arr[kv_idx].split('=');
-		var k = kvp[0];
-		var v = kvp[1];
-		arg_page[k] = v;
+var usp = new URLSearchParams(window.location.search);
+if (usp.has('h')) {
+	var h = document.querySelector('h1');
+	if (h) {
+		h.innerText = usp.get('h');
 	}
 }
+if (usp.has('r')) {
 
-if (arg_page['r']) {
+	var r = usp.get('r');
 
-	// Hint?
-	var h = document.getElementById('txt-hint');
-	h.innerHTML = 'Sending you to: ' + arg_page['r'];
-
-	// Timeout?
-	var t = 500;
-	if (arg_page['t']) {
-		t = parseInt( arg_page['t'], 10) || 0;
+	var f = document.querySelector('footer');
+	if (f) {
+		f.innerText = 'Sending you to: ' + r;
 	}
 
-	// Redirect
-	setTimeout(function() {
-		window.location = arg_page['r'];
-	}, t);
-
+	window.location = r;
 }
+
+	// // Hint?
+	// var h = document.getElementById('txt-hint');
+	// h.innerHTML = 'Sending you to: ' + arg_page['r'];
+
+	// // Timeout?
+	// var t = 500;
+	// if (arg_page['t']) {
+	// 	t = parseInt( arg_page['t'], 10) || 0;
+	// }
 
 </script>
 </body>
