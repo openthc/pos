@@ -59,3 +59,12 @@ docs-asciidoc:
 docs-doxygen:
 
 	doxygen etc/Doxyfile
+
+
+#
+# Riot JS Tags
+riot:
+	./node_modules/.bin/riot \
+		--output ./webroot/js/riot/ \
+		--sourcemap file \
+		./riot-tag/
