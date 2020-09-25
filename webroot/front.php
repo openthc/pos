@@ -35,12 +35,6 @@ $con['DB'] = function($c) {
 
 	if (!empty($_SESSION['dsn'])) {
 		$dbc = new SQL($_SESSION['dsn']);
-	} else {
-		$cfg = \OpenTHC\Config::get('database/main');
-		$c = sprintf('pgsql:host=%s;dbname=%s', $cfg['hostname'], $cfg['database']);
-		$u = $cfg['username'];
-		$p = $cfg['password'];
-		$dbc = new SQL($c, $u, $p);
 	}
 
 	return $dbc;
@@ -50,8 +44,9 @@ $con['DB'] = function($c) {
 
 // Redis Connection
 $con['Redis'] = function($c) {
+	$cfg = \OpenTHC\Config::get('redis.hostname');
 	$r = new \Redis();
-	$r->connect('127.0.0.1');
+	$r->connect($cfg['hostname']);
 	return $r;
 };
 
@@ -96,9 +91,9 @@ $app->group('/crm', 'App\Module\CRM')
 
 
 // B2B Operations
-//$app->group('/report', 'App\Module\Report')
-//	->add('App\Middleware\Menu')
-//	->add('OpenTHC\Middleware\Session');
+$app->group('/report', 'App\Module\Report')
+	->add('App\Middleware\Menu')
+	->add('OpenTHC\Middleware\Session');
 
 
 // Onsite & Online menus
