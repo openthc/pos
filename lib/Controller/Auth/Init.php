@@ -27,7 +27,7 @@ class Init extends \App\Controller\Auth\oAuth2
 			], 500);
 		}
 		$dbc_auth = new SQL(sprintf('pgsql:host=%s;dbname=%s', $cfg['hostname'], $cfg['database']), $cfg['username'], $cfg['password']);
-		$C1 = $dbc_auth->fetchRow('SELECT * FROM auth_company WHERE ulid = ?', $_SESSION['Company']['id']);
+		$C1 = $dbc_auth->fetchRow('SELECT * FROM auth_company WHERE id = ?', $_SESSION['Company']['id']);
 		if (empty($C1['dsn'])) {
 			return $RES->withJSON([
 				'data' => [],

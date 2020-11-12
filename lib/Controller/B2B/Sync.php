@@ -77,7 +77,7 @@ class Sync extends \OpenTHC\Controller\Base
 				if (empty($LTarget['id'])) {
 					_exit_text("Cannot find Target: '{$rec['global_to_mme_id']}'", 404);
 				}
-				if ($LTarget['ulid'] != $_SESSION['License']['ulid']) {
+				if ($LTarget['id'] != $_SESSION['License']['id']) {
 					_exit_text('License Mis-Match', 409);
 				}
 				var_dump($LTarget);

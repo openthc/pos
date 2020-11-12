@@ -34,7 +34,6 @@ class Ajax extends \OpenTHC\Controller\Base
 					$C = new Contact($dbc);
 					$C['id'] = _ulid();
 					$C['guid'] = $C['id'];
-					$C['ulid'] = $C['id'];
 					$C['fullname'] = $x;
 					$C['phone'] = $x;
 					$C->setFlag(Contact::FLAG_B2C_CLIENT);
@@ -52,7 +51,6 @@ class Ajax extends \OpenTHC\Controller\Base
 				if (empty($C)) {
 					$C = new Contact($dbc);
 					$C['id'] = _ulid();
-					$C['ulid'] = $C['id'];
 					$C['guid'] = $C['id'];
 					$C['fullname'] = $x;
 					$C['email'] = $x;
@@ -71,7 +69,6 @@ class Ajax extends \OpenTHC\Controller\Base
 				if (empty($C)) {
 					$C = new Contact($dbc);
 					$C['id'] = _ulid();
-					$C['ulid'] = $C['id'];
 					$C['guid'] = $C['id'];
 					$C['fullname'] = $x;
 					$C['altid'] = $x;
