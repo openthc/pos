@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+	OpenTHC PHPUnit Configuration File
+-->
+<phpunit
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd"
+	backupGlobals="false"
+	backupStaticAttributes="false"
+	bootstrap="boot.php"
+	cacheResult="false"
+	colors="true"
+	convertErrorsToExceptions="true"
+	convertNoticesToExceptions="true"
+	convertWarningsToExceptions="true"
+	processIsolation="false"
+	stopOnError="true"
+	stopOnFailure="true"
+	stopOnRisky="true"
+	timeoutForSmallTests="1"
+	timeoutForMediumTests="10"
+	timeoutForLargeTests="60"
+	verbose="false"
+>
+
+	<coverage/>
+
+	<php>
+
+		<env name="debug-http" value="false"/>
+
+		<env name="test-host" value="sso.openthc.dev"/>
+		<env name="test-hash" value="CONFIG_AND_PUT_A_SECRET_HERE" />
+
+		<const name="TEST_BROWSERSTACK_USER" value=""/>
+		<const name="TEST_BROWSERSTACK_AUTH" value=""/>
+		<const name="TEST_BROWSERSTACK_BASE" value="hub-cloud.browserstack.com"/>
+
+		<const name="USER_A_USERNAME" value="test@openthc.com"/>
+		<const name="USER_A_PASSWORD" value="password"/>
+		<const name="USER_A_PASSWORD_FAIL" value="password-fail"/>
+
+	</php>
+
+	<testsuites>
+		<testsuite name="All">
+			<directory>0_Core/</directory>
+			<directory>1_Auth/</directory>
+			<directory>2_Account/</directory>
+			<directory>3_oAuth2/</directory>
+		</testsuite>
+	</testsuites>
+	<logging>
+		<!-- <log type="coverage-html" target="../webroot/test-output" /> -->
+		<junit outputFile="../webroot/test-output/output.xml" />
+		<!-- <log type="testdox-html" target="../webroot/test-output/testdox.html" /> -->
+	</logging>
+</phpunit>
