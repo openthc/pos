@@ -20,9 +20,6 @@ class View extends \OpenTHC\Controller\Base
 			return(0);
 		}
 		$L['unit_price'] = $L['sell'];
-		if (empty($L['created_at'])) {
-			$L['created_at'] = $L['ts_created']; // @deprecated
-		}
 
 		$P = new \App\Product($dbc, $L['product_id']);
 		$PT = new \App\Product\Type($dbc, $P['product_type_id']);

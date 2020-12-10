@@ -15,17 +15,20 @@ class oAuth2 extends \OpenTHC\Controller\Base
 		$a = $_SESSION['oauth2-state'];
 		$b = $_GET['state'];
 
+		unset($_SESSION['oauth2-state']);
+
 		if (empty($a)) {
-			_exit_html('<h1>Invalid State [CAO#019]</h1><p>Please try to <a href="/auth/shut">sign in</a></p>', 400);
+			_exit_html('<h1>Invalid State [CAO-024]</h1><p>Please try to <a href="/auth/shut">sign in</a></p>', 400);
 		}
 
 		if (empty($b)) {
-			_exit_html('<h1>Invalid State [CAO#023]</h1><p>Please try to <a href="/auth/shut">sign in</a></p>', 400);
+			_exit_html('<h1>Invalid State [CAO-030]</h1><p>Please try to <a href="/auth/shut">sign in</a></p>', 400);
 		}
 
 		if ($a != $b) {
-			_exit_html('<h1>Invalid State [CAO#027]</h1><p>Please try to <a href="/auth/shut">sign in</a></p>', 400);
+			_exit_html('<h1>Invalid State [CAO-036]</h1><p>Please try to <a href="/auth/shut">sign in</a></p>', 400);
 		}
+
 	}
 
 	/**

@@ -100,8 +100,7 @@ class Accept extends \OpenTHC\Controller\Base
 			// $dbc->insert('lot', array(
 			// 	'id' => $lot['global_received_inventory_id'],
 			// 	'company_id' => $_SESSION['company']['id'],
-			// 	'company_ulid' => $_SESSION['company']['ulid'],
-			// 	'license_ulid' => $_SESSION['license']['ulid'],
+			// 	'license_id' => $_SESSION['license']['id'],
 			// 	'name' => $lot['description'],
 			// 	'meta' => \json_encode($lot),
 			// ));
