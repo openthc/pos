@@ -21,9 +21,9 @@
 	timeoutForMediumTests="10"
 	timeoutForLargeTests="60"
 	verbose="false"
->
+	>
 
-	<coverage/>
+	<coverage />
 
 	<php>
 
@@ -47,9 +47,11 @@
 			<directory>.</directory>
 		</testsuite>
 	</testsuites>
+
 	<logging>
 		<!-- <log type="coverage-html" target="../webroot/test-output" /> -->
 		<junit outputFile="../webroot/test-output/output.xml" />
 		<!-- <log type="testdox-html" target="../webroot/test-output/testdox.html" /> -->
 	</logging>
+
 </phpunit>

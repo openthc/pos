@@ -13,49 +13,39 @@ dt=$(date)
 
 cd "$d"
 
-report_path="../webroot/test-report"
-if [ ! -d "$report_path" ]
-then
-	mkdir "$report_path"
-fi
+output_base="../webroot/test-output"
+output_main="$output_base/index.html"
+mkdir -p "$output_base"
 
-report_home="$report_path/index.html"
-
-echo '<h1>Tests Started</h1>' > "$report_home"
+#
+# Lint
+echo '<h1>Linting</h1>' > "$output_main"
+find ../api/ ../bin/ ../lib/ ../sbin/ ../view/ -type f -name '*.php' -exec php -l {} \; | grep -v 'No syntax'
 
 
 #
 #
 ../vendor/bin/phpunit \
-	--log-junit "$report_path/output.xml" \
-	--testdox-html "$report_path/testdox.html" \
-	--testdox-text "$report_path/testdox.txt" \
-	--testdox-xml "$report_path/testdox.xml" \
 	--verbose \
-	"$@" 2>&1 | tee "$report_path/output.txt"
+	"$@" 2>&1 | tee "$output_base/output.txt"
 
-# if [[ $ret != 0 ]]
-# then
-# 	echo "PHPUnit Failed"
-# 	exit 1;
-# fi
-note=$(tail -n1 "$report_path/output.txt")
+note=$(tail -n1 "$output_base/output.txt")
 
-echo '<h1>Tests Completed</h1>' > "$report_home"
+echo '<h1>Tests Completed</h1>' > "$output_main"
 
 #
 # Get Transform
-echo '<h1>Transforming...</h1>' > "$report_home"
+echo '<h1>Transforming...</h1>' > "$output_main"
 curl -qs https://openthc.com/pub/phpunit/report.xsl > report.xsl
 xsltproc \
 	--nomkdir \
-	--output "$report_path/output.html" \
+	--output "$output_base/output.html" \
 	report.xsl \
-	"$report_path/output.xml"
+	"$output_base/output.xml"
 
 #
 # Final Ouptut
-cat <<HTML > "$report_home"
+cat <<HTML > "$output_main"
 <html>
 <head>
 <meta charset="utf-8">
