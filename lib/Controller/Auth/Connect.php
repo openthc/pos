@@ -25,7 +25,7 @@ class Connect extends \OpenTHC\Controller\Auth\Connect
 		if (empty($_SESSION['Company']['id']) || empty($_SESSION['License']['id']) || empty($_SESSION['Contact']['id'])) {
 			return $RES->withJSON([
 				'data' => [],
-				'meta' => [ 'detail' => 'Fatal Session State [CAC#029]'],
+				'meta' => [ 'detail' => 'Fatal Session State [CAC-029]'],
 			], 500);
 		}
 
