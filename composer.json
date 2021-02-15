@@ -18,22 +18,22 @@
 		"ext-sockets": "*",
 		"edoceo/lowline_php": "dev-master",
 		"edoceo/radix": "dev-master",
-		"erusev/parsedown": "1.7.4",
-		"league/oauth2-client": "2.5.0",
+		"erusev/parsedown-extra": "0.8.1",
+		"league/oauth2-client": "2.6.0",
 		"openthc/common": "dev-master",
-		"pear/net_smtp": "1.8.1",
-		"plivo/plivo-php": "4.10.0",
+		"pear/net_smtp": "1.9.2",
+		"plivo/plivo-php": "4.17.1",
 		"tuupola/base32": "1.0.0",
-		"twilio/sdk": "6.10.0",
+		"twilio/sdk": "6.17.0",
 		"tecnickcom/tcpdf": "6.3.5"
 	},
 	"require-dev": {
 		"behat/behat": "3.7.0",
-		"php-webdriver/webdriver": "1.8.2",
+		"php-webdriver/webdriver": "1.9.0",
 		"phpmd/phpmd": "2.9.1",
-		"phpstan/phpstan": "0.12.54",
-		"phpunit/phpunit": "9.4.2",
-		"sebastian/phpcpd": "6.0.2"
+		"phpstan/phpstan": "0.12.76",
+		"phpunit/phpunit": "9.5.2",
+		"sebastian/phpcpd": "6.0.3"
 
 	}
 }
