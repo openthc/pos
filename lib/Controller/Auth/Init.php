@@ -19,19 +19,12 @@ class Init extends \App\Controller\Auth\oAuth2
 		}
 
 		// Lookup the DSN
-		$cfg = \OpenTHC\Config::get('database/auth');
-		if (empty($cfg)) {
-			return $RES->withJSON([
-				'data' => [],
-				'meta' => [ 'detail' => 'Fatal Database Error [CAC#032]'],
-			], 500);
-		}
-		$dbc_auth = new SQL(sprintf('pgsql:host=%s;dbname=%s', $cfg['hostname'], $cfg['database']), $cfg['username'], $cfg['password']);
+		$dbc_auth = _dbc('auth');
 		$C1 = $dbc_auth->fetchRow('SELECT * FROM auth_company WHERE id = ?', $_SESSION['Company']['id']);
 		if (empty($C1['dsn'])) {
 			return $RES->withJSON([
 				'data' => [],
-				'meta' => [ 'detail' => 'Fatal Database Error [CAC#043]'],
+				'meta' => [ 'detail' => 'Fatal Database Error [CAC-043]'],
 			], 500);
 		}
 
