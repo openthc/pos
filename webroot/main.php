@@ -44,9 +44,9 @@ $con['DB'] = function($c) {
 
 // Redis Connection
 $con['Redis'] = function($c) {
-	$cfg = \OpenTHC\Config::get('redis.hostname');
+	$x = \OpenTHC\Config::get('redis/hostname');
 	$r = new \Redis();
-	$r->connect($cfg['hostname']);
+	$r->connect($x);
 	return $r;
 };
 
@@ -107,8 +107,8 @@ $app->group('/settings', 'App\Module\Settings')
 	->add('OpenTHC\Middleware\Session');
 
 
-// Supplier
-// $app->group('/supplier', 'App\Module\Supplier')
+// Vendor
+// $app->group('/vendor', 'App\Module\Vendor')
 // 	->add('App\Middleware\Menu')
 // 	->add('OpenTHC\Middleware\Session');
 
@@ -134,9 +134,8 @@ $app->group('/auth', function() {
 // Custom Middleware?
 $f = sprintf('%s/Custom/boot.php', APP_ROOT);
 if (is_file($f)) {
-	// require_once($f);
+	require_once($f);
 }
-
 
 // Execute
 $app->run();
