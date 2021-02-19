@@ -16,6 +16,7 @@ error_reporting(E_ALL & ~ E_NOTICE);
 // Composer
 require_once(APP_ROOT . '/vendor/autoload.php');
 
+\OpenTHC\Config::get(APP_ROOT);
 
 /**
  * Database Connection

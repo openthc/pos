@@ -36,7 +36,7 @@ class oAuth2 extends \OpenTHC\Controller\Base
 	 */
 	protected function getProvider($r=null)
 	{
-		$cfg = \OpenTHC\Config::get('openthc/sso');
+		$cfg = \OpenTHC\Config::get('openthc_sso');
 
 		$u = sprintf('https://%s/auth/back?%s', $_SERVER['SERVER_NAME'], http_build_query(array('r' => $r)));
 		$u = trim($u, '?');

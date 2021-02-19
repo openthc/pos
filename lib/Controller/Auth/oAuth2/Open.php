@@ -24,7 +24,7 @@ class Open extends \App\Controller\Auth\oAuth2
 		}
 
 		$p = $this->getProvider($r);
-		$cfg = \OpenTHC\Config::get('openthc/sso');
+		$cfg = \OpenTHC\Config::get('openthc_sso');
 		$arg = array(
 			'scope' => $cfg['scope'],
 		);
