@@ -1,6 +1,6 @@
 <?php
 /**
- * POS Home
+ * Register/Terminal Shut
 */
 
 namespace App\Controller\POS;
@@ -23,7 +23,7 @@ class Shut extends \OpenTHC\Controller\Base
 
 		Session::flash('info', 'Signed out of POS Terminal');
 
-		return $RES->withRedirect('/home');
+		return $RES->withRedirect('/dashboard');
 
 	}
 }

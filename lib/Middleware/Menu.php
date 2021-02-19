@@ -16,7 +16,7 @@ class Menu extends \OpenTHC\Middleware\Base
 			'main' => array(),
 			'page' => array(
 				array(
-					'link' => '/auth/open?r=/home',
+					'link' => '/auth/open',
 					'html' => '<i class="fas fa-sign-in-alt"></i>',
 				)
 			),
@@ -32,7 +32,7 @@ class Menu extends \OpenTHC\Middleware\Base
 
 		if ($auth) {
 
-			$menu['home_link'] = '/home';
+			$menu['home_link'] = '/dashboard';
 			$menu['main'] = array(
 				array(
 					'link' => '/pos',

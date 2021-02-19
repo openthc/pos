@@ -15,7 +15,7 @@ class Init extends \App\Controller\Auth\oAuth2
 
 		$ret = $_GET['r'];
 		if (empty($ret)) {
-			$ret = '/home';
+			$ret = '/dashboard';
 		}
 
 		// Lookup the DSN

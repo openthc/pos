@@ -1,9 +1,9 @@
 <?php
 /**
- * Home AJAX Handler
+ * Dashboard AJAX Handler
  */
 
-namespace App\Controller\Home;
+namespace App\Controller\Dashboard;
 
 class Ajax extends \OpenTHC\Controller\Base
 {
