@@ -15,7 +15,6 @@ class Receipt extends \App\PDF\Base
 	function __construct($orientation='P', $unit='mm', $format=array(72, 1000), $unicode=true, $encoding='UTF-8', $diskcache=false, $pdfa=false)
 	{
 		parent::__construct($orientation, $unit, $format, $unicode, $encoding, $diskcache, $pdfa);
-		$this->setTitle(sprintf('Receipt #%d', $_GET['s']));
 		$this->setAutoPageBreak(false);
 	}
 
@@ -29,13 +28,17 @@ class Receipt extends \App\PDF\Base
 		$this->License = $x;
 	}
 
+	function setSale($s)
+	{
+		$this->_b2c_sale = $s;
+		$this->setTitle(sprintf('Receipt #%s', $this->_b2c_sale['id']));
+	}
+
 	function setItems($b2c_item_list)
 	{
 		$this->_item_list = $b2c_item_list;
 		// $c = count($b2c_item_list);
-
 		// Try to Determine How tall to be?
-
 	}
 
 	function drawHead()
@@ -87,7 +90,7 @@ class Receipt extends \App\PDF\Base
 		// Cash Paid
 		$y += 1;
 		$this->setXY(1, $y);
-		$this->cell(70, 5, 'Cash:');
+		$this->cell(70, 5, 'Cash Paid:');
 
 		// Change
 		$y += 5;
@@ -128,28 +131,10 @@ class Receipt extends \App\PDF\Base
 	{
 		$y = $this->getY();
 		$y += 10;
-		// $this->setXY(1, $y);
-		// $this->cell(70, 5, $_SESSION['Company']['name']);
-
-		// $y += 5;
-		// $this->setXY(1, $y);
-		// $this->cell(70, 5, $_SESSION['Company']['address_full']);
-
-		// $y += 5;
-		// $this->setXY(1, $y);
-		// $this->cell(70, 5, $_SESSION['Company']['phone']);
-
-		// $y += 5;
-		// $this->setXY(1, $y);
-		// $this->cell(70, 5, $_SESSION['Company']['email']);
 
 		// Line
 		$this->line(1, $y, 71, $y);
 		$y += 1;
-
-		// $this->setXY(1, $y);
-		// $this->setFont('Helvetica', '', 10);
-		// $this->cell(70, 5, 'Message', null, null, 'C');
 
 		// TAIL
 		// New Company Object?
@@ -180,14 +165,40 @@ class Receipt extends \App\PDF\Base
 		}
 
 		$y = $this->getY();
-		// $y += 10;
-
+		$y += 1;
 		$this->line(1, $y, 71, $y);
 		$y += 1;
 
 		$this->setXY(1, $y);
 		$this->setFont('Helvetica', '', 10);
 		$this->multicell(70, 5, $foot, null, 'L', null, 1);
+
+		// If FeedBack Link
+		if (true) {
+
+			$y = $this->getY();
+
+			$link = sprintf('https://%s/feedback/%s', $_SERVER['SERVER_NAME'], $this->_b2c_sale['id']);
+
+			$style = array(
+				'border' => false,
+				'padding' => 0,
+				'hpadding' => 0,
+				'vpadding' => 0,
+				'fgcolor' => array(0x00, 0x00, 0x00),
+				'bgcolor' => null,
+				'position' => null,
+			);
+			$align = 'N';
+			$distort = false;
+			$x = 23;
+			$y = $y + 4;
+			$w = 26;
+			$h = 26;
+
+			$this->write2DBarcode($link, 'QRCODE,L', $x, $y, $w, $h, $style, $align, $distort);
+
+		}
 
 	}
 
