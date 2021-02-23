@@ -12,7 +12,7 @@ class Back extends \App\Controller\Auth\oAuth2
 		$p = $this->getProvider();
 
 		if (empty($_GET['code'])) {
-			_exit_text('Invalid Link [AOB#022]', 400);
+			_exit_text('Invalid Link [AOB-022]', 400);
 		}
 
 		// Check State
@@ -26,25 +26,25 @@ class Back extends \App\Controller\Auth\oAuth2
 				'code' => $_GET['code']
 			]);
 		} catch (\Exception $e) {
-			_exit_text('Invalid Access Token [AOB#027]', 400);
+			_exit_text('Invalid Access Token [AOB-027]', 400);
 		}
 
 		if (empty($tok)) {
-			_exit_text('Invalid Access Token [AOB#031]', 400);
+			_exit_text('Invalid Access Token [AOB-031]', 400);
 		}
 
 		$chk = json_decode(json_encode($tok), true);
 		if (empty($chk['access_token'])) {
-			_exit_text('Invalid Access Token [AOB#036]', 400);
+			_exit_text('Invalid Access Token [AOB-036]', 400);
 		}
 		if (empty($chk['scope'])) {
-			_exit_text('Invalid Access Token [AOB#039]', 400);
+			_exit_text('Invalid Access Token [AOB-039]', 400);
 		}
 		if (empty($chk['token_type'])) {
-			_exit_text('Invalid Access Token [AOB#042]', 400);
+			_exit_text('Invalid Access Token [AOB-042]', 400);
 		}
 		if ('bearer' != $chk['token_type']) {
-			_exit_text('Invalid Access Token [AOB#045]', 400);
+			_exit_text('Invalid Access Token [AOB-045]', 400);
 		}
 
 		// Using the access token, we may look up details about the
@@ -62,10 +62,10 @@ class Back extends \App\Controller\Auth\oAuth2
 			]));
 
 		} catch (\Exception $e) {
-			_exit_text($e->getMessage() . ' [AOB#071]', 500);
+			_exit_text($e->getMessage() . ' [AOB-071]', 500);
 		}
 
-		_exit_text('Invalid Request [AOB#072]', 400);
+		_exit_text('Invalid Request [AOB-072]', 400);
 	}
 
 }
