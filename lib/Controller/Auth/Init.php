@@ -5,14 +5,10 @@
 
 namespace App\Controller\Auth;
 
-use Edoceo\Radix\DB\SQL;
-
 class Init extends \App\Controller\Base
 {
 	function __invoke($REQ, $RES, $ARG)
 	{
-		// @todo Some Logging?
-
 		$ret = $_GET['r'];
 		if (empty($ret)) {
 			$ret = '/dashboard';
