@@ -31,7 +31,7 @@ class View extends \OpenTHC\Controller\Base
 		// $_ENV['h1'] = $_ENV['title'] = 'Inventory :: ' . UI_GUID::format($this->Inventory['guid']);
 		// $_ENV['body-head-menu'] = MRU::get('Inventory');
 		// MRU::add('Inventory', array(
-		// 	'name' => sprintf('%s: %s', UI_GUID::format($this->Inventory['guid'], true), $this->Inventory['name_strain']),
+		// 	'name' => sprintf('%s: %s', UI_GUID::format($this->Inventory['guid'], true), $this->Inventory['strain_name']),
 		// 	'link' => sprintf('/inventory/view?id=%d', $this->Inventory['id']),
 		// ));
 		// $this->Batch = new Batch($this->Inventory['batch_id']);

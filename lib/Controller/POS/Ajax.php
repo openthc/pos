@@ -71,7 +71,7 @@ class Ajax extends \OpenTHC\Controller\Base
 SELECT lot_full.*
 FROM lot_full
 WHERE license_id = :l0
-  AND stat IN (1, 200)
+  AND stat = 200
   AND qty > 0
   AND (sell IS NOT NULL AND sell > 0)
 SQL;
@@ -284,7 +284,7 @@ function _draw_inventory_grid($res)
 	foreach ($res as $rec) {
 
 		//$I = new Inventory($rec);
-		$rec['name'] = $rec['product_name'] . '/' . $rec['name_strain'];
+		$rec['name'] = $rec['product_name'] . '/' . $rec['strain_name'];
 
 		// if ($pt_x != $rec['product_type_id']) {
 		// 	echo '<h3>' . h($rec['product_type_name']) . '</h3>';
@@ -357,7 +357,8 @@ function _draw_inventory_list($res)
 	foreach ($res as $rec) {
 
 		//$I = new Inventory($rec);
-		$rec['name'] = $rec['product_name'] . '/' . $rec['name_strain'];
+		$rec['name'] = sprintf('%s / %s', $rec['product_name'], $rec['strain_name']);
+		$rec['name'] = trim($rec['name'], '/');
 
 		if ($pt_x != $rec['product_type_id']) {
 			echo '<h3>' . h($rec['product_type_name']) . '</h3>';
@@ -378,31 +379,24 @@ function _draw_inventory_list($res)
 		echo ': ';
 		echo h($rec['name']);
 		echo '</h4>';
-		// echo '<span style="bottom: 4px; position:absolute; right: 4px;">' . floor($rec['size']) . '</span>';
 		echo '</div>';
 
 		echo '<div class="col-md-2">';
-		switch (sprintf('%s/%s', $rec['product_type_mode'], $rec['product_type_unit'])) {
-		case 'each/ea':
-			echo '<h4 style="text-align:right;">' . sprintf('%0.2f', $rec['package_unit_qom']) . ' ea</h4>';
+		switch ($rec['product_type_mode']) {
+		case 'bulk':
+			printf('<h4 style="text-align:right;">%0.2f %s</h4>', $rec['package_unit_qom'], $rec['package_unit_uom']);
 			break;
-		case 'each/g':
-			echo '<h4 style="text-align:right;">' . sprintf('%0.2f', $rec['package_unit_qom']) . ' g</h4>';
-			break;
-		default:
-			echo '<h4 style="text-align:right;">' . sprintf('%d * %0.2f g', $rec['qty'], $rec['package_unit_qom']) . '/' . $rec['product_name'] . '</h4>';
+		case 'each':
+			printf('<h4 style="text-align:right;">%0.2f %s</h4>', $rec['package_unit_qom'], $rec['package_unit_uom']);
 			break;
 		}
 		echo '</div>';
 
 		echo '<div class="col-md-3">';
 		echo '<h4 style="text-align:right;">$' . number_format($rec['sell'], 2) . '</h4>';
-		// echo '<span style="bottom: 4px; position:absolute; right: 4px;">' . floor($rec['size']) . '</span>';
 		echo '</div>';
 
 		echo '</div>';
-
-
 
 	}
 }
