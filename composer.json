@@ -21,6 +21,7 @@
 		"erusev/parsedown-extra": "0.8.1",
 		"league/oauth2-client": "2.6.0",
 		"openthc/common": "dev-master",
+		"openthc/cre-adapter": "dev-master",
 		"pear/net_smtp": "1.9.2",
 		"plivo/plivo-php": "4.17.1",
 		"tuupola/base32": "1.0.0",

@@ -28,7 +28,7 @@ class Commit extends \OpenTHC\Controller\Base
 			$Sale['id'] = ULID::create();
 			$Sale['license_id'] = $License['id'];
 			$Sale['contact_id'] = $_SESSION['Contact']['id'];
-			$Sale['guid'] = '-';
+			$Sale['guid'] = $Sale['id'];
 			$Sale['meta'] = json_encode($_POST);
 			$Sale->save();
 
@@ -37,7 +37,7 @@ class Commit extends \OpenTHC\Controller\Base
 				// @todo Need to Handle "Special" line items
 				// Like, Loyalty or Tax or ??? -- Could those be "system" class Inventory to add to a ticket?
 				// And Don't Decrement Them?
-				if (preg_match('/^qty\-(\d+)/', $key, $m)) {
+				if (preg_match('/^qty\-(\w+)/', $key, $m)) {
 
 					$qty = floatval($_POST[$key]);
 					$IL = new \App\Lot($dbc, $m[1]);
@@ -105,7 +105,7 @@ class Commit extends \OpenTHC\Controller\Base
 				$SI['inventory_id'] = -1;
 				$SI['guid'] = '-';
 				$SI['qty'] = 1;
-				$SI['qom'] = 0; // $IL['package_size'];
+				$SI['qom'] = 0;
 				$SI['unit_price'] = ($sum_item_price * $tax_excise_rate);
 				$SI['uom'] = 'ea';
 				$SI->setFlag(\App\B2C\Sale\Item::FLAG_TAX_RETAIL);
@@ -118,16 +118,13 @@ class Commit extends \OpenTHC\Controller\Base
 			$Sale['full_price'] = $Sale['list_price'] + $tax0 + $tax1;
 			$Sale->save();
 
-			$dbc->query('COMMIT');
-
 		} catch (Exception $e) {
 			_exit_text('Failed to Execute the Sale', 500);
 		}
 
 		$this->sendToCRE($Sale);
 
-		//$PT = new POS_Terminal($_SESSION['pos-id']);
-		//$PT->addMRUSale($this->Sale);
+		$dbc->query('COMMIT');
 
 		Session::flash('info', 'Sale Confirmed, Transaction #' . $Sale['id']);
 
@@ -135,105 +132,204 @@ class Commit extends \OpenTHC\Controller\Base
 
 	}
 
+	/**
+	 * Send the Sale to the CRE
+	 */
 	function sendToCRE($Sale)
 	{
 		$dbc = $this->_container->DB;
 
-		$req = [
-			'created_at' => $Sale['created_at'],
-			'type' => 'Consumer',
-			'item_list' => [],
-		];
-		foreach ($Sale->getItems() as $SI) {
+		switch ($_SESSION['cre']['engine']) {
+			case 'biotrack':
+				$this->send_to_biotrack($Sale);
+				break;
+			case 'leafdata':
+				$this->send_to_leafdata($Sale);
+				break;
+			case 'metrc':
+				$this->send_to_metrc($Sale);
+				break;
+		}
 
-			$L = new \App\Lot($dbc, $SI['inventory_id']);
+	}
 
-			$req['item_list'][] = [
-				'guid' => $L['guid'],
-				'qty' => $SI['qty'],
-				'uom' => $SI['uom'],
-				'full_price' => $SI['unit_price'] * $SI['qty'],
+	/**
+	 * Execute Sale in BioTrack
+	 */
+	function send_to_biotrack($b2c_sale)
+	{
+		$rbe = App::rbe();
+		// $res = $rbe->card_lookup($_POST['mmj-mp'], $_POST['mmj-cg']);
+
+		$S['json'] = json_decode($S['json'], true);
+
+		$inv_list = array();
+		foreach ($S['json'] as $k => $v) {
+
+			if (preg_match('/^item\-(\d+)$/', $k, $m)) {
+
+				$I = new Inventory($m[1]);
+				$s = $S['json'][sprintf('size-%d', $I['id'])];
+				// print_r($I);
+
+				if ($I->isRegulated()) {
+					$inv_list[] = array(
+						'barcodeid' => $I['guid'],
+						'quantity' => intval($s),
+						'price' => sprintf('%0.2f', $I['sell']),
+					);
+				}
+			}
+		}
+		// print_r($inv_list);
+
+		throw new Exception('What to Do HEre');
+
+		if (count($inv_list)) {
+			$res = $rbe->sale_dispense($inv_list, strtotime($S['dts']));
+			switch ($res['success']) {
+			case 0:
+				// Tri
+				//print_r($res);
+				Session::flash('fail', $rbe->formatError($res));
+				Radix::redirect('/pos/sale?id=' . $S['id']);
+				break;
+			case 1:
+				$S['tid'] = $res['transactionid'];
+				Session::flash('info', "Sale {$S['id']} Assigned Transaction {$S['tid']}");
+				//syslog(LOG_NOTICE, "Sale {$S['id']} Assigned Transaction {$S['tid']}");
+				$S->save();
+				//Task::done($task);
+				break;
+			}
+		} else {
+			// UnRegulated Sale?
+			// ??
+		}
+
+		return $b2c_sale;
+
+	}
+
+	/**
+	 * Execute Sale in LeafData
+	 */
+	function send_to_leafdata($b2c_sale)
+	{
+		$dbc = $this->_container->DB;
+
+		$obj = [];
+		$obj['external_id'] = $b2c_sale['id'];
+		$obj['type'] = 'retail_recreational';
+		$obj['status'] = 'sale';
+		$obj['sold_at'] = date(\OpenTHC\CRE\LeafData::FORMAT_DATE_TIME);
+		// $obj['global_sold_by_user_id'] = '';
+		// $obj['patient_medical_id']
+		// $obj['caregiver_id']
+		$obj['price_total'] = 0;
+		$obj['sale_items'] = [];
+
+		// Get Items
+		$b2c_item_list = $b2c_sale->getItems();
+		foreach ($b2c_item_list as $b2c_item) {
+
+			$lot = new \App\Lot($dbc, $b2c_item['inventory_id']);
+			$Product = new \App\Product($dbc, $lot['product_id']);
+
+			$obj['sale_items'][] = [
+				'global_inventory_id' => $lot['guid'],
+				// 'global_batch_id' =>
+				'external_id' => $b2c_item['id'],
+				'type' => $obj['type'],
+				'sold_at' => $obj['sold_at'],
+				'qty' => $b2c_item['qty'],
+				'uom' => 'ea',
+				'unit_price' => $b2c_item['unit_price'],
+				'name' => $Product['name'],
+			];
+
+			$obj['price_total'] = $obj['price_total'] + ($b2c_item['unit_price'] * $b2c_item['qty']);
+		}
+
+		$cre = \OpenTHC\CRE::factory($_SESSION['cre']);
+		$cre->setLicense($_SESSION['License']);
+
+		$res = $cre->b2c()->create($obj);
+		if (200 != $res['code']) {
+			Session::flash('fail', $cre->formatError($res));
+		}
+
+		$b2c_sale['guid'] = $res['data'][0]['global_id'];
+		$b2c_sale['meta'] = json_encode($res['data'][0]);
+		// $b2c_sale->setMeta($res['data'][0], 'B2C/Sale/Created');
+		$b2c_sale->save();
+
+		return $b2c_sale;
+
+	}
+
+	/**
+	 * Execute Sale in Metrc
+	 */
+	function send_to_metrc($Sale)
+	{
+		$dbc = $this->_container->DB;
+
+		$cre = \OpenTHC\CRE::factory($_SESSION['cre']);
+		$cre->setLicense($_SESSION['License']);
+
+		// $req = $cre->_curl_init($cre->_make_url('/unitsofmeasure/v1/active'));
+		// $res = $cre->_curl_exec($req);
+		// var_dump($res);
+
+		// $req = $cre->_curl_init($cre->_make_url('/sales/v1/customertypes'));
+		// $res = $cre->_curl_exec($req);
+		// var_dump($res);
+		// exit;
+
+		$obj = [];
+		$obj['SalesDateTime'] = date(\DateTime::ISO8601);
+		$obj['SalesCustomerType'] = 'Consumer';
+		// Consumer" [1] => string(7) "Patient" [2] => string(9) "Caregiver" [3] => string(15) "ExternalPatient"
+		$obj['PatientLicenseNumber'] = 'ABC-123';
+		// "CaregiverLicenseNumber": null,
+		// "IdentificationMethod": null,
+		$obj['Transactions'] = [];
+
+		$b2c_item_list = $Sale->getItems();
+		foreach ($b2c_item_list as $b2c_item) {
+			$lot = new \App\Lot($dbc, $b2c_item['inventory_id']);
+			$obj['Transactions'][] = [
+				'PackageLabel' => $lot['guid'],
+				'Quantity' => $b2c_item['qty'],
+				'UnitOfMeasure' => 'Grams',
+				'TotalAmount' => ($b2c_item['unit_price'] * $b2c_item['qty']),
 			];
 		}
 
-		// $cre = CRE::factory($_SESSION['cre']);
-		// $res = $cre->b2c->sale()->create($req);
+		$api = $cre->b2c();
 
-		switch ($_SESSION['cre']['engine']) {
-			case 'metrc':
-				throw new Exception('Cannot Sell in Oregon');
-				break;
-			case 'biotrack':
-				_exec_sale_in_rbe_wa($S);
-				break;
-			case 'leafdata':
-				_exec_sale_in_rbe_wa_leaf($S);
-				break;
-		}
+		$res = $api->create($obj);
+		if (200 == $res['code']) {
 
-	}
-}
+			$cre->setTimeAlpha(date(\DateTime::ISO8601, $_SERVER['REQUEST_TIME'] - 60));
+			$cre->setTimeOmega(date(\DateTime::ISO8601, $_SERVER['REQUEST_TIME'] + 60));
+			$chk = $api->search('active');
 
+			var_dump($chk);
 
-function _exec_sale_in_rbe_wa($S)
-{
-	$rbe = App::rbe();
-
-	// Radix::dump($_SESSION);
-	// Radix::dump($task);
-	$S['json'] = json_decode($S['json'], true);
-	// Radix::dump($S);
-
-	$inv_list = array();
-	foreach ($S['json'] as $k => $v) {
-
-		if (preg_match('/^item\-(\d+)$/', $k, $m)) {
-
-			$I = new Inventory($m[1]);
-			$s = $S['json'][sprintf('size-%d', $I['id'])];
-			// print_r($I);
-
-			if ($I->isRegulated()) {
-				$inv_list[] = array(
-					'barcodeid' => $I['guid'],
-					'quantity' => intval($s),
-					'price' => sprintf('%0.2f', $I['sell']),
-				);
+			foreach ($chk['data'] as $chk_b2c) {
+				var_dump($chk_b2c);
+				$obj8 = $api->single($chk_b2c['Id']);
+				var_dump($obj8);
 			}
+
 		}
+
+		var_dump($res);
+
+		return $Sale;
+
 	}
-	// print_r($inv_list);
-
-	throw new Exception('What to Do HEre');
-
-	if (count($inv_list)) {
-		$res = $rbe->sale_dispense($inv_list, strtotime($S['dts']));
-		switch ($res['success']) {
-		case 0:
-			// Tri
-			//print_r($res);
-			Session::flash('fail', $rbe->formatError($res));
-			Radix::redirect('/pos/sale?id=' . $S['id']);
-			break;
-		case 1:
-			$S['tid'] = $res['transactionid'];
-			Session::flash('info', "Sale {$S['id']} Assigned Transaction {$S['tid']}");
-			//syslog(LOG_NOTICE, "Sale {$S['id']} Assigned Transaction {$S['tid']}");
-			$S->save();
-			//Task::done($task);
-			break;
-		}
-	} else {
-		// UnRegulated Sale?
-		// ??
-	}
-
-}
-
-function _exec_sale_in_rbe_wa_leaf($S)
-{
-	$rbe = App::rbe();
-
-	return false;
 
 }

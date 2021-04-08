@@ -8,7 +8,6 @@
 
 namespace App\Controller\POS\Cart;
 
-use Edoceo\Radix;
 use Edoceo\Radix\Session;
 use Edoceo\Radix\DB\SQL;
 
@@ -23,13 +22,12 @@ class Save extends \OpenTHC\Controller\Base
 
 			$idx_item = 0;
 			foreach ($_POST as $k => $v) {
-				if (preg_match('/^qty\-(\d+)$/', $k, $m)) {
+				if (preg_match('/^qty\-(\w{26})$/', $k, $m)) {
 					$idx_item++;
 				}
 			}
 			if ($idx_item == 0) {
-				die("No Hold");
-				Radix::redirect('/pos');
+				return $RES->withRedirect('/pos');
 			}
 
 			$sql = 'INSERT INTO b2c_sale_hold (contact_id, meta) VALUES (:c0, :m1) RETURNING id';
@@ -40,7 +38,7 @@ class Save extends \OpenTHC\Controller\Base
 			$hid = $dbc->fetchOne($sql, $arg);
 			if (empty($hid)) {
 				Session::flash('fail', 'Failed to place hold');
-				Radix::redirect();
+				return $RES->withRedirect('/pos');
 			}
 			Session::flash('info', sprintf('Hold #%d Confirmed', $hid));
 
@@ -49,12 +47,13 @@ class Save extends \OpenTHC\Controller\Base
 				// HTTP::post('/api/print', array('object' => 'hold', 'object-id' => $hid));
 			}
 
-			Radix::redirect();
+			return $RES->withRedirect('/pos');
 
 		}
 
-		Session::flash('fail', 'CPS#022: Invalid Input');
-		Radix::redirect();
+		Session::flash('fail', 'Invalid Input [PCS-055]');
+		return $RES->withRedirect('/pos');
 
 	}
+
 }
