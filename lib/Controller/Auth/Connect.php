@@ -29,6 +29,9 @@ class Connect extends \OpenTHC\Controller\Auth\Connect
 			], 500);
 		}
 
+		// Keep CRE Data
+		$_SESSION['cre'] = $this->_connect_info['cre'];
+
 		return $RES->withRedirect('/auth/init');
 
 	}
