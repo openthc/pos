@@ -17,8 +17,6 @@
  * along with OpenTHC POS.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-use Edoceo\Radix\DB\SQL;
-
 require_once(dirname(dirname(__FILE__)) . '/boot.php');
 
 // Slim Application
@@ -34,7 +32,7 @@ $con['DB'] = function($c) {
 	$dbc = null;
 
 	if (!empty($_SESSION['dsn'])) {
-		$dbc = new SQL($_SESSION['dsn']);
+		$dbc = _dbc($_SESSION['dsn']);
 	}
 
 	return $dbc;
@@ -75,41 +73,48 @@ $app->group('/api', 'App\Module\API');
 // Main Page
 $app->group('/dashboard', 'App\Module\Dashboard')
 	->add('App\Middleware\Menu')
+	->add('App\Middleware\Auth')
 	->add('OpenTHC\Middleware\Session');
 
 
 // POS / Register
 $app->group('/pos', 'App\Module\POS')
 	->add('App\Middleware\Menu')
+	->add('App\Middleware\Auth')
 	->add('OpenTHC\Middleware\Session');
 
 
 // CRM / Loyalty
 $app->group('/crm', 'App\Module\CRM')
 	->add('App\Middleware\Menu')
+	->add('App\Middleware\Auth')
 	->add('OpenTHC\Middleware\Session');
 
 
 // B2B Operations
 $app->group('/report', 'App\Module\Report')
 	->add('App\Middleware\Menu')
+	->add('App\Middleware\Auth')
 	->add('OpenTHC\Middleware\Session');
 
 
 // Onsite & Online menus
 $app->group('/menu', 'App\Module\Menu')
+	->add('App\Middleware\Auth')
 	->add('OpenTHC\Middleware\Session');
 
 
 // Settings Interface
 $app->group('/settings', 'App\Module\Settings')
 	->add('App\Middleware\Menu')
+	->add('App\Middleware\Auth')
 	->add('OpenTHC\Middleware\Session');
 
 
 // Vendor
 // $app->group('/vendor', 'App\Module\Vendor')
 // 	->add('App\Middleware\Menu')
+// 	->add('App\Middleware\Auth')
 // 	->add('OpenTHC\Middleware\Session');
 
 // B2B Operations
