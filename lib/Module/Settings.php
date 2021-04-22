@@ -32,11 +32,6 @@ class Settings extends \OpenTHC\Module\Base
 
 		$a->get('/receipt/preview', 'App\Controller\Settings\Receipt\Preview');
 
-		// $this->get('', function($REQ, $RES, $ARG) {
-		// 	$data = array();
-		// 	$this->view->render($RES, 'page/settings/index.html', $data);
-		// });
-
 		// // Reports
 		// $this->group('/report', 'App\Module\Report');
 

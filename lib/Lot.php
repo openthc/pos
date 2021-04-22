@@ -18,7 +18,7 @@ class Lot extends \OpenTHC\SQL\Record
 		);
 		$res = $this->_dbc->query($sql, $arg);
 		if (empty($res)) {
-			throw new Exception("Could not Decrement Inventory");
+			throw new \Exception("Could not Decrement Inventory");
 		}
 	}
 

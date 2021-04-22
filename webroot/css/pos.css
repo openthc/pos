@@ -292,12 +292,12 @@ div.hero a:not(.btn) {
 }
 div.hero h1 {
   font-size: 320%;
-  margin: 0;
+  margin: 0 0 0.5em 0;
   padding: 0;
 }
 div.hero h2 {
   font-size: 280%;
-  margin: 0;
+  margin: 0 0 0.5em 0;
   padding: 0;
 }
 div.hero p {
@@ -382,13 +382,24 @@ body.auth-sign-in #auth-pin-input .btn {
 }
 /**
 	POS Stylesheet
-	:mode=css:
 */
+.pos-number {
+  border-style: solid;
+  border-radius: 4px;
+  font-size: 1.1em;
+  outline: none;
+  padding: 4px;
+  text-align: right;
+  width: 4em;
+}
+.pos-warn {
+  color: #FFAC40;
+}
 body.pos {
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
-  align-item: stretch;
+  align-items: stretch;
   height: 100%;
 }
 body.pos #pos-menu-wrap {
@@ -528,6 +539,7 @@ body.pos .pos-foot-wrap {
 .pos-item-sale-wrap .pos-sale-wrap {
   border-left: 1px solid #333;
   flex: 1 1 40%;
+  overflow-y: auto;
 }
 /**
  * Grid Layout of POS Items
@@ -543,4 +555,23 @@ body.pos .pos-foot-wrap {
   border-bottom: 1px solid #333;
   flex: 1 0 25%;
   margin: 0 0 0.5em 0;
+}
+@media (max-width: 660px) {
+  .pos-item-sale-wrap {
+    flex-direction: column;
+  }
+  .pos-item-sale-wrap .pos-item-wrap {
+    border-bottom: 1px solid #333;
+    border-right: none;
+    flex: 1 1 50%;
+  }
+  .pos-item-sale-wrap .pos-sale-wrap {
+    border-left: none;
+    flex: 1 1 50%;
+    overflow: auto;
+  }
+  /* Footer Buttons */
+  .btn .btn-text {
+    display: none;
+  }
 }

@@ -2,34 +2,6 @@
 
 {% block body %}
 
-<style>
-@media (max-width: 660px) {
-
-	.pos-item-sale-wrap {
-		flex-direction: column;
-	}
-
-	.pos-item-sale-wrap .pos-item-wrap {
-		border-bottom: 1px solid #333;
-		border-right: none;
-		flex: 1 1 50%;
-	}
-
-	.pos-item-sale-wrap .pos-sale-wrap {
-		border-left: none;
-		flex: 1 1 50%;
-		overflow: auto;
-	}
-
-
-	/* Footer Buttons */
-	.btn .btn-text {
-		display: none;
-	}
-
-}
-</style>
-
 <div id="pos-main-wrap">
 	<div class="pos-item-sale-wrap">
 	<div class="pos-item-wrap">
@@ -38,6 +10,9 @@
 			<!-- Scanner/Search Input Area -->
 			<div id="pos-scanner-read" style="background: #ccc; flex: 1 0 auto; padding: 0.5rem;">
 				<div class="input-group">
+					<div class="input-group-prepend">
+						<button class="btn btn-outline-secondary"><i class="fas fa-camera"></i></button>
+					</div>
 					<input class="form-control" id="barcode-input" name="barcode" type="text">
 					<div class="input-group-append">
 						<button class="btn btn-outline-secondary"><i class="fas fa-search"></i></button>
@@ -52,7 +27,7 @@
 	</div>
 	<div class="pos-sale-wrap">
 		<!-- Items on the Ticket -->
-		<form action="/pos/pay" id="psi-form" method="post">
+		<form action="/pos/pay" autocomplete="off" id="psi-form" method="post">
 		<div id="psi-item-list" style="overflow-x:auto;">
 			<div id="psi-item-list-empty" style="margin: 10%; text-align:center;">
 				<h3 class="alert alert-dark">Purchase Ticket Data Appears Here</h3>

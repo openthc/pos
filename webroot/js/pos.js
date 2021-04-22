@@ -230,4 +230,19 @@ $(function() {
 		chkSaleCost();
 	});
 
+
+	// modal for open existing cart/ticket
+	$('#sale-hold-list-wrap').on('click', '.btn-drop', function() {
+		var $b = $(this);
+		var cid = $b.data('cart-id');
+		var arg = {
+			a: 'drop',
+			cart: cid,
+		};
+		$.post('/pos/cart/drop', arg, function() {
+			$b.closest('tr').remove();
+		})
+	});
+
+
 });

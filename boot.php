@@ -48,7 +48,6 @@ function _dbc($dsn=null)
 
 		return $dbc_list[$dsn];
 
-	break;
 	default:
 
 		$dbc_list[$dsn] = new \Edoceo\Radix\DB\SQL($dsn);

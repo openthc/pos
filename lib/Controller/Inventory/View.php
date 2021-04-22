@@ -28,23 +28,6 @@ class View extends \OpenTHC\Controller\Base
 
 		$data = [];
 		$data['Page'] = [ 'title' => 'Inventory :: View '];
-		// $_ENV['h1'] = $_ENV['title'] = 'Inventory :: ' . UI_GUID::format($this->Inventory['guid']);
-		// $_ENV['body-head-menu'] = MRU::get('Inventory');
-		// MRU::add('Inventory', array(
-		// 	'name' => sprintf('%s: %s', UI_GUID::format($this->Inventory['guid'], true), $this->Inventory['strain_name']),
-		// 	'link' => sprintf('/inventory/view?id=%d', $this->Inventory['id']),
-		// ));
-		// $this->Batch = new Batch($this->Inventory['batch_id']);
-		// $this->Strain = new Strain($this->Inventory['strain_id']);
-		// $x = UI_Inventory::icon($this->Inventory);
-		// if (!empty($x)) {
-		// 	$_ENV['h1'] .= ' <small>' . $x . '</small>';
-		// }
-
-		// Inventory Photo
-		// $img_file = sprintf('%s/webroot/img/inventory/%06d/%d.png', APP_ROOT, $_SESSION['gid'], $this->Inventory['id']);
-		// $img_link = sprintf('/img/inventory/%06d/%d.png', $_SESSION['gid'], $this->Inventory['id']);
-
 
 		$data['Lot'] = $L;
 		$data['Product'] = $P;
