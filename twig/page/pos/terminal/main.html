@@ -136,15 +136,7 @@ $(function() {
 
 		var val = this.value;
 
-		// console.log('keydown == ' + e.keyCode);
-
 		switch (e.keyCode) {
-		case 16: // Shift
-		case 17: // Ctrl
-		case 18: // Alt
-		case 46: // Delete
-			return false;
-			break;
 		case 10:
 		case 13:
 			// Return Key
@@ -153,7 +145,36 @@ $(function() {
 			// $('#barcode-input').val('');
 			return false;
 			break;
+		case 16: // Shift
+		case 17: // Ctrl
+		case 18: // Alt
+		case 46: // Delete
+			return false;
+			break;
 		}
+
+	});
+
+	$("#barcode-input").on('keyup', function() {
+
+		var val = this.value;
+		if (0 === val.length) {
+			$('.pos-item-wrap .inv-item').show();
+			return;
+		}
+
+		// Now Filter the Grid or Table
+		var rex = new RegExp(val, 'gim');
+		$('.pos-item-wrap .inv-item').each(function(i, n) {
+
+			$(n).show();
+
+			var t = $(n).text();
+			if (!t.match(rex)) {
+				$(n).hide();
+			}
+
+		});
 
 	});
 
