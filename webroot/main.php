@@ -136,6 +136,39 @@ $app->group('/auth', function() {
 	->add('OpenTHC\Middleware\Session');
 
 
+// Webhooks
+$app->group('/webhook', function() {
+
+	$this->post('/weedmaps/order', function($REQ, $RES, $ARG) {
+
+		$file = sprintf('%s/var/weedmaps-order-%s.txt', APP_ROOT, _ulid());
+		$json = file_get_contents('php://input');
+		file_put_contents($file, json_encode([
+			'_GET' => $_GET,
+			'_POST' => $_POST,
+			'_ENV' => $_ENV,
+			'_BODY' => $json
+		]));
+
+		$data = json_decode($json, true);
+		switch ($data['status']) {
+			case 'DRAFT':
+				__exit_json($data);
+				break;
+			case 'PENDING':
+				__exit_json($data);
+				break;
+		}
+
+		__exit_json([
+			'data' => null,
+			'meta' => [ 'detail' => 'Request Not Handled' ]
+		], 400);
+
+	});
+});
+
+
 // Custom Middleware?
 $f = sprintf('%s/Custom/boot.php', APP_ROOT);
 if (is_file($f)) {
