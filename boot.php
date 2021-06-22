@@ -39,7 +39,7 @@ function _dbc($dsn=null)
 	case 'main':
 	case 'root':
 
-		$cfg = \OpenTHC\Config::get(sprintf('database_%s', $dsn));
+		$cfg = \OpenTHC\Config::get(sprintf('database/%s', $dsn));
 		if (empty($cfg)) {
 			_exit_text('Invalid Database Configuration [ABD-039]', 500);
 		}

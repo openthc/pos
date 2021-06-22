@@ -11,7 +11,7 @@
 			<div id="pos-scanner-read" style="background: #ccc; flex: 1 0 auto; padding: 0.5rem;">
 				<div class="input-group">
 					<div class="input-group-prepend">
-						<button class="btn btn-outline-secondary"><i class="fas fa-camera"></i></button>
+						<button class="btn btn-outline-secondary" id="pos-camera-input"><i class="fas fa-camera"></i></button>
 					</div>
 					<input class="form-control" id="barcode-input" name="barcode" type="text">
 					<div class="input-group-append">
@@ -131,30 +131,48 @@ function searchInventory(x)
 
 $(function() {
 
-	$("#barcode-input").focus();
-	$("#barcode-input").on('keydown', function(e) {
+	// https://github.com/zxing-js/library/blob/master/docs/examples/qr-camera/index.html
+	$('#pos-camera-input').on('click', function() {
+		window.OpenTHC.Camera.exists(function(good) {
+			// window.OpenTHC.Camera.open(function(stream) {
 
-		var val = this.value;
+				$(document.body).append('<div id="pos-camera-preview-wrap" style="background: #101010; border: 4px solid #red; left: 10vw; position: absolute; top: 5vh;"><video id="pos-camera-preview" style="height:480px; width:640px;"></div>');
 
-		switch (e.keyCode) {
-		case 10:
-		case 13:
-			// Return Key
-			// Execute Search Now!
-			searchInventory(val);
-			// $('#barcode-input').val('');
-			return false;
-			break;
-		case 16: // Shift
-		case 17: // Ctrl
-		case 18: // Alt
-		case 46: // Delete
-			return false;
-			break;
-		}
+// @see https://github.com/zxing-js/library/issues/432
+const hints = new Map();
+const formats = [
+	ZXing.BarcodeFormat.CODE_128,
+	ZXing.BarcodeFormat.QR_CODE,
+	ZXing.BarcodeFormat.PDF_417
+];
+hints.set(ZXing.DecodeHintType.POSSIBLE_FORMATS, formats);
+hints.set(ZXing.DecodeHintType.CHARACTER_SET, 'utf-8');
+//hints.set(ZXing.DecodeHintType.TRY_HARDER, true);
+//hints.set(ZXing.DecodeHintType.PURE_BARCODE, true);
+var Scanner = new ZXing.BrowserMultiFormatReader(hints);
 
+				// var Scanner = new ZXing.BrowserQRCodeReader();
+				// var Scanner = new ZXing.BrowserPDF417CodeReader();
+				// Scanner.set
+				Scanner.decodeFromInputVideoDevice('', 'pos-camera-preview')
+				.then(function(res) {
+					console.log(res);
+					$('#barcode-input').val(res);
+					$('#pos-camera-preview-wrap').remove();
+					Scanner.reset();
+					delete Scanner;
+				})
+				.catch((err) => { console.log(err); });
+
+				// window.OpenTHC.Camera.scan(function() {
+
+					// alert('I Got a Scan!!');
+				// });
+			// });
+		});
 	});
 
+	$("#barcode-input").focus();
 	$("#barcode-input").on('keyup', function() {
 
 		var val = this.value;
