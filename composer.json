@@ -6,34 +6,30 @@
 		"psr-4": {
 			"App\\": "./lib",
 			"Custom\\": "./Custom"
-		}
+		},
+		"exclude-from-classmap": [
+			"/vendor/erusev/parsedown-extra/test"
+		]
 	},
 	"require": {
-		"php": ">=7.3.0",
-		"ext-curl": "*",
-		"ext-date": "*",
-		"ext-json": "*",
-		"ext-PDO": "*",
-		"ext-session": "*",
-		"ext-sockets": "*",
 		"edoceo/lowline_php": "dev-master",
 		"edoceo/radix": "dev-master",
 		"erusev/parsedown-extra": "0.8.1",
 		"league/oauth2-client": "2.6.0",
 		"openthc/common": "dev-master",
 		"openthc/cre-adapter": "dev-master",
-		"pear/net_smtp": "1.9.2",
-		"plivo/plivo-php": "4.17.1",
-		"tuupola/base32": "1.0.0",
-		"twilio/sdk": "6.17.0",
-		"tecnickcom/tcpdf": "6.3.5"
+		"pear/net_smtp": "1.10.0",
+		"plivo/plivo-php": "4.21.0",
+		"tuupola/base32": "2.0.0",
+		"twilio/sdk": "6.27.0",
+		"tecnickcom/tcpdf": "6.4.1"
 	},
 	"require-dev": {
-		"behat/behat": "3.7.0",
-		"php-webdriver/webdriver": "1.9.0",
-		"phpmd/phpmd": "2.9.1",
-		"phpstan/phpstan": "0.12.76",
-		"phpunit/phpunit": "9.5.2",
+		"behat/behat": "3.8.1",
+		"php-webdriver/webdriver": "1.11.1",
+		"phpmd/phpmd": "2.10.1",
+		"phpstan/phpstan": "0.12.92",
+		"phpunit/phpunit": "9.5.6",
 		"sebastian/phpcpd": "6.0.3"
 
 	}
