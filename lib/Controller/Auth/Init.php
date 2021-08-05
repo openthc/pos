@@ -1,6 +1,6 @@
 <?php
 /**
- * Initialize The Session
+ * Initialise an Authenticated Session
  */
 
 namespace App\Controller\Auth;

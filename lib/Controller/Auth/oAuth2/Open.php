@@ -1,6 +1,6 @@
 <?php
 /**
- * oAuth2 Starts Here, redirects to oAuth provider
+ * Open oAuth2 authentication process
  */
 
 namespace App\Controller\Auth\oAuth2;
@@ -15,25 +15,39 @@ class Open extends \OpenTHC\Controller\Auth\oAuth2
 			unset($_SESSION[$k]);
 		}
 
-		$r = $_GET['r'];
-		switch ($r) {
-		case '1':
-		case 'r':
-			$r = $_SERVER['HTTP_REFERER'];
-			break;
-		}
+		$ret = $this->_get_return_path();
 
-		$p = $this->getProvider($r);
-		$cfg = \OpenTHC\Config::get('openthc_sso');
-		$arg = array(
-			'scope' => $cfg['scope'],
-		);
-		$url = $p->getAuthorizationUrl($arg);
+		$p = $this->getProvider($ret);
+		$url = $p->getAuthorizationUrl([
+			'scope' => 'pos company contact',
+		]);
 
-		// Get the state generated for you and store it to the session.
 		$_SESSION['oauth2-state'] = $p->getState();
 
 		return $RES->withRedirect($url);
+
+	}
+
+	/**
+	 *
+	 */
+	function _get_return_path()
+	{
+		$ret = '/dashboard';
+		if (!empty($_GET['r'])) {
+			switch ($_GET['r']) {
+				case '1':
+				case 'r':
+					// @todo should validate the referrer
+					$ret = $_SERVER['HTTP_REFERER'];
+					break;
+				default:
+					$ret = $_GET['r'];
+					break;
+			}
+		}
+
+		return $ret;
 
 	}
 
