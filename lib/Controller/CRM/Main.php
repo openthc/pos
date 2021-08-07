@@ -1,11 +1,11 @@
 <?php
 /**
-	CRM Home
-*/
+ * CRM Main
+ */
 
 namespace App\Controller\CRM;
 
-class Home extends \OpenTHC\Controller\Base
+class Main extends \OpenTHC\Controller\Base
 {
 	function __invoke($REQ, $RES, $ARG)
 	{
@@ -13,7 +13,7 @@ class Home extends \OpenTHC\Controller\Base
 			'Page' => array('title' => 'CRM'),
 		);
 
-		return $this->_container->view->render($RES, 'page/crm/home.html', $data);
+		return $this->_container->view->render($RES, 'page/crm/main.html', $data);
 
 	}
 

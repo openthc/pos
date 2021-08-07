@@ -9,7 +9,7 @@ class CRM extends \OpenTHC\Module\Base
 {
 	function __invoke($a)
 	{
-		$a->get('', 'App\Controller\CRM\Home');
+		$a->get('', 'App\Controller\CRM\Main');
 		$a->get('/contact', 'App\Controller\CRM\Contact');
 		$a->post('/contact', 'App\Controller\CRM\Contact:save');
 		$a->get('/message', 'App\Controller\CRM\Message');

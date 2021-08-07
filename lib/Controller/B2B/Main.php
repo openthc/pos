@@ -5,7 +5,7 @@
 
 namespace App\Controller\B2B;
 
-class Home extends \OpenTHC\Controller\Base
+class Main extends \OpenTHC\Controller\Base
 {
 	function __invoke($REQ, $RES, $ARG)
 	{

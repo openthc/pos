@@ -1,13 +1,13 @@
 <?php
 /**
- * POS Home
+ * POS Main
 */
 
 namespace App\Controller\POS;
 
 use Edoceo\Radix\Session;
 
-class Home extends \OpenTHC\Controller\Base
+class Main extends \OpenTHC\Controller\Base
 {
 	function __invoke($REQ, $RES, $ARG)
 	{
@@ -19,7 +19,7 @@ class Home extends \OpenTHC\Controller\Base
 		];
 		$chk = $dbc->fetchOne($sql, $arg);
 		if (empty($chk)) {
-			_exit_html('Inventory Lots need to be present and priced for the POS to operate [CPH#020]', 400);
+			__exit_text('Inventory Lots need to be present and priced for the POS to operate [CPH-020]', 400);
 		}
 
 

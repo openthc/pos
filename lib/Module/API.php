@@ -9,7 +9,7 @@ class API extends \OpenTHC\Module\Base
 {
 	function __invoke($a)
 	{
-		$a->get('', 'App\Controller\API\Home');
+		$a->get('', 'App\Controller\API\Main');
 
 		$a->post('/print', 'App\Controller\API\Print');
 

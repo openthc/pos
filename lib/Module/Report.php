@@ -9,7 +9,7 @@ class Report extends \OpenTHC\Module\Base
 {
 	function __invoke($a)
 	{
-		$a->get('', 'App\Controller\Report\Home');
+		$a->get('', 'App\Controller\Report\Main');
 		$a->get('/b2c/recent', function($REQ, $RES, $ARG) {
 			return $this->view->render($RES, 'page/report/b2c/recent.html', []);
 		});

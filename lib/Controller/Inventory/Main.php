@@ -3,9 +3,9 @@
  *
  */
 
-namespace App\Controller;
+namespace App\Controller\Inventory;
 
-class Inventory extends \OpenTHC\Controller\Base
+class Main extends \OpenTHC\Controller\Base
 {
 	function __invoke($REQ, $RES, $ARG)
 	{
@@ -18,7 +18,7 @@ class Inventory extends \OpenTHC\Controller\Base
 			'view_mode' => $_GET['view'],
 		);
 
-		return $this->_container->view->render($RES, 'page/inventory/home.html', $data);
+		return $this->_container->view->render($RES, 'page/inventory/main.html', $data);
 
 	}
 

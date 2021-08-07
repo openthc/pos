@@ -9,7 +9,7 @@ class B2B extends \OpenTHC\Module\Base
 {
 	function __invoke($a)
 	{
-		$a->get('', 'App\Controller\B2B\Home');
+		$a->get('', 'App\Controller\B2B\Main');
 
 		// $a->get('/incoming');
 		$a->get('/incoming/create', 'App\Controller\B2B\Incoming\Create');

@@ -9,8 +9,8 @@ class POS extends \OpenTHC\Module\Base
 {
 	function __invoke($a)
 	{
-		$a->get('', 'App\Controller\POS\Home');
-		$a->post('', 'App\Controller\POS\Home:post');
+		$a->get('', 'App\Controller\POS\Main');
+		$a->post('', 'App\Controller\POS\Main:post');
 
 		$a->get('/fast', 'App\Controller\POS\Fast');
 

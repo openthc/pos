@@ -9,7 +9,7 @@ class Menu extends \OpenTHC\Module\Base
 {
 	function __invoke($a)
 	{
-		$a->get('', 'App\Controller\Menu\Home');
+		$a->get('', 'App\Controller\Menu\Main');
 		$a->get('/online', 'App\Controller\Menu\Online');
 		$a->get('/onsite', 'App\Controller\Menu\Onsite');
 	}

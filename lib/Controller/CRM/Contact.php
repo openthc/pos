@@ -1,6 +1,6 @@
 <?php
 /**
- * CRM Home
+ * CRM Contact Views
  */
 
 namespace App\Controller\CRM;
