@@ -44,13 +44,14 @@
 	<tr>
 		<td>Strain:</td>
 		<td>{{ Variety.name }}
-		<!-- <?php
+		<?php
 		if (!empty($this->Variety['id'])) {
 			echo sprintf('<a href="/inventory?strain=%d">%s</a>', $this->Variety['id'], h($this->Strain['name']));
 			if (!empty($this->Strain['guid'])) {
 				echo ' <small>[<a href="/settings/strains/edit?id=' . $this->Variety['id'] . '">' . UI_GUID::format($this->Strain['guid'], true) . '</a>]</small>';
 			}
-		?> -->
+		}
+		?>
 		</td>
 	</tr>
 
@@ -95,26 +96,29 @@
 	<button accesskey="v" class="btn btn-outline-warning" name="a" title="Verify all the data for this Item" type="submit" value="verify"><i class="far fa-check-circle"></i> <u>V</u>erify</button>
 	<button class="btn btn-outline-secondary" data-toggle="modal" data-target="#modal-lot-finish" name="a" type="button"><i class="far fa-box-check"></i> Finish</button>
 
-	<!-- <?php
-	if ($show_move) {
-		echo ' <button class="btn btn-outline-secondary" name="a" title="Use the Edit link next to Zone (z)" type="submit" value="move"><i class="fas fa-arrow-circle-right"></i> Move</button>';
-	}
+	<!--
+	<?php
+	// if ($show_move) {
+	// 	echo ' <button class="btn btn-outline-secondary" name="a" title="Use the Edit link next to Zone (z)" type="submit" value="move"><i class="fas fa-arrow-circle-right"></i> Move</button>';
+	// }
 
-	if ($show_stage) {
-		echo ' <button accesskey="m" class="btn btn-outline-primary" name="a" type="submit" value="move"><u>M</u>ove</button>';
-	}
+	// if ($show_stage) {
+	// 	echo ' <button accesskey="m" class="btn btn-outline-primary" name="a" type="submit" value="move"><u>M</u>ove</button>';
+	// }
 
-	echo ' <button class="btn btn-outline-primary" data-toggle="modal" data-target="#modal-object-note" name="a" type="button"><i class="far fa-comments"></i> Note</button>';
+	// echo ' <button class="btn btn-outline-primary" data-toggle="modal" data-target="#modal-object-note" name="a" type="button"><i class="far fa-comments"></i> Note</button>';
 
-	echo '<span style="display:none;">';
-	echo '<input id="file-upload"  name="file" type="file">';
-	echo '</span>';
-	echo ' <button class="btn btn-outline-primary" id="exec-file-photo" name="a" type="button"><i class="fas fa-camera"></i> Add Photo</button>';
-	echo ' <button class="btn btn-outline-success" id="exec-file-upload" name="a" style="display:none;" type="submit" value="upload">Upload</button>';
+	// echo '<span style="display:none;">';
+	// echo '<input id="file-upload"  name="file" type="file">';
+	// echo '</span>';
+	// echo ' <button class="btn btn-outline-primary" id="exec-file-photo" name="a" type="button"><i class="fas fa-camera"></i> Add Photo</button>';
+	// echo ' <button class="btn btn-outline-success" id="exec-file-upload" name="a" style="display:none;" type="submit" value="upload">Upload</button>';
 
-	if (is_file($img_file)) {
-		echo ' <button class="btn btn-outline-primary" id="exec-view-photo" name="a" type="button"><i class="fas fa-image"></i> View Photo</button>';
-	} -->
+	// if (is_file($img_file)) {
+	// 	echo ' <button class="btn btn-outline-primary" id="exec-view-photo" name="a" type="button"><i class="fas fa-image"></i> View Photo</button>';
+	// }
+	?>
+	-->
 </div>
 <div id="exec-one-ccc">
 	<!-- if ($show_destroy) {

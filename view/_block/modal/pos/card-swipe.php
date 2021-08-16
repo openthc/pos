@@ -1,3 +1,10 @@
+<?php
+/**
+ *
+ */
+
+?>
+
 <div id="card-modal" style="display:none;">
 
 <h2 style="background: #212121; color:#fcfcfc; margin:0; padding:4px;">Swipe Card</h2>
@@ -28,3 +35,10 @@ $(function() {
 
 });
 </script>
+
+echo $this->block('modal.php', [
+	'modal_id' => 'pos-modal-scan-id',
+	'modal_title' => 'Scan ID',
+	'body' => $body,
+	'foot' => $foot,
+]);

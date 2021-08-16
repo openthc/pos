@@ -1,4 +1,11 @@
-{% extends "layout/html-pos.html" %}
+<?php
+/**
+ *
+ */
+
+$this->layout_file = sprintf('%s/view/_layout/html-pos.php', APP_ROOT);
+
+?>
 
 <div id="pos-main-wrap">
 	<div class="pos-item-sale-wrap">
@@ -77,21 +84,18 @@
 	</div>
 </div>
 
-
-{% include "block/modal/pos/scan-id.html" %}
-{% include "block/modal/pos/hold.html" %}
-{% include "block/modal/pos/hold-list.html" %}
-{% include "block/modal/pos/discount.html" %}
-{% include "block/modal/pos/loyalty.html" %}
-{% include "block/modal/pos/payment-cash.html" %}
-{% include "block/modal/pos/payment-card.html" %}
-
-{#
-{% include "block/modal/pos/card-swipe.html" %}
-{% include "block/modal/pos/transaction-limit.html" %}
-{% include "block/modal/pos/keypad.html" %}
-#}
-
+<?php
+echo $this->block('modal/pos/scan-id.php');
+echo $this->block('modal/pos/hold.php');
+echo $this->block('modal/pos/hold-list.php');
+echo $this->block('modal/pos/discount.php');
+echo $this->block('modal/pos/loyalty.php');
+echo $this->block('modal/pos/payment-cash.php');
+echo $this->block('modal/pos/payment-card.php');
+// echo $this->block('modal/pos/card-swipe.php')
+// echo $this->block('modal/pos/transaction-limit.php')
+// echo $this->block('modal/pos/keypad.php')
+?>
 
 <script>
 var body_drag = false;

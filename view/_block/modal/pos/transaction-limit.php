@@ -1,3 +1,10 @@
+<?php
+/**
+ *
+ */
+
+?>
+
 <div id="pos-modal-transaction-limit" style="display:none;">
 	<div class="warn">
 		<h2>Transaction Over Limits</h2>
@@ -22,24 +29,25 @@
 		</div>
 	</div>
 
-	</div>
+</div>
 
-	<script>
-	$(function() {
-		$('#pos-ticket-reset').on('click', function() {
-			Weed.modal('shut');
-			// Blank the Ticket
-			e.preventDefault()
-			e.stopPropagation();
-			return false;
-		});
 
-		$('#pos-modal-transaction-limit button.good').on('click', function() {
-			Weed.modal('shut');
-			e.preventDefault()
-			e.stopPropagation();
-			return false;
-		});
-
+<script>
+$(function() {
+	$('#pos-ticket-reset').on('click', function() {
+		Weed.modal('shut');
+		// Blank the Ticket
+		e.preventDefault()
+		e.stopPropagation();
+		return false;
 	});
-	</script>
+
+	$('#pos-modal-transaction-limit button.good').on('click', function() {
+		Weed.modal('shut');
+		e.preventDefault()
+		e.stopPropagation();
+		return false;
+	});
+
+});
+</script>

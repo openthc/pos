@@ -1,14 +1,9 @@
-{#
-	Modal for Adding a Discount
-#}
+<?php
+/**
+ * Modal for Adding a Discount
+ */
 
-{% extends "block/modal.html" %}
-
-{% set modal_title = "Sales :: Discount" %}
-{% set modal_id = "pos-modal-discount" %}
-
-{% block body %}
-
+$body = <<<HTML
 <div class="container">
 <div class="row mb-4">
 	<div class="col-md-8"><h5>Fixed Discount</h5></div>
@@ -45,9 +40,16 @@
 	<h3>Loading Discounts...</h3>
 </div>
 -->
+HTML;
 
-{% endblock %}
 
-{% block foot %}
+$foot = <<<HTML
 <button class="btn btn-outline-primary" id="pos-discount-apply" name="a" type="submit" value="pos-discount-apply"><i class="fas fa-check-square"></i> Apply</button>
-{% endblock %}
+HTML;
+
+echo $this->block('modal.php', [
+	'modal_id' => 'pos-modal-discount',
+	'modal_title' => 'Sales :: Discount',
+	'body' => $body,
+	'foot' => $foot,
+]);

@@ -1,23 +1,27 @@
-{#
-	Modal for Saving the Current Sale
-#}
+<?php
+/**
+ * Modal for Saving the Current Sale
+ */
 
-{% extends "block/modal.html" %}
 
-{% set modal_title = "Sales :: Create Hold" %}
-{% set modal_id = "pos-modal-sale-hold" %}
-
-{% block body %}
-
+$body = <<<HTML
 <div>
 	<div class="form-group">
 	<label>Customer Name/Note</label>
 		<input autocomplete="off" class="form-control" id="customer-name" value="">
 	</div>
 </div>
+HTML;
 
-{% endblock %}
 
-{% block foot %}
+$foot = <<<HTML
 <button class="btn btn-outline-primary" id="pos-modal-sale-hold-save" name="a" type="button" value="save"><i class="fas fa-save"></i> Save</button>
-{% endblock %}
+HTML;
+
+
+echo $this->block('modal.php', [
+	'modal_id' => 'pos-modal-sale-hold',
+	'modal_title' => 'Sales :: Create Hold',
+	'body' => $body,
+	'foot' => $foot,
+]);

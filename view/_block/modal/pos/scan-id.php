@@ -1,21 +1,20 @@
-{#
-	The ID Scanner Modal
-#}
+<?php
+/**
+ * The ID Scanner Modal
+ */
 
-{% extends "block/modal.html" %}
-
-{% set modal_id = "pos-modal-scan-id" %}
-{% set modal_title = "Scan ID" %}
-
-{% block body %}
-
+$body = <<<HTML
 <div id="scan-input-stat"></div>
 <div id="scan-input-data"></div>
+HTML;
 
-{% endblock %}
-
-
-
-{% block foot %}
+$foot = <<<HTML
 <button class="btn btn-outline-primary" disabled name="a" type="button"><i class="fas fa-check-square"></i> Complete</button>
-{% endblock %}
+HTML;
+
+echo $this->block('modal.php', [
+	'modal_id' => 'pos-modal-scan-id',
+	'modal_title' => 'Scan ID',
+	'body' => $body,
+	'foot' => $foot,
+]);

@@ -1,13 +1,9 @@
-{#
-	The Payment Modal
-#}
+<?php
+/**
+ * The Payment Modal
+ */
 
-{% extends "block/modal.html" %}
-
-{% set modal_id = "pos-modal-payment" %}
-{% set modal_title = "Collect Payment" %}
-
-{% block body %}
+$body = <<<HTML
 <!-- <div class="container"> -->
 <div class="row" style="display:none;">
 	<div class="col-md-4">
@@ -116,13 +112,20 @@
 </div> -->
 <!-- </div> -->
  <!-- /.container -->
+HTML;
 
-{% endblock %}
 
-
-{% block foot %}
+$foot = <<<HTML
 <button class="btn btn-warning" disabled="disabled" id="pos-pay-undo" type="button"><i class="fas fa-undo"></i> Undo</button>
 <button class="btn btn-primary" disabled id="pos-payment-commit" name="a" type="submit" value="pos-done">
 	<i class="fas fa-check-square"></i> Complete
 </button>
-{% endblock %}
+HTML;
+
+
+echo $this->block('modal.php', [
+	'modal_id' => 'pos-modal-payment',
+	'modal_title' => 'Collect Payment',
+	'body' => $body,
+	'foot' => $foot,
+]);

@@ -1,15 +1,10 @@
-{#
-	Modal for Loyalty Program
-	@todo Maybe just one input box for any/all codes?
-#}
+<?php
+/**
+ * Modal for Loyalty Program
+ * @todo Maybe just one input box for any/all codes?
+ */
 
-{% extends "block/modal.html" %}
-
-{% set modal_title = "Sales :: Loyalty" %}
-{% set modal_id = "pos-modal-loyalty" %}
-
-{% block body %}
-
+$body = <<<HTML
 <div class="row mb-4">
 	<div class="col-md-6">
 		<h5>Phone</h5>
@@ -66,9 +61,16 @@
 	<h3>Loading Discounts...</h3>
 </div>
 -->
+HTML;
 
-{% endblock %}
-
-{% block foot %}
+$foot = <<<HTML
 <button class="btn btn-outline-primary" id="pos-loyalty-apply" name="a" type="submit" value="pos-discount-apply"><i class="fas fa-check-square"></i> Apply</button>
-{% endblock %}
+HTML;
+
+
+echo $this->block('modal.php', [
+	'modal_id' => 'pos-modal-loyalty',
+	'modal_title' => 'Sales :: Loyalty',
+	'body' => $body,
+	'foot' => $foot,
+]);

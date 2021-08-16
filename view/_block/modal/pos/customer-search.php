@@ -1,3 +1,10 @@
+<?php
+/**
+ *
+ */
+
+?>
+
 <div id="pos-modal-customer" style="display:none;">
 
 	<div class="pure-g">
@@ -23,4 +30,13 @@
 		</div>
 	</div>
 
-	</div>
+</div>
+
+<?php
+
+echo $this->block('modal.php', [
+	'modal_id' => 'pos-modal-scan-id',
+	'modal_title' => 'Scan ID',
+	'body' => $body,
+	'foot' => $foot,
+]);

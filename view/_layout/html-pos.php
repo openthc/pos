@@ -66,7 +66,7 @@
 		<a class="btn btn-outline-secondary" href="/pos/shut"><i class="fas fa-power-off"></i></a>
 	</div>
 </div>
-{% block body %}{% endblock %}
+<?= $this->body ?>
 <div class="shut" id="menu-left">
 	<div class="menu-item">
 		<button class="btn btn-outline-secondary menu-left-toggle" type="button"><i class="fas fa-bars"></i></button>
@@ -88,7 +88,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/riot/4.14.0/riot.min.js" integrity="sha512-+LI/J+j6hecBPuCvPtbjYAXiha2RuYEpO3yromB1zTVq8UuH0BTafeP7myLEd9tJnaVa2JkhLzRdhdIh+Iru0w==" crossorigin="anonymous"></script>
 <!-- <script src="https://unpkg.com/@zxing/library@latest"></script> -->
 <script crossorigin="anonymous" src="https://unpkg.com/@zxing/library@0.18.6/umd/index.min.js"></script>
-{% block foot_script %}
 <script src="/js/pos.js"></script>
 <script src="/js/pos-scanner.js"></script>
 <script src="/js/pos-printer.js"></script>
@@ -109,6 +108,6 @@ $(function () {
 	});
 });
 </script>
-{% endblock %}
+<?= $this->foot_script ?>
 </body>
 </html>

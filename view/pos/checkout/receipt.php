@@ -1,4 +1,11 @@
-{% extends "layout/html-pos.html" %}
+<?php
+/**
+ *
+ */
+
+$this->layout_file = sprintf('%s/view/_layout/html-pos.php', APP_ROOT);
+
+?>
 
 <form method="post">
 
