@@ -1,7 +1,3 @@
-{% extends "layout/html.html" %}
-{% import 'macros.html' as macros %}
-
-{% block body %}
 
 <div class="row mt-4">
 <div class="col">
@@ -44,5 +40,3 @@
 </div>
 </div>
 </div>
-
-{% endblock %}

@@ -1,10 +1,8 @@
-{#
-	Show List of Pending Inbound Transfer
-#}
-
-{% extends "layout/html.html" %}
-
-{% block body %}
+<?php
+/**
+ * Show List of Pending Inbound Transfer
+ */
+?>
 
 <h1>Transfer :: {{ Transfer.global_id }} <small>[{{ Transfer.manifest_type }} / {{ Transfer.status }}]</small></h1>
 
@@ -98,10 +96,7 @@
 
 </form>
 
-{% endblock %}
 
-{% block foot_script %}
-{{ parent() }}
 <script>
 $(function() {
 	if ('in-transit' == '{{ Transfer.status }}') {
@@ -109,4 +104,3 @@ $(function() {
 	}
 });
 </script>
-{% endblock %}

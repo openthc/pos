@@ -13,7 +13,7 @@ class Main extends \OpenTHC\Controller\Base
 			'Page' => array('title' => 'CRM'),
 		);
 
-		return $this->_container->view->render($RES, 'page/crm/main.html', $data);
+		return $RES->write( $this->render('crm/main.php', $data) );
 
 	}
 

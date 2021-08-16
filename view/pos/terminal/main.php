@@ -1,7 +1,5 @@
 {% extends "layout/html-pos.html" %}
 
-{% block body %}
-
 <div id="pos-main-wrap">
 	<div class="pos-item-sale-wrap">
 	<div class="pos-item-wrap">
@@ -94,11 +92,7 @@
 {% include "block/modal/pos/keypad.html" %}
 #}
 
-{% endblock %}
 
-
-{% block foot_script %}
-{{ parent() }}
 <script>
 var body_drag = false;
 var body_drag_y = 0;
@@ -369,4 +363,3 @@ var Scanner = new ZXing.BrowserMultiFormatReader(hints);
 
 });
 </script>
-{% endblock %}

@@ -9,6 +9,11 @@ class Main extends \OpenTHC\Controller\Base
 {
 	function __invoke($REQ, $RES, $ARG)
 	{
+		// Bounce to App?
+		// $x = \OpenTHC\Config::get('openthc_app/hostname');
+		// $url = sprintf('https://%s', $x);
+		// return $RES->withRedirect($url . '/transfer/incoming?l=' . $_SESSION['License']['id']);
+
 		$dbc = $this->_container->DB;
 
 		// Load Transfer Data
@@ -28,7 +33,7 @@ class Main extends \OpenTHC\Controller\Base
 			'transfer_list' => $transfer_list,
 		);
 
-		return $this->_container->view->render($RES, 'page/b2b/index.html', $data);
+		return $RES->write( $this->render('b2b/index.php', $data) );
 
 	}
 

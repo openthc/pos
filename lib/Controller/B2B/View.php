@@ -22,7 +22,7 @@ class View extends \OpenTHC\Controller\Base
 			'Transfer' => $res['result'],
 		);
 
-		return $this->_container->view->render($RES, 'page/b2b/view.html', $data);
+		return $RES->write( $this->render('b2b/view.php', $data) );
 
 	}
 }

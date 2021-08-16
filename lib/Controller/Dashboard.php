@@ -26,12 +26,10 @@ class Dashboard extends \OpenTHC\Controller\Base
 		}
 
 		// if (empty($_SESSION['License'])) {
-		// 	return $this->_container->view->render($RES, 'page/pick-license.html', $data);
+		// 	return $RES->write( $this->render('pick-license.php', $data) );
 		// }
 
-		// return $RES->write( $this->render($file, $data) );
-
-		return $this->_container->view->render($RES, 'page/dashboard.html', $data);
+		return $RES->write( $this->render('dashboard.php', $data) );
 
 	}
 

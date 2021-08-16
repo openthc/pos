@@ -56,7 +56,7 @@ class Receipt extends \OpenTHC\Controller\Base
 		case 'send-email':
 			$_POST['receipt-email'] = trim(strtolower($_POST['receipt-email']));
 			if (empty($_POST['receipt-email'])) {
-				_exit_text('Invalid Email', 400);
+				__exit_text('Invalid Email', 400);
 			}
 			return $this->_send_email($RES, $data);
 		case 'send-phone':
@@ -66,10 +66,10 @@ class Receipt extends \OpenTHC\Controller\Base
 		switch ($this->Mode) {
 		case 'print-select':
 			//require_once(APP_ROOT . '/view/pos/print-select.php');
-			return $this->_container->view->render($RES, 'page/pos/checkout/receipt-select.html', $data);
+			return $RES->write( $this->render('pos/checkout/receipt-select.php', $data) );
 		}
 
-		return $this->_container->view->render($RES, 'page/pos/checkout/receipt.html', $data);
+		return $RES->write( $this->render('pos/checkout/receipt.php', $data) );
 
 	}
 

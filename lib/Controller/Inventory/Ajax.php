@@ -25,6 +25,6 @@ SQL;
 
 		$data['inventory_list'] = $this->_container->DB->fetchAll($sql, $arg);
 
-		return $this->_container->view->render($RES, 'block/inventory-list.html', $data);
+		return $RES->write( $this->render('_block/inventory-list.php', $data) );
 	}
 }

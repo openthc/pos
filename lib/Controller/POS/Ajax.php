@@ -33,7 +33,7 @@ class Ajax extends \OpenTHC\Controller\Base
 					'item_info' => implode(', ', $info),
 				);
 			}
-			return $this->_container->view->render($RES, 'block/hold-list.html', $data);
+			return $RES->write( $this->render('_block/hold-list.php', $data) );
 
 			case 'push':
 

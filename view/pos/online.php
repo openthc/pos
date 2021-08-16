@@ -1,7 +1,5 @@
 {% extends "layout/html-pos.html" %}
 
-{% block body %}
-
 <div class="container">
 <div class="hero">
 	<h1>Online Orders</h1>
@@ -20,6 +18,3 @@
 </div>
 
 </div>
-
-
-{% endblock %}

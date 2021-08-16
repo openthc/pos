@@ -1,6 +1,3 @@
-{% extends "layout/html.html" %}
-
-{% block body %}
 
 <div class="container">
 
@@ -27,5 +24,3 @@
 	</div>
 
 </div>
-
-{% endblock %}

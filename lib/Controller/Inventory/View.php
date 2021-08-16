@@ -35,6 +35,6 @@ class View extends \OpenTHC\Controller\Base
 		$data['Variety'] = $V;
 		$data['Zone'] = $Z;
 
-		return $this->_container->view->render($RES, 'page/inventory/view.html', $data);
+		return $RES->write( $this->render('inventory/view.php', $data) );
 	}
 }

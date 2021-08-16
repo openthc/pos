@@ -13,7 +13,7 @@ class Message extends \OpenTHC\Controller\Base
 			'Page' => array('title' => 'CRM :: Messaging'),
 		);
 
-		return $this->_container->view->render($RES, 'page/crm/message.html', $data);
+		return $RES->write( $this->render('crm/message.php', $data) );
 
 	}
 
@@ -23,7 +23,7 @@ class Message extends \OpenTHC\Controller\Base
 			'Page' => array('title' => 'CRM :: Messaging :: Compose Email'),
 		);
 
-		return $this->_container->view->render($RES, 'page/crm/message-compose-email.html', $data);
+		return $RES->write( $this->render('crm/message-compose-email.php', $data) );
 
 	}
 
@@ -33,7 +33,7 @@ class Message extends \OpenTHC\Controller\Base
 			'Page' => array('title' => 'CRM :: Messaging :: Compose SMS'),
 		);
 
-		return $this->_container->view->render($RES, 'page/crm/message-compose-sms.html', $data);
+		return $RES->write( $this->render('crm/message-compose-sms.php', $data) );
 
 	}
 

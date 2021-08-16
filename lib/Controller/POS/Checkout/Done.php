@@ -13,6 +13,6 @@ class Done extends \OpenTHC\Controller\Base
 			'Page' => array('title' => 'POS :: Checkout :: Done')
 		);
 
-		return $this->_container->view->render($RES, 'page/pos/checkout/done.html', $data);
+		return $RES->write( $this->render('pos/checkout/done.php', $data) );
 	}
 }

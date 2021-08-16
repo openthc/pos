@@ -1,6 +1,3 @@
-{% extends "layout/html.html" %}
-
-{% block body %}
 
 <div style="position:relative;">
 <form action="/b2b/sync" autocomplete="off" method="post">
@@ -38,10 +35,7 @@
 
 <div id="inventory-list"></div>
 
-{% endblock %}
 
-{% block foot_script %}
-{{ parent() }}
 <script>
 $(function() {
     $('#inventory-list').html('<i class="fas fa-sync fa-spin"></i> Loading...');
@@ -50,4 +44,3 @@ $(function() {
     });
 });
 </script>
-{% endblock %}

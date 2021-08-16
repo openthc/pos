@@ -122,7 +122,7 @@ class Sync extends \OpenTHC\Controller\Base
 
 		//if (empty($transfer_list)) {
 		//	$data = array();
-		//	return $this->_container->view->render($RES, 'page/transfer/empty.html', $data);
+		//	return $RES->write( $this->render('transfer/empty.php', $data) );
 		//}
 
 		return $RES->withRedirect('/b2b');

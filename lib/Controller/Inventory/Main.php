@@ -18,7 +18,7 @@ class Main extends \OpenTHC\Controller\Base
 			'view_mode' => $_GET['view'],
 		);
 
-		return $this->_container->view->render($RES, 'page/inventory/main.html', $data);
+		return $RES->write( $this->render('inventory/main.php', $data) );
 
 	}
 

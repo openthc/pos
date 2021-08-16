@@ -12,6 +12,8 @@ class Delivery extends \OpenTHC\Controller\Base
 		$data = [
 			'Page' => ['title' => 'POS :: Delivery' ],
 		];
-		return $this->_container->view->render($RES, 'page/pos/delivery.html', $data);
+		$data['map_api_key_js'] = \OpenTHC\Config::get('google/map_api_key_js');
+
+		return $RES->write( $this->render('pos/delivery.php', $data) );
 	}
 }

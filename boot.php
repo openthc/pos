@@ -59,6 +59,20 @@ function _dbc($dsn=null)
 	return null;
 }
 
+function _draw_html_card($head, $body, $foot=null)
+{
+	ob_start();
+	echo '<div class="card">';
+	printf('<div class="card-header">%s</div>', $head);
+	printf('<div class="card-body">%s</div>', $body);
+	if ($foot) {
+		printf('<div class="card-footer">%s</div>', $foot);
+	}
+	echo '</div>';
+
+	return ob_get_clean();
+}
+
 /**
  * You can put custom stuff here, it will be available to the entire application
  */

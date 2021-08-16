@@ -14,6 +14,6 @@ class Online extends \OpenTHC\Controller\Base
 		$data = [
 			'Page' => ['title' => 'POS :: Online' ],
 		];
-		return $this->_container->view->render($RES, 'page/pos/online.html', $data);
+		return $RES->write( $this->render('pos/online.php', $data) );
 	}
 }

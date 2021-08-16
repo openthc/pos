@@ -17,7 +17,7 @@ class Contact extends \OpenTHC\Controller\Base
 		$sql = 'SELECT * FROM contact WHERE email IS NOT NULL OR phone IS NOT NULL ORDER BY id LIMIT 50';
 		$data['contact_list'] = $dbc->fetchAll($sql);
 
-		return $this->_container->view->render($RES, 'page/crm/contact.html', $data);
+		return $RES->write( $this->render('crm/contact.php', $data) );
 
 	}
 

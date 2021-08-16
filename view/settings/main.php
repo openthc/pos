@@ -1,6 +1,3 @@
-{% extends "layout/html.html" %}
-
-{% block body %}
 
 <div class="container">
 	<div class="hero">
@@ -8,5 +5,3 @@
 		<div class="alert alert-warning">Demo System does not allow Settings to be changed.</div>
 	</div>
 </div>
-
-{% endblock %}

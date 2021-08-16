@@ -1,13 +1,8 @@
-{#
-	Show List of Pending Inbound Transfer
-#}
-
-{% extends "layout/html.html" %}
-
-{% block body_head %}
-{% endblock %}
-
-{% block body %}
+<?php
+/**
+ * Show List of Pending Inbound Transfer
+ */
+?>
 
 <div style="position:relative;">
 <form action="/b2b/sync" autocomplete="off" method="post">
@@ -59,5 +54,3 @@
 </tbody>
 </table>
 </div>
-
-{% endblock %}

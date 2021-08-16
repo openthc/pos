@@ -24,20 +24,20 @@ class Main extends \OpenTHC\Controller\Base
 
 
 		if (empty($_SESSION['pos-terminal-id'])) {
-			$_SESSION['pos-terminal-id'] = \uniqid();
+			$_SESSION['pos-terminal-id'] = _ulid();
 		}
 
 		// if ('auth' == $_GET['v']) {
 		if (empty($_SESSION['pos-terminal-contact'])) {
 			$data = [];
 			$data['Page'] = [ 'title' => 'Terminal Authentication'];
-			return $this->_container->view->render($RES, 'page/pos/open.html', $data);
+			return $RES->write( $this->render('pos/open.php', $data) );
 		}
 
 		if ('scan' == $_GET['v']) {
 			$data = [];
 			$data['Page'] = [ 'title' => 'ID Scanner'];
-			return $this->_container->view->render($RES, 'page/pos/scan-id.html', $data);
+			return $RES->write( $this->render('pos/scan-id.php', $data) );
 		}
 
 		$data = array(
@@ -66,13 +66,13 @@ class Main extends \OpenTHC\Controller\Base
 			$this->_container->view['menu'] = $menu;
 		}
 
-		if ('open' == $_GET['a']) {
-			if (!empty($_GET['t'])) {
+		if (('open' == $_GET['a']) && !empty($_GET['t'])) {
 
-				$data['cart_item_list'] = array();
+			$data['cart_item_list'] = array();
 
-				$Cart = $this->_container->DB->fetchRow('SELECT * FROM b2c_sale_hold WHERE id = ?', array($_GET['t']));
-				if (!empty($Cart['id'])) {
+			$Cart = $this->_container->DB->fetchRow('SELECT * FROM b2c_sale_hold WHERE id = ?', array($_GET['t']));
+			if (!empty($Cart['id'])) {
+
 				$Cart['meta'] = json_decode($Cart['meta'], true);
 
 				foreach ($Cart['meta'] as $k => $v) {
@@ -88,11 +88,10 @@ class Main extends \OpenTHC\Controller\Base
 						);
 					}
 				}
-				}
 			}
 		}
 
-		return $this->_container->view->render($RES, 'page/pos/terminal/main.html', $data);
+		return $RES->write( $this->render('pos/terminal/main.php', $data) );
 
 	}
 

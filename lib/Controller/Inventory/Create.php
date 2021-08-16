@@ -17,7 +17,7 @@ class Create extends \OpenTHC\Controller\Base
 		$data['Page'] = [ 'title' => 'Inventory :: Create' ];
 		$data['License'] = $_SESSION['License'];
 
-		return $this->_container->view->render($RES, 'page/inventory/create.html', $data);
+		return $RES->write( $this->render('inventory/create.php', $data) );
 
 	}
 

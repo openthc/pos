@@ -14,7 +14,7 @@ class Create extends \OpenTHC\Controller\Base
 		$data['License_Source'] = [];
 		$data['License_Target'] = $_SESSION['License'];
 
-		return $this->_container->view->render($RES, 'page/b2b/incoming/create.html', $data);
+		return $RES->write( $this->render('b2b/incoming/create.php', $data) );
 	}
 
 	function post($REQ, $RES, $ARG)

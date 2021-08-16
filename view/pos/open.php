@@ -1,6 +1,3 @@
-{% extends "layout/html-pos.html" %}
-
-{% block body %}
 
 <style>
 .numpad-wrap {
@@ -40,9 +37,7 @@
 </div>
 </form>
 
-{% endblock %}
 
-{% block foot_script %}
 <script>
 var code_list = [];
 
@@ -69,4 +64,3 @@ $(function() {
 	});
 });
 </script>
-{% endblock %}

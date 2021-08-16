@@ -1,10 +1,8 @@
-{#
-	Show List of Pending Inbound Transfer
-#}
-
-{% extends "layout/html.html" %}
-
-{% block body %}
+<?php
+/**
+ * Show List of Pending Inbound Transfer
+ */
+?>
 
 <h1><a href="/b2b">Transfer</a> :: {{ Transfer.global_id }} <small>[{{ Transfer.manifest_type }} / {{ Transfer.status }}]</small></h1>
 
@@ -67,10 +65,7 @@
 </div>
 </form>
 
-{% endblock %}
 
-{% block foot_script %}
-{{ parent() }}
 <script>
 $(function() {
 
@@ -94,4 +89,3 @@ $(function() {
 
 });
 </script>
-{% endblock %}

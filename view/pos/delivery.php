@@ -1,6 +1,3 @@
-{% extends "layout/html-pos.html" %}
-
-{% block body %}
 
 <style>
 #delivery-map {
@@ -11,8 +8,6 @@
 	width: 100%;
 }
 </style>
-
-<div class="container-fluid">
 
 <h1>POS Delivery </h1>
 
@@ -37,12 +32,8 @@
 	</div>
 </div>
 
-</div>
 
-{% endblock %}
-
-{% block foot_script %}
-<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDVJvvpHqOFkGNKknxBsE4VuVEsdSXGJbs"></script>
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=<?= $data['map_api_key_js'] ?>"></script>
 <script>
 var opt = {
 	zoom: 11,
@@ -97,5 +88,3 @@ $(function() {
 
 });
 </script>
-
-{% endblock %}

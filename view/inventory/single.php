@@ -1,6 +1,3 @@
-{% extends "layout/html.html" %}
-
-{% block body %}
 
 <style>
 .inline-edit-wrap {
@@ -165,10 +162,7 @@
 	</table>
 </section>
 
-{% endblock %}
 
-{% block foot_script %}
-{{ parent() }}
 <script>
 function _init_qa_data()
 {
@@ -360,4 +354,3 @@ $(function() {
 
 });
 </script>
-{% endblock %}

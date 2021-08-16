@@ -1,7 +1,5 @@
 {% extends "layout/html-pos.html" %}
 
-{% block body %}
-
 <form method="post">
 
 <div class="container mt-4">
@@ -68,10 +66,7 @@
 
 </form>
 
-{% endblock %}
 
-{% block foot_script %}
-{{ parent() }}
 <script>
 function btnErrorFlash($btn)
 {
@@ -166,4 +161,3 @@ $(function() {
 	});
 });
 </script>
-{% endblock %}

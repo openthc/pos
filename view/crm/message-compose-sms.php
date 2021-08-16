@@ -1,6 +1,4 @@
-{% extends "layout/html.html" %}
 
-{% block body %}
 <div class="row mt-4">
 <div class="col">
 <div class="container">
@@ -24,4 +22,3 @@
 </div>
 </div>
 </div>
-{% endblock %}

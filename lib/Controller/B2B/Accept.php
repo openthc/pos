@@ -51,9 +51,7 @@ class Accept extends \OpenTHC\Controller\Base
 			'Zone_list' => $zone_list,
 		);
 
-		// _exit_text($data);
-
-		return $this->_container->view->render($RES, 'page/b2b/accept.html', $data);
+		return $RES->write( $this->render('b2b/accept.php', $data) );
 
 	}
 
