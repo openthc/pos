@@ -128,24 +128,42 @@
 <script>
 $(function() {
 
-	$.get('/report/ajax/revenue-daily')
-		.done(function(body) {
-			$('#chart-sales-daily-sum-wrap').empty();
-			$('#chart-sales-daily-sum-wrap').append('<canvas id="chart-sales-daily-sum" height="240" style="height:240px;"></canvas>');
-			var ctx = document.getElementById('chart-sales-daily-sum').getContext('2d');
-			window.Chart0 = new Chart(ctx, body);
+	fetch('/dashboard/ajax?a=b2c-revenue-daily')
+		.then(function(res) {
+			// res.ok == true
+			// res.status == 200
+			// res.headers.get('content-type'); // strtok(';');
+			return res.json();
+		})
+		.then(function(body) {
+			var $wrap = $('#chart-sales-daily-sum-wrap');
+			$wrap.empty();
+			if ((body.data) && ('object' == typeof body.data)) {
+				$wrap.append('<canvas id="chart-sales-daily-sum" height="240" style="height:240px;"></canvas>');
+				var ctx = document.getElementById('chart-sales-daily-sum').getContext('2d');
+				window.Chart0 = new Chart(ctx, body.data);
+			} else {
+				$wrap.append(`<div class="alert alert-warning">${body.meta.detail}</div>`);
+			}
 		});
 
-	$.get('/report/ajax/revenue-product-type')
-		.done(function(body) {
-			$('#chart-sales-product-type-wrap').empty();
-			$('#chart-sales-product-type-wrap').append('<canvas id="chart-sales-product-type" height="240" style="height:240px;"></canvas>');
-			var ctx = document.getElementById('chart-sales-product-type').getContext('2d');
-			window.Chart1 = new Chart(ctx, body);
+	fetch('/dashboard/ajax?a=b2c-revenue-daily-product-type')
+		.then(res => res.json())
+		.then(function(body) {
+			var $wrap = $('#chart-sales-product-type-wrap')
+			$wrap.empty();
+			if ((body.data) && (body.data.length)) {
+				$wrap.append('<canvas id="chart-sales-product-type" height="240" style="height:240px;"></canvas>');
+				var ctx = document.getElementById('chart-sales-product-type').getContext('2d');
+				window.Chart1 = new Chart(ctx, body.data);
+			} else {
+				$wrap.append(`<div class="alert alert-warning">${body.meta.detail}</div>`);
+			}
 		});
 
-	$.get('/home/ajax?a=sale-recent')
-		.done(function(body) {
+	fetch('/dashboard/ajax?a=b2c-recent')
+		.then(res => res.text())
+		.then(function(body) {
 			$('#pos-sale-table-recent').empty();
 			$('#pos-sale-table-recent').html(body);
 		});

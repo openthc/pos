@@ -3,10 +3,13 @@
  *
  */
 
-namespace App\Controller;
+namespace App\Controller\Dashboard;
 
-class Dashboard extends \OpenTHC\Controller\Base
+class Main extends \OpenTHC\Controller\Base
 {
+	/**
+	 *
+	 */
 	function __invoke($REQ, $RES, $ARG)
 	{
 		$data = array(
