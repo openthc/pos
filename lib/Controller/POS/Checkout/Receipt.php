@@ -13,7 +13,6 @@ class Receipt extends \OpenTHC\Controller\Base
 	function __invoke($REQ, $RES, $ARG)
 	{
 		// $L = new License($this->_container->DB, $_SESSION['License']['id']);
-		// var_dump($L);
 
 		$data = array(
 			'Page' => array('title' => 'POS :: Checkout :: Receipt'),

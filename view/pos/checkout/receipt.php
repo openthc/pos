@@ -1,6 +1,6 @@
 <?php
 /**
- *
+ * Receipt Options
  */
 
 $this->layout_file = sprintf('%s/view/_layout/html-pos.php', APP_ROOT);
@@ -19,7 +19,7 @@ $this->layout_file = sprintf('%s/view/_layout/html-pos.php', APP_ROOT);
 		<div class="form-group">
 			<h2>Email</h2>
 			<form method="post">
-			<input name="sale_id" type="hidden" value="{{ Sale.id }}">
+			<input name="sale_id" type="hidden" value="<?= $data['Sale']['id'] ?>">
 			<div class="input-group">
 				<input class="form-control" name="receipt-email" placeholder="your@email.com" type="email">
 				<div class="input-group-append">
@@ -32,7 +32,7 @@ $this->layout_file = sprintf('%s/view/_layout/html-pos.php', APP_ROOT);
 		<div class="form-group">
 			<h2>Text</h2>
 			<form method="post">
-			<input name="sale_id" type="hidden" value="{{ Sale.id }}">
+			<input name="sale_id" type="hidden" value="<?= $data['Sale']['id'] ?>">
 			<div class="input-group">
 				<input class="form-control" name="receipt-phone" placeholder="(###) ###-####" type="text">
 				<div class="input-group-append">
@@ -48,9 +48,11 @@ $this->layout_file = sprintf('%s/view/_layout/html-pos.php', APP_ROOT);
 			<div class="input-group">
 				<select class="form-control" id="printer-list">
 					<option>- Select Printer -</option>
-					{% for p in printer_list %}
-						<option data-local-link="{{ p.link }}" value="{{ p.type }}">{{ p.name }}</option>
-					{% endfor %}
+					<?php
+					foreach ($data['printer_list'] as $p) {
+						printf('<option data-local-link="%s" value="%s">%s</option>', $p['link'], $p['type'], __h($p['name']));
+					}
+					?>
 				</select>
 				<div class="input-group-append">
 					<button class="btn btn-outline-warning" formtarget="openthc-print-window" id="send-print" name="a" type="submit" value="send-print"><i class="fas fa-printer"></i> Print Receipt</button>

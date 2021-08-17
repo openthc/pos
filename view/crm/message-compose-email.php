@@ -3,7 +3,7 @@
 <div class="col">
 <div class="container">
 
-	<h1>{{ Page.title }}</h1>
+	<h1><?= $data['Page']['title'] ?></h1>
 	<p>
 		To send proper emails, use an external HTML &amp; TEXT formatting tool and paste that contents here.
 

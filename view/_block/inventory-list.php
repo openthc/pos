@@ -9,18 +9,18 @@
 	</tr>
 </thead>
 <tbody>
-{% for inv in inventory_list %}
-
-	<tr class="inv-item"
-		data-id="{{ inv.id }}">
-
-		<td><a href="/inventory/view?id={{ inv.id }}">{{ inv.guid }}</a></td>
-		<td>{{ inv.product_name }}</td>
-		<td>{{ inv.package_unit_qom }} {{ inv.package_unit_uom }}</td>
-		<td class="r">{{ inv.qty }}</td>
-		<td class="r">{{ inv.unit_price }}</td>
-
+<?php
+foreach ($data['inventory_list'] as $inv) {
+?>
+	<tr class="inv-item" data-id="<?= $inv['id'] ?>">
+		<td><a href="/inventory/view?id=<?= $inv['id'] ?>"><?= $inv['guid'] ?></a></td>
+		<td><?= $inv['product_name'] ?></td>
+		<td><?= $inv['package_unit_qom'] ?> <?= $inv['package_unit_uom'] ?></td>
+		<td class="r"><?= $inv['qty'] ?></td>
+		<td class="r"><?= $inv['unit_price'] ?></td>
 	</tr>
-{% endfor %}
+<?php
+}
+?>
 </tbody>
 </table>

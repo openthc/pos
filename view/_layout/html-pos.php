@@ -52,7 +52,7 @@
 }
 
 </style>
-<title>{{ Page.title }}</title>
+<title><?= $data['Page']['title'] ?></title>
 </head>
 <body class="pos">
 <div id="menu-zero">
@@ -60,7 +60,7 @@
 		<button class="btn btn-outline-secondary menu-left-toggle" type="button"><i class="fas fa-bars"></i></button>
 	</div>
 	<div class="menu-item">
-		<div class="menu-item-text">{{ Page.title }}</div>
+		<div class="menu-item-text"><?= $data['Page']['title'] ?></div>
 	</div>
 	<div class="menu-item">
 		<a class="btn btn-outline-secondary" href="/pos/shut"><i class="fas fa-power-off"></i></a>

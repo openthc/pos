@@ -7,6 +7,26 @@ $this->layout_file = sprintf('%s/view/_layout/html-pos.php', APP_ROOT);
 
 ?>
 
+<style>
+#pos-camera-preview-wrap {
+	background: #101010;
+	border: 4px solid #c00000;
+	border-radius: .25rem;
+	left: 10vw;
+	position: absolute;
+	top: 5vh;
+}
+#pos-camera-preview-wrap .shut {
+	position: absolute;
+	top: -4px;
+	right: -4px;
+}
+#pos-camera-preview-wrap video {
+	transform: scaleX(-1);
+}
+</style>
+
+
 <div id="pos-main-wrap">
 	<div class="pos-item-sale-wrap">
 	<div class="pos-item-wrap">
@@ -50,16 +70,18 @@ $this->layout_file = sprintf('%s/view/_layout/html-pos.php', APP_ROOT);
 		<div class="sub-info-item-wrap"><h3>Due: $<span class="pos-checkout-sum">0.00</span></h3></div>
 	</div>
 	<div id="pos-terminal-cmd-wrap">
-		<div class="cmd-item">
-			<button class="btn btn-warning" id="pos-shop-redo" type="button">
-				<i class="fas fa-ban"></i><span class="btn-text"> Cancel</span>
-			</button>
+		<div class="cmd-item" style="flex: 0.5 0 auto;">
+			<a class="btn btn-danger" href="/pos/shut"><i class="fas fa-power-off"></i></a>
+			<a class="btn btn-warning" href="/pos" id="pos-shop-redo" type="button"><i class="fas fa-ban"></i></a>
 		</div>
+		<!--
+		@deprecated this can be done by the Camera feature now
 		<div class="cmd-item">
 			<button class="btn btn-primary" id="pos-checkout-scan-id" data-toggle="modal" data-target="#pos-modal-scan-id" type="button">
 				<i class="far fa-id-card"></i><span class="btn-text"> Scan ID</span>
 			</button>
 		</div>
+		-->
 		<div class="cmd-item">
 			<button class="btn btn-secondary" data-toggle="modal" data-target="#pos-modal-sale-hold" disabled id="pos-shop-save" type="button">
 				<i class="fas fa-save"></i><span class="btn-text"> Save</span></button>
@@ -134,39 +156,45 @@ $(function() {
 		window.OpenTHC.Camera.exists(function(good) {
 			// window.OpenTHC.Camera.open(function(stream) {
 
-				$(document.body).append('<div id="pos-camera-preview-wrap" style="background: #101010; border: 4px solid #red; left: 10vw; position: absolute; top: 5vh;"><video id="pos-camera-preview" style="height:480px; width:640px;"></div>');
+			var html = [];
+			html.push('<div id="pos-camera-preview-wrap">');
+			html.push('<video id="pos-camera-preview" style="height:480px; width:640px;"></video>');
+			html.push('<button class="btn btn-outline-danger shut"><i class="fas fa-times"></i></button>');
+			html.push('</div>');
+			$(document.body).append(html.join(''));
 
-// @see https://github.com/zxing-js/library/issues/432
-const hints = new Map();
-const formats = [
-	ZXing.BarcodeFormat.CODE_128,
-	ZXing.BarcodeFormat.QR_CODE,
-	ZXing.BarcodeFormat.PDF_417
-];
-hints.set(ZXing.DecodeHintType.POSSIBLE_FORMATS, formats);
-hints.set(ZXing.DecodeHintType.CHARACTER_SET, 'utf-8');
-//hints.set(ZXing.DecodeHintType.TRY_HARDER, true);
-//hints.set(ZXing.DecodeHintType.PURE_BARCODE, true);
-var Scanner = new ZXing.BrowserMultiFormatReader(hints);
+			// @see https://github.com/zxing-js/library/issues/432
+			const hints = new Map();
+			const formats = [
+				ZXing.BarcodeFormat.CODE_128,
+				ZXing.BarcodeFormat.QR_CODE,
+				ZXing.BarcodeFormat.PDF_417
+			];
+			hints.set(ZXing.DecodeHintType.POSSIBLE_FORMATS, formats);
+			hints.set(ZXing.DecodeHintType.CHARACTER_SET, 'utf-8');
+			//hints.set(ZXing.DecodeHintType.TRY_HARDER, true);
+			//hints.set(ZXing.DecodeHintType.PURE_BARCODE, true);
+			var Scanner = new ZXing.BrowserMultiFormatReader(hints);
+			Scanner.decodeFromInputVideoDevice('', 'pos-camera-preview')
+			.then(function(res) {
+				console.log(res);
+				$('#barcode-input').val(res);
+				$('#pos-camera-preview-wrap').remove();
+				Scanner.reset();
+				delete Scanner;
+			})
+			.catch((err) => { console.log(err); });
 
-				// var Scanner = new ZXing.BrowserQRCodeReader();
-				// var Scanner = new ZXing.BrowserPDF417CodeReader();
-				// Scanner.set
-				Scanner.decodeFromInputVideoDevice('', 'pos-camera-preview')
-				.then(function(res) {
-					console.log(res);
-					$('#barcode-input').val(res);
-					$('#pos-camera-preview-wrap').remove();
-					Scanner.reset();
-					delete Scanner;
-				})
-				.catch((err) => { console.log(err); });
-
-				// window.OpenTHC.Camera.scan(function() {
-
-					// alert('I Got a Scan!!');
-				// });
+			// window.OpenTHC.Camera.scan(function() {
+			// 	alert('I Got a Scan!!');
 			// });
+
+			$('#pos-camera-preview-wrap .shut').one('click', function() {
+				Scanner.reset();
+				delete Scanner;
+				$('#pos-camera-preview-wrap').remove();
+			});
+
 		});
 	});
 
@@ -353,17 +381,24 @@ var Scanner = new ZXing.BrowserMultiFormatReader(hints);
 
 		return false;
 	});
-
-	{% for ci in cart_item_list %}
-		Cart_addItem({
-			id: {{ ci.id }},
-			name: "{{ ci.name }}",
-			weight: {{ ci.weight }},
-			price: {{ ci.price }},
-			qty: {{ ci.qty }}
-		});
-	{% endfor %}
-
-
 });
 </script>
+
+<?php
+if ($data['cart_item_list']) {
+?>
+<script>
+	<?php
+	foreach ($data['cart_item_list'] as $ci) {
+		printf('Cart_addItem(%s)', json_encode([
+			'id' => $ci['id'],
+			'name' => $ci['name'],
+			'weight' => $ci['weight'],
+			'price' => $ci['price'],
+			'qty' => $ci['qty']
+		]));
+	}
+	?>
+</script>
+<?php
+}

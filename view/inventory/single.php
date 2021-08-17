@@ -24,7 +24,7 @@
 }
 </style>
 
-<h1><a href="/inventory">Inventory</a> :: {{ Lot.guid }}</h1>
+<h1><a href="/inventory">Inventory</a> :: <?= $data['Lot']['guid'] ?></h1>
 
 <div class="row" style="margin-bottom:2em;">
 <div class="col-md-6">
@@ -33,22 +33,25 @@
 	<tr>
 	<td>Product:</td>
 	<td>
-		<a href="/inventory?product={{ Product.id }}">{{ Product.name }}</a>
-		<small>[<a href="/settings/product/edit?id={{ Product.id }}">{{ Product.guid }}</a>]</small>
+		<a href="/inventory?product=<?= $data['Product']['id'] ?>"><?= $data['Product']['name'] ?></a>
+		<small>[<a href="/settings/product/edit?id=<?= $data['Product']['id'] ?>"><?= $data['Product']['guid'] ?></a>]</small>
 	</td>
 	</tr>
 	<tr>
 		<td>Product Type:</td>
-		<td>{{ Product_Type.name }}</td>
+		<td><?= $data['Product_Type']['name'] ?></td>
 	</tr>
 	<tr>
-		<td>Strain:</td>
-		<td>{{ Variety.name }}
+		<td>Variety:</td>
+		<td><?= $data['Variety']['name'] ?>
 		<?php
 		if (!empty($this->Variety['id'])) {
-			echo sprintf('<a href="/inventory?strain=%d">%s</a>', $this->Variety['id'], h($this->Strain['name']));
+			printf('<a href="/inventory?strain=%d">%s</a>', $this->Variety['id'], h($this->Strain['name']));
 			if (!empty($this->Strain['guid'])) {
-				echo ' <small>[<a href="/settings/strains/edit?id=' . $this->Variety['id'] . '">' . UI_GUID::format($this->Strain['guid'], true) . '</a>]</small>';
+				printf(' <small>[<a href="/settings/strains/edit?id=%s">%s</a>]</small>'
+					, $this->Variety['id']
+					, UI_GUID::format($this->Strain['guid'], true)
+				);
 			}
 		}
 		?>
@@ -57,11 +60,11 @@
 
 	<tr>
 	<td>Zone:</td>
-	<td>{{ Zone.name }}</td>
+	<td><?= $data['Zone']['name'] ?></td>
 </tr>
 	<tr>
 		<td>Quantity:</td>
-		<td class="r"><strong>{{ Lot.qty }}</strong></td>
+		<td class="r"><strong><?= $data['Lot']['qty'] ?></strong></td>
 	</tr>
 
 	<tr>
@@ -73,7 +76,7 @@
 					data-value-current=""
 					data-value-initial=""
 					id="price" min="0.00" type="number" step="0.01"
-					value="{{ Lot.unit_price }}">
+					value="<?= $data['Lot']['unit_price'] ?>">
 				<div class="input-group-append">
 					<div class="input-group-text">/each<span id="price-proc-icon"></span></div>
 				</div>
@@ -158,9 +161,9 @@
 		</thead>
 		<tbody>
 			<tr>
-				<td>{{ Lot.created_at }}</td>
+				<td><?= $data['Lot']['created_at'] ?></td>
 				<th>Inventory Created</th>
-				<th>{{ Lot.qty }}</th>
+				<th><?= $data['Lot']['qty'] ?></th>
 			</tr>
 		</tbody>
 	</table>
@@ -174,7 +177,7 @@ function _init_qa_data()
 
 		var arg = {
 			a: a,
-			i: '{{ Lot.id }}',
+			i: '<?= $data['Lot']['id'] ?>',
 		};
 
 		$('#inventory-qa-results').empty();
@@ -284,7 +287,7 @@ $(function() {
 	});
 
 	$('#print-exec').on('click', function(e) {
-		Weed.Printer.openModal('Inventory', { list: [ '{{ Lot.id }}' ]});
+		Weed.Printer.openModal('Inventory', { list: [ '<?= $data['Lot']['id'] ?>' ]});
 	});
 
 	// $('#price').on('blur change keyup', _.debounce(function() {
@@ -298,7 +301,7 @@ $(function() {
 
 	// 		var arg = {
 	// 			a: 'price',
-	// 			i: '{{ Lot.id }}',
+	// 			i: '<?= $data['Lot']['id'] ?>',
 	// 			p: now,
 	// 		};
 
@@ -352,7 +355,7 @@ $(function() {
 	// Load Parents
 	var arg = {
 		a: 'parents',
-		id: '{{ Lot.id }}',
+		id: '<?= $data['Lot']['id'] ?>',
 	};
 	$('#inventory-parent-wrap').load('/inventory/ajax', arg);
 

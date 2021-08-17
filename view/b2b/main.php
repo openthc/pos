@@ -30,27 +30,28 @@
 	</tr>
 </thead>
 <tbody>
-{% for t in transfer_list %}
-
+<?php
+foreach ($data['transfer_list'] as $t) {
+?>
 	<tr>
-	<td>{{ t.status_void ? "VOID/" }}<a href="/b2b/{{ t.id }}">{{ t.id }}</a></td>
-	<td>{{ t.date }}</td>
-	<td>
-		{{ t.origin_license.name }}
-	</td>
-	<td>
-		{{ t.target_license.name }}
-	</td>
-	<td>{{ t.meta.status_void ? "VOID/" }}{{ t.meta.manifest_type }}</td>
-	<td>{{ t.meta.status }}</td>
+	<td><?= ($t['status_void'] ? "VOID/" : '') ?><a href="/b2b/<?= $t['id'] ?>"><?= $t['id'] ?></a></td>
+	<td><?= $t['date'] ?></td>
+	<td><?= $t['origin_license']['name'] ?></td>
+	<td><?= $t['target_license']['name'] ?></td>
+	<td><?= ($t['meta']['status_void'] ? "VOID/" : '') ?> <?= $t['meta']['manifest_type'] ?></td>
+	<td><?= $t['meta']['status'] ?></td>
 	<td class="r">
-		{% if "in-transit" ==  t.meta.status %}
-			<a class="btn btn-sm btn-outline-primary" href="/b2b/{{ t.id }}/accept"><i class="fas fa-arrow-right"></i> Accept</a>
-		{% endif %}
+		<?php
+		if ('in-transit' == $t['meta']['status']) {
+			printf('<a class="btn btn-sm btn-outline-primary" href="/b2b/%s/accept"><i class="fas fa-arrow-right"></i> Accept</a>'
+				, $t['id']);
+		}
+		?>
 	</td>
 	</tr>
-
-{% endfor %}
+<?php
+}
+?>
 </tbody>
 </table>
 </div>

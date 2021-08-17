@@ -4,27 +4,28 @@
  */
 ?>
 
-<h1>Transfer :: {{ Transfer.global_id }} <small>[{{ Transfer.manifest_type }} / {{ Transfer.status }}]</small></h1>
+<h1>Transfer :: <?= $data['Transfer']['global_id'] ?>
+<small>[<?= $data['Transfer']['manifest_type'] ?> / <?= $data['Transfer']['status'] ?>]</small></h1>
 
 <div class="row">
 <div class="col">
 	<div class="form-group">
 		<label>From:</label>
 		<div class="input-group">
-			<input class="form-control" readonly value="{{ Origin_License.name }} #{{ Origin_License.code }}">
-			<div class="input-group-append"><a class="btn btn-outline-secondary" href="https://directory.openthc.com/company?id={{ Origin_License.company_id }}" target="_blank"><i class="fas fa-address-book"></i></a></div>
+			<input class="form-control" readonly value="<?= $data['Origin_License']['name'] ?> #<?= $data['Origin_License']['code'] ?>">
+			<div class="input-group-append"><a class="btn btn-outline-secondary" href="https://directory.openthc.com/company?id=<?= $data['Origin_License']['company_id'] ?>" target="_blank"><i class="fas fa-address-book"></i></a></div>
 		</div>
-		<small>{{ Transfer.global_from_mme_id }}</small>
+		<small><?= $data['Transfer']['global_from_mme_id'] ?></small>
 	</div>
 </div>
 <div class="col">
 	<div class="form-group">
 		<label>Ship To:</label>
 		<div class="input-group">
-			<input class="form-control" readonly value="{{ Target_License.name }} #{{ Target_License.code }}">
-			<div class="input-group-append"><a class="btn btn-outline-secondary" href="https://directory.openthc.com/company?id={{ Demand_License.company_id }}" target="_blank"><i class="fas fa-address-book"></i></a></div>
+			<input class="form-control" readonly value="<?= $data['Target_License']['name'] ?> #<?= $data['Target_License']['code'] ?>">
+			<div class="input-group-append"><a class="btn btn-outline-secondary" href="https://directory.openthc.com/company?id=<?= $data['Demand_License']['company_id'] ?>" target="_blank"><i class="fas fa-address-book"></i></a></div>
 		</div>
-		<small>{{ Transfer.global_to_mme_id }}</small>
+		<small><?= $data['Transfer']['global_to_mme_id'] ?></small>
 	</div>
 </div>
 </div>
@@ -45,46 +46,56 @@
 	</tr>
 </thead>
 <tbody>
-{% for iti in Transfer.inventory_transfer_items %}
+<?php
+foreach ($data['Transfer']['inventory_transfer_items'] as $iti) {
+?>
 	<tr>
 		<td>
-			{{ iti.global_inventory_id }}<br>
-			<small>txn: {{ iti.global_id }}</small>
+			<?= $iti['global_inventory_id'] ?><br>
+			<small>txn: <?= $iti['global_id'] ?></small>
 		</td>
-		<td>{{ iti.strain_name }}</td>
+		<td><?= $iti['strain_name'] ?></td>
 		<td>
-			{{ iti.description }}<br>
+			<?= $iti['description'] ?><br>
 			<small>
-				{{ iti.retest ? "RETEST" }}
-				{% if iti.is_sample %}
-					{% if iti.sample_type == "lab_sample" %}
-						Sample /
-					{% endif %}
-				{% endif %}
-				{{ iti.inventory_type.type }} / {{ iti.inventory_type.intermediate_type }}
-				{{ iti.is_for_extraction ? " / For Extract" }}
+				<?= $iti['retest'] ? 'RETEST' : '' ?>
+				<?php
+				if ($iti['is_sample']) {
+					if ('lab_sample' == $iti['sample_type']) {
+						echo 'Sample / ';
+					}
+				}
+				printf('%s / %s %s'
+					, $iti['inventory_type']['type']
+					, $iti['inventory_type']['intermediate_type']
+					, $iti['is_for_extraction'] ? ' / For Extract' : ''
+				);
+				?>
 			</small>
 		</td>
-		<td class="r">{{ iti.qty }}</td>
-		<!-- <td><pre>{{ dump(iti) }}</pre></td> -->
+		<td class="r"><?= $iti['qty'] ?></td>
 		<td>
-			<input name="lot-receive-guid-{{ iti.global_id }}" type="hidden" value="{{ iti.global_id }}">
-			<input class="form-control form-control-sm r" name="lot-receive-count-{{ iti.global_id }}" value="{{ iti.received_qty ?: iti.qty }}">
+			<input name="lot-receive-guid-<?= $iti['global_id'] ?>" type="hidden" value="<?= $iti['global_id'] ?>">
+			<input class="form-control form-control-sm r" name="lot-receive-count-<?= $iti['global_id'] ?>" value="<?= $iti['received_qty'] ?: $iti['qty'] ?>">
 		</td>
 		<td class="r">
-			<input class="form-control r" readonly value="{{ iti.price }}">
+			<input class="form-control r" readonly value="<?= $iti['price'] ?>">
 		</td>
 	</tr>
-{% endfor %}
+<?php
+}
+?>
 </tbody>
 </table>
 
 <div class="form-group">
 	<label>Receive to:</label>
 	<select class="form-control" name="zone-id">
-	{% for Z in Zone_list %}
-		<option value="{{ Z.guid }}">{{ Z.name }}</option>
-	{% endfor %}
+	<?php
+	foreach ($data['Zone_list'] as $Z) {
+		printf('<option value="%s">%s</option>', $Z['guid'], $Z['name']);
+	}
+	?>
 	</select>
 </div>
 
@@ -99,7 +110,7 @@
 
 <script>
 $(function() {
-	if ('in-transit' == '{{ Transfer.status }}') {
+	if ('in-transit' == '<?= $data['Transfer']['status'] ?>') {
 		$('.btn-transfer-accept').removeAttr('disabled');
 	}
 });

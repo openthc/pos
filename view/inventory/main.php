@@ -13,22 +13,22 @@
 <div>
     <ul class="nav nav-tabs">
         <li class="nav-item">
-            <a class="nav-link {{ view_mode == "100" ? "active" }}" href="?view=100">Unpriced</a>
+            <a class="nav-link <?= ($data['view_mode'] == "100" ? "active" : '') ?>" href="?view=100">Unpriced</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link {{ view_mode == "flower" ? "active" }}" href="?view=flower">Flower</a>
+            <a class="nav-link <?= ($data['view_mode'] == "flower" ? "active" : '') ?>" href="?view=flower">Flower</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link {{ view_mode == "extract" ? "active" }}" href="?view=extract">Extract</a>
+            <a class="nav-link <?= ($data['view_mode'] == "extract" ? "active" : '') ?>" href="?view=extract">Extract</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link {{ view_mode == "edible" ? "active" }}" href="?view=edible">Edibles</a>
+            <a class="nav-link <?= ($data['view_mode'] == "edible" ? "active" : '') ?>" href="?view=edible">Edibles</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link {{ view_mode == "samples" ? "active" }}" href="/inventory/samples">Samples</a>
+            <a class="nav-link <?= ($data['view_mode'] == "samples" ? "active" : '') ?>" href="/inventory/samples">Samples</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link {{ view_mode == "misc" ? "active" }}" href="?view=misc">Other Stuff</a>
+            <a class="nav-link <?= ($data['view_mode'] == "misc" ? "active" : '') ?>" href="?view=misc">Other Stuff</a>
         </li>
     </ul>
 </div>
@@ -40,7 +40,7 @@
 $(function() {
     $('#inventory-list').html('<i class="fas fa-sync fa-spin"></i> Loading...');
     $('#inventory-list').load('/inventory/ajax', {
-        view: '{{ view_mode }}'
+        view: '<?= $data['view_mode'] ?>'
     });
 });
 </script>

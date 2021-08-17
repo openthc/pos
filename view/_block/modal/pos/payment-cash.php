@@ -125,7 +125,7 @@ HTML;
 
 echo $this->block('modal.php', [
 	'modal_id' => 'pos-modal-payment',
-	'modal_title' => 'Collect Payment',
+	'modal_title' => 'Payment :: Cash',
 	'body' => $body,
 	'foot' => $foot,
 ]);

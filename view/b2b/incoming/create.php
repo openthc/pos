@@ -4,7 +4,7 @@
  */
 ?>
 
-<h1><a href="/b2b">Transfer</a> :: {{ Transfer.global_id }} <small>[{{ Transfer.manifest_type }} / {{ Transfer.status }}]</small></h1>
+<h1><a href="/b2b">Transfer</a> :: <?= $data['Transfer']['global_id'] ?> <small>[<?= $data['Transfer']['manifest_type'] ?> / <?= $data['Transfer']['status'] ?>]</small></h1>
 
 <form autocomplete="off" method="post">
 <div class="container">
@@ -25,7 +25,7 @@
 	<div class="col-md-4">
 		<div class="form-group">
 			<label>Receiving License:</label>
-			<input class="form-control" disabled name="target-license" readonly value="{{ License_Target.name }}">
+			<input class="form-control" disabled name="target-license" readonly value="<?= $data['License_Target']['name'] ?>">
 		</div>
 	</div>
 </div>

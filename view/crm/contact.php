@@ -17,13 +17,15 @@
 	</tr>
 </thead>
 <tbody>
-{% for c in contact_list %}
-	<tr>
-		<td>{{ c.fullname }}</td>
-		<td>{{ c.email }}</td>
-		<td>{{ c.phone }}</td>
-	</tr>
-{% endfor %}
+<?php
+foreach ($data['contact_list'] as $c) {
+	echo '<tr>';
+	printf('<td>%s</td>', __h($c['fullname']) );
+	printf('<td>%s</td>', $c['email'] );
+	printf('<td>%s</td>', $c['phone'] );
+	echo '</tr>';
+}
+?>
 </tbody>
 <tfoot>
 	<tr>
