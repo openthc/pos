@@ -2,8 +2,10 @@
 
 THANKS FOR SHOPPING AT $license_name
 
-1234 Fake St #145
-Big City, ST, 12345
+123 Fake St #4
+Big City, ST, 56789
 store@cannabis.example.com
 http://domain.example.com/
 +1 (555) 555-5555
+
+*** EDIT etc/receipt-tail.txt ***

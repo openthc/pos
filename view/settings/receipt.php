@@ -1,4 +1,15 @@
 
+<style>
+#receipt-preview-wrap iframe {
+	border: none;
+	height: 50vh;
+	margin: 0;
+	padding: 0;
+	width: 100%;
+}
+</style>
+
+
 <div class="container">
 
 	<div class="hero">
@@ -7,31 +18,36 @@
 
 <div class="row">
 	<div class="col-md-6">
+
 		<h2>Editor</h2>
 
 		<div class="form-group">
 			<label>Header</label>
-			<input class="form-control" name="pos-receipt-head">
+			<input class="form-control" name="pos-receipt-head" value="<?= __h($data['receipt-head']) ?>">
 			Maybe allow an image?
 		</div>
 
-		<textarea class="form-control" name="pos-receipt-tail" style="height: 40vh;">
-THANKS FOR SHOPPING AT $name
+		<textarea class="form-control" name="pos-receipt-tail" style="height: 40vh;"><?= __h($data['receipt-tail']) ?></textarea>
+		<textarea class="form-control" name="pos-receipt-foot" style="height: 40vh;"><?= __h($data['receipt-foot']) ?></textarea>
 
-1234 Fake St #145
-Big City, ST, 12345
-store@cannabis.example.com
-http://domain.example.com/
-+1 (555) 555-5555
-		</textarea>
-		<textarea class="form-control" name="pos-receipt-foot" style="height: 40vh;">
-		</textarea>
 	</div>
 	<div class="col-md-6">
-		<h2>Preview</h2>
+		<h2>Preview <button class="btn btn-sm btn-outline-secondary btn-print-preview" type="button"><i class="fas fa-print"></i></button></h2>
+		<div id="receipt-preview-wrap"></div>
 		<img src="">
 	</div>
 </div>
 
 
+
 </div>
+
+
+<script>
+$(function() {
+	$('.btn-print-preview').on('click', function() {
+		// Render Some PDF in an iFrame Maybe?
+		$('#receipt-preview-wrap').html('<iframe src="/settings/receipt/preview"></iframe>');
+	});
+});
+</script>

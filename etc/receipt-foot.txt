@@ -19,3 +19,5 @@ For use by adults over 21 years old.
 Pesticide information available upon request.
 
 KEEP OUT OF REACH OF CHILDREN
+
+*** EDIT etc/receipt-foot.txt ***

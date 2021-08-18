@@ -43,14 +43,11 @@ class Receipt extends \App\PDF\Base
 
 	function drawHead()
 	{
-		// $_SESSION['Company']['name'] = '$Company Name Here$';
-
 		$this->setXY(0, 5);
 		$this->setFont('Helvetica', 'B', 18);
 		$this->setFillColor(0x10, 0x10, 0x10);
 		$this->setTextColor(0xff, 0xff, 0xff);
 		$this->cell(72, 4, $_SESSION['Company']['name'], null, null, 'C', true);
-
 	}
 
 	function drawSummary()
@@ -84,6 +81,7 @@ class Receipt extends \App\PDF\Base
 		$this->setXY(1, $y);
 		$this->cell(70, 5, 'Total:');
 
+
 		$y += 6;
 		$this->line(1, $y, 71, $y);
 
@@ -102,7 +100,7 @@ class Receipt extends \App\PDF\Base
 		$this->setXY(1, $y);
 		$this->cell(70, 5, 'Transaction ID:');
 		$this->setXY(36, $y);
-		$this->cell(35, 5, '#1234567890', 0, 0, 'R');
+		$this->cell(35, 5, $this->_b2c_sale['id'], 0, 0, 'R');
 
 		// Transaction Type
 		$y += 5;
@@ -116,14 +114,14 @@ class Receipt extends \App\PDF\Base
 		$this->setXY(1, $y);
 		$this->cell(70, 5, 'Register:');
 		$this->setXY(36, $y);
-		$this->cell(35, 5, 'REG-ABCD1234', 0, 0, 'R');
+		$this->cell(35, 5, $this->_b2c_sale['terminal_id'], 0, 0, 'R');
 
 		// Date/Time
 		$y += 5;
 		$this->setXY(1, $y);
 		$this->cell(70, 5, 'Time:');
 		$this->setXY(36, $y);
-		$this->cell(35, 5, _date('Y-m-d H:i:s', time(), 'America/Los_Angeles'), 0, 0, 'R');
+		$this->cell(35, 5, _date('Y-m-d H:i', $this->_b2c_sale['created_at'], 'America/Los_Angeles'), 0, 0, 'R');
 
 	}
 
@@ -136,15 +134,7 @@ class Receipt extends \App\PDF\Base
 		$this->line(1, $y, 71, $y);
 		$y += 1;
 
-		// TAIL
-		// New Company Object?
-		// $tail = $this->Company->opt('pos-receipt-tail');
-		if (empty($tail)) {
-			$file = sprintf('%s/etc/receipt-tail.txt', APP_ROOT);
-			if (is_file($file)) {
-				$tail = file_get_contents($file);
-			}
-		}
+		$tail = $this->loadTailText();
 
 		$y += 6;
 		$this->setXY(1, $y);
@@ -156,13 +146,7 @@ class Receipt extends \App\PDF\Base
 	function drawFoot()
 	{
 		// FOOT
-		// $foot = $this->Company->opt('pos-receipt-foot');
-		if (empty($foot)) {
-			$file = sprintf('%s/etc/receipt-foot.txt', APP_ROOT);
-			if (is_file($file)) {
-				$foot = file_get_contents($file);
-			}
-		}
+		$foot = $this->loadFootText();
 
 		$y = $this->getY();
 		$y += 1;
@@ -253,6 +237,47 @@ class Receipt extends \App\PDF\Base
 
 	}
 
+	/**
+	 *
+	 */
+	function loadHeadText()
+	{
+		return $this->_load_text_from('pos-receipt-head', 'receipt-head.txt');
+	}
 
+	/**
+	 *
+	 */
+	function loadFootText()
+	{
+		return $this->_load_text_from('pos-receipt-foot', 'receipt-foot.txt');
+	}
+
+	/**
+	 *
+	 */
+	function loadTailText()
+	{
+		return $this->_load_text_from('pos-receipt-tail', 'receipt-tail.txt');
+	}
+
+	/**
+	 * @param $d Database Key
+	 * @param $f File Name
+	 */
+	private function _load_text_from($d, $f)
+	{
+		$text = $this->Company->opt($d);
+
+		if (empty($text)) {
+			$file = sprintf('%s/etc/%s', APP_ROOT, $f);
+			if (is_file($file)) {
+				$text = file_get_contents($file);
+			}
+		}
+
+		return $text;
+
+	}
 
 }
