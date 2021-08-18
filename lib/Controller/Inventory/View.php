@@ -23,8 +23,8 @@ class View extends \OpenTHC\Controller\Base
 
 		$P = new \App\Product($dbc, $L['product_id']);
 		$PT = new \App\Product\Type($dbc, $P['product_type_id']);
-		$V = new \App\Variety($dbc, $L['strain_id']);
-		$Z = new \App\Zone($dbc, $L['room_id']);
+		$V = new \App\Variety($dbc, $L['variety_id']);
+		$S = new \App\Zone($dbc, $L['section_id']);
 
 		$data = [];
 		$data['Page'] = [ 'title' => 'Inventory :: View '];
@@ -33,7 +33,7 @@ class View extends \OpenTHC\Controller\Base
 		$data['Product'] = $P;
 		$data['Product_Type'] = $PT;
 		$data['Variety'] = $V;
-		$data['Zone'] = $Z;
+		$data['Section'] = $S;
 
 		return $RES->write( $this->render('inventory/view.php', $data) );
 	}

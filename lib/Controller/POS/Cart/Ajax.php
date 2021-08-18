@@ -138,7 +138,7 @@ switch ($_POST['a']) {
 		}
 
 		$_SESSION['cart']->add(array(
-			'name' => $I['strain'],
+			'name' => $I['variety'],
 			'size' => $_POST['size'],
 			'cost' => $I['sell'],
 		));

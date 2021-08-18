@@ -46,11 +46,11 @@
 		<td><?= $data['Variety']['name'] ?>
 		<?php
 		if (!empty($this->Variety['id'])) {
-			printf('<a href="/inventory?strain=%d">%s</a>', $this->Variety['id'], h($this->Strain['name']));
-			if (!empty($this->Strain['guid'])) {
-				printf(' <small>[<a href="/settings/strains/edit?id=%s">%s</a>]</small>'
+			printf('<a href="/inventory?variety=%s">%s</a>', $this->Variety['id'], h($this->Variety['name']));
+			if (!empty($this->Variety['guid'])) {
+				printf(' <small>[<a href="/settings/variety/edit?id=%s">%s</a>]</small>'
 					, $this->Variety['id']
-					, UI_GUID::format($this->Strain['guid'], true)
+					, UI_GUID::format($this->Variety['guid'], true)
 				);
 			}
 		}

@@ -38,7 +38,8 @@
 <thead class="thead-dark">
 	<tr>
 		<th>ID</th>
-		<th>Strain</th>
+		<th>Product</th>
+		<th>Variety</th>
 		<th>Description</th>
 		<th class="r">Sent</th>
 		<th class="r">Received</th>
@@ -54,7 +55,7 @@ foreach ($data['Transfer']['inventory_transfer_items'] as $iti) {
 			<?= $iti['global_inventory_id'] ?><br>
 			<small>txn: <?= $iti['global_id'] ?></small>
 		</td>
-		<td><?= $iti['strain_name'] ?></td>
+		<td><?= $iti['variety_name'] ?></td>
 		<td>
 			<?= $iti['description'] ?><br>
 			<small>

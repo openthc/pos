@@ -35,8 +35,8 @@
 	<tr>
 	<th>Type</th>
 	<th>GUID</th>
-	<th>Strain</th>
 	<th>Product</th>
+	<th>Variety</th>
 	<th class="r">Quantity</th>
 	<th class="r">Weight</th>
 	<th class="r">Price</th>
@@ -46,8 +46,8 @@
 <tr id="item-0">
 	<td><?= _select_inventory_type('item-0') ?></td>
 	<td><input class="form-control" name="inventory-guid-0"></td>
-	<td><input class="form-control" name="strain-name-0"></td>
 	<td><input class="form-control" name="product-name-0"></td>
+	<td><input class="form-control" name="variety-name-0"></td>
 	<td class="r"><input class="form-control math-input r" name="inventory-quantity-0"></td>
 	<td class="r"><input class="form-control math-input r" name="inventory-weight-0"></td>
 	<td class="r"><input class="form-control math-input r" name="inventory-price-0"></td>

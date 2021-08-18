@@ -7,8 +7,6 @@ $this->layout_file = sprintf('%s/view/_layout/html-pos.php', APP_ROOT);
 
 ?>
 
-<form method="post">
-
 <div class="container mt-4">
 <div class="row justify-content-center">
 <div class="col-md-8">
@@ -16,9 +14,9 @@ $this->layout_file = sprintf('%s/view/_layout/html-pos.php', APP_ROOT);
 	<h1 class="card-header">Print Receipt</h1>
 	<div class="card-body">
 
+		<form autocomplete="off" method="post">
 		<div class="form-group">
 			<h2>Email</h2>
-			<form method="post">
 			<input name="sale_id" type="hidden" value="<?= $data['Sale']['id'] ?>">
 			<div class="input-group">
 				<input class="form-control" name="receipt-email" placeholder="your@email.com" type="email">
@@ -26,12 +24,12 @@ $this->layout_file = sprintf('%s/view/_layout/html-pos.php', APP_ROOT);
 					<button class="btn btn-outline-secondary" name="a" value="send-email">Send Receipt</button>
 				</div>
 			</div>
-			</form>
 		</div>
+		</form>
 
+		<form autocomplete="off" method="post">
 		<div class="form-group">
 			<h2>Text</h2>
-			<form method="post">
 			<input name="sale_id" type="hidden" value="<?= $data['Sale']['id'] ?>">
 			<div class="input-group">
 				<input class="form-control" name="receipt-phone" placeholder="(###) ###-####" type="text">
@@ -39,10 +37,10 @@ $this->layout_file = sprintf('%s/view/_layout/html-pos.php', APP_ROOT);
 					<button class="btn btn-outline-secondary" name="a" value="send-phone">Send Receipt</button>
 				</div>
 			</div>
-			</form>
 		</div>
+		</form>
 
-		<form method="post">
+		<form autocomplete="off" method="post">
 		<div class="form-group">
 			<h2>Print It</h2>
 			<div class="input-group">
@@ -64,16 +62,16 @@ $this->layout_file = sprintf('%s/view/_layout/html-pos.php', APP_ROOT);
 	</div>
 
 
+	<form autocomplete="off" method="post">
 	<div class="card-footer">
 		<button class="btn btn-outline-primary" name="a" value="send-blank">No Receipt</button>
 	</div>
+	</form>
 
 </div>
 </div>
 </div>
 </div>
-
-</form>
 
 
 <script>
@@ -111,6 +109,23 @@ $(function() {
 
 			break;
 
+		case 'app-print-direct':
+
+			// Have App Generate One-Time Link
+			// Then Pass to the app-container (Android, iOS, Electron) via CustomEvent
+			$.post('', { a: 'print-direct-link' }, function(body, stat) {
+
+					var ce = new CustomEvent('openthc_print_direct');
+					ce.printer_url = $sel.data('local-link');
+					ce.document_url = body.data.document_url;
+
+					window.dispatchEvent(ce);
+			});
+
+			return false;
+
+			break;
+
 		case 'lpd':
 
 			// Emit an Application Specific Event for Android, Electron or iOS to Catch?
@@ -122,8 +137,7 @@ $(function() {
 
 		case 'pdf':
 
-			// var $F = $(this).closest('form');
-
+			// Browser Popup
 			var opts = [];
 			opts.push('top=' + (window.screenTop + 64));
 			opts.push('left=' + (window.screenLeft + 64));
@@ -144,11 +158,6 @@ $(function() {
 				// w.close();
 			});
 
-			// Do Nothing, Submit Form
-			// w.onloadend = function() {
-			// 	console.log('onloadend!');
-			// };
-			// w.print();
 			break;
 
 		case 'rpi':

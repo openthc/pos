@@ -219,7 +219,7 @@ class Receipt extends \App\PDF\Base
 			$I = $SI['Inventory'];
 
 			$this->setXY(1, $y);
-			$this->cell(70, 5, $I['name'] . ' ' . $I['strain_name']);
+			$this->cell(70, 5, $I['product_name'] . ' ' . $I['variety_name']);
 
 			$y += 5;
 			$this->setXY(1, $y);

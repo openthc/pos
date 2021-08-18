@@ -85,7 +85,7 @@ SQL;
 			// $arg[':q0'] = $q;
 			$arg[':q1'] = sprintf('%%%s%%', $q);
 		}
-		$sql.= ' ORDER BY product_type_name, product_name';
+		$sql.= ' ORDER BY product_type_name, product_name, variety_name';
 		$res = $this->_container->DB->fetchAll($sql, $arg);
 
 		switch (count($res)) {
@@ -166,7 +166,7 @@ function __old_ajax_shit($RES)
 			if (preg_match('/^item\-(\d+)$/', $k , $m)) {
 
 				$I = new Inventory($m[1]);
-				$si = $this->_container->Redis->hget('strain/' . strtolower($I['name']));
+				$si = $this->_container->Redis->hget('variety/' . strtolower($I['name']));
 
 				echo '<div class="col-md-9">';
 				echo '<h2>';
@@ -285,7 +285,7 @@ function _draw_inventory_grid($res)
 	foreach ($res as $rec) {
 
 		//$I = new Inventory($rec);
-		$rec['name'] = $rec['product_name'] . '/' . $rec['strain_name'];
+		$rec['name'] = $rec['product_name'] . '/' . $rec['variety_name'];
 
 		// if ($pt_x != $rec['product_type_id']) {
 		// 	echo '<h3>' . h($rec['product_type_name']) . '</h3>';
@@ -294,7 +294,7 @@ function _draw_inventory_grid($res)
 
 		echo '<div class="pos-item-grid-item"';
 		echo ' data-id="' . $rec['id'] . '"';
-		echo ' data-name="' . substr($rec['guid'], -4) . ': ' . h($rec['name']) . '"';
+		echo ' data-name="' . substr($rec['guid'], -4) . ': ' . __h($rec['name']) . '"';
 		echo ' data-count="' . sprintf('%0.2f', $rec['unit_onhand']) . '"';
 		echo ' data-weight="' . sprintf('%0.2f', $rec['unit_weight']) . '"';
 		echo ' data-price="' . sprintf('%0.2f', $rec['sell']) . '"';
@@ -305,7 +305,7 @@ function _draw_inventory_grid($res)
 		echo '<h4>';
 		echo substr($rec['guid'], -4);
 		echo ': ';
-		echo h($rec['name']);
+		echo __h($rec['name']);
 		echo '</h4>';
 		echo '</div>';
 
@@ -358,17 +358,17 @@ function _draw_inventory_list($res)
 	foreach ($res as $rec) {
 
 		//$I = new Inventory($rec);
-		$rec['name'] = sprintf('%s / %s', $rec['product_name'], $rec['strain_name']);
+		$rec['name'] = sprintf('%s / %s', $rec['product_name'], $rec['variety_name']);
 		$rec['name'] = trim($rec['name'], '/');
 
 		if ($pt_x != $rec['product_type_id']) {
-			echo '<h3>' . h($rec['product_type_name']) . '</h3>';
+			echo '<h3>' . __h($rec['product_type_name']) . '</h3>';
 		}
 		$pt_x = $rec['product_type_id'];
 
 		echo '<div class="inv-item row"';
 		echo ' data-id="' . $rec['id'] . '"';
-		echo ' data-name="' . substr($rec['guid'], -4) . ': ' . h($rec['name']) . '"';
+		echo ' data-name="' . substr($rec['guid'], -4) . ': ' . __h($rec['name']) . '"';
 		echo ' data-count="' . sprintf('%d', $rec['qty']) . '"';
 		echo ' data-weight="' . sprintf('%0.1f', $rec['package_unit_qom']) . '"';
 		echo ' data-price="' . sprintf('%0.2f', $rec['sell']) . '"';

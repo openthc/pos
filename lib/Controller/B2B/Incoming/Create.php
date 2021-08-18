@@ -17,6 +17,9 @@ class Create extends \OpenTHC\Controller\Base
 		return $RES->write( $this->render('b2b/incoming/create.php', $data) );
 	}
 
+	/**
+	 * Save the Incoming B2B Transaction
+	 */
 	function post($REQ, $RES, $ARG)
 	{
 		// Action Handler
@@ -34,10 +37,11 @@ class Create extends \OpenTHC\Controller\Base
 
 						$code = $m[1];
 
+						// BioTrack Format
 						$item = array(
 							'barcodeid' => $_POST[sprintf('inventory-guid-%s', $code)],
 							'invtype' => $_POST[sprintf('item-%s', $code)],
-							'strain' => $_POST[sprintf('strain-name-%s', $code)],
+							'strain' => $_POST[sprintf('variety-name-%s', $code)],
 							'productname' => $_POST[sprintf('product-name-%s', $code)],
 							'quantity' => $_POST[sprintf('inventory-quantity-%s', $code)],
 							'usableweight' => $_POST[sprintf('inventory-weight-%s', $code)],
