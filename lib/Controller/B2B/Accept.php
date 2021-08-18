@@ -29,11 +29,11 @@ class Accept extends \OpenTHC\Controller\Base
 		}
 		$T1 = $res['result'];
 
-		$res = $cre->get('/config/zone');
+		$res = $cre->get('/config/section');
 		if ('success' != $res['status']) {
-			_exit_fail('<h1>Cannot load Zone list from CRE [CTA-033]</h1>', 501);
+			_exit_fail('<h1>Cannot load Section list from CRE [CTA-033]</h1>', 501);
 		}
-		$zone_list = $res['result'];
+		$section_list = $res['result'];
 
 		$Origin = $dbc->fetchRow('SELECT * FROM license WHERE guid = ?', array($T1['global_from_mme_id']));
 		$Target = $dbc->fetchRow('SELECT * FROM license WHERE guid = ?', array($T1['global_to_mme_id']));
@@ -43,7 +43,7 @@ class Accept extends \OpenTHC\Controller\Base
 			'Transfer' => $T1,
 			'Origin_License' => $Origin,
 			'Target_License' => $Target,
-			'Zone_list' => $zone_list,
+			'Section_list' => $section_list,
 		);
 
 		return $RES->write( $this->render('b2b/accept.php', $data) );
@@ -72,7 +72,7 @@ class Accept extends \OpenTHC\Controller\Base
 				$iti = array(
 					'global_id' => $v,
 					'received_qty' => $rx,
-					'global_received_area_id' => $_POST['zone-id'],
+					'global_received_area_id' => $_POST['section-id'],
 				);
 
 				$args['inventory_transfer_items'][] = $iti;

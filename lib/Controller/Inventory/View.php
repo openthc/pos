@@ -24,7 +24,7 @@ class View extends \OpenTHC\Controller\Base
 		$P = new \App\Product($dbc, $L['product_id']);
 		$PT = new \App\Product\Type($dbc, $P['product_type_id']);
 		$V = new \App\Variety($dbc, $L['variety_id']);
-		$S = new \App\Zone($dbc, $L['section_id']);
+		$S = new \App\Section($dbc, $L['section_id']);
 
 		$data = [];
 		$data['Page'] = [ 'title' => 'Inventory :: View '];

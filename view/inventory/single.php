@@ -59,9 +59,9 @@
 	</tr>
 
 	<tr>
-	<td>Zone:</td>
-	<td><?= $data['Zone']['name'] ?></td>
-</tr>
+		<td>Section:</td>
+		<td><?= __h($data['Section']['name']) ?></td>
+	</tr>
 	<tr>
 		<td>Quantity:</td>
 		<td class="r"><strong><?= $data['Lot']['qty'] ?></strong></td>
@@ -101,16 +101,7 @@
 
 	<!--
 	<?php
-	// if ($show_move) {
-	// 	echo ' <button class="btn btn-outline-secondary" name="a" title="Use the Edit link next to Zone (z)" type="submit" value="move"><i class="fas fa-arrow-circle-right"></i> Move</button>';
-	// }
-
-	// if ($show_stage) {
-	// 	echo ' <button accesskey="m" class="btn btn-outline-primary" name="a" type="submit" value="move"><u>M</u>ove</button>';
-	// }
-
 	// echo ' <button class="btn btn-outline-primary" data-toggle="modal" data-target="#modal-object-note" name="a" type="button"><i class="far fa-comments"></i> Note</button>';
-
 	// echo '<span style="display:none;">';
 	// echo '<input id="file-upload"  name="file" type="file">';
 	// echo '</span>';

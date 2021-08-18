@@ -91,10 +91,10 @@ foreach ($data['Transfer']['inventory_transfer_items'] as $iti) {
 
 <div class="form-group">
 	<label>Receive to:</label>
-	<select class="form-control" name="zone-id">
+	<select class="form-control" name="section-id">
 	<?php
-	foreach ($data['Zone_list'] as $Z) {
-		printf('<option value="%s">%s</option>', $Z['guid'], $Z['name']);
+	foreach ($data['Section_list'] as $x) {
+		printf('<option value="%s">%s</option>', $x['guid'], $x['name']);
 	}
 	?>
 	</select>
