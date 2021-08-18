@@ -7,18 +7,15 @@ namespace App\Controller\POS\Cart;
 
 use Edoceo\Radix;
 use Edoceo\Radix\Session;
-use Edoceo\Radix\DB\SQL;
 
 class Save extends \OpenTHC\Controller\Base
 {
-        function __invoke($REQ, $RES, $ARG)
-        {
-
-
+	function __invoke($REQ, $RES, $ARG)
+	{
 		if (!empty($_GET['a']) && ('open-hold' == $_GET['a'])) {
 
 			$arg = array($_GET['hold-id']);
-			$SH = SQL::fetch_row('SELECT * FROM b2c_sale_hold WHERE id = ?', $arg);
+			$SH = $dbc->fetchRow('SELECT * FROM b2c_sale_hold WHERE id = ?', $arg);
 			$SH['json'] = json_decode($SH['json'], true);
 
 

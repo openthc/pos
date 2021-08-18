@@ -5,8 +5,6 @@
 
 namespace App\Controller\B2B;
 
-use Edoceo\Radix\DB\SQL;
-
 class Accept extends \OpenTHC\Controller\Base
 {
 	function __invoke($REQ, $RES, $ARG)

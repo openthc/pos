@@ -9,7 +9,6 @@
 namespace App\Controller\POS\Cart;
 
 use Edoceo\Radix\Session;
-use Edoceo\Radix\DB\SQL;
 
 class Save extends \OpenTHC\Controller\Base
 {

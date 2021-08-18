@@ -7,7 +7,6 @@ namespace App\Controller\POS\Cart;
 
 use Edoceo\Radix;
 use Edoceo\Radix\Session;
-use Edoceo\Radix\DB\SQL;
 
 use OpenTHC\Contact;
 

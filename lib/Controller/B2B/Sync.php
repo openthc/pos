@@ -5,7 +5,6 @@
 
 namespace App\Controller\B2B;
 
-use Edoceo\Radix\DB\SQL;
 use DateInterval;
 use DateTime;
 use DateTimeZone;
@@ -133,7 +132,7 @@ class Sync extends \OpenTHC\Controller\Base
 		$sql.= ' JOIN license ON transfer_incoming.license_id_source = license.id';
 		$sql.= ' WHERE transfer_incoming.license_id_target = :l AND transfer_incoming.guid = :g';
 		$arg = array(':l' => $_SESSION['License']['id'], ':g' => $ARG['guid']);
-		$data['transfer'] = SQL::fetch_row($sql, $arg);
+		$data['transfer'] = $dbc->fetchRow($sql, $arg);
 
 
 		$cre = new \OpenTHC\RCE($_SESSION['pipe-token']);
@@ -173,7 +172,7 @@ class Sync extends \OpenTHC\Controller\Base
 		// Cleanup for re-add
 		$sql = 'DELETE FROM b2b_incoming_item WHERE transfer_id = :t';
 		$arg = array($data['transfer']['id']);
-		SQL::query($sql, $arg);
+		$dbc->query($sql, $arg);
 
 		$full_price = 0;
 		foreach ($res['result']['inventory_transfer_items'] as $rec) {
