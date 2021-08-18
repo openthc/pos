@@ -24,19 +24,15 @@ class Accept extends \OpenTHC\Controller\Base
 
 		// Fresh data from CRE
 		$res = $cre->get('/transfer/incoming/' . $ARG['id']);
-		// echo $cre->_raw;
-		// var_dump($cre->_raw);
-		// exit;
 		if ('success' != $res['status']) {
-			print_r($res);
-			die("Cannot Load Transfer");
+			_exit_fail('<h1>Cannot Load B2B Sale [CTA-028]</h1>', 500);
 		}
 		//var_dump($res);
 		$T1 = $res['result'];
 
 		$res = $cre->get('/config/zone');
 		if ('success' != $res['status']) {
-			_exit_text('Cannot load Zone list from CRE [CTA#033]', 501);
+			_exit_fail('<h1>Cannot load Zone list from CRE [CTA-033]</h1>', 501);
 		}
 		$zone_list = $res['result'];
 

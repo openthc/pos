@@ -11,15 +11,10 @@ class View extends \OpenTHC\Controller\Base
 	{
 		$cre = new \OpenTHC\CRE($_SESSION['pipe-token']);
 		$res = $cre->get('/transfer/incoming/' . $ARG['id']);
-		// if ('success' != $res['status']) {
-		// 	// print_r($res);
-		// 	die("Cannot Load Transfer");
-		// }
-		// _exit_text($data);
 
 		$data = array(
 			'Page' => array('title' => sprintf('Transfer %s', $ARG['id'])),
-			'Transfer' => $res['result'],
+			'Transfer' => $res['data'],
 		);
 
 		return $RES->write( $this->render('b2b/view.php', $data) );

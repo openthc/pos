@@ -105,14 +105,11 @@ class Receipt extends \OpenTHC\Controller\Base
 	 */
 	function _send_email($RES, $data)
 	{
-		var_dump($_POST);
-
 		$cfg = SQL::fetch_one("SELECT val FROM auth_company_option WHERE key = 'pos-email-send'");
 		if (empty($cfg)) {
-			_exit_text('Email Service is not configured');
+			_exit_fail('<h1>Email Service is not configured</h1>', 501);
 		}
 		$cfg = \json_decode($cfg, true);
-		var_dump($cfg);
 
 		$rcpt = $_POST['receipt-email'];
 		$chk = \Edoceo\Radix\Net\HTTP::get('http://isvaliduser.com/api/check?e=' . \rawurlencode($rcpt));
@@ -124,7 +121,7 @@ class Receipt extends \OpenTHC\Controller\Base
 		} else {
 			var_dump($chk);
 			exit;
-			_exit_html('<p>Invalid Email, <a href="/auth/open">try again</a>.</p>', 400);
+			_exit_fail('<p>Invalid Email, <a href="/auth/open">try again</a>.</p>', 400);
 		}
 
 		$T = new \App\B2C\Sale($_GET['s']);
@@ -197,7 +194,7 @@ EOM;
 
 		$cfg = $dbc->fetchOne("SELECT val FROM auth_company_option WHERE key = 'pos-phone-send'");
 		if (empty($cfg)) {
-			_exit_text('SMS Service is not configured');
+			_exit_fail('<h1>SMS Service is not configured</h1><p>Please <a href="/settings/receipt">update the settings</a></p>', 501);
 		}
 		$cfg = \json_decode($cfg, true);
 
