@@ -1,7 +1,8 @@
 <?php
 /**
  * POS AJAX Handler
-*/
+ * Has some legacy functional level stuff that should be cleaned up
+ */
 
 namespace App\Controller\POS;
 
@@ -15,7 +16,6 @@ class Ajax extends \OpenTHC\Controller\Base
 		case 'hold-list':
 			$data = array('hold_list' => array());
 			$res = $this->_container->DB->fetchAll('SELECT * FROM b2c_sale_hold ORDER BY created_at');
-			//var_dump($res);
 			foreach ($res as $rec) {
 
 				$rec['meta'] = json_decode($rec['meta'], true);
@@ -59,9 +59,10 @@ class Ajax extends \OpenTHC\Controller\Base
 	function _search($RES)
 	{
 		$q = trim($_GET['q']);
+
+		// Remove the '~' prefix (should we add others and trim?)
 		switch (substr($q, 0, 1)) {
 		case '~':
-			// Exact Match?
 			$q = substr($q, 1);
 		}
 
@@ -375,9 +376,8 @@ function _draw_inventory_list($res)
 
 		echo '<div class="col-md-7">';
 		echo '<h4>';
-		echo substr($rec['guid'], -4);
-		echo ': ';
-		echo h($rec['name']);
+		printf('<code>%s</code> %s', substr($rec['guid'], -4), __h($rec['name']));
+		printf(' <small>[%d]</small>', $rec['qty']);
 		echo '</h4>';
 		echo '</div>';
 

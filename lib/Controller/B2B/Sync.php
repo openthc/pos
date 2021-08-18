@@ -38,14 +38,9 @@ class Sync extends \OpenTHC\Controller\Base
 		$dbc = $this->_container->DB;
 
 		$res = $this->_cre->get('/transfer/incoming?source=true'); // transfer();
-		// echo($this->_cre->_raw);
-		// var_dump($res);
-		// exit;
 
 		$transfer_list = array();
 		if (empty($res['result']) || !is_array($res['result'])) {
-			var_dump($_SESSION);
-			var_dump($res);
 			die("Cannot Load Transfers\n");
 		}
 
@@ -71,7 +66,6 @@ class Sync extends \OpenTHC\Controller\Base
 					$LOrigin['id'] = $dbc->insert('license', $LOrigin);
 					// _exit_text("Cannot find Origin: '{$rec['global_from_mme_id']}'", 404);
 				}
-				// var_dump($LOrigin);
 
 				$LTarget = \OpenTHC\License::findByGUID($rec['global_to_mme_id']);
 				if (empty($LTarget['id'])) {
@@ -80,7 +74,6 @@ class Sync extends \OpenTHC\Controller\Base
 				if ($LTarget['id'] != $_SESSION['License']['id']) {
 					_exit_text('License Mis-Match', 409);
 				}
-				var_dump($LTarget);
 
 				$rec = array(
 					'id' => $rec['guid'],
@@ -101,7 +94,6 @@ class Sync extends \OpenTHC\Controller\Base
 				);
 
 				$sql = 'UPDATE b2b_incoming SET hash = :h, meta = :m WHERE id = :id';
-				var_dump($upd);
 
 				$dbc->query($sql, $upd);
 			}
@@ -250,7 +242,6 @@ class Sync extends \OpenTHC\Controller\Base
 					'Strain' => $Strain,
 				)
 			);
-			var_dump($add);
 
 
 			$full_price += floatval($rec['price']);

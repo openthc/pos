@@ -192,8 +192,6 @@ class Receipt extends \App\PDF\Base
 		$this->_renderCalcHeight();
 		$y = $this->getY();
 		$y = ceil($y) + 5;
-		// var_dump($y);
-		// exit;
 
 		$this->deletePage(1);
 		$this->addPage('P', [ 72, $y ]);

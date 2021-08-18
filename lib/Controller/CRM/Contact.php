@@ -23,7 +23,6 @@ class Contact extends \OpenTHC\Controller\Base
 
 	function save($REQ, $RES, $ARG)
 	{
-		// var_dump($_POST);
 
 		$dbc = $this->_container->DB;
 

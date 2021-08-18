@@ -6,7 +6,6 @@
 namespace App\Controller\POS\Checkout;
 
 use Edoceo\Radix\Session;
-use Edoceo\Radix\DB\SQL;
 use Edoceo\Radix\ULID;
 
 class Commit extends \OpenTHC\Controller\Base
@@ -90,6 +89,7 @@ class Commit extends \OpenTHC\Controller\Base
 			}
 
 			// Retail/Sales Taxes
+			// $License->opt('tax-retail-rate') ??
 			$arg = [
 				':k' => sprintf('/%s/tax-retail-rate', $_SESSION['License']['id']),
 			];
@@ -118,8 +118,8 @@ class Commit extends \OpenTHC\Controller\Base
 			$Sale['full_price'] = $Sale['list_price'] + $tax0 + $tax1;
 			$Sale->save();
 
-		} catch (Exception $e) {
-			_exit_text('Failed to Execute the Sale', 500);
+		} catch (\Exception $e) {
+			_exit_fail('<h1>Failed to Execute the Sale [PCC-123]</h1>', 500);
 		}
 
 		$this->sendToCRE($Sale);
@@ -170,7 +170,6 @@ class Commit extends \OpenTHC\Controller\Base
 
 				$I = new Inventory($m[1]);
 				$s = $S['json'][sprintf('size-%d', $I['id'])];
-				// print_r($I);
 
 				if ($I->isRegulated()) {
 					$inv_list[] = array(
@@ -181,7 +180,6 @@ class Commit extends \OpenTHC\Controller\Base
 				}
 			}
 		}
-		// print_r($inv_list);
 
 		throw new Exception('What to Do HEre');
 
@@ -190,7 +188,6 @@ class Commit extends \OpenTHC\Controller\Base
 			switch ($res['success']) {
 			case 0:
 				// Tri
-				//print_r($res);
 				Session::flash('fail', $rbe->formatError($res));
 				Radix::redirect('/pos/sale?id=' . $S['id']);
 				break;
@@ -280,11 +277,9 @@ class Commit extends \OpenTHC\Controller\Base
 
 		// $req = $cre->_curl_init($cre->_make_url('/unitsofmeasure/v1/active'));
 		// $res = $cre->_curl_exec($req);
-		// var_dump($res);
 
 		// $req = $cre->_curl_init($cre->_make_url('/sales/v1/customertypes'));
 		// $res = $cre->_curl_exec($req);
-		// var_dump($res);
 		// exit;
 
 		$obj = [];
@@ -316,17 +311,11 @@ class Commit extends \OpenTHC\Controller\Base
 			$cre->setTimeOmega(date(\DateTime::ISO8601, $_SERVER['REQUEST_TIME'] + 60));
 			$chk = $api->search('active');
 
-			var_dump($chk);
-
 			foreach ($chk['data'] as $chk_b2c) {
-				var_dump($chk_b2c);
 				$obj8 = $api->single($chk_b2c['Id']);
-				var_dump($obj8);
 			}
 
 		}
-
-		var_dump($res);
 
 		return $Sale;
 

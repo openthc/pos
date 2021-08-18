@@ -27,7 +27,6 @@ class Accept extends \OpenTHC\Controller\Base
 		if ('success' != $res['status']) {
 			_exit_fail('<h1>Cannot Load B2B Sale [CTA-028]</h1>', 500);
 		}
-		//var_dump($res);
 		$T1 = $res['result'];
 
 		$res = $cre->get('/config/zone');

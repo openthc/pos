@@ -114,12 +114,10 @@ class Receipt extends \OpenTHC\Controller\Base
 		$rcpt = $_POST['receipt-email'];
 		$chk = \Edoceo\Radix\Net\HTTP::get('http://isvaliduser.com/api/check?e=' . \rawurlencode($rcpt));
 		if (($chk['info']['http_code'] >= 200) && ($chk['info']['http_code'] <= 299)) {
-			// OK'
-			//var_dump($chk);
+			// OK
 			$res = json_decode($chk['body'], true);
 			$rcpt = $res['email'];
 		} else {
-			var_dump($chk);
 			exit;
 			_exit_fail('<p>Invalid Email, <a href="/auth/open">try again</a>.</p>', 400);
 		}
@@ -206,14 +204,14 @@ EOM;
 			$PRC = new \Plivo\RestClient($cfg['sid'], $cfg['key']);
 			$PRC->messages->create($_POST['receipt-phone'], array(
 				'from' => $cfg['cid'],
-				'body' => sprintf('Receipt #%d at %s/pub/receipt?_=%s', $_GET['s'], APP_SITE, $hash)
+				'body' => sprintf('Receipt #%d at https://%s/pub/receipt?_=%s', $_GET['s'], $_SERVER['SERVER_NAME'], $hash)
 			));
 			break;
 		case 'twilio':
 			$TRC = new \Twilio\Rest\Client($cfg['sid'], $cfg['key']);
 			$TRC->messages->create($_POST['receipt-phone'], array(
 				'from' => $cfg['cid'],
-				'body' => sprintf('Receipt #%d at %s/pub/receipt?_=%s', $_GET['s'], APP_SITE, $hash)
+				'body' => sprintf('Receipt #%d at https://%s/pub/receipt?_=%s', $_GET['s'], $_SERVER['SERVER_NAME'], $hash)
 			));
 			break;
 		case 'rcpt.fyi':
@@ -227,7 +225,7 @@ EOM;
 			]);
 			$arg = [
 				'to' => $_POST['receipt-phone'],
-				'document' => sprintf('%s/pub/receipt?_=%s', APP_SITE, $hash),
+				'document' => sprintf('https://%s/pub/receipt?_=%s', $_SERVER['SERVER_NAME'], $hash),
 			];
 			$res = $ghc->post($url, $arg);
 			$raw = $res->getBody()->getContents();
@@ -235,8 +233,6 @@ EOM;
 			if (empty($ret['code'])) {
 				$ret['code'] = $res->getStatusCode();
 			}
-
-			var_dump($ret);
 
 			exit;
 

@@ -3,9 +3,6 @@
  * OpenTHC POS Application Bootstrap
  */
 
-define('APP_NAME', getenv('APP_NAME') ?: 'OpenTHC | POS');
-define('APP_HOST', getenv('APP_HOST') ?: 'pos.openthc.dev');
-define('APP_SITE', 'https://' . APP_HOST);
 define('APP_ROOT', __DIR__);
 define('APP_SALT', ''); // put 16 to 32 characters here
 
@@ -76,6 +73,7 @@ function _draw_html_card($head, $body, $foot=null)
 function _exit_fail($main, $code)
 {
 	// @todo preg_match /(\w{3}\-{\d+})/ to <a href
+	ob_start();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -103,6 +101,8 @@ h1 {
 </body>
 </html>
 <?php
+	$html = ob_get_clean();
+	__exit_html($html, $code);
 }
 
 /**
