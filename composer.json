@@ -3,18 +3,17 @@
 	"description": "Cannabis Retail Point of Sale",
 	"license": "GPL-3.0-only",
 	"autoload": {
+		"exclude-from-classmap": [
+			"vendor/erusev/parsedown-extra/test"
+		],
 		"psr-4": {
 			"App\\": "./lib",
 			"Custom\\": "./Custom"
-		},
-		"exclude-from-classmap": [
-			"/vendor/erusev/parsedown-extra/test"
-		]
+		}
 	},
 	"require": {
 		"edoceo/lowline_php": "dev-master",
 		"edoceo/radix": "dev-master",
-		"erusev/parsedown-extra": "0.8.1",
 		"league/oauth2-client": "2.6.0",
 		"openthc/common": "dev-master",
 		"openthc/cre-adapter": "dev-master",
