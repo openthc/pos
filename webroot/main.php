@@ -21,7 +21,7 @@ require_once(dirname(dirname(__FILE__)) . '/boot.php');
 
 // Slim Application
 $cfg = [];
-// $cfg['debug'] = true;
+$cfg['debug'] = true;
 $app = new \OpenTHC\App($cfg);
 
 
@@ -111,6 +111,10 @@ $app->group('/settings', 'App\Module\Settings')
 	->add('OpenTHC\Middleware\Session');
 
 
+// External Shop
+$app->group('/shop', 'App\Module\Shop')
+	->add('OpenTHC\Middleware\Session');
+
 // Vendor
 // $app->group('/vendor', 'App\Module\Vendor')
 // 	->add('App\Middleware\Menu')
@@ -133,6 +137,11 @@ $app->group('/auth', function() {
 	$this->get('/ping', 'OpenTHC\Controller\Auth\Ping');
 	$this->get('/shut', 'OpenTHC\Controller\Auth\Shut');
 })
+	->add('OpenTHC\Middleware\Session');
+
+
+// Intent
+$app->map(['GET','POST'], '/intent', 'App\Controller\Intent')
 	->add('OpenTHC\Middleware\Session');
 
 

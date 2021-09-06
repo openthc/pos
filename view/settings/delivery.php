@@ -1,6 +1,6 @@
 <?php
 /**
- *
+ * Delivery Manager
  */
 
 
@@ -9,6 +9,7 @@ $delivery_auth_link = sprintf('https://%s/intent?%s'
 	, http_build_query([
 		'a' => 'delivery-auth',
 		'c' => $_SESSION['Company']['id'],
+		'l' => $_SESSION['License']['id']
 	])
 );
 

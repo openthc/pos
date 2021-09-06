@@ -16,6 +16,8 @@
 </style>
 
 <form autocomplete="off" method="post">
+<input name="CSRF" type="hidden" value="<?= $data['CSRF'] ?>">
+
 <div class="container mt-4">
 	<div class="numpad-wrap">
 		<div class="numpad-grid"><button class="btn btn-outline-primary btn-number" type="button">1</button></div>
@@ -32,7 +34,7 @@
 		<div class="numpad-grid"><button class="btn btn-outline-success btn-action" name="a" type="submit" value="auth-code"><i class="fas fa-arrow-right"></i></button></div>
 	</div>
 
-	<input class="form-control" id="auth-code" name="code" type="text">
+	<input class="form-control" id="auth-code" name="code" type="hidden">
 
 </div>
 </form>
@@ -50,7 +52,6 @@ $(function() {
 			code_list.pop();
 			break;
 		case 'next':
-			// Submit Form?
 			break;
 		}
 	});
