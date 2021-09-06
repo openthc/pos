@@ -203,7 +203,7 @@ $(function() {
 	// Attach Handler to Payment Button
 	$('#pos-shop-next').on('click', function(e) {
 
-		$('#pp-cash-pay').val('0.00');
+		$('#payment-cash-incoming').val('0.00');
 
 		ppFormUpdate();
 

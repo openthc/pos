@@ -12,6 +12,9 @@ class Commit extends \OpenTHC\Controller\Base
 {
 	function __invoke($REQ, $RES, $ARG)
 	{
+		$_POST['cash_incoming'] = floatval($_POST['cash_incoming']);
+		$_POST['cash_outgoing'] = floatval($_POST['cash_outgoing']);
+
 		$dbc = $this->_container->DB;
 
 		$License = new \OpenTHC\License($dbc, $_SESSION['License']['id']);
@@ -29,7 +32,7 @@ class Commit extends \OpenTHC\Controller\Base
 			$Sale['contact_id'] = $_SESSION['Contact']['id'];
 			$Sale['guid'] = $Sale['id'];
 			$Sale['meta'] = json_encode($_POST);
-			$Sale->save();
+			$Sale->save('B2C/Sale/Create');
 
 			$key_list = array_keys($_POST);
 			foreach ($key_list as $key) {
@@ -52,7 +55,7 @@ class Commit extends \OpenTHC\Controller\Base
 						$SI['unit_price']= $IL['sell'];
 						$SI['uom'] = 'ea';
 						// $SI['sort'] = $idx_sort;
-						$SI->save();
+						$SI->save('B2C/Sale/Item/Create');
 
 						$IL->decrement($qty);
 
@@ -114,9 +117,8 @@ class Commit extends \OpenTHC\Controller\Base
 				// $idx_sort++;
 			}
 
-			$Sale['list_price'] = $sum_item_price; // $_POST['sub'];
-			$Sale['full_price'] = $Sale['list_price'] + $tax0 + $tax1;
-			$Sale->save();
+			$Sale['full_price'] = $sum_item_price + $tax0 + $tax1;
+			$Sale->save('B2C/Sale/Created');
 
 		} catch (\Exception $e) {
 			_exit_fail('<h1>Failed to Execute the Sale [PCC-123]</h1>', 500);
@@ -137,8 +139,6 @@ class Commit extends \OpenTHC\Controller\Base
 	 */
 	function sendToCRE($Sale)
 	{
-		$dbc = $this->_container->DB;
-
 		switch ($_SESSION['cre']['engine']) {
 			case 'biotrack':
 				$this->send_to_biotrack($Sale);
@@ -150,7 +150,6 @@ class Commit extends \OpenTHC\Controller\Base
 				$this->send_to_metrc($Sale);
 				break;
 		}
-
 	}
 
 	/**
@@ -257,9 +256,8 @@ class Commit extends \OpenTHC\Controller\Base
 		}
 
 		$b2c_sale['guid'] = $res['data'][0]['global_id'];
-		$b2c_sale['meta'] = json_encode($res['data'][0]);
-		// $b2c_sale->setMeta($res['data'][0], 'B2C/Sale/Created');
-		$b2c_sale->save();
+		// $b2c_sale['meta'] = json_encode($res['data'][0]);
+		$b2c_sale->save('B2C/Sale/Committed');
 
 		return $b2c_sale;
 

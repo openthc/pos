@@ -76,7 +76,7 @@ $body = <<<HTML
 		<div class="alert alert-secondary" id="amount-paid-wrap" style="font-size:28px; margin: 0;">
 			<div class="d-flex justify-content-between">
 				<div>Paid:</div>
-				<div class="r" id="pp-cash-pay">0.00</div>
+				<div class="r" id="payment-cash-incoming">0.00</div>
 			</div>
 		</div>
 	</div>
@@ -84,32 +84,12 @@ $body = <<<HTML
 		<div class="alert alert-warning" id="amount-need-wrap" style="font-size:28px; margin: 0;">
 			<div class="d-flex justify-content-between">
 				<div id="amount-need-hint">Due:</div>
-				<div class="r" id="amount-need-value">0.00</div>
+				<div class="r" id="payment-cash-outgoing">0.00</div>
 			</div>
 		</div>
 	</div>
 </div>
 
-<!-- <div class="row mb-4">
-	<div class="col-md-6" style="text-align:center;">
-		<span style="font-size:32px;">Paid:</span>
-		<div style="padding: 4px 8px;">
-			<input class="form-control psi-item-size r" id="pp-cash-pay" name="payment-made" readonly step="0.01" style="width: 98%;" type="number" value="0.00">
-		</div>
-	</div>
-	<div class="col-md-6" style="text-align:center;">
-		<span style="font-size:32px;">Due:</span>
-		<div style="padding: 4px 8px;">
-			<input class="form-control psi-item-size r" id="payment-need" name="payment-need" readonly step="0.01" style="width: 98%;" type="number" value="0.00">
-		</div>
-	</div>
-</div> -->
-
-<!-- <div class="row">
-	<div class="col-md-12">
-		<h2 id="pos-payment-over" style="font-size:32px; text-align:center;">Change: $<span id="pos-back-due">0.00</span></h2>
-	</div>
-</div> -->
 <!-- </div> -->
  <!-- /.container -->
 HTML;

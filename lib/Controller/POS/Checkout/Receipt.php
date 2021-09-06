@@ -12,8 +12,6 @@ class Receipt extends \OpenTHC\Controller\Base
 {
 	function __invoke($REQ, $RES, $ARG)
 	{
-		// $L = new License($this->_container->DB, $_SESSION['License']['id']);
-
 		$data = array(
 			'Page' => array('title' => 'POS :: Checkout :: Receipt'),
 			'Company' => $_SESSION['Company'],
@@ -31,15 +29,20 @@ class Receipt extends \OpenTHC\Controller\Base
 				// 	'link' => 'https://localhost:8000/print-server.php',
 				// 	'name' => 'Direct Localhost',
 				// ],
-				[
-					'type' => 'rpi',
-					'link' => 'https://192.168.2.237/print-server.php',
-					'name' => 'Direct To Localnet Print Server',
-				],
+				// [
+				// 	'type' => 'rpi',
+				// 	'link' => 'https://192.168.2.237/print-server.php',
+				// 	'name' => 'Direct To Localnet Print Server',
+				// ],
 				// [
 				// 	'type' => 'air',
 				// 	'name' => 'Air Print - BETA',
 				// 	'link' => '',
+				// ],
+				// [
+				// 	'name' => 'Application Direct',
+				// 	'type' => 'app-print-direct',
+				// 	'link' => 'ipp://192.168.2.237:631/TSC100'
 				// ],
 			]
 		);
@@ -50,6 +53,8 @@ class Receipt extends \OpenTHC\Controller\Base
 		case 'print-receipt':
 		case 'send-print':
 			return $this->print($RES);
+		case 'print-direct-link':
+			return $this->print_direct_link($RES);
 		case 'send-blank':
 			return $RES->withRedirect('/pos');
 		case 'send-email':
@@ -67,6 +72,14 @@ class Receipt extends \OpenTHC\Controller\Base
 			//require_once(APP_ROOT . '/view/pos/print-select.php');
 			return $RES->write( $this->render('pos/checkout/receipt-select.php', $data) );
 		}
+
+		$dbc = $this->_container->DB;
+
+		$S = new \App\B2C\Sale($dbc, $_GET['s']);
+		$Sm = json_decode($S['meta'], true);
+
+		$data['cash_incoming'] = $Sm['cash_incoming'];
+		$data['cash_outgoing'] = $Sm['cash_outgoing'];
 
 		return $RES->write( $this->render('pos/checkout/receipt.php', $data) );
 
@@ -89,12 +102,31 @@ class Receipt extends \OpenTHC\Controller\Base
 		$pdf = new \App\PDF\Receipt();
 		$pdf->setCompany( new \OpenTHC\Company($dbc, $_SESSION['Company'] ));
 		$pdf->setLicense( new \OpenTHC\Company($dbc, $_SESSION['License'] ));
+		$pdf->setSale($S);
 		$pdf->setItems($b2c_item_list);
 		$pdf->render();
 		$name = sprintf('receipt_%s.pdf', $S['id']);
 		$pdf->Output($name, 'I');
 
 		exit(0);
+	}
+
+	/**
+	 *
+	 */
+	function print_direct_link($RES)
+	{
+		// Like Print Above, but Save PDF
+		$pdf_file = sprintf('%s/webroot/output/%s.pdf', APP_ROOT, $ulid);
+		$pdf_base = basename($pdf_file);
+
+		return $RES->withJSON([
+			'data' => sprintf('https://%s/output/%s.pdf', $_SERVER['SERVER_NAME'], $pdf_base),
+			'meta' => [
+				'expires_at' => 'THE_FUTURE',
+			]
+		]);
+
 	}
 
 	/**
@@ -105,7 +137,8 @@ class Receipt extends \OpenTHC\Controller\Base
 	 */
 	function _send_email($RES, $data)
 	{
-		$cfg = SQL::fetch_one("SELECT val FROM auth_company_option WHERE key = 'pos-email-send'");
+		$dbc = $this->_container->DB;
+		$cfg = $dbc->fetchOne("SELECT val FROM auth_company_option WHERE key = 'pos-email-send'");
 		if (empty($cfg)) {
 			_exit_fail('<h1>Email Service is not configured</h1>', 501);
 		}

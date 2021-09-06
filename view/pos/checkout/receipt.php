@@ -8,6 +8,31 @@ $this->layout_file = sprintf('%s/view/_layout/html-pos.php', APP_ROOT);
 ?>
 
 <div class="container mt-4">
+
+<div class="row justify-content-center mb-2">
+<div class="col-md-8">
+<div class="card">
+
+	<h1 class="card-header">Cash</h1>
+
+	<div class="alert alert-success" style="font-size:28px; margin: 0;">
+		<div class="d-flex justify-content-between">
+			<div>Paid:</div>
+			<div class="r">$<?= number_format($data['cash_incoming'], 2) ?></div>
+		</div>
+	</div>
+
+	<div class="alert alert-danger" style="font-size:28px; margin: 0;">
+		<div class="d-flex justify-content-between">
+			<div>Change:</div>
+			<div class="r">$<?= number_format($data['cash_outgoing'], 2) ?></div>
+		</div>
+	</div>
+
+</div>
+</div>
+</div>
+
 <div class="row justify-content-center">
 <div class="col-md-8">
 <div class="card">

@@ -8,8 +8,7 @@ var ppCashPaid_List = new Array();
 function ppFormUpdate()
 {
 	var full = Weed.POS.sale.due;
-	// var cash = parseFloat($('#pp-cash-pay').val(), 10);
-	var cash = parseFloat($('#pp-cash-pay').text(), 10);
+	var cash = parseFloat($('#payment-cash-incoming').text(), 10);
 	var need = (full - cash);
 	var back = (cash - full);
 
@@ -24,7 +23,7 @@ function ppFormUpdate()
 		$('#amount-need-wrap').removeClass('alert-danger alert-secondary alert-success');
 		$('#amount-need-wrap').addClass('alert-warning');
 		$('#amount-need-hint').text('Due:');
-		$('#amount-need-value').text(need.toFixed(2));
+		$('#payment-cash-outgoing').text(need.toFixed(2));
 
 	} else if (cash === full) {
 
@@ -35,12 +34,11 @@ function ppFormUpdate()
 		$('#amount-need-wrap').removeClass('alert-danger alert-secondary alert-success alert-warning');
 		$('#amount-need-wrap').addClass('alert-success');
 		$('#amount-need-hint').text('Perfect!');
-		$('#amount-need-value').text('0.00');
+		$('#payment-cash-outgoing').text('0.00');
 
 		// $('.pos-cost-due').addClass('text-success').removeClass('text-warning');
-		// $('#pp-cash-pay').addClass('text-success').removeClass('text-danger').removeClass('text-warning');
+		// $('#payment-cash-incoming').addClass('text-success').removeClass('text-danger').removeClass('text-warning');
 
-		// $('#pos-payment-over').show().addClass('alert alert-success');
 		$('#pos-payment-commit').removeAttr('disabled');
 
 	} else if (cash > full) {
@@ -52,15 +50,14 @@ function ppFormUpdate()
 		$('#amount-need-wrap').removeClass('alert-danger alert-secondary alert-success');
 		$('#amount-need-wrap').addClass('alert-danger');
 		$('#amount-need-hint').text('Change:');
-		$('#amount-need-value').text( back.toFixed(2) );
+		$('#payment-cash-outgoing').text( back.toFixed(2) );
 		// $('#pos-back-due').html( back.toFixed(2) )
 
 		// $('.pos-cost-due').addClass('text-warning').removeClass('text-success');
-		// $('#pp-cash-pay').addClass('text-warning').removeClass('text-danger').removeClass('text-success');
+		// $('#payment-cash-incoming').addClass('text-warning').removeClass('text-danger').removeClass('text-success');
 		// $('#pp-card-pay').removeClass('text-danger').removeClass('text-success').removeClass('text-warning');
 
 		//$('#pos-back-due').addClass('text-warning').removeClass('text-danger').removeClass('text-success');
-		// $('#pos-payment-over').show().addClass('alert alert-danger');
 		$('#pos-payment-commit').removeAttr('disabled');
 
 	}
@@ -78,14 +75,15 @@ function ppAddCash(n)
 {
 	console.log('ppAddCash');
 
-	var full = $('#pos-cost-due').data('amount');
+	debugger;
+	var full = $('#pos-cost-due').data('amount'); // @todo is this wrong?
 
 	var add = parseFloat( $(n).data('amount'), 10 );
-	var cur = parseFloat( $('#pp-cash-pay').text(), 10 );
+	var cur = parseFloat( $('#payment-cash-incoming').text(), 10 );
 	if (!cur) cur = 0;
 
 	var cash = (cur + add);
-	$('#pp-cash-pay').text( cash.toFixed(2)  );
+	$('#payment-cash-incoming').text( cash.toFixed(2)  );
 
 	var card = full - cash;
 	$('#pp-card-pay').val( card.toFixed(2)  );
@@ -138,23 +136,23 @@ $(function() {
 	});
 
 	// Focus on Select!
-	// $('#pp-cash-pay').on('focus', function(e) {
+	// $('#payment-cash-incoming').on('focus', function(e) {
 	// 	console.log('focus');
 	// 	$(this).select();
 	// });
-	// $('#pp-cash-pay').on('mouseup', function(e) {
+	// $('#payment-cash-incoming').on('mouseup', function(e) {
 	// 	console.log('mouseup');
 	// 	e.preventDefault();
 	// 	return false;
 	// });
 
-	$('#pp-cash-pay').on('keyup', function() {
-		ppFormUpdate();
-	});
+	// $('#payment-cash-incoming').on('keyup', function() {
+	// 	ppFormUpdate();
+	// });
 
 	// Reset my Form
 	$('#pos-pay-undo').on('click', function() {
-		$('#pp-cash-pay').text('0.00');
+		$('#payment-cash-incoming').text('0.00');
 		$('#pp-card-pay').text('0.00');
 		ppFormUpdate();
 	});
@@ -167,15 +165,15 @@ $(function() {
 		//Weed.modal('shut');
 	});
 
-	// $('#pp-cash-pay').focus().select();
-	// var ppcp = document.getElementById('pp-cash-pay');
-	// ppcp.focus();
-	// ppcp.select();
-
 	/**
 		Actual Payment Button
 	*/
 	$('#pos-payment-commit').on('click touchend', function(e) {
+
+		debugger;
+
+		var cash_incoming = $('#payment-cash-incoming').text();
+		var cash_outgoing = $('#payment-cash-outgoing').text();
 
 		$('#psi-form').attr('action', '/pos/checkout/commit');
 		$('#psi-form').append('<input name="a" type="hidden" value="pos-done">');
@@ -183,8 +181,10 @@ $(function() {
 		$('#psi-form').append('<input name="sub" type="hidden" value="' + Weed.POS.sale.sub + '">');
 		$('#psi-form').append('<input name="tax_i502" type="hidden" value="' + Weed.POS.sale.tax_i502 + '">');
 		$('#psi-form').append('<input name="tax_sale" type="hidden" value="' + Weed.POS.sale.tax_sale + '">');
-		$('#psi-form').append('<input name="pay" type="hidden" value="' + $('#pp-cash-pay').val() + '">');
+		$('#psi-form').append('<input name="pay" type="hidden" value="' + $('#payment-cash-incoming').val() + '">'); // @deprecated
 		$('#psi-form').append('<input name="name" type="hidden" value="' + $('#customer-name').val() + '">');
+		$('#psi-form').append(`<input name="cash_incoming" type="hidden" value="${cash_incoming}">`);
+		$('#psi-form').append(`<input name="cash_outgoing" type="hidden" value="${cash_outgoing}">`);
 		$('#psi-form').submit();
 
 		return false;
