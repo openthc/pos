@@ -1,0 +1,42 @@
+<?php
+/**
+ *
+ */
+
+
+$delivery_auth_link = sprintf('https://%s/intent?%s'
+	, $_SERVER['SERVER_NAME']
+	, http_build_query([
+		'a' => 'delivery-auth',
+		'c' => $_SESSION['Company']['id'],
+	])
+);
+
+
+?>
+
+<div class="container mt-4">
+
+	<h2>Delivery Staff Sign In:</h2>
+	<div class="form-group">
+		<div class="input-group">
+			<input class="form-control form-control-lg" readonly type="text" value="<?= $delivery_auth_link ?>">
+			<div class="input-group-append">
+				<button class="btn btn-outline-secondary" type="button"><i class="fas fa-qrcode"></i></button>
+			</div>
+		</div>
+	</div>
+
+<!--
+	<h2>Another Thing:</h2>
+	<div class="form-group">
+		<div class="input-group">
+			<input class="form-control form-control-lg" readonly type="text" value="<?= $delivery_auth_link ?>">
+			<div class="input-group-append">
+				<button class="btn btn-outline-secondary" type="button"><i class="fas fa-qrcode"></i></button>
+			</div>
+		</div>
+	</div>
+ -->
+
+</div>
