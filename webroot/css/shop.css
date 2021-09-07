@@ -1,0 +1,43 @@
+/**
+ * Styles for the Public Shop and Example
+ */
+
+.product-grid {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: space-around;
+}
+.product-grid .product-item-wrap {
+	flex: 1 1 25%;
+	margin: 0 0 0.25rem 0;
+	max-width: 30rem;
+	min-width: 20rem;
+	padding: 0.25rem;
+}
+.product-grid .product-item-wrap .product-item {
+	border: 1px solid #ddd;
+	border-radius: 0.25rem;
+}
+.product-grid .product-item-wrap .product-item header {
+	margin: 0;
+	padding: 0.25rem 0.50rem;
+}
+.product-grid .product-item-wrap .product-item header h2
+, .product-grid .product-item-wrap .product-item header h3 {
+	margin: 0;
+	padding: 0;
+}
+
+.product-grid .product-item-wrap .product-item .product-cost {
+	font-size: 1.5rem;
+	font-weight: bold;
+}
+
+.product-grid .product-item-wrap .product-item .product-item-foot {
+	display: flex;
+	margin: 0.50rem;
+	flex-direction: row;
+	justify-content: space-between;
+
+}

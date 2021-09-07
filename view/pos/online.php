@@ -1,15 +1,18 @@
 <?php
 /**
- *
+ * External / Online Orders
  */
-
-$this->layout_file = sprintf('%s/view/_layout/html-pos.php', APP_ROOT);
 
 ?>
 
 <div class="container">
 <div class="hero">
 	<h1>Online Orders</h1>
+	<p>These orders can come from external systems, if you have them configured or from your own website</p>
+	<div>
+		<a class="btn btn-outline-secondary">Configure Settings</a>
+		<a class="btn btn-outline-secondary" href="/shop/example?c=<?= $_SESSION['Company']['id'] ?>" target="_blank">View Example</a>
+	</div>
 </div>
 
 <div class="table-responsive">
