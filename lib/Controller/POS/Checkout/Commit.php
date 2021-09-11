@@ -121,7 +121,7 @@ class Commit extends \OpenTHC\Controller\Base
 			$Sale->save('B2C/Sale/Created');
 
 		} catch (\Exception $e) {
-			_exit_fail('<h1>Failed to Execute the Sale [PCC-123]</h1>', 500);
+			_exit_html_fail('<h1>Failed to Execute the Sale [PCC-123]</h1>', 500);
 		}
 
 		$this->sendToCRE($Sale);

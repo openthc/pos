@@ -19,7 +19,7 @@ class Main extends \OpenTHC\Controller\Base
 		];
 		$chk = $dbc->fetchOne($sql, $arg);
 		if (empty($chk)) {
-			_exit_fail('<h1>Inventory Lots need to be present and priced for the POS to operate [CPH-020]</h1>', 501);
+			_exit_html_fail('<h1>Inventory Lots need to be present and priced for the POS to operate [CPH-020]</h1>', 501);
 		}
 
 

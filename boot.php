@@ -70,41 +70,6 @@ function _draw_html_card($head, $body, $foot=null)
 	return ob_get_clean();
 }
 
-function _exit_fail($main, $code)
-{
-	// @todo preg_match /(\w{3}\-{\d+})/ to <a href
-	ob_start();
-?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<style>
-body {
-	background: #101010;
-	color: #fdfdfd;
-	font-family: sans-serif;
-	margin: 0;
-	padding: 1vh 2vw;
-}
-h1 {
-	color: #fd1010;
-	font-size: 180%;
-	margin: 0;
-	padding: 0;
-}
-</style>
-<title>OpenTHC :: Error</title>
-</head>
-<body>
-<main><?= $main ?></main>
-</body>
-</html>
-<?php
-	$html = ob_get_clean();
-	__exit_html($html, $code);
-}
-
 /**
  * You can put custom stuff here, it will be available to the entire application
  */

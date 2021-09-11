@@ -140,7 +140,7 @@ class Receipt extends \OpenTHC\Controller\Base
 		$dbc = $this->_container->DB;
 		$cfg = $dbc->fetchOne("SELECT val FROM auth_company_option WHERE key = 'pos-email-send'");
 		if (empty($cfg)) {
-			_exit_fail('<h1>Email Service is not configured</h1>', 501);
+			_exit_html_fail('<h1>Email Service is not configured</h1>', 501);
 		}
 		$cfg = \json_decode($cfg, true);
 
@@ -151,8 +151,7 @@ class Receipt extends \OpenTHC\Controller\Base
 			$res = json_decode($chk['body'], true);
 			$rcpt = $res['email'];
 		} else {
-			exit;
-			_exit_fail('<p>Invalid Email, <a href="/auth/open">try again</a>.</p>', 400);
+			_exit_html_fail('<p>Invalid Email, <a href="/auth/open">try again</a>.</p>', 400);
 		}
 
 		$T = new \App\B2C\Sale($_GET['s']);
@@ -225,7 +224,7 @@ EOM;
 
 		$cfg = $dbc->fetchOne("SELECT val FROM auth_company_option WHERE key = 'pos-phone-send'");
 		if (empty($cfg)) {
-			_exit_fail('<h1>SMS Service is not configured</h1><p>Please <a href="/settings/receipt">update the settings</a></p>', 501);
+			_exit_html_fail('<h1>SMS Service is not configured</h1><p>Please <a href="/settings/receipt">update the settings</a></p>', 501);
 		}
 		$cfg = \json_decode($cfg, true);
 

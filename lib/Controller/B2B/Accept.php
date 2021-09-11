@@ -23,13 +23,13 @@ class Accept extends \OpenTHC\Controller\Base
 		// Fresh data from CRE
 		$res = $cre->get('/transfer/incoming/' . $ARG['id']);
 		if ('success' != $res['status']) {
-			_exit_fail('<h1>Cannot Load B2B Sale [CTA-028]</h1>', 500);
+			_exit_html_fail('<h1>Cannot Load B2B Sale [CTA-028]</h1>', 500);
 		}
 		$T1 = $res['result'];
 
 		$res = $cre->get('/config/section');
 		if ('success' != $res['status']) {
-			_exit_fail('<h1>Cannot load Section list from CRE [CTA-033]</h1>', 501);
+			_exit_html_fail('<h1>Cannot load Section list from CRE [CTA-033]</h1>', 501);
 		}
 		$section_list = $res['result'];
 
