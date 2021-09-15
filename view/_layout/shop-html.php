@@ -27,12 +27,7 @@ header('content-type: text/html; charset=utf-8', true);
 <head>
 </head>
 <body>
-<?php
-$x = Session::flash();
-if ($x) {
-	printf('<div class="container"><div class="alert-wrap">%s</div></div>', $x);
-}
-?>
+<?= $this->block('session-flash.php') ?>
 <div class="container-fluid" style="min-height:80vh;">
 <?= $this->body ?>
 </div>
