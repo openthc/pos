@@ -9,8 +9,13 @@
 }
 </style>
 
+<div class="container mt-4">
+	<h2>Email Configured: <span class="badge badge-info">Not Yet</span></h2>
+	<h2>SMS Configured: <span class="badge badge-info">Not Yet</span></h2>
+</div>
 
-<div class="container">
+
+<div class="container mt-4">
 
 	<div class="hero">
 		<h1>Receipt Text</h1>
@@ -36,6 +41,7 @@
 		<div id="receipt-preview-wrap"></div>
 		<img src="">
 	</div>
+
 </div>
 
 
