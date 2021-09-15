@@ -42,7 +42,7 @@ $body = <<<HTML
 	<div class="col-md-6" style="text-align:center;">
 		<span style="font-size:32px;">Paid:</span>
 		<div style="padding: 4px 8px;">
-			<input autocomplete="off" class="form-control psi-item-size" id="pp-cash-pay" name="payment-made" step="0.01" style="width: 98%;" type="number" value="0.00">
+			<input autocomplete="off" class="form-control psi-item-size" id="pp-card-pay" name="payment-made" step="0.01" style="width: 98%;" type="number" value="0.00">
 		</div>
 	</div>
 	<div class="col-md-6" style="text-align:center;">

@@ -34,21 +34,15 @@ $body_class_list[] = sprintf('m1-%s', $m1_mode);
 </head>
 <body class="<?= implode(' ', $body_class_list) ?>" data-menu-left-mode="<?= $m1_mode ?>">
 <?= $this->block('body-head.php') ?>
-<!--
-{% if alert %}
-	<div class="container">
-	<div class="alert-wrap">
-		{{ alert }}
-	</div>
-	</div>
-{% endif %}
- -->
-
+<?php
+$x = Session::flash();
+if ($x) {
+	printf('<div class="container"><div class="alert-wrap">%s</div></div>', $x);
+}
+?>
 <div class="container-fluid" style="min-height:80vh;">
 <?= $this->body ?>
 </div>
-
-{% include "block/footer-pub.html" %}
 
 <script src="https://cdn.openthc.com/lodash/4.17.15/lodash.js" integrity="sha256-VeNaFBVDhoX3H+gJ37DpT/nTuZTdjYro9yBruHjVmoQ=" crossorigin="anonymous"></script>
 <script src="https://cdn.openthc.com/jquery/3.4.1/jquery.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
@@ -56,6 +50,7 @@ $body_class_list[] = sprintf('m1-%s', $m1_mode);
 <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.19/js/jquery.dataTables.min.js" integrity="sha256-t5ZQTZsbQi8NxszC10CseKjJ5QeMw5NINtOXQrESGSU=" crossorigin="anonymous"></script> -->
 <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.19/js/dataTables.bootstrap4.min.js" integrity="sha256-hJ44ymhBmRPJKIaKRf3DSX5uiFEZ9xB/qx8cNbJvIMU=" crossorigin="anonymous"></script> -->
 <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/riot/4.14.0/riot.min.js" integrity="sha512-+LI/J+j6hecBPuCvPtbjYAXiha2RuYEpO3yromB1zTVq8UuH0BTafeP7myLEd9tJnaVa2JkhLzRdhdIh+Iru0w==" crossorigin="anonymous"></script> -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" integrity="sha512-CNgIRecGo7nphbeZ04Sc13ka07paqdeTu0WR1IM4kNcpmBAUSHSQX0FslNhTDadL4O5SAGapGt4FodqL8My0mA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.5.0/chart.min.js" integrity="sha512-asxKqQghC1oBShyhiBwA+YgotaSYKxGP1rcSYTDrB0U6DxwlJjU59B67U8+5/++uFjcuVM8Hh5cokLjZlhm3Vg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <!-- <script src="https://app.openthc.com/js/app.js"></script> -->
 <script src="/js/pos.js"></script>

@@ -87,6 +87,7 @@
 <script src="https://cdn.openthc.com/bootstrap/4.4.1/bootstrap.js" integrity="sha256-OUFW7hFO0/r5aEGTQOz9F/aXQOt+TwqI1Z4fbVvww04=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/riot/4.14.0/riot.min.js" integrity="sha512-+LI/J+j6hecBPuCvPtbjYAXiha2RuYEpO3yromB1zTVq8UuH0BTafeP7myLEd9tJnaVa2JkhLzRdhdIh+Iru0w==" crossorigin="anonymous"></script>
 <!-- <script src="https://unpkg.com/@zxing/library@latest"></script> -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" integrity="sha512-CNgIRecGo7nphbeZ04Sc13ka07paqdeTu0WR1IM4kNcpmBAUSHSQX0FslNhTDadL4O5SAGapGt4FodqL8My0mA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script crossorigin="anonymous" src="https://unpkg.com/@zxing/library@0.18.6/umd/index.min.js"></script>
 <script src="/js/pos.js"></script>
 <script src="/js/pos-scanner.js"></script>
