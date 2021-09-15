@@ -23,7 +23,7 @@ $delivery_auth_link = sprintf('https://%s/intent?%s'
 		<div class="input-group">
 			<input class="form-control form-control-lg" readonly type="text" value="<?= $delivery_auth_link ?>">
 			<div class="input-group-append">
-				<button class="btn btn-outline-secondary" type="button"><i class="fas fa-qrcode"></i></button>
+				<button class="btn btn-outline-secondary qrcode-link" data-code="<?= $delivery_auth_link ?>" type="button"><i class="fas fa-qrcode"></i></button>
 			</div>
 		</div>
 	</div>

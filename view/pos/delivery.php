@@ -9,7 +9,26 @@
 }
 </style>
 
-<h1>POS Delivery </h1>
+<header style="display:flex; justify-content: space-between;">
+	<div>
+		<h1>POS Delivery </h1>
+	</div>
+	<div><?php
+$delivery_auth_link = sprintf('https://%s/intent?%s'
+	, $_SERVER['SERVER_NAME']
+	, http_build_query([
+		'a' => 'delivery-auth',
+		'c' => $_SESSION['Company']['id'],
+		'l' => $_SESSION['License']['id']
+	])
+);
+printf('<button class="btn btn-outline-secondary qrcode-link" data-code="%s" type="button"><i class="fas fa-qrcode"></i></button>'
+	, $delivery_auth_link
+);
+	?></div>
+</header>
+
+
 
 <div class="row">
 	<div class="col-md-6">

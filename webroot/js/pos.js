@@ -245,4 +245,39 @@ $(function() {
 	});
 
 
+	// Open A Link in a Modal Thing
+	$('.qrcode-link').on('click', function(e) {
+
+		var size = 384;
+
+		var html = `<div class="modal" id="qrcode-view" role="dialog" tabindex="-1">
+<div class="modal-dialog modal-lg" role="document">
+<div class="modal-content">
+<div class="modal-body">
+	<div style="height: ${size}px; margin: 0 auto; width: ${size}px;">
+		<div id="qrcode-embed-image"></div>
+	</div>
+</div>
+</div>
+</div>
+</div>
+`;
+
+		$(window.document.body).append(html);
+		$('#qrcode-view').modal('show');
+		$('#qrcode-view').on('hide.bs.modal', function() {
+			$('#qrcode-view').remove();
+		});
+
+		var arg = {
+			text: this.getAttribute('data-code'),
+			width: size,
+			height: size,
+			colorDark : "#000000",
+			colorLight : "#ffffff",
+			correctLevel : QRCode.CorrectLevel.H
+		};
+		var qrcode = new QRCode('qrcode-embed-image', arg);
+	});
+
 });
