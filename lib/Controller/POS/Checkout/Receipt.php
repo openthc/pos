@@ -246,9 +246,11 @@ EOM;
 				'body' => sprintf('Receipt #%d at https://%s/pub/receipt?_=%s', $_GET['s'], $_SERVER['SERVER_NAME'], $hash)
 			));
 			break;
+
 		case 'rcpt.fyi':
+
 			$ghc = new \GuzzleHttp\Client([
-				'base_uri' => 'https://rcpt.fyi/send',
+				'base_uri' => 'https://rcpt.fyi',
 				'headers' => [
 					'user-agent' => 'OpenTHC/420.20.040',
 					'authorization' => sprintf('Bearer %s', $this->_api_auth),
@@ -256,18 +258,15 @@ EOM;
 				'http_errors' => false
 			]);
 			$arg = [
-				'to' => $_POST['receipt-phone'],
-				'document' => sprintf('https://%s/pub/receipt?_=%s', $_SERVER['SERVER_NAME'], $hash),
+				'address' => $_POST['receipt-phone'],
+				'message' => sprintf('https://%s/pub/receipt?_=%s', $_SERVER['SERVER_NAME'], $hash),
 			];
-			$res = $ghc->post($url, $arg);
+			$res = $ghc->post('/api/send', $arg);
 			$raw = $res->getBody()->getContents();
 			$ret = json_decode($raw, true);
 			if (empty($ret['code'])) {
 				$ret['code'] = $res->getStatusCode();
 			}
-
-			exit;
-
 
 		}
 
@@ -287,7 +286,7 @@ EOM;
 		}));
 
 		$base = array(
-			'app_url' => \OpenTHC\Config::get('application.base'),
+			'app_url' => \OpenTHC\Config::get('application/base'),
 			'mail_hash' => sha1(openssl_random_pseudo_bytes(512)),
 		);
 

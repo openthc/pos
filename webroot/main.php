@@ -1,6 +1,6 @@
 <?php
 /**
- * Front Controller
+ * Main Controller
  *
  * This file is part of OpenTHC POS
  *
