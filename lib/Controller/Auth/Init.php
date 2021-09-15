@@ -9,6 +9,10 @@ class Init extends \OpenTHC\Controller\Base
 {
 	function __invoke($REQ, $RES, $ARG)
 	{
+		if (!empty($_GET['_'])) {
+			// Do Something Special?
+		}
+
 		$ret = $_GET['r'];
 		if (empty($ret)) {
 			$ret = '/dashboard';
@@ -18,10 +22,7 @@ class Init extends \OpenTHC\Controller\Base
 		$dbc_auth = _dbc('auth');
 		$chk = $dbc_auth->fetchRow('SELECT dsn, cre, cre_meta FROM auth_company WHERE id = ?', $_SESSION['Company']['id']);
 		if (empty($chk['dsn'])) {
-			return $RES->withJSON([
-				'data' => [],
-				'meta' => [ 'detail' => 'Fatal Database Error [CAC-043]'],
-			], 500);
+			_exit_html_fail('<h1>Fatal Database Error [CAC-043]</h1>', 500);
 		}
 
 		$dbc_user = _dbc($chk['dsn']);
@@ -30,8 +31,11 @@ class Init extends \OpenTHC\Controller\Base
 
 		// Find the Default License?
 		if (empty($_SESSION['License'])) {
-			// Find It?
 			$License = $dbc_user->fetchRow('SELECT * FROM license WHERE flag & :f1 = :f1 ORDER BY id LIMIT 1', [ ':f1' => 0x01000000 ]);
+			$_SESSION['License'] = $License;
+		} else {
+			// Reload License
+			$License = $dbc_user->fetchRow('SELECT * FROM license WHERE id = :l0', [ ':l0' => $_SESSION['License']['id'] ]);
 			$_SESSION['License'] = $License;
 		}
 
@@ -41,11 +45,6 @@ class Init extends \OpenTHC\Controller\Base
 		}
 
 		// Cleanup some CRE Data
-		if (empty($_SESSION['cre']['service-key']) && !empty($_SESSION['cre']['program-key'])) {
-			$_SESSION['cre']['service-key'] = $_SESSION['cre']['program-key'];
-			unset($_SESSION['cre']['program-key']);
-		}
-
 		if (empty($_SESSION['cre']['license']) && !empty($_SESSION['cre']['auth']['license'])) {
 			$_SESSION['cre']['license'] = $_SESSION['cre']['auth']['license'];
 			unset($_SESSION['cre']['auth']['license']);

@@ -9,6 +9,7 @@ class Connect extends \OpenTHC\Controller\Auth\Connect
 {
 	function __invoke($REQ, $RES, $ARG)
 	{
+		// Requires License
 		$RES = parent::__invoke($REQ, $RES, $ARG);
 
 		$x = $RES->getStatusCode();
