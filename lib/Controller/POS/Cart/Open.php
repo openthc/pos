@@ -8,7 +8,7 @@ namespace App\Controller\POS\Cart;
 use Edoceo\Radix;
 use Edoceo\Radix\Session;
 
-class Save extends \OpenTHC\Controller\Base
+class Open extends \OpenTHC\Controller\Base
 {
 	function __invoke($REQ, $RES, $ARG)
 	{
