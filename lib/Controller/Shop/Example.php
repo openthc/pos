@@ -17,8 +17,7 @@ class Example extends \OpenTHC\Controller\Base
 		$dbc_auth = _dbc('auth');
 		$Company = $dbc_auth->fetchRow('SELECT id, name, dsn FROM auth_company WHERE id = :c0', [ ':c0' => $_GET['c'] ]);
 		if (empty($Company['id'])) {
-			// _exit_html_warn('')
-			__exit_html('Invalid Request', 400);
+			_exit_html_fail('Invalid Request [CSE-020]', 400);
 		}
 
 		$dbc_user = _dbc($Company['dsn']);
@@ -26,7 +25,6 @@ class Example extends \OpenTHC\Controller\Base
 
 		$data['Page']['title'] = sprintf('Example Shop :: %s', $Company['name']);
 		$data['Company'] = $Company;
-
 
 		$sql = <<<SQL
  SELECT inventory.id,

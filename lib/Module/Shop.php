@@ -17,6 +17,8 @@ class Shop extends \OpenTHC\Module\Base
 		$a->get('/checkout', 'App\Controller\Shop\Checkout');
 		$a->post('/checkout', 'App\Controller\Shop\Checkout:post');
 
+		$a->get('/checkout/done', 'App\Controller\Shop\Checkout:done');
+
 		$a->get('/example', 'App\Controller\Shop\Example');
 	}
 }

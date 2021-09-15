@@ -10,7 +10,7 @@ $this->layout_file = sprintf('%s/view/_layout/shop-html.php', APP_ROOT);
 <header style="display:flex; justify-content: space-between;">
 	<div><h1><?= $data['Page']['title'] ?></h1></div>
 	<div>
-		<a class="btn btn-outline-secondary" href="/shop/cart?c=<?= $data['b2b_sale']['company']['id'] ?>"><i class="fas fa-shopping-cart"></i></a>
+		<h2 class="badge bg-success">Complete</h2>
 	</div>
 </header>
 
@@ -40,7 +40,7 @@ foreach ($data['b2b_sale']['item_list'] as $idx => $b2b_item) {
 			<div class="input-group-prepend">
 				<div class="input-group-text" style="width: 6em;">Name:</div>
 			</div>
-			<input class="form-control form-control-lg" type="text">
+			<input class="form-control form-control-lg" readonly type="text" value="<?= __h($b2b['contact']['name']) ?>">
 		</div>
 	</div>
 
@@ -49,7 +49,7 @@ foreach ($data['b2b_sale']['item_list'] as $idx => $b2b_item) {
 			<div class="input-group-prepend">
 				<div class="input-group-text" style="width: 6em;">Email:</div>
 			</div>
-			<input class="form-control form-control-lg" type="email">
+			<input class="form-control form-control-lg" readonly type="email" value="<?= __h($b2b['contact']['email']) ?>">
 		</div>
 	</div>
 
@@ -58,14 +58,15 @@ foreach ($data['b2b_sale']['item_list'] as $idx => $b2b_item) {
 			<div class="input-group-prepend">
 				<div class="input-group-text" style="width: 6em;">Phone:</div>
 			</div>
-			<input class="form-control form-control-lg" type="tel">
+			<input class="form-control form-control-lg" readonly type="tel" value="<?= __h($b2b['contact']['phone']) ?>">
 		</div>
 	</div>
 
 </section>
 
 <div>
-	<button class="btn btn-lg btn-danger" name="a" type="submit" value="b2c-sale-delete"><i class="fas fa-trash"></i> Delete</button>
+	<a class="btn btn-lg btn-primary" href="/shop?c=<?= $data['b2b_sale']['company']['id'] ?>"><i class="fas fa-store"></i> Shop Storefront</a>
+	<button class="btn btn-lg btn-outline-danger" name="a" type="submit" value="b2c-sale-delete"><i class="fas fa-trash"></i> Delete</button>
 </div>
 
 </div>

@@ -14,9 +14,35 @@ class Cart extends \OpenTHC\Controller\Base
 	{
 		// View
 		$data = $this->data;
-		$data['product_list'] = $this->load_cart_product_list($_GET['c']);
-		$html = $this->render('shop/cart-main.php', $data);
+		$data['Page']['title'] = 'Cart';
+		$data['Company'] = [
+			'id' => $_GET['c'],
+		];
+
+		$cart = sprintf('cart-%s', $data['Company']['id']);
+
+		$product_list = $this->load_cart_product_list($data['Company']['id']);
+
+		$data['product_list'] = [];
+		foreach ($product_list as $p) {
+			$data['product_list'][] = [
+				'lot' => [
+					'id' => $p['lot_id']
+				]
+				, 'product' => [
+					'id' => $p['product_id']
+					, 'name' => $p['product_name']
+					, 'sell' => $p['sell']
+				]
+				, 'variety' => $p['variety']
+				, 'qty' => $_SESSION[$cart][ $p['lot_id'] ]
+			];
+		}
+
+		$html = $this->render('shop/cart.php', $data);
+
 		return $RES->write($html);
+
 	}
 
 	/**
@@ -57,8 +83,7 @@ class Cart extends \OpenTHC\Controller\Base
 				$dbc_auth = _dbc('auth');
 				$Company = $dbc_auth->fetchRow('SELECT id, name FROM auth_company WHERE id = :c0', [ ':c0' => $_GET['c'] ]);
 				if (empty($Company['id'])) {
-					// _exit_html_warn('')
-					__exit_html('Invalid Request', 400);
+					_exit_html_warn('Invalid Request [CSC-064]', 400);
 				}
 
 				$cart = sprintf('cart-%s', $Company['id']);
@@ -66,12 +91,12 @@ class Cart extends \OpenTHC\Controller\Base
 				$b2b_sale = [];
 				$b2b_sale['id'] = _ulid();
 				$b2b_sale['company'] = $Company;
-				// $b2b_sale['item_list'] = $_SESSION[$cart];
 
 				$product_want_list = $this->load_cart_product_list($Company['id']);
 				foreach ($product_want_list as $p) {
 
 					$b2b_item = [];
+					$b2b_item['qty'] = $_SESSION[$cart][$p['lot_id']];
 					$b2b_item['lot_id'] = $p['lot_id'];
 					$b2b_item['product'] = [
 						'id' => $p['product_id'],
@@ -93,7 +118,6 @@ class Cart extends \OpenTHC\Controller\Base
 
 				break;
 
-
 			case 'cart-delete':
 
 				$key_list = array_keys($_SESSION);
@@ -102,6 +126,8 @@ class Cart extends \OpenTHC\Controller\Base
 						unset($_SESSION[$k]);
 					}
 				}
+
+				\Edoceo\Radix\Session::flash('info', 'Cart has been emptied');
 
 				return $RES->withRedirect(sprintf('/shop?c=%s', $_GET['c']));
 		}
@@ -116,8 +142,7 @@ class Cart extends \OpenTHC\Controller\Base
 		$dbc_auth = _dbc('auth');
 		$Company = $dbc_auth->fetchRow('SELECT id, name, dsn FROM auth_company WHERE id = :c0', [ ':c0' => $c ]);
 		if (empty($Company['id'])) {
-			// _exit_html_warn('')
-			__exit_html('Invalid Request', 400);
+			_exit_html_fail('Invalid Request [CSC-121]', 400);
 		}
 
 		$dbc_user = _dbc($Company['dsn']);
@@ -162,6 +187,9 @@ SQL;
 
 		$cart = sprintf('cart-%s', $c);
 		$product_want = $_SESSION[$cart];
+		if (empty($product_want)) {
+			return [];
+		}
 
 		$idx = 0;
 		$arg = [];
