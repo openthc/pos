@@ -36,17 +36,20 @@ $this->layout_file = sprintf('%s/view/_layout/html-pos.php', APP_ROOT);
 			<div id="pos-scanner-read" style="background: #ccc; flex: 1 0 auto; padding: 0.5rem;">
 				<div class="input-group">
 					<div class="input-group-prepend">
-						<button class="btn btn-outline-secondary" id="pos-camera-input"><i class="fas fa-camera"></i></button>
+						<button class="btn btn-primary" id="pos-camera-input" type="button"><i class="fas fa-camera"></i></button>
 					</div>
-					<input class="form-control" id="barcode-input" name="barcode" type="text">
+					<input autofocus class="form-control" id="barcode-input" name="barcode" type="text">
 					<div class="input-group-append">
-						<button class="btn btn-outline-secondary"><i class="fas fa-search"></i></button>
+						<button class="btn btn-secondary" id="pos-lot-search" type="button"><i class="fas fa-search"></i></button>
 					</div>
 				</div>
 			</div>
 
 			<div id="pos-item-list">
 				<!-- Filled by AJAX -->
+				<div id="pos-item-list-empty" style="margin: 10%; text-align:center;">
+					<h4 class="alert alert-dark">Inventory Search Data Appears Here</h4>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -55,7 +58,7 @@ $this->layout_file = sprintf('%s/view/_layout/html-pos.php', APP_ROOT);
 		<form action="/pos/pay" autocomplete="off" id="psi-form" method="post">
 		<div id="psi-item-list" style="overflow-x:auto;">
 			<div id="psi-item-list-empty" style="margin: 10%; text-align:center;">
-				<h3 class="alert alert-dark">Purchase Ticket Data Appears Here</h3>
+				<h4 class="alert alert-dark">Purchase Ticket Data Appears Here</h4>
 			</div>
 		</div>
 		</form>
@@ -70,10 +73,6 @@ $this->layout_file = sprintf('%s/view/_layout/html-pos.php', APP_ROOT);
 		<div class="sub-info-item-wrap"><h3>Due: $<span class="pos-checkout-sum">0.00</span></h3></div>
 	</div>
 	<div id="pos-terminal-cmd-wrap">
-		<div class="cmd-item" style="flex: 0.5 0 auto;">
-			<a class="btn btn-danger" href="/pos/shut"><i class="fas fa-power-off"></i></a>
-			<a class="btn btn-warning" href="/pos" id="pos-shop-redo" type="button"><i class="fas fa-ban"></i></a>
-		</div>
 		<!--
 		@deprecated this can be done by the Camera feature now
 		<div class="cmd-item">
@@ -83,21 +82,21 @@ $this->layout_file = sprintf('%s/view/_layout/html-pos.php', APP_ROOT);
 		</div>
 		-->
 		<div class="cmd-item">
-			<button class="btn btn-secondary" data-toggle="modal" data-target="#pos-modal-sale-hold" disabled id="pos-shop-save" type="button">
+			<button class="btn btn-lg btn-primary" data-toggle="modal" data-target="#pos-modal-sale-hold" disabled id="pos-shop-save" type="button">
 				<i class="fas fa-save"></i><span class="btn-text"> Save</span></button>
 		</div>
 		<div class="cmd-item">
-			<button class="btn btn-secondary" data-toggle="modal" data-target="#pos-modal-discount" disabled id="pos-shop-disc" type="button">
+			<button class="btn btn-lg btn-secondary" data-toggle="modal" data-target="#pos-modal-discount" disabled id="pos-shop-disc" type="button">
 				<i class="fas fa-percent"></i><span class="btn-text"> Discount</span>
 			</button>
 		</div>
 		<div class="cmd-item">
-			<button class="btn btn-outline-success" data-toggle="modal" data-target="#pos-modal-loyalty" disabled type="button">
+			<button class="btn btn-lg btn-primary" data-toggle="modal" data-target="#pos-modal-loyalty" disabled type="button">
 				<i class="fas fa-crown"></i><span class="btn-text"> Loyalty</span>
 			</button>
 		</div>
 		<div class="cmd-item">
-			<button class="btn btn-success" data-toggle="modal" data-target="#pos-modal-payment" disabled id="pos-shop-next" type="button">
+			<button class="btn btn-lg btn-success" data-toggle="modal" data-target="#pos-modal-payment" disabled id="pos-shop-next" type="button">
 				<i class="far fa-money-bill-alt"></i><span class="btn-text"> Payment</span>
 			</button>
 		</div>
@@ -109,7 +108,6 @@ $this->layout_file = sprintf('%s/view/_layout/html-pos.php', APP_ROOT);
 <?php
 echo $this->block('modal/pos/scan-id.php');
 echo $this->block('modal/pos/hold.php');
-echo $this->block('modal/pos/hold-list.php');
 echo $this->block('modal/pos/discount.php');
 echo $this->block('modal/pos/loyalty.php');
 echo $this->block('modal/pos/payment-cash.php');
@@ -135,18 +133,13 @@ function searchInventory(x)
 	//$('#barcode-auto-complete').load('/pos/ajax?a=search&b=' + x, function() {
 	//	$('#barcode-auto-complete').data('working', '');
 	//});
-	$.get('/pos/ajax?a=search&q=' + x, function(body, stat) {
-		$('#pos-item-list').html(body);
-	}).fail(function(jxhr, stat) {
-		if ('error' === stat) {
-			if (404 === jxhr.status) {
-				// Show some Message
-				// $('#barcode-auto-complete').data('failure')
-				$('#barcode-input').val('');
-				$('#pos-item-list').html('<div class="alert alert-danger">No priced items were found</div>');
-			}
-		}
-	});
+	fetch(`/pos/ajax?a=search&q=${x}`)
+		.then(res => res.text())
+		.then(body => {
+			$('#barcode-input').val('');
+			$('#pos-item-list').html(body);
+		});
+
 }
 
 $(function() {
@@ -198,7 +191,6 @@ $(function() {
 		});
 	});
 
-	$("#barcode-input").focus();
 	$("#barcode-input").on('keyup', function() {
 
 		var val = this.value;
@@ -222,7 +214,7 @@ $(function() {
 
 	});
 
-	searchInventory('');
+	// searchInventory('');
 
 	//$(document.body).on('touchstart', function(e) {
 	//	body_drag = false;
@@ -259,13 +251,15 @@ $(function() {
 			return false;
 		}
 
-		var id = $(this).data('id');
-		$('#psi-item-' + id).remove();
+		// Remove Parent
+		$(this).closest('.psi-item-item').remove();
 
 		chkSaleCost();
+
 	});
 
 	$('#pos-modal-sale-hold-save').on('click touchend', function(e) {
+		// @todo use fetch() and FormData()
 		$('#psi-form').attr('action', '/pos/cart/save');
 		$('#psi-form').append('<input name="a" type="hidden" value="save">');
 		$('#psi-form').append('<input name="name" type="hidden" value="' + $('#customer-name').val() + '">');
@@ -275,7 +269,6 @@ $(function() {
 
 	$('#pos-modal-scan-id').on('show.bs.modal', function() {
 		POS.Scanner.live('#scan-input-stat', function(data) {
-
 			var data = POS.Scanner.data.join('');
 			data = data.replace(/Shift/g, ' ');
 			data = data.replace(/ControlJ/g, '<br>--Control J--<br>');
@@ -285,10 +278,6 @@ $(function() {
 
 	$('#pos-modal-scan-id').on('hide.bs.modal', function() {
 		POS.Scanner.stop();
-	});
-
-	$('#pos-modal-sale-hold-list').on('show.bs.modal', function() {
-		$('#sale-hold-list-wrap').load('/pos/ajax?a=hold-list');
 	});
 
 	// $('#pos-pay-card').on('click', function(e) {

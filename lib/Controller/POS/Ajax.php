@@ -14,28 +14,35 @@ class Ajax extends \OpenTHC\Controller\Base
 
 		switch ($_GET['a']) {
 		case 'hold-list':
-			$data = array('hold_list' => array());
+
 			$res = $this->_container->DB->fetchAll('SELECT * FROM b2c_sale_hold ORDER BY created_at');
+			if (empty($res)) {
+				_exit_html('<h4>No Holds</h4>');
+			}
+
+			ob_start();
 			foreach ($res as $rec) {
 
 				$rec['meta'] = json_decode($rec['meta'], true);
-				$info = array();
-				foreach ($rec['meta'] as $k => $v) {
-					if (preg_match('/^qty\-(\d+)$/', $k, $m)) {
-						$info[] = sprintf('%s=%d', $k, $v);
-					}
+
+				if (empty($rec['meta']['name'])) {
+					$rec['meta']['name'] = '-unknown-';
 				}
 
-				$data['hold_list'][] = array(
-					'id' => $rec['id'],
-					'time' => _date('h:i', $rec['cts']),
-					'name' => $rec['meta']['name'],
-					'item_info' => implode(', ', $info),
-				);
+				echo '<div style="display: flex; justify-content: space-between; margin-bottom: 0.50rem;">';
+				printf('<h4><a href="#%s">%s</a></h4>', $rec['id'], $rec['meta']['name']);
+				echo '<button class="btn btn-sm btn-danger"><i class="fas fa-times"></i></button>';
+				echo '</div>';
 			}
-			return $RES->write( $this->render('_block/hold-list.php', $data) );
 
-			case 'push':
+			$html = ob_get_clean();
+			_exit_html($html);
+
+			// return $RES->write( $this->render('_block/hold-list.php', $data) );
+
+		case 'hold-open':
+			return $this->hold_open($RES);
+		case 'push':
 
 				$k = sprintf('pos-terminal-card', $_SESSION['pos-terminal-id']);
 				$this->_container->Redis->del($k);
@@ -53,6 +60,65 @@ class Ajax extends \OpenTHC\Controller\Base
 		}
 
 		__old_ajax_shit($RES);
+
+	}
+
+	function hold_open($RES)
+	{
+		$ret_data = [];
+
+		$dbc = $this->_container->DB;
+
+		$rec = $dbc->fetchRow('SELECT * FROM b2c_sale_hold WHERE id = :pk', [
+			':pk' => $_GET['id']
+		]);
+
+		if (empty($rec)) {
+			__exit_json($ret_data, 404);
+		}
+
+		$rec['meta'] = json_decode($rec['meta']);
+
+		switch ($rec['type']) {
+			case 'general':
+				foreach ($rec['meta'] as $k => $v) {
+					if (preg_match('/^qty-(\w+)$/', $k, $m)) {
+						$sql = <<<SQL
+SELECT lot_full.*
+FROM lot_full
+WHERE license_id = :l0
+  AND stat = 200
+  AND qty > 0
+  AND (sell IS NOT NULL AND sell > 0)
+  AND lot_id = :pk
+SQL;
+
+						$lot = $dbc->fetchRow($sql, [
+							':l0' => $_SESSION['License']['id'],
+							':pk' => $m[1]
+						]);
+
+						$ret_data[] = [
+							'id' => $lot['id'],
+							'qty' => $v,
+							'unit_price' => $lot['sell'],
+							'product' => [
+								'id' => $lot['product_id'],
+								'name' => $lot['product_name']
+							],
+							'package' => [
+								'id' => '',
+								'name' => sprintf('%s %s', rtrim($lot['package_unit_qom'], '0'), $lot['package_unit_uom'])
+							]
+						];
+					}
+				}
+		}
+
+		__exit_json([
+			'data' => $ret_data
+			, 'meta' => [],
+		]);
 
 	}
 
@@ -119,6 +185,8 @@ SQL;
 
 function __old_ajax_shit($RES)
 {
+	throw new \Exception('@deprecated [CPA-122]');
+
 	switch ($_GET['a']) {
 	case 'discount-list':
 
@@ -245,10 +313,9 @@ function __old_ajax_shit($RES)
 
 function _draw_ajax_search_error()
 {
-		Session::flash('fail', 'Item not found');
 ?>
 <div id="alert-lookup">
-<?= Session::flash() ?>
+	<h4 class="alert alert-warning">Item not found</h4>
 </div>
 <script>
 $(function() {

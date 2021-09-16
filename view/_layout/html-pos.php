@@ -13,12 +13,11 @@
 #pos-modal-payment {
 	user-select: none;
 }
-
 #menu-zero {
 	align-items: center;
 	background: #343a40;
-	/* display: flex; */
-	display: none;
+	display: flex;
+	/* display: none; */
 	flex: 0 1 auto;
 	justify-content: space-between;
 }
@@ -30,10 +29,8 @@
 	font-family: monospace;
 	font-size: 120%;
 }
-/* @todo On Mobile Make this 48px? */
-
 #menu-left {
-	background: #343a4099;
+	background: #343a40ee;
 	display: none;
 	left: 0;
 	position:absolute ;
@@ -46,8 +43,10 @@
 	flex-wrap: wrap;
 	height: 100vh;
 	width: 20vw;
+	z-index: 10;
 }
 #menu-left .menu-item {
+	color: #f0f0f0;
 	padding: 0.50rem;
 }
 
@@ -63,7 +62,8 @@
 		<div class="menu-item-text"><?= $data['Page']['title'] ?></div>
 	</div>
 	<div class="menu-item">
-		<a class="btn btn-outline-secondary" href="/pos/shut"><i class="fas fa-power-off"></i></a>
+	<a class="btn btn-warning" href="/pos" id="pos-shop-redo" type="button"><i class="fas fa-ban"></i></a>
+		<a class="btn btn-danger" href="/pos/shut"><i class="fas fa-power-off"></i></a>
 	</div>
 </div>
 <?= $this->body ?>
@@ -74,11 +74,7 @@
 	<div class="menu-item">
 		<input class="form-control">
 	</div>
-	<div class="menu-item">
-		<ul>
-			<li>Menu Item</li>
-		</ul>
-	</div>
+	<div class="menu-item" id="sale-hold-list"></div>
 </div>
 
 <script src="https://cdn.openthc.com/lodash/4.17.15/lodash.js" integrity="sha256-VeNaFBVDhoX3H+gJ37DpT/nTuZTdjYro9yBruHjVmoQ=" crossorigin="anonymous"></script>
@@ -105,6 +101,11 @@ $(function () {
 			$m.removeClass('open');
 		} else {
 			$m.addClass('open');
+			// emit('menu-left-opened');
+			// OpenTHC.POS.Hold.update();
+			// var e = document.createEvent('Event')
+			var e = new Event('menu-left-opened');
+			window.document.dispatchEvent(e);
 		}
 	});
 });

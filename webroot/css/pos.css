@@ -443,9 +443,10 @@ body.pos .pos-foot-wrap {
   padding: 0 0 3em 0;
 }
 #pos-item-list h3 {
-  background: #aaa;
+  background: #4a4a4a;
+  color: #f0f0f0;
   margin: 0;
-  text-align: center;
+  padding: 0.25rem 0.50rem;
 }
 #pos-2col-wrap {
   position: relative;
@@ -490,7 +491,7 @@ body.pos .pos-foot-wrap {
   flex: 1 1 33%;
   text-align: center;
 }
-.pos-foot-wrap #pos-terminal-cmd-wrap .cmd-item button {
+.pos-foot-wrap #pos-terminal-cmd-wrap .cmd-item .btn {
   font-weight: 700;
   margin: 4px auto;
   width: 80%;

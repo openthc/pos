@@ -230,21 +230,6 @@ $(function() {
 		chkSaleCost();
 	});
 
-
-	// modal for open existing cart/ticket
-	$('#sale-hold-list-wrap').on('click', '.btn-drop', function() {
-		var $b = $(this);
-		var cid = $b.data('cart-id');
-		var arg = {
-			a: 'drop',
-			cart: cid,
-		};
-		$.post('/pos/cart/drop', arg, function() {
-			$b.closest('tr').remove();
-		})
-	});
-
-
 	// Open A Link in a Modal Thing
 	$('.qrcode-link').on('click', function(e) {
 
@@ -278,6 +263,51 @@ $(function() {
 			correctLevel : QRCode.CorrectLevel.H
 		};
 		var qrcode = new QRCode('qrcode-embed-image', arg);
+	});
+
+	$('#pos-lot-search').on('click', function() {
+		var val = document.querySelector('#barcode-input').value;
+		searchInventory(val);
+	});
+
+	// Load Hold List
+	window.document.addEventListener('menu-left-opened', function() {
+		const $shl = $('#sale-hold-list');
+		$shl.html('<h4><i class="fas fa-sync fa-spin"></i> Loading...</h4>');
+		fetch('/pos/ajax?a=hold-list')
+		.then(res => res.text())
+		.then(html => {
+			$shl.html(html);
+		});
+	});
+
+	$('#sale-hold-list').on('click', 'a', function() {
+		console.log('sale-hold-list a!click');
+		$('#menu-left').removeClass('open');
+		fetch(`/pos/ajax?a=hold-open&id=${this.hash.replace('#', '')}`)
+		.then(res => res.json())
+		.then(json => {
+			json.data.forEach(function(v, i) {
+				Cart_addItem({
+					id: v.id,
+					name: v.product.name,
+					weight: v.package.name,
+					price: v.unit_price,
+					qty: v.qty
+				});
+			});
+		});
+
+	});
+
+	$('#sale-hold-list').on('click', 'button', function() {
+		console.log('sale-hold-list button!click');
+		fetch(`/pos/ajax?id=${this.value}`, {
+			method:'DELETE'
+		}).then(res => res.text())
+		.then(html => {
+				debugger;
+		});
 	});
 
 });
