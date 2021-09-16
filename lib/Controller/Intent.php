@@ -7,6 +7,9 @@ namespace App\Controller;
 
 class Intent extends \OpenTHC\Controller\Base
 {
+	/**
+	 *
+	 */
 	function __invoke($REQ, $RES, $ARG)
 	{
 		$data = [
@@ -26,6 +29,9 @@ class Intent extends \OpenTHC\Controller\Base
 
 	}
 
+	/**
+	 *
+	 */
 	function delivery_auth($RES)
 	{
 		if (empty($_SESSION['intent-delivery-username'])) {
@@ -40,7 +46,7 @@ class Intent extends \OpenTHC\Controller\Base
 			$dbc_auth = _dbc('auth');
 			$dsn = $dbc_auth->fetchOne('SELECT dsn FROM auth_company WHERE id = :c0', [ ':c0' => $_GET['c'] ]);
 			if (empty($dsn)) {
-				__exit_text('Invalid Request [LCI-025]', 400);
+				_exit_html_warn('<h1>Invalid Request [LCI-025]</h1>', 400);
 			}
 
 			// Contact Search by PIN
@@ -51,7 +57,7 @@ class Intent extends \OpenTHC\Controller\Base
 				':p1' => $hash,
 			]);
 			if (empty($chk['id'])) {
-				__exit_text('Invalid Request [LCI-035]', 400);
+				_exit_html_warn('<h1>Invalid Request [LCI-035]</h1>', 400);
 			}
 			// We should have a cookie, with encrypted stuff?
 			// Some kind of ID because we need to have unique passcode Too
@@ -59,9 +65,6 @@ class Intent extends \OpenTHC\Controller\Base
 			// Long-Term Marking as Delivery Auth OK?
 			if ($_COOKIE['pos-contact']) {
 				// Do Something Smart?
-
-
-
 			}
 
 			$_SESSION['Company'] = [];
