@@ -23,7 +23,7 @@ class Shut extends \OpenTHC\Controller\Base
 
 		Session::flash('info', 'Signed out of POS Terminal');
 
-		return $RES->withRedirect('/dashboard');
+		return $RES->withRedirect('/pos');
 
 	}
 }
