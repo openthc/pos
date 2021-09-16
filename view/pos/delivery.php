@@ -37,15 +37,29 @@ printf('<button class="btn btn-outline-secondary qrcode-link" data-code="%s" typ
 				<thead class="thead-dark">
 					<tr>
 					<th>Order</th>
-					<th>Entered</th>
-					<th>Total</th>
+					<th>Courier</th>
+					<th>Cart</th>
 					</tr>
 				</thead>
+				<tbody>
+				<?php
+				foreach ($data['b2c_sale_hold'] as $rec) {
+
+					$m = __json_decode($rec['meta']);
+
+					echo '<tr>';
+					printf('<td><a href="/pos#%s">%s</a></td>', $rec['id'], $rec['id']);
+					printf('<td>%s</td>', $rec['contact_name']);
+					printf('<td>%d Items</td>', count($m['item_list']));
+					echo '</tr>';
+				}
+				?>
+				</tbody>
 			</table>
 		</div>
 	</div>
 	<div class="col-md-6">
-		<div id="delivery-map">
+		<div id="delivery-map" style="max-height: 800px;">
 			<h2>Map Loading...</h2>
 		</div>
 	</div>

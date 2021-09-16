@@ -86,6 +86,7 @@ class Checkout extends \OpenTHC\Controller\Base
 					$chk = _ulid();
 					$rec = [
 						'id' => $chk,
+						'type' => 'client',
 						'fullname' => $b2b['contact']['name'],
 						'email' => $b2b['contact']['email'],
 						'phone' => $b2b['contact']['phone'],

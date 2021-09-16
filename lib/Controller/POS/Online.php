@@ -16,7 +16,7 @@ class Online extends \OpenTHC\Controller\Base
 
 		// Select
 		$dbc = $this->_container->DB;
-		$data['b2c_sale_hold'] = $dbc->fetchAll('SELECT * FROM b2c_sale_hold');
+		$data['b2c_sale_hold'] = $dbc->fetchAll("SELECT * FROM b2c_sale_hold WHERE type = 'online'");
 
 		return $RES->write( $this->render('pos/online.php', $data) );
 	}
