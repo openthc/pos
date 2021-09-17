@@ -20,7 +20,7 @@ class Delivery extends \OpenTHC\Controller\Base
 SELECT b2c_sale_hold.*
  , contact.fullname AS contact_name
 FROM b2c_sale_hold
-JOIN contact ON b2c_sale_hold.contact_id = contact.id
+LEFT JOIN contact ON b2c_sale_hold.contact_id = contact.id
 WHERE b2c_sale_hold.type IN ('delivery', 'general')
 SQL;
 		$data['b2c_sale_hold'] = $dbc->fetchAll($sql);

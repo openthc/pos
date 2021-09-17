@@ -45,12 +45,22 @@ printf('<button class="btn btn-outline-secondary qrcode-link" data-code="%s" typ
 				<?php
 				foreach ($data['b2c_sale_hold'] as $rec) {
 
-					$m = __json_decode($rec['meta']);
+					$b2c_item = __json_decode($rec['meta']);
+					if (empty($b2c_item['item_list'])) {
+						$b2c_item['item_list'] = [];
+					}
+					foreach ($b2c_item as $k => $v) {
+						if (preg_match('/^qty-(\w+)$/', $k, $m)) {
+							$b2c_item['item_list'][] = [
+								'id' => $m[1],
+							];
+						}
+					}
 
 					echo '<tr>';
 					printf('<td><a href="/pos#%s">%s</a></td>', $rec['id'], $rec['id']);
 					printf('<td>%s</td>', $rec['contact_name']);
-					printf('<td>%d Items</td>', count($m['item_list']));
+					printf('<td>%d Items</td>', count($b2c_item['item_list']));
 					echo '</tr>';
 				}
 				?>

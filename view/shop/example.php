@@ -9,8 +9,8 @@ $this->layout_file = sprintf('%s/view/_layout/shop-html.php', APP_ROOT);
 
 <header style="display:flex; justify-content: space-between;">
 	<div><h1><?= $data['Page']['title'] ?></h1></div>
-	<div>
-		<a class="btn btn-outline-secondary" href="/shop/cart?c=<?= $data['Company']['id'] ?>"><i class="fas fa-shopping-cart"></i></a>
+	<div style="padding: 0.50rem 0;">
+		<a class="btn btn-primary" href="/shop/cart?c=<?= $data['Company']['id'] ?>"><i class="fas fa-shopping-cart"></i> View Cart</a>
 	</div>
 </header>
 
@@ -35,6 +35,9 @@ foreach ($data['product_list'] as $p) {
 							<i class="fas fa-cart-plus"></i> Add
 					</button>
 				</div>
+			</div>
+			<div style="background: #dddddd; padding: 0 0.25rem;">
+				Lot: <span style="font-family: monospace; font-size: 80%;"><?= $p['id'] ?></span>
 			</div>
 		</div>
 	</div>

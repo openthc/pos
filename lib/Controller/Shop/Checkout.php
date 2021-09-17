@@ -30,10 +30,19 @@ class Checkout extends \OpenTHC\Controller\Base
 	{
 		$data = $this->data;
 
-		$key = sprintf('b2b-sale-%s', $_GET['o']);
-		$data['b2b_sale'] = $_SESSION[$key];
+		// @todo Lookup Company & Order
+		$dbc_auth = _dbc('auth');
+		$Company = $dbc_auth->fetchRow('SELECT id, name, dsn FROM auth_company WHERE id = :c0', [ ':c0' => $_GET['c'] ]);
+		if (empty($Company['id'])) {
+			_exit_html_fail('<h1>Invalid Request [CSC-037]</h1>', 500);
+		}
 
-		$data['Page']['title'] = sprintf('Checkout :: %s', $data['b2b_sale']['company']['name']);
+		$data['Page']['title'] = sprintf('Checkout :: %s', $Company['name']);
+
+		$dbc_user = _dbc($Company['dsn']);
+		$rec = $dbc_user->fetchRow('SELECT * FROM b2c_sale_hold WHERE id = :pk', [ ':pk' => $_GET['o'] ]);
+		$rec['meta'] = json_decode($rec['meta'], true);
+		$data['b2c'] = $rec['meta'];
 
 		$html = $this->render('shop/checkout-done.php', $data);
 
@@ -67,7 +76,7 @@ class Checkout extends \OpenTHC\Controller\Base
 				$dbc_auth = _dbc('auth');
 				$Company = $dbc_auth->fetchRow('SELECT id, name, dsn FROM auth_company WHERE id = :c0', [ ':c0' => $b2b['company']['id'] ]);
 				if (empty($Company['id'])) {
-					_exit_html_fail('Invalid Request [CSC-063]', 500);
+					_exit_html_fail('<h1>Invalid Request [CSC-063]</h1>', 500);
 				}
 
 				$dbc_user = _dbc($Company['dsn']);
@@ -105,9 +114,12 @@ class Checkout extends \OpenTHC\Controller\Base
 				$dbc_user->insert('b2c_sale_hold', [
 					'id' => $b2b['id'],
 					'contact_id' => $Contact['id'],
+					'type' => 'online',
 					'stat' => 100,
 					'meta' => json_encode($b2b),
 				]);
+
+				unset($_SESSION[sprintf('b2b-sale-%s', $b2b['id'])]);
 
 				break;
 
