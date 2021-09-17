@@ -120,6 +120,7 @@ class Checkout extends \OpenTHC\Controller\Base
 				]);
 
 				unset($_SESSION[sprintf('b2b-sale-%s', $b2b['id'])]);
+				unset($_SESSION[sprintf('cart-%s', $Company['id'])]);
 
 				break;
 

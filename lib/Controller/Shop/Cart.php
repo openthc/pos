@@ -96,8 +96,11 @@ class Cart extends \OpenTHC\Controller\Base
 				foreach ($product_want_list as $p) {
 
 					$b2b_item = [];
+					$b2b_item['lot_id'] = $p['lot_id']; // @deprecated
 					$b2b_item['qty'] = $_SESSION[$cart][$p['lot_id']];
-					$b2b_item['lot_id'] = $p['lot_id'];
+					$b2b_item['lot'] = [
+						'id' => $p['lot_id']
+					];
 					$b2b_item['product'] = [
 						'id' => $p['product_id'],
 						'name' => $p['product_name'],
