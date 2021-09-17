@@ -22,8 +22,8 @@ function Cart_addItem(obj)
 	// @todo Move Clicked Item to Top Row
 	if ($('#psi-item-' + obj.id).length > 0) {
 		var q = $('#psi-item-' + obj.id + '-size').val();
-		size = parseFloat(q, 10) || 1;
-		size++;
+		q = parseFloat(q, 10) || 1;
+		obj.qty += q;
 		$('#psi-item-' + obj.id).remove();
 	}
 

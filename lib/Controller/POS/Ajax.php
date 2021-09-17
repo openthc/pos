@@ -92,7 +92,7 @@ class Ajax extends \OpenTHC\Controller\Base
 			__exit_json($ret_data, 404);
 		}
 
-		$rec['meta'] = json_decode($rec['meta']);
+		$rec['meta'] = json_decode($rec['meta'], true);
 
 		switch ($rec['type']) {
 			case 'general':
@@ -128,6 +128,44 @@ SQL;
 						];
 					}
 				}
+
+				break;
+
+			case 'online':
+
+				$b2c = $rec['meta'];
+				foreach ($b2c['item_list'] as $b2c_item) {
+
+					$sql = <<<SQL
+SELECT lot_full.*
+FROM lot_full
+WHERE license_id = :l0
+	AND stat = 200
+	AND qty > 0
+	AND (sell IS NOT NULL AND sell > 0)
+	AND lot_id = :pk
+SQL;
+
+					$lot = $dbc->fetchRow($sql, [
+						':l0' => $_SESSION['License']['id'],
+						':pk' => $b2c_item['lot_id']
+					]);
+
+					// Response Data
+					$ret_data[] = [
+						'id' => $b2c_item['lot_id']
+						, 'qty' => $b2c_item['qty']
+						, 'unit_price' => $lot['sell']
+						, 'product' => $b2c_item['product']
+						, 'package' => [
+							'id' => ''
+							, 'name' => sprintf('%s %s', rtrim($lot['package_unit_qom'], '0'), $lot['package_unit_uom'])
+						]
+						, 'variety' => $b2c_item['variety']
+					];
+				}
+
+				break;
 		}
 
 		__exit_json([
