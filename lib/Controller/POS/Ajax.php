@@ -12,6 +12,20 @@ class Ajax extends \OpenTHC\Controller\Base
 	{
 		session_write_close();
 
+
+		switch ($_SERVER['REQUEST_METHOD']) {
+			case 'DELETE':
+
+				// Only the HOLD ID DELETE
+				if (preg_match('/^01\w{24}$/', $_GET['id'])) {
+					$dbc = $this->_container->DB;
+					$dbc->query('DELETE FROM b2c_sale_hold WHERE id = :pk', [ ':pk' => $_GET['id'] ]);
+				}
+
+				_exit_text('', 204);
+
+		}
+
 		switch ($_GET['a']) {
 		case 'hold-list':
 
@@ -29,16 +43,14 @@ class Ajax extends \OpenTHC\Controller\Base
 					$rec['meta']['name'] = '-unknown-';
 				}
 
-				echo '<div style="display: flex; justify-content: space-between; margin-bottom: 0.50rem;">';
+				echo '<div class="sale-hold-list-item" style="display: flex; justify-content: space-between; margin-bottom: 0.50rem;">';
 				printf('<h4><a href="#%s">%s</a></h4>', $rec['id'], $rec['meta']['name']);
-				echo '<button class="btn btn-sm btn-danger"><i class="fas fa-times"></i></button>';
+				printf('<button class="btn btn-sm btn-danger" type="button" value="%s"><i class="fas fa-times"></i></button>', $rec['id']);
 				echo '</div>';
 			}
 
 			$html = ob_get_clean();
 			_exit_html($html);
-
-			// return $RES->write( $this->render('_block/hold-list.php', $data) );
 
 		case 'hold-open':
 			return $this->hold_open($RES);
@@ -63,6 +75,9 @@ class Ajax extends \OpenTHC\Controller\Base
 
 	}
 
+	/**
+	 *
+	 */
 	function hold_open($RES)
 	{
 		$ret_data = [];
@@ -122,6 +137,9 @@ SQL;
 
 	}
 
+	/**
+	 *
+	 */
 	function _search($RES)
 	{
 		$q = trim($_GET['q']);
@@ -168,6 +186,7 @@ SQL;
 
 				$rec = $res[0];
 
+				// Was to auto-add when a single item was found
 				//echo '<script>';
 				////echo 'addSaleItem(document.getElementById("inv-item-' . $rec['id'] . '"));';
 				////echo '$("#barcode-auto-complete").empty();';

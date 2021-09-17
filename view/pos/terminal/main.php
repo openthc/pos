@@ -56,8 +56,8 @@ $this->layout_file = sprintf('%s/view/_layout/html-pos.php', APP_ROOT);
 	<div class="pos-sale-wrap">
 		<!-- Items on the Ticket -->
 		<form action="/pos/pay" autocomplete="off" id="psi-form" method="post">
-		<div id="psi-item-list" style="overflow-x:auto;">
-			<div id="psi-item-list-empty" style="margin: 10%; text-align:center;">
+		<div id="cart-list-wrap" style="overflow-x:auto;">
+			<div id="cart-list-empty" style="margin: 10%; text-align:center;">
 				<h4 class="alert alert-dark">Purchase Ticket Data Appears Here</h4>
 			</div>
 		</div>
@@ -118,9 +118,9 @@ echo $this->block('modal/pos/payment-card.php');
 ?>
 
 <script>
-var body_drag = false;
-var body_drag_y = 0;
-
+/**
+ *
+ */
 function searchInventory(x)
 {
 	console.log('searchInventory(' + x + ')');
@@ -216,24 +216,7 @@ $(function() {
 
 	// searchInventory('');
 
-	//$(document.body).on('touchstart', function(e) {
-	//	body_drag = false;
-	//	body_drag_y = e.originalEvent.touches[0].clientY;
-	//});
-
-	//$(document.body).on('touchmove', function(e) {
-	//	var cur_y = e.originalEvent.touches[0].clientY;
-	//	alert(body_drag_y);
-	//	alert(cur_y);
-	//	body_drag = true;
-	//});
-
 	$('#pos-item-list').on('click', '.inv-item', function(e) {
-
-		if (body_drag) {
-			return false;
-		}
-
 		Cart_addItem({
 			id: $(this).data('id'),
 			name: $(this).data('name'),
@@ -243,19 +226,6 @@ $(function() {
 		});
 
 		return false;
-	});
-
-	$('#psi-item-list').on('click', '.fa-times', function() {
-
-		if (body_drag) {
-			return false;
-		}
-
-		// Remove Parent
-		$(this).closest('.psi-item-item').remove();
-
-		chkSaleCost();
-
 	});
 
 	$('#pos-modal-sale-hold-save').on('click touchend', function(e) {
@@ -303,16 +273,6 @@ $(function() {
 	// $(document).on('keypress', function() {
 	// 	console.log('document!keypress');
 	// });
-
-//  If on-screen keyboard is muted, use this popup modal
-//	$('#psi-item-list').on('focus', '.psi-item-size', function(e) {
-//		Weed.modal( $('#pos-modal-number-input') );
-//		$('#app-modal-wrap').css('width', '480px');
-//		$('#pos-modal-number-input').show();
-//		$('#pos-modal-number-input-live').html( parseFloat($(e.target).val(), 10).toFixed(2) );
-//		$('#pos-modal-number-input-live').attr('data-first', 'true');
-//		$('#pos-modal-number-input-live').attr('data-update', $(e.target).attr('id'));
-//	});
 
 	$('#pos-modal-number-input button.digit').on('click touchstart', function(e) {
 

@@ -14,11 +14,11 @@ class POS extends \OpenTHC\Module\Base
 
 		$a->get('/fast', 'App\Controller\POS\Fast');
 
-		$a->map(['GET', 'POST'], '/ajax', 'App\Controller\POS\Ajax');
+		$a->map([ 'GET', 'POST', 'DELETE' ], '/ajax', 'App\Controller\POS\Ajax');
 
 		$a->post('/checkout/commit', 'App\Controller\POS\Checkout\Commit');
 		$a->get('/checkout/done', 'App\Controller\POS\Checkout\Done');
-		$a->map(['GET', 'POST'], '/checkout/receipt', 'App\Controller\POS\Checkout\Receipt');
+		$a->map([ 'GET', 'POST' ], '/checkout/receipt', 'App\Controller\POS\Checkout\Receipt');
 
 		$a->post('/cart/ajax', 'App\Controller\POS\Cart\Ajax');
 		$a->post('/cart/drop', 'App\Controller\POS\Cart\Drop');

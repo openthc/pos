@@ -281,6 +281,7 @@ $(function() {
 		});
 	});
 
+	// Load the Sale Ticket
 	$('#sale-hold-list').on('click', 'a', function() {
 		console.log('sale-hold-list a!click');
 		$('#menu-left').removeClass('open');
@@ -301,13 +302,13 @@ $(function() {
 	});
 
 	$('#sale-hold-list').on('click', 'button', function() {
-		console.log('sale-hold-list button!click');
+		// console.log('sale-hold-list button!click');
+		var $x = $(this).closest('.sale-hold-list-item');
 		fetch(`/pos/ajax?id=${this.value}`, {
 			method:'DELETE'
-		}).then(res => res.text())
-		.then(html => {
-				debugger;
 		});
+		$x.remove();
+
 	});
 
 });
