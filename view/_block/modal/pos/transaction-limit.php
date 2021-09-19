@@ -25,7 +25,7 @@
 			<button class="btn btn-outline-warning" id="pos-ticket-reset" type="button"> Reset</button>
 		</div>
 		<div class="col-md-6" style="text-align:center;">
-			<button class="btn btn-outline-success" name="a" type="button" value="pos-discount-apply">OK</button>
+			<button class="btn btn-outline-success" type="button">OK</button>
 		</div>
 	</div>
 

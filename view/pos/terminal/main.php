@@ -86,7 +86,7 @@ $this->layout_file = sprintf('%s/view/_layout/html-pos.php', APP_ROOT);
 				<i class="fas fa-save"></i><span class="btn-text"> Save</span></button>
 		</div>
 		<div class="cmd-item">
-			<button class="btn btn-lg btn-secondary" data-toggle="modal" data-target="#pos-modal-discount" disabled id="pos-shop-disc" type="button">
+			<button class="btn btn-lg btn-secondary" data-toggle="modal" data-target="#pos-modal-discount" disabled type="button">
 				<i class="fas fa-percent"></i><span class="btn-text"> Discount</span>
 			</button>
 		</div>

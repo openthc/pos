@@ -17,7 +17,8 @@ function Cart_addItem(obj)
 	if ( ! obj.qty ) {
 		obj.qty = 1;
 	}
-
+	obj.qty = parseFloat(obj.qty, 10) || 0;
+	obj.price = parseFloat(obj.price, 10) || 0;
 
 	// @todo Move Clicked Item to Top Row
 	if ($('#psi-item-' + obj.id).length > 0) {
@@ -46,7 +47,7 @@ function Cart_addItem(obj)
 		<input class="form-control psi-item-size" data-id="${obj.id}" id="psi-item-${obj.id}-size" name="qty-${obj.id}" type="number" value="${obj.qty}">
 	</div>
 	<div class="col-md-4">
-		<h3 style="margin:0; padding:0;">${obj.price}</h3>
+		<h3 style="margin:0; padding:0;">${obj.price.toFixed(2)}</h3>
 	</div>
 	<div class="col-md-4" style="text-align:right;">
 		<h3><span id="psi-item-${obj.id}-sale">${full_price.toFixed(2)}</span></h3>
