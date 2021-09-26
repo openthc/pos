@@ -13,7 +13,7 @@ The OpenTHC POS Package is a web-based point of sale integrated with BioTrack, L
 == Installation
 
 Clone the repo onto your web-platform.
-This can be a remote host, or a computer running on site, it has been known to operate from a Raspberry Pi.
+This can be a remote host, or a computer running on-site, it has been known to operate from a Raspberry Pi.
 
 Connect the system to a database, a schema is not included here, one is available from the CRE package.
 
@@ -24,10 +24,10 @@ Process sales!
 
 == Overview
 
-# Retail Management System
+=== Retail Management System
 
  * Point-of-Sale/Terminal
- * Regulatory Integration (BT, LD, M)
+ * Compliance Reporting Engine Integration (BT, LD, M)
  * Product Intake
  * ID Verification
  * Sales Limits
@@ -36,7 +36,8 @@ Process sales!
  * Loyalty Programs
  * Online Ordering and Menus
 
-## Requirements
+
+== Requirements
 
 Runs on Android tables, Apple iPad, Desktop.
 Linux and Windows.

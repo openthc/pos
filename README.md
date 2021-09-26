@@ -7,6 +7,7 @@ It integrates with BioTrack, MJ Freeway/LeafData and Franwell/METRC or can be us
 
     git clone {this repo}
     composer update
+    npm update
     [ update apache config ]
     certbot
     [ update apache config for ssl ]
@@ -94,3 +95,8 @@ here are other offerings.
 
 * Eaze - https://www.eaze.com/
 * WoahStork - https://www.woahstork.com/
+
+
+### Hardware
+
+* [Heckler](https://hecklerdesign.com/)
