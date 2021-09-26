@@ -28,11 +28,4 @@
 		<li class="nav-item"><a class="nav-link" href="/settings"><i class="fas fa-cogs"></i></a></li>
 		<li class="nav-item"><a class="nav-link" href="/auth/shut"><i class="fas fa-power-off"></i></a></li>
 	</ul>
-<!--
-	<div class="item tool navbar-expand-md">
-		<ul class="navbar-nav">
-			<li class="nav-item"><a class="nav-link" href="/auth/shut"><i class="fas fa-power-off"></i></a></li>
-		</ul>
-	</div>
-	 -->
 </nav>

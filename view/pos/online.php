@@ -37,7 +37,7 @@
 		$rec['item_info'] = implode(', ', $item_info);
 
 		echo '<tr>';
-		printf('<td><a href="/pos/online%s</td>', $rec['id']);
+		printf('<td><a href="/pos/online">%s</a></td>', $rec['id']);
 		printf('<td>%s</td>', $rec['contact_name']);
 		// printf('<td><pre>%s</pre></td>', $rec['meta']);
 		printf('<td>%s</td>', $rec['item_info']);

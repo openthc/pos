@@ -14,17 +14,29 @@
 		<h1>POS Delivery </h1>
 	</div>
 	<div><?php
-$delivery_auth_link = sprintf('https://%s/intent?%s'
-	, $_SERVER['SERVER_NAME']
-	, http_build_query([
-		'a' => 'delivery-auth',
-		'c' => $_SESSION['Company']['id'],
-		'l' => $_SESSION['License']['id']
-	])
-);
-printf('<button class="btn btn-outline-secondary qrcode-link" data-code="%s" type="button"><i class="fas fa-qrcode"></i></button>'
-	, $delivery_auth_link
-);
+	$delivery_auth_link = sprintf('https://%s/intent?%s'
+		, $_SERVER['SERVER_NAME']
+		, http_build_query([
+			'a' => 'delivery-auth',
+			'c' => $_SESSION['Company']['id'],
+			'l' => $_SESSION['License']['id']
+		])
+	);
+	// printf('<button class="btn btn-outline-secondary qrcode-link" data-code="%s" type="button"><i class="fas fa-qrcode"></i> Courier Auth</button>'
+	// 	, $delivery_auth_link
+	// );
+
+	$link = sprintf('/pos/delivery/ajax?%s'
+		, http_build_query([
+			'a' => 'delivery-auth',
+			'c' => $_SESSION['Company']['id'],
+			'l' => $_SESSION['License']['id']
+		])
+	);
+	printf('<button class="btn btn-outline-secondary qrcode-link" data-load="%s" type="button"><i class="fas fa-qrcode"></i> Courier Auth</button>'
+		, $link
+	);
+
 	?></div>
 </header>
 
@@ -32,6 +44,52 @@ printf('<button class="btn btn-outline-secondary qrcode-link" data-code="%s" typ
 
 <div class="row">
 	<div class="col-md-6">
+
+		<h2>Active Couriers</h2>
+		<form method="post">
+		<table class="table">
+				<thead class="thead-dark">
+					<tr>
+					<th>Courier</th>
+					<th>Active</th>
+					<th>Location</th>
+					</tr>
+				</thead>
+				<tbody>
+				<?php
+				foreach ($data['courier_list'] as $c) {
+					$ping = sprintf('%d m ago', ceil($c['ping'] / 60));
+					echo '<tr>';
+					printf('<td>%s</td>', $c['name']);
+					printf('<td>%s / %s</td>', $c['stat'], $ping);
+					printf('<td>%s</td>', $c['location']);
+					echo '</tr>';
+				}
+				?>
+				</tbody>
+				<tfoot>
+					<tr>
+						<td colspan="2">
+							<select class="form-control">
+						<?php
+						foreach ($data['contact_list'] as $c) {
+							printf('<option value="%s">%s</option>', $c['id'], __h($c['name']));
+						}
+						?>
+							</select>
+						</td>
+						<td class="r">
+							<button class="btn btn-primary"><i class="fas fa-plus"></i></button>
+						</td>
+					</tr>
+				</tfoot>
+		</table>
+		</form>
+
+		<hr>
+
+		<h2>Orders</h2>
+
 		<div class="table-responsive">
 			<table class="table">
 				<thead class="thead-dark">
