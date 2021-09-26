@@ -73,7 +73,7 @@ SQL;
 
 		__exit_json([
 			'data' => $cht_data,
-			'meta' => [ 'detail' => 'Query Not Executed [CDA-050]' ]
+			'meta' => [ 'detail' => 'Query Not Executed [CDA-076]' ]
 		]);
 
 	}
@@ -84,19 +84,52 @@ SQL;
 	function _b2c_revenue_daily_product_type()
 	{
 		$sql = <<<SQL
-SELECT sub(b2c_sale.full_price) AS full_price_sum
-, date_trunc('day', created_at) AS created_at_day
-FROM b2c_sale
-WHERE created_at >= now() - '15 days'::interval
-GROUP BY created_at_day
-ORDER BY created_at_day
+SELECT sum(b2c_sale_item.unit_price * b2c_sale_item.qty) AS full_price_sum
+, product_type.name AS product_type_name
+FROM b2c_sale_item
+JOIN b2c_sale ON b2c_sale_item.b2c_sale_id = b2c_sale.id
+JOIN inventory ON b2c_sale_item.inventory_id = inventory.id
+JOIN product ON inventory.product_id = product.id
+JOIN product_type ON product.product_type_id = product_type.id
+WHERE b2c_sale.created_at >= now() - '15 days'::interval
+GROUP BY product_type.name
+ORDER BY full_price_sum DESC
 SQL;
 
-		__exit_json([
-			'data' => [],
-			'meta' => [ 'detail' => 'Query Not Executed [CDA-050]' ]
-		]);
+		$dbc = $this->_container->DB;
+		$res = $dbc->fetchAll($sql);
 
+		$cht_data = [];
+		$cht_data['type'] = 'doughnut'; // 'pie';
+		$cht_data['data'] = [
+			'labels' => [],
+			'datasets' => [
+				0 => [
+					'label' => 'Revenue by Product Type',
+					'backgroundColor' => [ 'red', 'orange', 'yellow', 'green', 'blue', 'indigo', 'violet' ],
+					// 'borderColor' => 'green',
+					'data' => []
+				]
+			]
+		];
+		$cht_data['options'] = [
+			'animations' => false,
+			'maintainAspectRatio' => false,
+			'plugins' => [
+				'legend' => false,
+			]
+		];
+
+		foreach ($res as $rec) {
+			$cht_data['data']['labels'][] = $rec['product_type_name'];
+			$cht_data['data']['datasets'][0]['backgroundColor'][] =
+			$cht_data['data']['datasets'][0]['data'][] = $rec['full_price_sum'];
+		}
+
+		__exit_json([
+			'data' => $cht_data,
+			'meta' => [], // 'detail' => 'Results Not Reay [CDA-097]' ]
+		]);
 
 	}
 

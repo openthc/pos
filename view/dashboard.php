@@ -84,7 +84,7 @@
 				<h1>Loading Chart...</h1>
 			</div>
 		</div>
-		<div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
+		<div class="card-footer small text-muted" id="chart-sales-daily-sum-info">Updated at --:--</div>
 		</div>
 	</div>
 	<div class="col">
@@ -96,7 +96,7 @@
 				<h1>Loading Chart...</h1>
 			</div>
 		</div>
-		<div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
+		<div class="card-footer small text-muted" id="chart-sales-product-type-info">Updated at --:--</div>
 		</div>
 	</div>
 </div>
@@ -121,7 +121,7 @@
 		</table>
 		</div>
 	</div>
-	<div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
+	<div class="card-footer small text-muted">Updated at --:--</div>
 </div>
 
 
@@ -145,6 +145,9 @@ $(function() {
 			} else {
 				$wrap.append(`<div class="alert alert-warning">${body.meta.detail}</div>`);
 			}
+
+			$('#chart-sales-daily-sum-info').text(`Updated at: ${new Date().toLocaleTimeString()}`);
+
 		});
 
 	fetch('/dashboard/ajax?a=b2c-revenue-daily-product-type')
@@ -152,10 +155,11 @@ $(function() {
 		.then(function(body) {
 			var $wrap = $('#chart-sales-product-type-wrap')
 			$wrap.empty();
-			if ((body.data) && (body.data.length)) {
+			if ((body.data) && ('object' == typeof body.data)) {
 				$wrap.append('<canvas id="chart-sales-product-type" height="240" style="height:240px;"></canvas>');
 				var ctx = document.getElementById('chart-sales-product-type').getContext('2d');
 				window.Chart1 = new Chart(ctx, body.data);
+				$('#chart-sales-product-type-info').text(`Updated at: ${new Date().toLocaleTimeString()}`);
 			} else {
 				$wrap.append(`<div class="alert alert-warning">${body.meta.detail}</div>`);
 			}
