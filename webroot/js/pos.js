@@ -4,6 +4,18 @@
 	Point-of-Sale JavaSCript
 */
 
+// @see https://github.com/ulid/javascript/blob/master/dist/index.js
+// so this is not realy a ULID thing
+window.ulid = function()
+{
+	var t = Date.now();
+	var r0 = Math.floor(Math.random() * 100000);
+	var r1 = Math.floor(Math.random() * 1000000);
+	var u = t.toString(32).toUpperCase() + r0.toString(32).toUpperCase() + r1.toString(32).toUpperCase();
+	return u;
+}
+
+
 var Weed = Weed || {};
 
 Weed.POS = {
@@ -233,6 +245,21 @@ $(function() {
 	// Open A Link in a Modal Thing
 	$('.qrcode-link').on('click', function(e) {
 
+		function draw_qrcode(code, size)
+		{
+			var arg = {
+				text: code,
+				width: size,
+				height: size,
+				colorDark : "#000000",
+				colorLight : "#ffffff",
+				correctLevel : QRCode.CorrectLevel.H
+			};
+			$('#qrcode-embed-image').empty();
+			var qrcode = new QRCode('qrcode-embed-image', arg);
+
+		}
+
 		var size = 384;
 
 		var html = `<div class="modal" id="qrcode-view" role="dialog" tabindex="-1">
@@ -240,7 +267,7 @@ $(function() {
 <div class="modal-content">
 <div class="modal-body">
 	<div style="height: ${size}px; margin: 0 auto; width: ${size}px;">
-		<div id="qrcode-embed-image"></div>
+		<div id="qrcode-embed-image"><i class="fas fa-sync fa-spin"></i></div>
 	</div>
 </div>
 </div>
@@ -254,15 +281,19 @@ $(function() {
 			$('#qrcode-view').remove();
 		});
 
-		var arg = {
-			text: this.getAttribute('data-code'),
-			width: size,
-			height: size,
-			colorDark : "#000000",
-			colorLight : "#ffffff",
-			correctLevel : QRCode.CorrectLevel.H
-		};
-		var qrcode = new QRCode('qrcode-embed-image', arg);
+		var code = this.getAttribute('data-code');
+		if (code) {
+			draw_qrcode(code, size);
+			return;
+		}
+
+		var load = this.getAttribute('data-load');
+		if (load) {
+			fetch(load).then(res => res.json()).then(function(json) {
+				draw_qrcode(json.data, size);
+			});
+		}
+
 	});
 
 	$('#pos-lot-search').on('click', function() {
