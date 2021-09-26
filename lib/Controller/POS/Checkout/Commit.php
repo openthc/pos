@@ -253,11 +253,16 @@ class Commit extends \OpenTHC\Controller\Base
 		$res = $cre->b2c()->create($obj);
 		if (200 != $res['code']) {
 			Session::flash('fail', $cre->formatError($res));
+		} else {
+			$b2c_sale['guid'] = $res['data'][0]['global_id'];
+			$m = $b2c_sale['meta'];
+			if (is_string($m)) {
+				$m = json_decode($m, true);
+			}
+			$m = array_merge_recursive($m, $res['data'][0]);
+			$b2c_sale['meta'] = json_encode($m);
+			$b2c_sale->save('B2C/Sale/Committed');
 		}
-
-		$b2c_sale['guid'] = $res['data'][0]['global_id'];
-		// $b2c_sale['meta'] = json_encode($res['data'][0]);
-		$b2c_sale->save('B2C/Sale/Committed');
 
 		return $b2c_sale;
 
