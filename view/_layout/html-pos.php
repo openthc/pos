@@ -10,48 +10,6 @@
 <link rel="stylesheet" href="https://cdn.openthc.com/bootstrap/4.4.1/bootstrap.css" integrity="sha256-L/W5Wfqfa0sdBNIKN9cG6QA5F2qx4qICmU2VgLruv9Y=" crossorigin="anonymous">
 <!-- <link href="/css/main.css" rel="stylesheet"> -->
 <link href="/css/pos.css" rel="stylesheet">
-<style>
-#pos-modal-payment {
-	user-select: none;
-}
-#menu-zero {
-	align-items: center;
-	background: #343a40;
-	display: flex;
-	/* display: none; */
-	flex: 0 1 auto;
-	justify-content: space-between;
-}
-#menu-zero div.menu-item {
-	padding: 0.50rem;
-}
-#menu-zero div.menu-item .menu-item-text {
-	color: #f9f9f9;
-	font-family: monospace;
-	font-size: 120%;
-}
-#menu-left {
-	background: #343a40ee;
-	display: none;
-	left: 0;
-	position:absolute ;
-	width: 0;
-	top: 0;
-}
-#menu-left.open {
-	display: flex;
-	flex-direction: column;
-	flex-wrap: wrap;
-	height: 100vh;
-	width: 20vw;
-	z-index: 10;
-}
-#menu-left .menu-item {
-	color: #f0f0f0;
-	padding: 0.50rem;
-}
-
-</style>
 <title><?= $data['Page']['title'] ?></title>
 </head>
 <body class="pos">

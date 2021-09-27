@@ -1,6 +1,6 @@
 /**
- * [POS description]
- * @type {[type]}
+ * POS Scanner
+ * Tries to be a Helper for reading PDF417 from Bluetooth or USB Scanner
  */
 
 

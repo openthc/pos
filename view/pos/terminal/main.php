@@ -7,26 +7,6 @@ $this->layout_file = sprintf('%s/view/_layout/html-pos.php', APP_ROOT);
 
 ?>
 
-<style>
-#pos-camera-preview-wrap {
-	background: #101010;
-	border: 4px solid #c00000;
-	border-radius: .25rem;
-	left: 10vw;
-	position: absolute;
-	top: 5vh;
-}
-#pos-camera-preview-wrap .shut {
-	position: absolute;
-	top: -4px;
-	right: -4px;
-}
-#pos-camera-preview-wrap video {
-	transform: scaleX(-1);
-}
-</style>
-
-
 <div id="pos-main-wrap">
 	<div class="pos-item-sale-wrap">
 	<div class="pos-item-wrap">

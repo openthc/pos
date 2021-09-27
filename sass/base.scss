@@ -1,7 +1,6 @@
 /**
-	OpenTHC Point of Sale Stylesheet
-	:mode=css:
-*/
+ * OpenTHC Point of Sale Stylesheet
+ */
 
 /*
 @import "_.less";
@@ -21,6 +20,9 @@ html {
 	height: 100%;
 }
 
+body {
+	font-family: sans-serif!important;
+}
 
 footer {
 	background: #000c00;
@@ -415,6 +417,13 @@ ul.ui-widget-content.ui-autocomplete {
 	font-size: 120%;
 }
 
+#delivery-map {
+	background-color: #33333333;
+	height: 100%;
+	min-height: 480px;
+	min-width: 320px;
+	width: 100%;
+}
 
 /**
 	Page Specific Rules
@@ -592,15 +601,17 @@ body.pos {
 	#pos-terminal-cmd-wrap {
 
 		display: flex;
+		justify-content: space-between;
 
 		.cmd-item {
-			flex: 1 1 33%;
+
+			flex: 1 1 auto;
+			padding: 0.25rem;
 			text-align: center;
 
 			button {
 				font-weight: 700;
 				margin: 4px auto;
-				width:80%;
 			}
 		}
 
@@ -611,11 +622,6 @@ body.pos {
 /** Checkout Terminal Price Footer Stuff */
 
 #pos-modal-number-input {
-	-webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
 	user-select: none;
 }
 

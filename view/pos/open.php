@@ -1,20 +1,4 @@
 
-<style>
-.numpad-wrap {
-	display: flex;
-	flex-wrap: wrap;
-}
-.numpad-grid {
-	flex: 0 0 33.333333%;
-	font-size: 32px;
-}
-.numpad-grid .btn {
-	font-size: 32px;
-	height: 4em;
-	width: 100%;
-}
-</style>
-
 <form autocomplete="off" method="post">
 <input name="CSRF" type="hidden" value="<?= $data['CSRF'] ?>">
 

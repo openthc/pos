@@ -1,0 +1,66 @@
+/**
+ *
+ */
+
+ #pos-modal-payment {
+	user-select: none;
+}
+#menu-zero {
+	align-items: center;
+	background: #343a40;
+	display: flex;
+	/* display: none; */
+	flex: 0 1 auto;
+	justify-content: space-between;
+}
+#menu-zero div.menu-item {
+	padding: 0.50rem;
+}
+#menu-zero div.menu-item .menu-item-text {
+	color: #f9f9f9;
+	font-family: monospace;
+	font-size: 120%;
+}
+#menu-left {
+	background: #343a40ee;
+	display: none;
+	left: 0;
+	position:absolute ;
+	width: 0;
+	top: 0;
+}
+#menu-left.open {
+	display: flex;
+	flex-direction: column;
+	flex-wrap: wrap;
+	height: 100vh;
+	width: 20vw;
+	z-index: 10;
+}
+#menu-left .menu-item {
+	color: #f0f0f0;
+	padding: 0.50rem;
+}
+
+
+/**
+ * Camera Scanner Thing
+ */
+#pos-camera-preview-wrap {
+	background: #101010;
+	border: 4px solid #c00000;
+	border-radius: .25rem;
+	left: 5vw;
+	position: absolute;
+	top: 5vh;
+}
+
+#pos-camera-preview-wrap .shut {
+	position: absolute;
+	bottom: 0;
+	// top: -4px;
+	// right: -4px;
+}
+#pos-camera-preview-wrap video {
+	transform: scaleX(-1);
+}

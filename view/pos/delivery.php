@@ -1,14 +1,4 @@
 
-<style>
-#delivery-map {
-	background-color: #33333333;
-	height: 100%;
-	min-height: 480px;
-	min-width: 320px;
-	width: 100%;
-}
-</style>
-
 <header style="display:flex; justify-content: space-between;">
 	<div>
 		<h1>POS Delivery </h1>

@@ -1,14 +1,4 @@
 
-<style>
-#receipt-preview-wrap iframe {
-	border: none;
-	height: 50vh;
-	margin: 0;
-	padding: 0;
-	width: 100%;
-}
-</style>
-
 <div class="container mt-4">
 	<h2>Email Configured: <span class="badge badge-info">Not Yet</span></h2>
 	<h2>SMS Configured: <span class="badge badge-info">Not Yet</span></h2>

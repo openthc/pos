@@ -1,29 +1,4 @@
 
-<style>
-.inline-edit-wrap {
-
-}
-.inline-edit-wrap .inline-edit-edit {
-	display:none;
-}
-.inline-edit-wrap .inline-edit-view {
-	position: relative;
-}
-.inline-edit-wrap .inline-edit-view .inline-edit-knob {
-	font-size: 0.85rem;
-	position: absolute;
-	right: 0.25rem;
-}
-.simple-edit-wrap {
-	position: relative;
-}
-.simple-edit-wrap .simple-edit-knob {
-	font-size: 0.85rem;
-	position: absolute;
-	right: 0.25rem;
-}
-</style>
-
 <h1><a href="/inventory">Inventory</a> :: <?= $data['Lot']['guid'] ?></h1>
 
 <div class="row" style="margin-bottom:2em;">
