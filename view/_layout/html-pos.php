@@ -8,8 +8,8 @@
 <meta name="theme-color" content="#247420">
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdn.openthc.com/bootstrap/4.4.1/bootstrap.css" integrity="sha256-L/W5Wfqfa0sdBNIKN9cG6QA5F2qx4qICmU2VgLruv9Y=" crossorigin="anonymous">
-<!-- <link href="/css/main.css" rel="stylesheet"> -->
-<link href="/css/pos.css" rel="stylesheet">
+<link href="/css/main.css" rel="stylesheet">
+<!-- <link href="/css/pos.css" rel="stylesheet"> -->
 <title><?= $data['Page']['title'] ?></title>
 </head>
 <body class="pos">

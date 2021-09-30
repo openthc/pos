@@ -27,7 +27,7 @@ $body_class_list[] = sprintf('m1-%s', $m1_mode);
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.19/css/dataTables.bootstrap4.min.css" integrity="sha256-F+DaKAClQut87heMIC6oThARMuWne8+WzxIDT7jXuPA=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdn.openthc.com/css/www/0.0.2/main.css" crossorigin="anonymous">
 <!-- <link rel="stylesheet" href="https://cdn.openthc.com/css/www/0.0.2/menu-tlr.css" crossorigin="anonymous"> -->
-<!-- <link rel="stylesheet" href="/css/main.css"> -->
+<link rel="stylesheet" href="/css/main.css">
 <title><?= h(strip_tags($this->data['Page']['title'])) ?></title>
 </head>
 <body class="<?= implode(' ', $body_class_list) ?>" data-menu-left-mode="<?= $m1_mode ?>">

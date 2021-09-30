@@ -21,8 +21,8 @@ header('content-type: text/html; charset=utf-8', true);
 <link rel="stylesheet" href="https://cdn.openthc.com/bootstrap/4.4.1/bootstrap.css" integrity="sha256-L/W5Wfqfa0sdBNIKN9cG6QA5F2qx4qICmU2VgLruv9Y=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdn.openthc.com/css/www/0.0.2/main.css" crossorigin="anonymous">
 <!-- <link rel="stylesheet" href="https://cdn.openthc.com/css/www/0.0.2/menu-tlr.css" crossorigin="anonymous"> -->
-<!-- <link rel="stylesheet" href="/css/main.css"> -->
-<link rel="stylesheet" href="/css/shop.css">
+<link rel="stylesheet" href="/css/main.css">
+<!-- <link rel="stylesheet" href="/css/shop.css"> -->
 <title><?= h(strip_tags($this->data['Page']['title'])) ?></title>
 <head>
 </head>
