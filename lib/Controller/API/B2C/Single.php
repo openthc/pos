@@ -36,7 +36,10 @@ class Single extends \App\Controller\API\Base
 
 		$b2c_item_list = $b2c->getItems();
 
+		// Format Output
 		$ret = $b2c->toArray();
+		$ret['license'] = [ 'id' => $ret['license_id'] ];
+		unset($ret['license_id']);
 		$ret['item_list'] = $b2c_item_list;
 
 		__exit_text([

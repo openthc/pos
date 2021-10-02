@@ -14,8 +14,8 @@ class Base extends \OpenTHC\Controller\Base
 	{
 		$c['phpErrorHandler'] = function($c) {
 			return function($REQ, $RES, $ERR) {
-				var_dump($ERR);
-				exit(0);
+				// var_dump($ERR);
+				// exit(0);
 				__exit_json([
 					'data' => null
 					, 'meta' => [ 'detail' => 'Fatal Error [ERR-001]' ]
@@ -23,26 +23,28 @@ class Base extends \OpenTHC\Controller\Base
 			};
 		};
 
-		$c['errorHandler'] = function($x) {
+		$c['errorHandler'] = function($c) {
 			return function($REQ, $RES, $ERR) {
 				// var_dump($ERR);
+				// exit;
 				__exit_json([
 					'data' => null
 					, 'meta' => [ 'detail' => 'Fatal Error [ERR-002]' ]
 				], 500);
 			};
-			// var_dump($x);
-			// echo "ERR-002";
-			// exit(0);
 		};
 
-		// $c['notFoundHandler']
-		// $c['response'] = new class extends \Slim\Http\Response {
-		// 	function withJSON($json, $code=200, $flag=0)
-		// 	{
-		// 		$flag = intval($flag);
-		// 		return parent::withJSON($json, $code, ($flag | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
-		// 	}
+		// Over-ride the Response object
+		// FAIL: Pimple\Exception\FrozenServiceException: Cannot override frozen service "response".
+		// $c['response'] = function($c) {
+		// 	$ret = new class extends \Slim\Http\Response {
+		// 		function withJSON($json, $code=200, $flag=0)
+		// 		{
+		// 			$flag = intval($flag);
+		// 			return parent::withJSON($json, $code, ($flag | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
+		// 		}
+		// 	};
+		// 	return $ret;
 		// };
 
 		parent::__construct($c);
