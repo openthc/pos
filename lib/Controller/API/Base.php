@@ -10,6 +10,45 @@ namespace App\Controller\API;
 
 class Base extends \OpenTHC\Controller\Base
 {
+	function __construct($c)
+	{
+		$c['phpErrorHandler'] = function($c) {
+			return function($REQ, $RES, $ERR) {
+				var_dump($ERR);
+				exit(0);
+				__exit_json([
+					'data' => null
+					, 'meta' => [ 'detail' => 'Fatal Error [ERR-001]' ]
+				], 500);
+			};
+		};
+
+		$c['errorHandler'] = function($x) {
+			return function($REQ, $RES, $ERR) {
+				// var_dump($ERR);
+				__exit_json([
+					'data' => null
+					, 'meta' => [ 'detail' => 'Fatal Error [ERR-002]' ]
+				], 500);
+			};
+			// var_dump($x);
+			// echo "ERR-002";
+			// exit(0);
+		};
+
+		// $c['notFoundHandler']
+		// $c['response'] = new class extends \Slim\Http\Response {
+		// 	function withJSON($json, $code=200, $flag=0)
+		// 	{
+		// 		$flag = intval($flag);
+		// 		return parent::withJSON($json, $code, ($flag | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
+		// 	}
+		// };
+
+		parent::__construct($c);
+
+	}
+
 	/**
 	 * This maybe should be in Middleware
 	 */

@@ -25,8 +25,15 @@ class B2C extends \App\Controller\API\Base
 		$b2c['license_id'] = $source_data['license']['id'];
 		$b2c->save();
 
+		// Format Output
+		$ret = $b2c->toArray();
+		$ret['license'] = [
+			'id' => $ret['license_id']
+		];
+		unset($ret['license_id']);
+
 		__exit_json([
-			'data' => $b2c->toArray()
+			'data' => $ret
 			, 'meta' => []
 		]);
 

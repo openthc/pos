@@ -1,18 +1,13 @@
 <?php
 /**
- *
+ * (c) 2018 OpenTHC, Inc.
+ * This file is part of OpenTHC API released under MIT License
+ * SPDX-License-Identifier: GPL-3.0-only
  */
 
 namespace App\Controller\API;
 
 class Main extends \App\Controller\API\Base
 {
-	function __invoke($REQ, $RES, $ARG)
-	{
-		__exit_json([
-			'data' => null,
-			'meta' => [],
-		], 501);
 
-	}
 }
