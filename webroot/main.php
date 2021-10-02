@@ -67,7 +67,7 @@ $con['Company'] = function($c0) {
 
 
 // API
-$app->group('/api', 'App\Module\API');
+$app->group('/api/v2018', 'App\Module\API');
 
 
 // Main Page
