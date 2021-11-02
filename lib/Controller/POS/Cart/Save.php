@@ -29,10 +29,10 @@ class Save extends \OpenTHC\Controller\Base
 				return $RES->withRedirect('/pos');
 			}
 
-			$sql = 'INSERT INTO b2c_sale_hold (contact_id, type, meta) VALUES (:c0, :t1, :m1) RETURNING id';
+			$sql = 'INSERT INTO b2c_sale_hold (contact_id, meta) VALUES (:c0, :m1) RETURNING id';
 			$arg = [
 				':c0' => $_SESSION['Contact']['id'],
-				':t1' => 'general',
+				// ':t1' => 'general',
 				':m1' => json_encode($_POST),
 			];
 			$hid = $dbc->fetchOne($sql, $arg);
