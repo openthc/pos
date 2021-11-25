@@ -1,7 +1,11 @@
 <?php
 /**
+ * (c) 2018 OpenTHC, Inc.
+ * This file is part of OpenTHC API released under MIT License
+ * SPDX-License-Identifier: GPL-3.0-only
+ *
  * POS Checkout Commit
-*/
+ */
 
 namespace App\Controller\POS\Checkout;
 
@@ -50,8 +54,7 @@ class Commit extends \OpenTHC\Controller\Base
 						$SI['id'] = ULID::create();
 						$SI['b2c_sale_id'] = $Sale['id'];
 						$SI['inventory_id'] = $IL['id'];
-						$SI['qty'] = $qty;
-						$SI['qom'] = 0; // $IL['package_size'];
+						$SI['unit_count'] = $qty;
 						$SI['unit_price']= $IL['sell'];
 						$SI['uom'] = 'ea';
 						// $SI['sort'] = $idx_sort;
@@ -81,10 +84,8 @@ class Commit extends \OpenTHC\Controller\Base
 				$SI['b2c_sale_id'] = $Sale['id'];
 				$SI['inventory_id'] = -1;
 				$SI['guid'] = '-';
-				$SI['qty'] = 1;
-				$SI['qom'] = 0; // $IL['package_size'];
+				$SI['unit_count'] = 1;
 				$SI['unit_price'] = ($sum_item_price * $tax_excise_rate);
-				$SI['uom'] = 'ea';
 				// $SI['sort'] = $idx_sort;
 				$SI->setFlag(\App\B2C\Sale\Item::FLAG_TAX_EXCISE);
 				$SI->save();
@@ -107,10 +108,8 @@ class Commit extends \OpenTHC\Controller\Base
 				$SI['b2c_sale_id'] = $Sale['id'];
 				$SI['inventory_id'] = -1;
 				$SI['guid'] = '-';
-				$SI['qty'] = 1;
-				$SI['qom'] = 0;
+				$SI['unit_count'] = 1;
 				$SI['unit_price'] = ($sum_item_price * $tax_excise_rate);
-				$SI['uom'] = 'ea';
 				$SI->setFlag(\App\B2C\Sale\Item::FLAG_TAX_RETAIL);
 				// $SI['sort'] = $idx_sort;
 				$SI->save();
@@ -118,7 +117,7 @@ class Commit extends \OpenTHC\Controller\Base
 			}
 
 			$Sale['full_price'] = $sum_item_price + $tax0 + $tax1;
-			$Sale->save('B2C/Sale/Created');
+			$Sale->save('B2C/Sale/Commit');
 
 		} catch (\Exception $e) {
 			_exit_html_fail('<h1>Failed to Execute the Sale [PCC-123]</h1>', 500);
@@ -191,7 +190,6 @@ class Commit extends \OpenTHC\Controller\Base
 				Radix::redirect('/pos/sale?id=' . $S['id']);
 				break;
 			case 1:
-				$S['tid'] = $res['transactionid'];
 				Session::flash('info', "Sale {$S['id']} Assigned Transaction {$S['tid']}");
 				//syslog(LOG_NOTICE, "Sale {$S['id']} Assigned Transaction {$S['tid']}");
 				$S->save();
