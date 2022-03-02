@@ -13,7 +13,9 @@ error_reporting(E_ALL & ~ E_NOTICE);
 // Composer
 require_once(APP_ROOT . '/vendor/autoload.php');
 
-\OpenTHC\Config::init(APP_ROOT);
+if ( ! \OpenTHC\Config::init(APP_ROOT) ) {
+	_exit_html_fail('<h1>Invalid Application Configuration [POS-017]</h1>', 500);
+}
 
 /**
  * Database Connection
@@ -41,7 +43,7 @@ function _dbc($dsn=null)
 			_exit_text('Invalid Database Configuration [ABD-039]', 500);
 		}
 
-		$dbc_list[$dsn] = new \Edoceo\Radix\DB\SQL(sprintf('pgsql:host=%s;dbname=%s', $cfg['hostname'], $cfg['database']), $cfg['username'], $cfg['password']);
+		$dbc_list[$dsn] = new \Edoceo\Radix\DB\SQL(sprintf('pgsql:application_name=openthc-pos;host=%s;dbname=%s', $cfg['hostname'], $cfg['database']), $cfg['username'], $cfg['password']);
 
 		return $dbc_list[$dsn];
 
