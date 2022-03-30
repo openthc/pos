@@ -15,6 +15,8 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with OpenTHC POS.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ * SPDX-License-Identifier: GPL-3.0-only
  */
 
 require_once(dirname(dirname(__FILE__)) . '/boot.php');
@@ -120,12 +122,6 @@ $app->group('/shop', 'App\Module\Shop')
 // 	->add('App\Middleware\Menu')
 // 	->add('App\Middleware\Auth')
 // 	->add('OpenTHC\Middleware\Session');
-
-// B2B Operations
-//$app->group('/b2b', 'App\Module\B2B')
-//	->add('App\Middleware\Menu')
-//	//->add('App\Middleware\Auth')
-//	->add('OpenTHC\Middleware\Session');
 
 
 // Authentication
