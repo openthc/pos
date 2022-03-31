@@ -13,6 +13,9 @@ var Camera_auth = 0;
 window.OpenTHC = window.OpenTHC || {};
 window.OpenTHC.Camera = {
 
+	/**
+	 *
+	 */
 	exists: function(callback)
 	{
 		let dev_list = navigator.mediaDevices;

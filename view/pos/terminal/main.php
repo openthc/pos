@@ -13,7 +13,7 @@ $this->layout_file = sprintf('%s/view/_layout/html-pos.php', APP_ROOT);
 		<div style="display:flex; flex-direction: column; flex-wrap: nowrap; height:100%;">
 
 			<!-- Scanner/Search Input Area -->
-			<div id="pos-scanner-read" style="background: #ccc; flex: 1 0 auto; padding: 0.5rem;">
+			<div id="pos-scanner-read" style="background: #ccc; flex: 1 0 auto; padding: 0.5rem; position:relative;">
 				<div class="input-group">
 					<div class="input-group-prepend">
 						<button class="btn btn-primary" id="pos-camera-input" type="button"><i class="fas fa-camera"></i></button>
@@ -23,6 +23,7 @@ $this->layout_file = sprintf('%s/view/_layout/html-pos.php', APP_ROOT);
 						<button class="btn btn-secondary" id="pos-lot-search" type="button"><i class="fas fa-search"></i></button>
 					</div>
 				</div>
+				<div class="collapse" id="pos-scanner-read-info" style="background: #333; color: var(--red); font-size: 2rem; height: 100%; left: 0; position: absolute; text-align: center; top: 0; width:100%; z-index: 4;"></div>
 			</div>
 
 			<div id="pos-item-list">
@@ -127,6 +128,20 @@ $(function() {
 	// https://github.com/zxing-js/library/blob/master/docs/examples/qr-camera/index.html
 	$('#pos-camera-input').on('click', function() {
 		window.OpenTHC.Camera.exists(function(good) {
+
+			if ( ! good) {
+				$('#pos-camera-input').removeClass('btn-primary');
+				$('#pos-camera-input').addClass('btn-danger');
+				// $('#pos-camera-input').prop('disabled', true);
+				$('#pos-scanner-read-info').text('Invalid Camera Device');
+				$('#pos-scanner-read-info').show();
+				setTimeout(function() {
+					$('#pos-scanner-read-info').hide();
+				}, 5000);
+
+				return;
+			}
+
 			// window.OpenTHC.Camera.open(function(stream) {
 
 			var html = [];
