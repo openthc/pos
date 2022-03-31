@@ -1,3 +1,13 @@
+<?php
+/**
+ * OpenTHC HTML POS Terminal Layout
+ *
+ * SPDX-License-Identifier: GPL-3.0-only
+ */
+
+header('content-type: text/html; charset=utf-8', true);
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,14 +16,41 @@
 <meta name="application-name" content="OpenTHC">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#247420">
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
-<link rel="stylesheet" href="https://cdn.openthc.com/bootstrap/4.4.1/bootstrap.css" integrity="sha256-L/W5Wfqfa0sdBNIKN9cG6QA5F2qx4qICmU2VgLruv9Y=" crossorigin="anonymous">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" integrity="sha256-mUZM63G8m73Mcidfrv5E+Y61y7a12O5mW4ezU3bxqW4=" crossorigin="anonymous" referrerpolicy="no-referrer">
+<link rel="stylesheet" href="https://cdn.openthc.com/bootstrap/5.1.3/bootstrap.min.css" integrity="sha256-YvdLHPgkqJ8DVUxjjnGVlMMJtNimJ6dYkowFFvp4kKs=" crossorigin="anonymous" referrerpolicy="no-referrer">
 <link href="/css/main.css" rel="stylesheet">
 <!-- <link href="/css/pos.css" rel="stylesheet"> -->
 <title><?= $data['Page']['title'] ?></title>
 </head>
 <body class="pos">
-<div id="menu-zero">
+<nav class="navbar navbar-expand-md navbar-dark bg-dark sticky-top">
+<div class="container-fluid">
+
+	<a class="navbar-brand menu-left-toggle" type="button"><i class="fas fa-user-clock"></i></a>
+
+	<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menu0" aria-controls="menu0" aria-expanded="false" aria-label="Toggle navigation">
+		<span class="navbar-toggler-icon"></span>
+	</button>
+
+	<div class="collapse navbar-collapse" id="menu0">
+
+		<div class="navbar-text mx-auto">
+			<div style="color: #f9f9f9; font-family: monospace; font-size: 120%;"><?= $data['Page']['title'] ?></div>
+		</div>
+
+		<div class="navbar-text">
+			<a class="btn btn-warning" href="/pos" id="pos-shop-redo" type="button"><i class="fas fa-ban" style="color: var(--bs-dark);"></i></a>
+			<a class="btn btn-danger" href="/pos/shut"><i class="fas fa-power-off" style="color: var(--bs-dark);" ></i></a>
+			<!-- <li class="nav-item"><a class="nav-link" href="/settings"><i class="fas fa-cogs"></i></a></li>
+			<li class="nav-item"><a class="nav-link" href="/auth/shut"><i class="fas fa-power-off"></i></a></li> -->
+		</div>
+
+	</div>
+
+</div>
+</nav>
+
+<!-- <div id="menu-zero">
 	<div class="menu-item">
 		<button class="btn btn-outline-secondary menu-left-toggle" type="button"><i class="fas fa-bars"></i></button>
 	</div>
@@ -21,10 +58,10 @@
 		<div class="menu-item-text"><?= $data['Page']['title'] ?></div>
 	</div>
 	<div class="menu-item">
-	<a class="btn btn-warning" href="/pos" id="pos-shop-redo" type="button"><i class="fas fa-ban"></i></a>
+		<a class="btn btn-warning" href="/pos" id="pos-shop-redo" type="button"><i class="fas fa-ban"></i></a>
 		<a class="btn btn-danger" href="/pos/shut"><i class="fas fa-power-off"></i></a>
 	</div>
-</div>
+</div> -->
 <?= $this->body ?>
 <div class="shut" id="menu-left">
 	<div class="menu-item">
@@ -36,14 +73,14 @@
 	<div class="menu-item" id="sale-hold-list"></div>
 </div>
 
-<script src="https://cdn.openthc.com/lodash/4.17.15/lodash.js" integrity="sha256-VeNaFBVDhoX3H+gJ37DpT/nTuZTdjYro9yBruHjVmoQ=" crossorigin="anonymous"></script>
-<script src="https://cdn.openthc.com/jquery/3.4.1/jquery.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
-<script src="https://cdn.openthc.com/jqueryui/1.12.1/jqueryui.js" integrity="sha256-KM512VNnjElC30ehFwehXjx1YCHPiQkOPmqnrWtpccM=" crossorigin="anonymous"></script>
-<script src="https://cdn.openthc.com/bootstrap/4.4.1/bootstrap.js" integrity="sha256-OUFW7hFO0/r5aEGTQOz9F/aXQOt+TwqI1Z4fbVvww04=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/riot/4.14.0/riot.min.js" integrity="sha512-+LI/J+j6hecBPuCvPtbjYAXiha2RuYEpO3yromB1zTVq8UuH0BTafeP7myLEd9tJnaVa2JkhLzRdhdIh+Iru0w==" crossorigin="anonymous"></script>
+<script src="https://cdn.openthc.com/lodash/4.17.15/lodash.js" integrity="sha256-VeNaFBVDhoX3H+gJ37DpT/nTuZTdjYro9yBruHjVmoQ=" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdn.openthc.com/jquery/3.4.1/jquery.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdn.openthc.com/jqueryui/1.12.1/jqueryui.js" integrity="sha256-KM512VNnjElC30ehFwehXjx1YCHPiQkOPmqnrWtpccM=" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdn.openthc.com/bootstrap/5.1.3/bootstrap.bundle.min.js" integrity="sha256-9SEPo+fwJFpMUet/KACSwO+Z/dKMReF9q4zFhU/fT9M=" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/riot/4.14.0/riot.min.js" integrity="sha256-mxBp2pV/KfjX4uaj+6aEh2MWB7J+j8o6VuOCs4aY7zM=" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <!-- <script src="https://unpkg.com/@zxing/library@latest"></script> -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" integrity="sha512-CNgIRecGo7nphbeZ04Sc13ka07paqdeTu0WR1IM4kNcpmBAUSHSQX0FslNhTDadL4O5SAGapGt4FodqL8My0mA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script crossorigin="anonymous" src="https://unpkg.com/@zxing/library@0.18.6/umd/index.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" integrity="sha256-xUHvBjJ4hahBW8qN9gceFBibSFUzbe9PNttUvehITzY=" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://unpkg.com/@zxing/library@0.18.6/umd/index.min.js" integrity="sha256-J5sXEO7LHYtUX4tjXapBjPDpcEHzQNwOwpkKcIhJJAI=" crossorigin="anonymous"></script>
 <script src="/js/pos.js"></script>
 <script src="/js/pos-scanner.js"></script>
 <script src="/js/pos-printer.js"></script>
