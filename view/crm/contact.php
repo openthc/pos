@@ -29,10 +29,10 @@ foreach ($data['contact_list'] as $c) {
 </tbody>
 <tfoot>
 	<tr>
-		<td><input class="form-control form-control-sm" name="contact-name" type="text"></td>
-		<td><input class="form-control form-control-sm" name="contact-email" type="text"></td>
-		<td><input class="form-control form-control-sm" name="contact-phone" type="text"></td>
-		<td><input class="form-control form-control-sm" name="contact-tags" type="text"></td>
+		<td><input autocomplete="off" class="form-control form-control-sm" name="contact-name" type="text"></td>
+		<td><input autocomplete="off" class="form-control form-control-sm" name="contact-email" type="text"></td>
+		<td><input autocomplete="off" class="form-control form-control-sm" name="contact-phone" type="text"></td>
+		<td><input autocomplete="off" class="form-control form-control-sm" name="contact-tags" type="text"></td>
 		<td class="r"><button class="btn btn-sm btn-outline-primary" name="a" value="contact-save"><i class="fas fa-save"></i></button></td>
 	</tr>
 </tfoot>

@@ -1,23 +1,24 @@
 
 <form autocomplete="off" method="post">
+
 <input name="CSRF" type="hidden" value="<?= $data['CSRF'] ?>">
+<input id="auth-code" name="code" type="hidden">
 
 <div class="container mt-4">
-	<div class="form-control form-control-lg" id="auth-code-view" style="font-size: 150%; font-weight: bold; letter-spacing: 1em; line-height:1; text-align: center;"></div>
-	<input id="auth-code" name="code" type="hidden">
-	<div class="numpad-wrap">
-		<div class="numpad-grid"><button class="btn btn-outline-primary btn-action" type="button" value="1">1</button></div>
-		<div class="numpad-grid"><button class="btn btn-outline-primary btn-action" type="button" value="2">2</button></div>
-		<div class="numpad-grid"><button class="btn btn-outline-primary btn-action" type="button" value="3">3</button></div>
-		<div class="numpad-grid"><button class="btn btn-outline-primary btn-action" type="button" value="4">4</button></div>
-		<div class="numpad-grid"><button class="btn btn-outline-primary btn-action" type="button" value="5">5</button></div>
-		<div class="numpad-grid"><button class="btn btn-outline-primary btn-action" type="button" value="6">6</button></div>
-		<div class="numpad-grid"><button class="btn btn-outline-primary btn-action" type="button" value="7">7</button></div>
-		<div class="numpad-grid"><button class="btn btn-outline-primary btn-action" type="button" value="8">8</button></div>
-		<div class="numpad-grid"><button class="btn btn-outline-primary btn-action" type="button" value="9">9</button></div>
-		<div class="numpad-grid"><button class="btn btn-outline-secondary btn-action" type="button" value="x"><i class="fas fa-arrow-left"></i></button></div>
-		<div class="numpad-grid"><button class="btn btn-outline-primary btn-action" type="button" value="0">0</button></div>
-		<div class="numpad-grid"><button class="btn btn-outline-success" name="a" type="submit" value="auth-code"><i class="fas fa-arrow-right"></i></button></div>
+	<div class="form-control form-control-lg mb-2" id="auth-code-view" style="font-size: 150%; font-weight: bold; letter-spacing: 1em; line-height:1; text-align: center;"></div>
+	<div class="numpad-wrap" style="margin: 0 -0.5vw;">
+		<div class="numpad-grid" style="padding:0.5vw;"><button class="btn btn-outline-primary btn-action" type="button" value="1">1</button></div>
+		<div class="numpad-grid" style="padding:0.5vw;"><button class="btn btn-outline-primary btn-action" type="button" value="2">2</button></div>
+		<div class="numpad-grid" style="padding:0.5vw;"><button class="btn btn-outline-primary btn-action" type="button" value="3">3</button></div>
+		<div class="numpad-grid" style="padding:0.5vw;"><button class="btn btn-outline-primary btn-action" type="button" value="4">4</button></div>
+		<div class="numpad-grid" style="padding:0.5vw;"><button class="btn btn-outline-primary btn-action" type="button" value="5">5</button></div>
+		<div class="numpad-grid" style="padding:0.5vw;"><button class="btn btn-outline-primary btn-action" type="button" value="6">6</button></div>
+		<div class="numpad-grid" style="padding:0.5vw;"><button class="btn btn-outline-primary btn-action" type="button" value="7">7</button></div>
+		<div class="numpad-grid" style="padding:0.5vw;"><button class="btn btn-outline-primary btn-action" type="button" value="8">8</button></div>
+		<div class="numpad-grid" style="padding:0.5vw;"><button class="btn btn-outline-primary btn-action" type="button" value="9">9</button></div>
+		<div class="numpad-grid" style="padding:0.5vw;"><button class="btn btn-outline-secondary btn-action" type="button" value="x"><i class="fas fa-arrow-left"></i></button></div>
+		<div class="numpad-grid" style="padding:0.5vw;"><button class="btn btn-outline-primary btn-action" type="button" value="0">0</button></div>
+		<div class="numpad-grid" style="padding:0.5vw;"><button class="btn btn-outline-success" name="a" type="submit" value="auth-code"><i class="fas fa-arrow-right"></i></button></div>
 	</div>
 
 </div>

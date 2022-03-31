@@ -21,7 +21,7 @@ $this->layout_file = sprintf('%s/view/_layout/html-pos.php', APP_ROOT);
 					<input autofocus class="form-control" id="barcode-input" name="barcode" type="text">
 					<button class="btn btn-secondary" id="pos-lot-search" type="button"><i class="fas fa-search"></i></button>
 				</div>
-				<div class="collapse" id="pos-scanner-read-info" style="background: #333; color: var(--red); font-size: 2rem; height: 100%; left: 0; position: absolute; text-align: center; top: 0; width:100%; z-index: 4;"></div>
+				<div class="collapse" id="pos-scanner-read-info" style="background: #333; color: var(--bs-danger); font-size: 2rem; height: 100%; left: 0; position: absolute; text-align: center; top: 0; width:100%; z-index: 4;"></div>
 			</div>
 
 			<div id="pos-item-list">
