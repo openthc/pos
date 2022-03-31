@@ -1,3 +1,9 @@
+<?php
+/**
+ * SPDX-License-Identifier: GPL-3.0-only
+ */
+
+?>
 
 <div class="container mt-4">
 	<h2>Email Configured: <span class="badge badge-info">Not Yet</span></h2>

@@ -1,6 +1,8 @@
 <?php
 /**
  * PDF Receipt
+ *
+ * SPDX-License-Identifier: GPL-3.0-only
  */
 
 namespace App\PDF;
@@ -38,8 +40,6 @@ class Receipt extends \App\PDF\Base
 	function setItems($b2c_item_list)
 	{
 		$this->_item_list = $b2c_item_list;
-		// $c = count($b2c_item_list);
-		// Try to Determine How tall to be?
 	}
 
 	function drawHead()
@@ -201,24 +201,27 @@ class Receipt extends \App\PDF\Base
 
 	}
 
+	/**
+	 *
+	 */
 	function render()
 	{
 		$this->addPage('P', [ 72, 5000 ]);
-		$this->_renderCalcHeight();
+
+		// First render to discover height
+		$this->_renderPrintable();
 		$y = $this->getY();
 		$y = ceil($y + 5);
 
+		// Clear and render correct height
 		$this->deletePage(1);
 		$this->addPage('P', [ 72, $y ]);
 		$this->_renderPrintable();
 	}
 
-	function _renderCalcHeight()
-	{
-		$x = $this->_renderPrintable();
-	}
-
-
+	/**
+	 *
+	 */
 	function _renderPrintable()
 	{
 		$this->drawHead();
@@ -230,8 +233,6 @@ class Receipt extends \App\PDF\Base
 		$y = $this->getY();
 		$y = 20;
 		foreach ($this->_item_list as $SI) {
-
-			$I = $SI['Inventory'];
 
 			$this->setXY(1, $y);
 			$this->cell(70, 5, $SI['Product']['name'] . ' ' . $SI['Variety']['name']);

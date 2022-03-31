@@ -1,7 +1,9 @@
 <?php
 /**
  * POS Receipt Handler
-*/
+ *
+ * SPDX-License-Identifier: GPL-3.0-only
+ */
 
 namespace App\Controller\POS\Checkout;
 
@@ -94,9 +96,19 @@ class Receipt extends \OpenTHC\Controller\Base
 
 		$S = new \App\B2C\Sale($dbc, $_GET['s']);
 
-		$b2c_item_list = $S->getItems();
-		foreach ($b2c_item_list as $i => $b2ci) {
-			$b2c_item_list[$i]['Inventory'] = new \App\Lot($dbc, $b2ci['inventory_id']);
+		$b2c_item_list = [];
+		$res = $S->getItems();
+		foreach ($res as $i => $b2ci) {
+
+			$I = new \App\Lot($dbc, $b2ci['inventory_id']);
+			$P = $dbc->fetchRow('SELECT id, name FROM product WHERE id = :p0', [ ':p0' => $I['product_id'] ]);
+			$V = $dbc->fetchRow('SELECT id, name FROM variety WHERE id = :v0', [ ':v0' => $I['variety_id'] ]);
+
+			$b2ci['Inventory'] = $I;
+			$b2ci['Product'] = $P;
+			$b2ci['Variety'] = $V;
+
+			$b2c_item_list[] = $b2ci;
 		}
 
 		$pdf = new \App\PDF\Receipt();
@@ -144,6 +156,7 @@ class Receipt extends \OpenTHC\Controller\Base
 		}
 		$cfg = \json_decode($cfg, true);
 
+		/*
 		$rcpt = $_POST['receipt-email'];
 		$chk = \Edoceo\Radix\Net\HTTP::get('http://isvaliduser.com/api/check?e=' . \rawurlencode($rcpt));
 		if (($chk['info']['http_code'] >= 200) && ($chk['info']['http_code'] <= 299)) {
@@ -153,6 +166,7 @@ class Receipt extends \OpenTHC\Controller\Base
 		} else {
 			_exit_html_fail('<p>Invalid Email, <a href="/auth/open">try again</a>.</p>', 400);
 		}
+		*/
 
 		$T = new \App\B2C\Sale($_GET['s']);
 
@@ -247,10 +261,10 @@ EOM;
 			));
 			break;
 
-		case 'rcpt.fyi':
+		case 'openthc':
 
 			$ghc = new \GuzzleHttp\Client([
-				'base_uri' => 'https://rcpt.fyi',
+				'base_uri' => 'https://openthc.pub',
 				'headers' => [
 					'user-agent' => 'OpenTHC/420.20.040',
 					'authorization' => sprintf('Bearer %s', $this->_api_auth),
@@ -267,6 +281,8 @@ EOM;
 			if (empty($ret['code'])) {
 				$ret['code'] = $res->getStatusCode();
 			}
+
+			break;
 
 		}
 
