@@ -44,10 +44,7 @@ class Base extends \TCPDF
 		//$this->setCellPaddings(0, 0, 0, 0);
 
 		// Set font
-		// dejavusans is a UTF-8 Unicode font, if you only need to
-		// print standard ASCII chars, you can use core fonts like
-		// helvetica or times to reduce file size.
-		$this->setFont('Helvetica', '', 14, '', true);
+		$this->setFont('freesans', '', 14, '', true);
 
 		// Set viewer preferences
 		$arg = array(
