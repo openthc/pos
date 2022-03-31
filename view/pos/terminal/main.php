@@ -1,6 +1,8 @@
 <?php
 /**
+ * Main Terminal View v2018
  *
+ * SPDX-License-Identifier: GPL-3.0-only
  */
 
 $this->layout_file = sprintf('%s/view/_layout/html-pos.php', APP_ROOT);
@@ -15,13 +17,9 @@ $this->layout_file = sprintf('%s/view/_layout/html-pos.php', APP_ROOT);
 			<!-- Scanner/Search Input Area -->
 			<div id="pos-scanner-read" style="background: #ccc; flex: 1 0 auto; padding: 0.5rem; position:relative;">
 				<div class="input-group">
-					<div class="input-group-prepend">
-						<button class="btn btn-primary" id="pos-camera-input" type="button"><i class="fas fa-camera"></i></button>
-					</div>
+					<button class="btn btn-primary" id="pos-camera-input" type="button"><i class="fas fa-camera"></i></button>
 					<input autofocus class="form-control" id="barcode-input" name="barcode" type="text">
-					<div class="input-group-append">
-						<button class="btn btn-secondary" id="pos-lot-search" type="button"><i class="fas fa-search"></i></button>
-					</div>
+					<button class="btn btn-secondary" id="pos-lot-search" type="button"><i class="fas fa-search"></i></button>
 				</div>
 				<div class="collapse" id="pos-scanner-read-info" style="background: #333; color: var(--red); font-size: 2rem; height: 100%; left: 0; position: absolute; text-align: center; top: 0; width:100%; z-index: 4;"></div>
 			</div>
@@ -57,27 +55,27 @@ $this->layout_file = sprintf('%s/view/_layout/html-pos.php', APP_ROOT);
 		<!--
 		@deprecated this can be done by the Camera feature now
 		<div class="cmd-item">
-			<button class="btn btn-primary" id="pos-checkout-scan-id" data-toggle="modal" data-target="#pos-modal-scan-id" type="button">
+			<button class="btn btn-primary" id="pos-checkout-scan-id" data-bs-toggle="modal" data-bs-target="#pos-modal-scan-id" type="button">
 				<i class="far fa-id-card"></i><span class="btn-text"> Scan ID</span>
 			</button>
 		</div>
 		-->
 		<div class="cmd-item">
-			<button class="btn btn-lg btn-primary" data-toggle="modal" data-target="#pos-modal-sale-hold" disabled id="pos-shop-save" type="button">
+			<button class="btn btn-lg btn-primary" data-bs-toggle="modal" data-bs-target="#pos-modal-sale-hold" disabled id="pos-shop-save" type="button">
 				<i class="fas fa-save"></i><span class="btn-text"> Save</span></button>
 		</div>
 		<div class="cmd-item">
-			<button class="btn btn-lg btn-secondary" data-toggle="modal" data-target="#pos-modal-discount" disabled type="button">
+			<button class="btn btn-lg btn-secondary" data-bs-toggle="modal" data-bs-target="#pos-modal-discount" disabled type="button">
 				<i class="fas fa-percent"></i><span class="btn-text"> Discount</span>
 			</button>
 		</div>
 		<div class="cmd-item">
-			<button class="btn btn-lg btn-primary" data-toggle="modal" data-target="#pos-modal-loyalty" disabled type="button">
+			<button class="btn btn-lg btn-primary" data-bs-toggle="modal" data-bs-target="#pos-modal-loyalty" disabled type="button">
 				<i class="fas fa-crown"></i><span class="btn-text"> Loyalty</span>
 			</button>
 		</div>
 		<div class="cmd-item">
-			<button class="btn btn-lg btn-success" data-toggle="modal" data-target="#pos-modal-payment" disabled id="pos-shop-next" type="button">
+			<button class="btn btn-lg btn-success" data-bs-toggle="modal" data-bs-target="#pos-modal-payment" disabled id="pos-shop-next" type="button">
 				<i class="far fa-money-bill-alt"></i><span class="btn-text"> Payment</span>
 			</button>
 		</div>

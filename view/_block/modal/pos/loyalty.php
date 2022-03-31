@@ -12,9 +12,7 @@ $body = <<<HTML
 	<div class="col-md-6">
 		<div class="input-group">
 			<input autocomplete="off" class="form-control form-control-lg" id="loyalty-phone" inputmode="tel" type="phone">
-			<div class="input-group-append">
-				<div class="input-group-text"><i class="fas fa-hashtag"></i></div>
-			</div>
+			<div class="input-group-text"><i class="fas fa-hashtag"></i></div>
 		</div>
 	</div>
 </div>
@@ -26,7 +24,7 @@ $body = <<<HTML
 	<div class="col-md-6">
 		<div class="input-group">
 			<input autocomplete="off" class="form-control form-control-lg" id="loyalty-email" inputmode="email" type="email">
-			<div class="input-group-append"><div class="input-group-text"><i class="fas fa-at"></i></div></div>
+			<div class="input-group-text"><i class="fas fa-at"></i></div>
 		</div>
 	</div>
 </div>
@@ -39,9 +37,7 @@ $body = <<<HTML
 	<div class="col-md-6">
 		<div class="input-group">
 			<input autocomplete="off" class="form-control form-control-lg" id="loyalty-other" type="text">
-			<div class="input-group-append">
-				<button class="btn btn-secondary" type="button"><i class="fas fa-qrcode"></i></button>
-			</div>
+			<button class="btn btn-secondary" type="button"><i class="fas fa-qrcode"></i></button>
 		</div>
 	</div>
 </div>

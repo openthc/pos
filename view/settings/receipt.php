@@ -16,7 +16,7 @@
 
 		<h2>Editor</h2>
 
-		<div class="form-group">
+		<div class="mb-2">
 			<label>Header</label>
 			<input class="form-control" name="pos-receipt-head" value="<?= __h($data['receipt-head']) ?>">
 			Maybe allow an image?

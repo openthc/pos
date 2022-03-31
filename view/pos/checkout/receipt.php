@@ -11,18 +11,15 @@ $this->layout_file = sprintf('%s/view/_layout/html-pos.php', APP_ROOT);
 
 <div class="row justify-content-center mb-2">
 <div class="col-md-8">
-<div class="card">
 
-	<h1 class="card-header">Cash</h1>
-
-	<div class="alert alert-success" style="font-size:28px; margin: 0;">
+	<div class="alert alert-success" style="font-size:28px;">
 		<div class="d-flex justify-content-between">
 			<div>Paid:</div>
 			<div class="r">$<?= number_format($data['cash_incoming'], 2) ?></div>
 		</div>
 	</div>
 
-	<div class="alert alert-danger" style="font-size:28px; margin: 0;">
+	<div class="alert alert-danger" style="font-size:28px;">
 		<div class="d-flex justify-content-between">
 			<div>Change:</div>
 			<div class="r">$<?= number_format($data['cash_outgoing'], 2) ?></div>
@@ -31,43 +28,38 @@ $this->layout_file = sprintf('%s/view/_layout/html-pos.php', APP_ROOT);
 
 </div>
 </div>
-</div>
 
 <div class="row justify-content-center">
 <div class="col-md-8">
 <div class="card">
-	<h1 class="card-header">Print Receipt</h1>
+	<h3 class="card-header">Print Receipt</h3>
 	<div class="card-body">
 
 		<form autocomplete="off" method="post">
-		<div class="form-group">
-			<h2>Email</h2>
+		<div class="mb-2">
+			<h4>Email</h4>
 			<input name="sale_id" type="hidden" value="<?= $data['Sale']['id'] ?>">
 			<div class="input-group">
-				<input class="form-control" name="receipt-email" placeholder="your@email.com" type="email">
-				<div class="input-group-append">
-					<button class="btn btn-outline-secondary" name="a" value="send-email">Send Receipt</button>
-				</div>
+				<input class="form-control" name="receipt-email" placeholder="client@email.com" type="email">
+				<button class="btn btn-secondary" name="a" value="send-email"><i class="fas fa-envelope-open-text"></i> Send Receipt</button>
 			</div>
 		</div>
 		</form>
 
 		<form autocomplete="off" method="post">
-		<div class="form-group">
-			<h2>Text</h2>
+		<div class="mb-2">
+			<h4>Text/SMS</h4>
 			<input name="sale_id" type="hidden" value="<?= $data['Sale']['id'] ?>">
 			<div class="input-group">
 				<input class="form-control" name="receipt-phone" placeholder="(###) ###-####" type="text">
-				<div class="input-group-append">
-					<button class="btn btn-outline-secondary" name="a" value="send-phone">Send Receipt</button>
-				</div>
+				<button class="btn btn-secondary" name="a" value="send-phone"><i class="fas fa-sms"></i> Send Receipt</button>
 			</div>
 		</div>
 		</form>
 
 		<form autocomplete="off" method="post">
-		<div class="form-group">
-			<h2>Print It</h2>
+		<div class="mb-2">
+			<h4>Print It</h4>
 			<div class="input-group">
 				<select class="form-control" id="printer-list">
 					<option>- Select Printer -</option>
@@ -77,9 +69,7 @@ $this->layout_file = sprintf('%s/view/_layout/html-pos.php', APP_ROOT);
 					}
 					?>
 				</select>
-				<div class="input-group-append">
-					<button class="btn btn-outline-warning" formtarget="openthc-print-window" id="send-print" name="a" type="submit" value="send-print"><i class="fas fa-printer"></i> Print Receipt</button>
-				</div>
+				<button class="btn btn-warning" formtarget="openthc-print-window" id="send-print" name="a" type="submit" value="send-print"><i class="fas fa-print"></i> Print Receipt</button>
 			</div>
 			<p>Warning: Printing kills trees</p>
 		</div>
@@ -89,7 +79,7 @@ $this->layout_file = sprintf('%s/view/_layout/html-pos.php', APP_ROOT);
 
 	<form autocomplete="off" method="post">
 	<div class="card-footer">
-		<button class="btn btn-outline-primary" name="a" value="send-blank">No Receipt</button>
+		<button class="btn btn-primary" name="a" value="send-blank"><i class="fas fa-ban"></i> No Receipt</button>
 	</div>
 	</form>
 

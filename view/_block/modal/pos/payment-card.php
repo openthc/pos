@@ -62,7 +62,7 @@ HTML;
 
 
 $foot = <<<HTML
-<button class="btn btn-warning" data-dismiss="modal" id="pos-pay-undo" style="display: none;" type="button"><i class="fas fa-undo"></i> Undo</button>
+<button class="btn btn-warning" data-bs-dismiss="modal" id="pos-pay-undo" style="display: none;" type="button"><i class="fas fa-undo"></i> Undo</button>
 <button class="btn btn-primary" disabled id="pos-payment-commit" name="a" type="submit" value="pos-done"><i class="fas fa-check-square-o"></i> Complete</button>
 HTML;
 

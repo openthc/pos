@@ -9,12 +9,12 @@
 
 	</p>
 
-	<div class="form-group">
+	<div class="mb-2">
 		<textarea class="form-control"></textarea>
 	</div>
 
-	<div class="form-group">
-		<button class="btn btn-outline-primary"><i class="fas fa-arrow-right"></i> Send</button>
+	<div class="mb-2">
+		<button class="btn btn-primary"><i class="fas fa-arrow-right"></i> Send</button>
 	</div>
 
 </div>

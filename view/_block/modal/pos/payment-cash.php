@@ -1,11 +1,12 @@
 <?php
 /**
  * The Payment Modal
+ *
+ * SPDX-License-Identifier: GPL-3.0-only
  */
 
 $body = <<<HTML
-<!-- <div class="container"> -->
-<div class="row" style="display:none;">
+<div class="row">
 	<div class="col-md-4">
 		<h4>Sub-Total: $<span class="pos-checkout-sub" data-amount="0">-.--</span></h4>
 	</div>
@@ -23,53 +24,42 @@ $body = <<<HTML
 	</div>
 </div>
 
-<div class="row">
-<div class="col-md-12">
-
-	<div class="row">
-		<div class="col-6">
-			<button class="btn btn-lg btn-block btn-outline-secondary mb-2 pp-cash" data-amount="100">$100</button>
-		</div>
-		<div class="col-6">
-			<button class="btn btn-lg btn-block btn-outline-secondary mb-2 pp-cash" data-amount="50">$50</button>
-		</div>
+<div class="d-flex flex-wrap justify-content-between mb-2">
+	<div class="p-1 w-50">
+		<button class="btn btn-lg btn-outline-secondary w-100 pp-cash" data-amount="100">$100</button>
 	</div>
-
-	<div class="row">
-		<div class="col-6">
-			<button class="btn btn-lg btn-block btn-outline-secondary mb-2 pp-cash" data-amount="20">$20</button>
-		</div>
-		<div class="col-6">
-			<button class="btn btn-lg btn-block btn-outline-secondary mb-2 pp-cash" data-amount="10">$10</button>
-		</div>
+	<div class="p-1 w-50">
+		<button class="btn btn-lg btn-outline-secondary w-100 pp-cash" data-amount="50">$50</button>
 	</div>
-
-	<div class="row">
-		<div class="col-6">
-			<button class="btn btn-lg btn-block btn-outline-secondary mb-2 pp-cash" data-amount="5">$5</button>
-		</div>
-		<div class="col-6">
-			<button class="btn btn-lg btn-block btn-outline-secondary mb-2 pp-cash" data-amount="1">$1</button>
-		</div>
+	<div class="p-1 w-50">
+		<button class="btn btn-lg btn-outline-secondary w-100 pp-cash" data-amount="20">$20</button>
 	</div>
-
-	<div class="row">
-		<div class="col-md-3">
-			<button class="btn btn-block btn-outline-secondary mb-2 pp-cash" data-amount="0.25">0.25</button>
-		</div>
-		<div class="col-md-3">
-			<button class="btn btn-block btn-outline-secondary mb-2 pp-cash" data-amount="0.10">0.10</button>
-		</div>
-		<div class="col-md-3">
-			<button class="btn btn-block btn-outline-secondary mb-2 pp-cash" data-amount="0.05">0.05</button>
-		</div>
-		<div class="col-md-3">
-			<button class="btn btn-block btn-outline-secondary mb-2 pp-cash" data-amount="0.01">0.01</button>
-		</div>
+	<div class="p-1 w-50">
+		<button class="btn btn-lg btn-outline-secondary w-100 pp-cash" data-amount="10">$10</button>
 	</div>
-
+	<div class="p-1 w-50">
+		<button class="btn btn-lg btn-outline-secondary w-100 pp-cash" data-amount="5">$5</button>
+	</div>
+	<div class="p-1 w-50">
+		<button class="btn btn-lg btn-outline-secondary w-100 pp-cash" data-amount="1">$1</button>
+	</div>
 </div>
-</div> <!-- /.row -->
+
+<div class="d-flex justify-content-between mb-2">
+	<div class="p-1 w-25">
+		<button class="btn btn-outline-secondary w-100 pp-cash" data-amount="0.25">0.25</button>
+	</div>
+	<div class="p-1 w-25">
+		<button class="btn btn-outline-secondary w-100 pp-cash" data-amount="0.10">0.10</button>
+	</div>
+	<div class="p-1 w-25">
+		<button class="btn btn-outline-secondary w-100 pp-cash" data-amount="0.05">0.05</button>
+	</div>
+	<div class="p-1 w-25">
+		<button class="btn btn-outline-secondary w-100 pp-cash" data-amount="0.01">0.01</button>
+	</div>
+</div>
+
 
 <div class="row">
 	<div class="col-md-6">
@@ -89,14 +79,11 @@ $body = <<<HTML
 		</div>
 	</div>
 </div>
-
-<!-- </div> -->
- <!-- /.container -->
 HTML;
 
 
 $foot = <<<HTML
-<button class="btn btn-warning" disabled="disabled" id="pos-pay-undo" type="button"><i class="fas fa-undo"></i> Undo</button>
+<button class="btn btn-warning" disabled id="pos-pay-undo" type="button"><i class="fas fa-undo"></i> Undo</button>
 <button class="btn btn-primary" disabled id="pos-payment-commit" name="a" type="submit" value="pos-done">
 	<i class="fas fa-check-square"></i> Complete
 </button>

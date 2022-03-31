@@ -52,9 +52,7 @@
 					data-value-initial=""
 					id="price" min="0.00" type="number" step="0.01"
 					value="<?= $data['Lot']['unit_price'] ?>">
-				<div class="input-group-append">
-					<div class="input-group-text">/each<span id="price-proc-icon"></span></div>
-				</div>
+				<div class="input-group-text">/each<span id="price-proc-icon"></span></div>
 			</div>
 		</td>
 	</tr>
@@ -72,11 +70,11 @@
 	<button accesskey="a" class="btn btn-outline-warning" name="a" title="Adjust the quantity, with documented reason (a)" type="submit" value="adjust"><i class="fas fa-edit"></i> <u>A</u>djust</button>
 	<button accesskey="t" class="btn btn-outline-success" name="a" type="submit" value="transfer"><i class="fas fa-truck"></i> Transfer</button>
 	<button accesskey="v" class="btn btn-outline-warning" name="a" title="Verify all the data for this Item" type="submit" value="verify"><i class="far fa-check-circle"></i> <u>V</u>erify</button>
-	<button class="btn btn-outline-secondary" data-toggle="modal" data-target="#modal-lot-finish" name="a" type="button"><i class="far fa-box-check"></i> Finish</button>
+	<button class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#modal-lot-finish" name="a" type="button"><i class="far fa-box-check"></i> Finish</button>
 
 	<!--
 	<?php
-	// echo ' <button class="btn btn-outline-primary" data-toggle="modal" data-target="#modal-object-note" name="a" type="button"><i class="far fa-comments"></i> Note</button>';
+	// echo ' <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modal-object-note" name="a" type="button"><i class="far fa-comments"></i> Note</button>';
 	// echo '<span style="display:none;">';
 	// echo '<input id="file-upload"  name="file" type="file">';
 	// echo '</span>';

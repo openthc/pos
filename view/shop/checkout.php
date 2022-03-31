@@ -38,29 +38,23 @@ foreach ($data['b2b_sale']['item_list'] as $idx => $b2b_item) {
 <section>
 	<h2>Client Details</h2>
 
-	<div class="form-group">
+	<div class="mb-2">
 		<div class="input-group">
-			<div class="input-group-prepend">
-				<div class="input-group-text" style="width: 6em;">Name:</div>
-			</div>
+			<div class="input-group-text" style="width: 6em;">Name:</div>
 			<input class="form-control form-control-lg" name="contact-name" type="text">
 		</div>
 	</div>
 
-	<div class="form-group">
+	<div class="mb-2">
 		<div class="input-group">
-			<div class="input-group-prepend">
-				<div class="input-group-text" style="width: 6em;">Email:</div>
-			</div>
+			<div class="input-group-text" style="width: 6em;">Email:</div>
 			<input class="form-control form-control-lg" name="contact-email" type="email">
 		</div>
 	</div>
 
-	<div class="form-group">
+	<div class="mb-2">
 		<div class="input-group">
-			<div class="input-group-prepend">
-				<div class="input-group-text" style="width: 6em;">Phone:</div>
-			</div>
+			<div class="input-group-text" style="width: 6em;">Phone:</div>
 			<input class="form-control form-control-lg" name="contact-phone" type="tel">
 		</div>
 	</div>

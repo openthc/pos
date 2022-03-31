@@ -32,40 +32,35 @@ $external_embed = sprintf('<script async defer src="https://%s/shop/embed.js?c=%
 
 
 	<h2>External Menu:</h2>
-	<div class="form-group">
+	<div class="mb-2">
 		<div class="input-group">
 			<input class="form-control form-control-lg" readonly type="text" value="<?= $external_menu_link ?>">
-			<div class="input-group-append">
-				<button class="btn btn-outline-secondary qrcode-link" data-code="<?= $external_menu_link ?>" type="button"><i class="fas fa-qrcode"></i></button>
-			</div>
+			<button class="btn btn-secondary qrcode-link" data-code="<?= $external_menu_link ?>" type="button"><i class="fas fa-qrcode"></i></button>
 		</div>
 	</div>
 
 
 	<h2>JavaScript Embed:</h2>
-	<div class="form-group">
+	<div class="mb-2">
 		<input class="form-control form-control-lg" readonly value="<?= __h($external_embed) ?>">
+		<!-- <button class="btn btn-secondary" data-code="<?= $external_menu_feed ?>" type="button"><i class="fas fa-clipboard"></i></button> -->
 	</div>
 
 
 	<h2>External Inventory Feed:</h2>
-	<div class="form-group">
+	<div class="mb-2">
 		<div class="input-group">
 			<input class="form-control form-control-lg" readonly type="text" value="<?= $external_menu_feed ?>">
-			<div class="input-group-append">
-				<button class="btn btn-outline-secondary qrcode-link" data-code="<?= $external_menu_feed ?>" type="button"><i class="fas fa-qrcode"></i></button>
-			</div>
+			<button class="btn btn-secondary qrcode-link" data-code="<?= $external_menu_feed ?>" type="button"><i class="fas fa-qrcode"></i></button>
 		</div>
 	</div>
 
 <!--
 	<h2>Another Thing:</h2>
-	<div class="form-group">
+	<div class="mb-2">
 		<div class="input-group">
 			<input class="form-control form-control-lg" readonly type="text" value="<?= $delivery_auth_link ?>">
-			<div class="input-group-append">
-				<button class="btn btn-outline-secondary qrcode-link" data-code="<?= $delivery_auth_link ?>" type="button"><i class="fas fa-qrcode"></i></button>
-			</div>
+			<button class="btn btn-outline-secondary qrcode-link" data-code="<?= $delivery_auth_link ?>" type="button"><i class="fas fa-qrcode"></i></button>
 		</div>
 	</div>
  -->

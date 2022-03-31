@@ -9,7 +9,7 @@ $body = <<<HTML
 	<div class="col-md-4">
 		<div class="input-group">
 			<input autocomplete="off" class="form-control r" id="pos-checkout-discount-fix" max="100" min="0" name="pos-discount-fixed" step="0.10" type="number" value="0.00">
-			<div class="input-group-append"><div class="input-group-text"><i class="fas fa-money-bill-alt"></i></div></div>
+			<div class="input-group-text"><i class="fas fa-money-bill-alt"></i></div>
 		</div>
 	</div>
 </div>
@@ -18,7 +18,7 @@ $body = <<<HTML
 	<div class="col-md-4">
 		<div class="input-group">
 			<input autocomplete="off" class="form-control r" id="pos-checkout-discount-pct" max="100" min="0" name="pos-discount-percent" step="1" type="number" value="0">
-			<div class="input-group-append"><div class="input-group-text"><i class="fas fa-percent"></i></div></div>
+			<div class="input-group-text"><i class="fas fa-percent"></i></div>
 		</div>
 	</div>
 </div>
@@ -57,7 +57,7 @@ HTML;
 
 
 $foot = <<<HTML
-<button class="btn btn-outline-primary" data-dismiss="modal" id="pos-discount-apply" type="button"><i class="fas fa-check-square"></i> Apply</button>
+<button class="btn btn-outline-primary" data-bs-dismiss="modal" id="pos-discount-apply" type="button"><i class="fas fa-check-square"></i> Apply</button>
 HTML;
 
 echo $this->block('modal.php', [

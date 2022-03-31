@@ -6,7 +6,7 @@
 
 $body = <<<HTML
 <div>
-	<div class="form-group">
+	<div class="mb-2">
 	<label>Customer Name/Note</label>
 		<input autocomplete="off" class="form-control" id="customer-name" value="">
 	</div>
