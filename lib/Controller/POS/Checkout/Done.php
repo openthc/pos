@@ -1,6 +1,8 @@
 <?php
 /**
  * Checkout Done
+ *
+ * SPDX-License-Identifier: GPL-3.0-only
  */
 
 namespace App\Controller\POS\Checkout;

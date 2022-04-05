@@ -1,6 +1,8 @@
 <?php
 /**
  * OpenTHC POS Application Bootstrap
+ *
+ * SPDX-License-Identifier: GPL-3.0-only
  */
 
 define('APP_ROOT', __DIR__);

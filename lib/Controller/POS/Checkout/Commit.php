@@ -1,10 +1,8 @@
 <?php
 /**
- * (c) 2018 OpenTHC, Inc.
- * This file is part of OpenTHC API released under MIT License
- * SPDX-License-Identifier: GPL-3.0-only
- *
  * POS Checkout Commit
+ *
+ * SPDX-License-Identifier: GPL-3.0-only
  */
 
 namespace App\Controller\POS\Checkout;
@@ -120,7 +118,7 @@ class Commit extends \OpenTHC\Controller\Base
 			$Sale->save('B2C/Sale/Commit');
 
 		} catch (\Exception $e) {
-			_exit_html_fail('<h1>Failed to Execute the Sale [PCC-123]</h1>', 500);
+			_exit_html_fail(sprintf('<h1>Failed to Execute the Sale [PCC-123]</h1><pre>%s</pre>', __h($e->getMessage())), 500);
 		}
 
 		$this->sendToCRE($Sale);
@@ -141,9 +139,6 @@ class Commit extends \OpenTHC\Controller\Base
 		switch ($_SESSION['cre']['engine']) {
 			case 'biotrack':
 				$this->send_to_biotrack($Sale);
-				break;
-			case 'leafdata':
-				$this->send_to_leafdata($Sale);
 				break;
 			case 'metrc':
 				$this->send_to_metrc($Sale);
@@ -199,67 +194,6 @@ class Commit extends \OpenTHC\Controller\Base
 		} else {
 			// UnRegulated Sale?
 			// ??
-		}
-
-		return $b2c_sale;
-
-	}
-
-	/**
-	 * Execute Sale in LeafData
-	 */
-	function send_to_leafdata($b2c_sale)
-	{
-		$dbc = $this->_container->DB;
-
-		$obj = [];
-		$obj['external_id'] = $b2c_sale['id'];
-		$obj['type'] = 'retail_recreational';
-		$obj['status'] = 'sale';
-		$obj['sold_at'] = date(\OpenTHC\CRE\LeafData::FORMAT_DATE_TIME);
-		// $obj['global_sold_by_user_id'] = '';
-		// $obj['patient_medical_id']
-		// $obj['caregiver_id']
-		$obj['price_total'] = 0;
-		$obj['sale_items'] = [];
-
-		// Get Items
-		$b2c_item_list = $b2c_sale->getItems();
-		foreach ($b2c_item_list as $b2c_item) {
-
-			$lot = new \App\Lot($dbc, $b2c_item['inventory_id']);
-			$Product = new \App\Product($dbc, $lot['product_id']);
-
-			$obj['sale_items'][] = [
-				'global_inventory_id' => $lot['guid'],
-				// 'global_batch_id' =>
-				'external_id' => $b2c_item['id'],
-				'type' => $obj['type'],
-				'sold_at' => $obj['sold_at'],
-				'qty' => $b2c_item['qty'],
-				'uom' => 'ea',
-				'unit_price' => $b2c_item['unit_price'],
-				'name' => $Product['name'],
-			];
-
-			$obj['price_total'] = $obj['price_total'] + ($b2c_item['unit_price'] * $b2c_item['qty']);
-		}
-
-		$cre = \OpenTHC\CRE::factory($_SESSION['cre']);
-		$cre->setLicense($_SESSION['License']);
-
-		$res = $cre->b2c()->create($obj);
-		if (200 != $res['code']) {
-			Session::flash('fail', $cre->formatError($res));
-		} else {
-			$b2c_sale['guid'] = $res['data'][0]['global_id'];
-			$m = $b2c_sale['meta'];
-			if (is_string($m)) {
-				$m = json_decode($m, true);
-			}
-			$m = array_merge_recursive($m, $res['data'][0]);
-			$b2c_sale['meta'] = json_encode($m);
-			$b2c_sale->save('B2C/Sale/Committed');
 		}
 
 		return $b2c_sale;

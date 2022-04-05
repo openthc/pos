@@ -58,7 +58,7 @@ class Item extends \App\Controller\API\Base
 		$b2c_item['inventory_id'] = $source_data['lot']['id'];
 		$b2c_item['unit_count'] = floatval($source_data['unit_count']);
 		$b2c_item['unit_price'] = floatval($source_data['unit_price']);
-		// $b2c_item['full_price'] = $b2c_item['qty'] * $b2c_item['unit_price'];
+		// $b2c_item['full_price'] = $b2c_item['unit_count'] * $b2c_item['unit_price'];
 		$b2c_item->save();
 
 		__exit_json([

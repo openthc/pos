@@ -1,6 +1,8 @@
 <?php
 /**
  * Dashboard AJAX Handler
+ *
+ * SPDX-License-Identifier: GPL-3.0-only
  */
 
 namespace App\Controller\Dashboard;
@@ -84,7 +86,7 @@ SQL;
 	function _b2c_revenue_daily_product_type()
 	{
 		$sql = <<<SQL
-SELECT sum(b2c_sale_item.unit_price * b2c_sale_item.qty) AS full_price_sum
+SELECT sum(b2c_sale_item.unit_price * b2c_sale_item.unit_count) AS full_price_sum
 , product_type.name AS product_type_name
 FROM b2c_sale_item
 JOIN b2c_sale ON b2c_sale_item.b2c_sale_id = b2c_sale.id
