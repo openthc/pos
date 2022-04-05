@@ -1,6 +1,8 @@
 <?php
 /**
  * Shopping Cart
+ *
+ * SPDX-License-Identifier: GPL-3.0-only
  */
 
 namespace App\Controller\Shop;
