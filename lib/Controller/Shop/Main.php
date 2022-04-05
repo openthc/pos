@@ -46,8 +46,8 @@ SELECT inventory.id,
     inventory.qa_thc AS thc,
     COALESCE(inventory.sell, product.sell) AS sell,
     inventory.tags,
-    inventory.strain_id AS variety_id,
-    strain.name AS variety_name,
+    inventory.variety_id AS variety_id,
+    variety.name AS variety_name,
     inventory.product_id,
     product.name AS product_name,
     product.package_type,
@@ -63,7 +63,7 @@ SELECT inventory.id,
     product_type.mode AS product_type_mode,
     product_type.unit AS product_type_unit
    FROM inventory
-     JOIN strain ON inventory.strain_id::text = strain.id::text
+     JOIN variety ON inventory.variety_id::text = variety.id::text
      JOIN product ON inventory.product_id::text = product.id::text
      JOIN product_type ON product.product_type_id::text = product_type.id::text
     WHERE product_type.id NOT IN ('018NY6XC00PR0DUCTTYPE00000', '018NY6XC00PR0DUCTTYPE00001', '018NY6XC00PR0DUCTTYPETY5AT', '018NY6XC00PT8AXVZGNZN3A0QT')
