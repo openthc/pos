@@ -1,6 +1,8 @@
 <?php
 /**
+ * AJAX View Helper
  *
+ * SPDX-License-Identifier: GPL-3.0-only
  */
 
 namespace App\Controller\Inventory;
@@ -25,6 +27,12 @@ SQL;
 
 		$data['inventory_list'] = $this->_container->DB->fetchAll($sql, $arg);
 
-		return $RES->write( $this->render('_block/inventory-list.php', $data) );
+		ob_start();
+		require_once(APP_ROOT . '/view/_block/inventory-list.php');
+		$html = ob_get_clean();
+
+		// return $RES->write( $this->render('_block/inventory-list.php', $data) );
+		__exit_html($html);
+
 	}
 }

@@ -76,7 +76,7 @@ class Ajax extends \OpenTHC\Controller\Base
 	}
 
 	/**
-	 *
+	 * Load the Hold Data
 	 */
 	function hold_open($RES)
 	{
@@ -91,11 +91,15 @@ class Ajax extends \OpenTHC\Controller\Base
 		if (empty($rec)) {
 			__exit_json($ret_data, 404);
 		}
+		if (empty($rec['type'])) {
+			$rec['type'] = 'general';
+		}
 
 		$rec['meta'] = json_decode($rec['meta'], true);
 
 		switch ($rec['type']) {
 			case 'general':
+			case 'inside':
 				foreach ($rec['meta'] as $k => $v) {
 					if (preg_match('/^qty-(\w+)$/', $k, $m)) {
 						$sql = <<<SQL
@@ -115,7 +119,8 @@ SQL;
 
 						$ret_data[] = [
 							'id' => $lot['id'],
-							'qty' => $v,
+							'qty' => $v,  // @deprecated
+							'unit_count' => $v,
 							'unit_price' => $lot['sell'],
 							'product' => [
 								'id' => $lot['product_id'],
@@ -154,7 +159,8 @@ SQL;
 					// Response Data
 					$ret_data[] = [
 						'id' => $b2c_item['lot_id']
-						, 'qty' => $b2c_item['qty']
+						, 'qty' => $b2c_item['qty']  // @deprecated
+						, 'unit_count' => $b2c_item['qty']
 						, 'unit_price' => $lot['sell']
 						, 'product' => $b2c_item['product']
 						, 'package' => [
