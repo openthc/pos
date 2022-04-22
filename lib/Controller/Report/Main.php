@@ -1,7 +1,9 @@
 <?php
 /**
+ * Basic Report Stuff
+ *
  * SPDX-License-Identifier: GPL-3.0-only
-*/
+ */
 
 namespace App\Controller\Report;
 
@@ -14,7 +16,12 @@ class Main extends \OpenTHC\Controller\Base
 	 */
 	function __invoke($REQ, $RES, $ARG)
 	{
-		__exit_html('<h1>Reports Not Available</h1>');
+		$data = [];
+
+		$html = $this->render('report/main.php', $data);
+
+		return $RES->write($html);
+
 	}
 
 	/**
@@ -22,7 +29,12 @@ class Main extends \OpenTHC\Controller\Base
 	 */
 	function recent($REQ, $RES, $ARG)
 	{
-		__exit_html('<h1>Requires More Sale History [CRM-019]</h1>');
+		$data = [];
+
+		$html = $this->render('report/recent.php', $data);
+
+		return $RES->write($html);
+
 	}
 
 }
