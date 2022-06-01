@@ -14,22 +14,21 @@
 	"require": {
 		"edoceo/lowline_php": "dev-master",
 		"edoceo/radix": "dev-master",
-		"league/oauth2-client": "2.6.0",
+		"league/oauth2-client": "2.6.1",
 		"openthc/common": "dev-master",
 		"openthc/cre-adapter": "dev-master",
 		"pear/net_smtp": "1.10.0",
 		"plivo/plivo-php": "4.21.0",
 		"tuupola/base32": "2.0.0",
-		"twilio/sdk": "6.27.0",
-		"tecnickcom/tcpdf": "6.4.1"
+		"twilio/sdk": "6.37.1",
+		"tecnickcom/tcpdf": "6.4.4"
 	},
 	"require-dev": {
-		"behat/behat": "3.8.1",
-		"php-webdriver/webdriver": "1.11.1",
-		"phpmd/phpmd": "2.10.1",
-		"phpstan/phpstan": "0.12.92",
-		"phpunit/phpunit": "9.5.6",
+		"behat/behat": "3.10.0",
+		"php-webdriver/webdriver": "1.12.1",
+		"phpmd/phpmd": "2.12.0",
+		"phpstan/phpstan": "1.7.8",
+		"phpunit/phpunit": "9.5.20",
 		"sebastian/phpcpd": "6.0.3"
-
 	}
 }
