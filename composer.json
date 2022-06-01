@@ -18,7 +18,7 @@
 		"openthc/common": "dev-master",
 		"openthc/cre-adapter": "dev-master",
 		"pear/net_smtp": "1.10.0",
-		"plivo/plivo-php": "4.21.0",
+		"plivo/plivo-php": "4.32.0",
 		"tuupola/base32": "2.0.0",
 		"twilio/sdk": "6.37.1",
 		"tecnickcom/tcpdf": "6.4.4"
