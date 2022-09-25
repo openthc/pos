@@ -12,8 +12,8 @@
 		}
 	},
 	"require": {
-		"edoceo/lowline_php": "dev-master",
-		"edoceo/radix": "dev-master",
+		"edoceo/lowline": "2022.0.266",
+		"edoceo/radix": "2021.0.0",
 		"league/oauth2-client": "2.6.1",
 		"openthc/common": "dev-master",
 		"openthc/cre-adapter": "dev-master",
