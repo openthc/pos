@@ -1,10 +1,10 @@
 /**
  * Print Helper
+ *
+ * SPDX-License-Identifier: GPL-3.0-only
  */
 
 POS.Printer = {
-
-	printGoogleCloud: function() {},
 
 	printLocalBrowser: function() {},
 
