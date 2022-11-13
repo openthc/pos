@@ -2,12 +2,17 @@
 /**
  * POS AJAX Handler
  * Has some legacy functional level stuff that should be cleaned up
+ *
+ * SPDX-License-Identifier: GPL-3.0-only
  */
 
 namespace App\Controller\POS;
 
 class Ajax extends \OpenTHC\Controller\Base
 {
+	/**
+	 *
+	 */
 	function __invoke($REQ, $RES, $ARG)
 	{
 		session_write_close();
@@ -102,15 +107,16 @@ class Ajax extends \OpenTHC\Controller\Base
 			case 'inside':
 				foreach ($rec['meta'] as $k => $v) {
 					if (preg_match('/^qty-(\w+)$/', $k, $m)) {
+
 						$sql = <<<SQL
-SELECT lot_full.*
-FROM lot_full
-WHERE license_id = :l0
-  AND stat = 200
-  AND qty > 0
-  AND (sell IS NOT NULL AND sell > 0)
-  AND lot_id = :pk
-SQL;
+						SELECT lot_full.*
+						FROM lot_full
+						WHERE license_id = :l0
+						AND stat = 200
+						AND qty > 0
+						AND (sell IS NOT NULL AND sell > 0)
+						AND lot_id = :pk
+						SQL;
 
 						$lot = $dbc->fetchRow($sql, [
 							':l0' => $_SESSION['License']['id'],
@@ -142,14 +148,14 @@ SQL;
 				foreach ($b2c['item_list'] as $b2c_item) {
 
 					$sql = <<<SQL
-SELECT lot_full.*
-FROM lot_full
-WHERE license_id = :l0
-	AND stat = 200
-	AND qty > 0
-	AND (sell IS NOT NULL AND sell > 0)
-	AND lot_id = :pk
-SQL;
+					SELECT lot_full.*
+					FROM lot_full
+					WHERE license_id = :l0
+						AND stat = 200
+						AND qty > 0
+						AND (sell IS NOT NULL AND sell > 0)
+						AND lot_id = :pk
+					SQL;
 
 					$lot = $dbc->fetchRow($sql, [
 						':l0' => $_SESSION['License']['id'],
@@ -159,6 +165,7 @@ SQL;
 					// Response Data
 					$ret_data[] = [
 						'id' => $b2c_item['lot_id']
+						, 'name' => sprintf('%s: %s / %s', substr($rec['guid'], -4), $b2c_item['product']['name'], $b2c_item['variety']['name'])
 						, 'qty' => $b2c_item['qty']  // @deprecated
 						, 'unit_count' => $b2c_item['qty']
 						, 'unit_price' => $lot['sell']
