@@ -4,9 +4,10 @@
 
 **/.idea/workspace.xml
 **/.idea/tasks.xml
+*.phar
 .build/
 .config/
-.env
+.env*
 .gradle/
 .idea/
 .local/
@@ -21,7 +22,8 @@ lib/RBE/
 node_modules/
 public/
 release/
-test/report.xsl
+test/*.xsl
 var/
 vendor/
+webroot/pub/
 webroot/test-output/
