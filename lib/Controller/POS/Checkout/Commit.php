@@ -45,6 +45,18 @@ class Commit extends \OpenTHC\Controller\Base
 
 					$qty = floatval($_POST[$key]);
 					$IL = new \App\Lot($dbc, $m[1]);
+					$P = new \App\Product($dbc, $IL['product_id']);
+					switch ($P['package_type']) {
+						case 'pack':
+						case 'each':
+							$uom = 'Each';
+							break;
+						case 'bulk':
+							// $uom = new \OpenTHC\UOM($P['package_unit_uom']);
+							// $uom = $uom->getName();
+							$uom = 'Grams';
+							break;
+					}
 
 					if ($IL['id']) {
 
@@ -54,7 +66,7 @@ class Commit extends \OpenTHC\Controller\Base
 						$SI['inventory_id'] = $IL['id'];
 						$SI['unit_count'] = $qty;
 						$SI['unit_price']= $IL['sell'];
-						$SI['uom'] = 'ea';
+						$SI['uom'] = $uom;
 						// $SI['sort'] = $idx_sort;
 						$SI->save('B2C/Sale/Item/Create');
 
