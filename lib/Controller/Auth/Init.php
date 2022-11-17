@@ -41,7 +41,8 @@ class Init extends \OpenTHC\Controller\Base
 
 		// Save the CRE Stuff?
 		if (!empty($chk['cre_meta'])) {
-			$_SESSION['cre'] = json_decode($chk['cre_meta'], true);
+			$cre_meta = json_decode($chk['cre_meta'], true);
+			$_SESSION['cre'] = array_merge($_SESSION['cre'], $cre_meta);
 		}
 
 		// Cleanup some CRE Data
