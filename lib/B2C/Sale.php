@@ -11,6 +11,8 @@ class Sale extends \OpenTHC\SQL\Record
 
 	private $_item_list;
 
+	const STAT_OPEN = 100;
+
 	public static function import($x)
 	{
 		$License = \OpenTHC\License::findByGUID($x['location']);

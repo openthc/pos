@@ -49,12 +49,12 @@ class Commit extends \OpenTHC\Controller\Base
 					switch ($P['package_type']) {
 						case 'pack':
 						case 'each':
-							$uom = 'Each';
+							$uom = 'ea';
 							break;
 						case 'bulk':
 							// $uom = new \OpenTHC\UOM($P['package_unit_uom']);
-							// $uom = $uom->getName();
-							$uom = 'Grams';
+							// $uom = $uom->getStub();
+							$uom = 'g';
 							break;
 					}
 
@@ -241,10 +241,12 @@ class Commit extends \OpenTHC\Controller\Base
 		$b2c_item_list = $Sale->getItems();
 		foreach ($b2c_item_list as $b2c_item) {
 			$lot = new \App\Lot($dbc, $b2c_item['inventory_id']);
+			// $uom = new \OpenTHC\UOM($b2c_item['uom']);
+			// $uom = $uom->getName();
 			$obj['Transactions'][] = [
 				'PackageLabel' => $lot['guid'],
 				'Quantity' => $b2c_item['qty'],
-				'UnitOfMeasure' => 'Grams',
+				'UnitOfMeasure' => $uom,
 				'TotalAmount' => ($b2c_item['unit_price'] * $b2c_item['qty']),
 			];
 		}
