@@ -52,9 +52,8 @@ class Commit extends \OpenTHC\Controller\Base
 							$uom = 'ea';
 							break;
 						case 'bulk':
-							// $uom = new \OpenTHC\UOM($P['package_unit_uom']);
-							// $uom = $uom->getStub();
-							$uom = 'g';
+							$uom = new \OpenTHC\UOM($P['package_unit_uom']);
+							$uom = $uom->getStub();
 							break;
 					}
 

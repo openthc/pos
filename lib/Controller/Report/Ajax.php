@@ -96,9 +96,8 @@ class Ajax extends \OpenTHC\Controller\Base
 							$uom = 'Each';
 							break;
 						case 'g':
-							// $uom = new \OpenTHC\UOM($sale_item['uom']);
-							// $uom = $uom->getName();
-							$uom = 'Grams';
+							$uom = new \OpenTHC\UOM($sale_item['uom']);
+							$uom = $uom->getName();
 							break;
 					}
 
