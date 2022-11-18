@@ -51,10 +51,10 @@ class Init extends \OpenTHC\Controller\Base
 			unset($_SESSION['cre']['auth']['license']);
 		}
 
-		if (empty($_SESSION['cre']['license-key']) && !empty($_SESSION['cre']['auth']['license-key'])) {
-			$_SESSION['cre']['license-key'] = $_SESSION['cre']['auth']['license-key'];
-			unset($_SESSION['cre']['auth']['license-key']);
-		}
+		// if (empty($_SESSION['cre']['license-key']) && !empty($_SESSION['cre']['auth']['license-key'])) {
+		// 	$_SESSION['cre']['license-key'] = $_SESSION['cre']['auth']['license-key'];
+		// 	unset($_SESSION['cre']['auth']['license-key']);
+		// }
 
 		unset($_SESSION['cre']['auth']);
 

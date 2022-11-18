@@ -43,23 +43,10 @@ class Ajax extends \OpenTHC\Controller\Base
 		$cre->setLicense($_SESSION['License']);
 
 		$meta = $B2C->getMeta();
+		$item_list = $B2C->getItems();
 		$b2c_sale_item_list = [];
-		foreach ($meta as $key => $value) {
-			if ( ! preg_match('/^qty-(\w{26})$/', $key, $match)) {
-				continue;
-			}
-			$I = $dbc->fetchRow('SELECT * FROM inventory WHERE id = :pk AND license_id = :l0', [
-				':pk' => $match[1],
-				':l0' => $_SESSION['License']['id'],
-			]);
-
-			$sql = 'SELECT * FROM b2c_sale_item';
-			$sql.= ' WHERE b2c_sale_id = :pk';
-			$sql.= ' AND inventory_id = :i0';
-			$b2c_sale_item = $dbc->fetchRow($sql, [
-				':pk' => $B2C['id'],
-				':i0' => $I['id'],
-			]);
+		foreach ($item_list as $b2c_sale_item) {
+			$I = new \App\Lot($dbc, $b2c_sale_item['inventory_id']);
 			$b2c_sale_item = new \App\B2C\Sale\Item($dbc, $b2c_sale_item);
 			$b2c_sale_item_list[] = [
 				'inventory' => $I,
@@ -101,6 +88,7 @@ class Ajax extends \OpenTHC\Controller\Base
 				);
 				foreach ($b2c_sale_item_list as $b2c_sale_item) {
 					$sale_item = $b2c_sale_item['sale_item'];
+					$I = $b2c_sale_item['inventory'];
 
 					// $uom = new \OpenTHC\UOM($sale_item['uom']);
 					switch ($sale_item['uom']) {
@@ -108,6 +96,8 @@ class Ajax extends \OpenTHC\Controller\Base
 							$uom = 'Each';
 							break;
 						case 'g':
+							// $uom = new \OpenTHC\UOM($sale_item['uom']);
+							// $uom = $uom->getName();
 							$uom = 'Grams';
 							break;
 					}
