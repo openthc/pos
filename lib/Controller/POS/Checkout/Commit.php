@@ -230,9 +230,9 @@ class Commit extends \OpenTHC\Controller\Base
 
 		$obj = [];
 		$obj['SalesDateTime'] = date(\DateTime::ISO8601);
-		$obj['SalesCustomerType'] = 'Consumer';
 		// Consumer" [1] => string(7) "Patient" [2] => string(9) "Caregiver" [3] => string(15) "ExternalPatient"
-		$obj['PatientLicenseNumber'] = 'ABC-123';
+		$obj['SalesCustomerType'] = 'Patient';
+		$obj['PatientLicenseNumber'] = '000001';
 		// "CaregiverLicenseNumber": null,
 		// "IdentificationMethod": null,
 		$obj['Transactions'] = [];
@@ -240,13 +240,13 @@ class Commit extends \OpenTHC\Controller\Base
 		$b2c_item_list = $Sale->getItems();
 		foreach ($b2c_item_list as $b2c_item) {
 			$lot = new \App\Lot($dbc, $b2c_item['inventory_id']);
-			// $uom = new \OpenTHC\UOM($b2c_item['uom']);
-			// $uom = $uom->getName();
+			$uom = new \OpenTHC\UOM($b2c_item['uom']);
+			$uom = $uom->getName();
 			$obj['Transactions'][] = [
 				'PackageLabel' => $lot['guid'],
-				'Quantity' => $b2c_item['qty'],
+				'Quantity' => $b2c_item['unit_count'],
 				'UnitOfMeasure' => $uom,
-				'TotalAmount' => ($b2c_item['unit_price'] * $b2c_item['qty']),
+				'TotalAmount' => ($b2c_item['unit_price'] * $b2c_item['unit_count']),
 			];
 		}
 

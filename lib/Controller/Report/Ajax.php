@@ -104,9 +104,8 @@ class Ajax extends \OpenTHC\Controller\Base
 					$transaction = array(
 						'PackageLabel' => $I['guid'],
 						'Quantity' => $sale_item['unit_count'],
-						// 'UnitOfMeasure' => $uom->getName(),
 						'UnitOfMeasure' => $uom,
-						'TotalAmount' => $sale_item['unit_price'],
+						'TotalAmount' => ($sale_item['unit_price'] * $sale_item['unit_count']),
 						'UnitThcPercent' => null,
 						'UnitThcContent' => null,
 						'UnitThcContentUnitOfMeasure' => null,
