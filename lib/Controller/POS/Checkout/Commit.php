@@ -221,21 +221,13 @@ class Commit extends \OpenTHC\Controller\Base
 		$cre = \OpenTHC\CRE::factory($_SESSION['cre']);
 		$cre->setLicense($_SESSION['License']);
 
-		// $req = $cre->_curl_init($cre->_make_url('/unitsofmeasure/v1/active'));
-		// $res = $cre->_curl_exec($req);
-
-		// $req = $cre->_curl_init($cre->_make_url('/sales/v1/customertypes'));
-		// $res = $cre->_curl_exec($req);
-		// exit;
-
 		$obj = [];
 		$obj['SalesDateTime'] = date(\DateTime::ISO8601);
-		// Consumer" [1] => string(7) "Patient" [2] => string(9) "Caregiver" [3] => string(15) "ExternalPatient"
+		$obj['Transactions'] = [];
+
+		// @todo Fix assumptions about Customer, add Patient/Caregiver UX
 		$obj['SalesCustomerType'] = 'Patient';
 		$obj['PatientLicenseNumber'] = '000001';
-		// "CaregiverLicenseNumber": null,
-		// "IdentificationMethod": null,
-		$obj['Transactions'] = [];
 
 		$b2c_item_list = $Sale->getItems();
 		foreach ($b2c_item_list as $b2c_item) {

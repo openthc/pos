@@ -90,16 +90,8 @@ class Ajax extends \OpenTHC\Controller\Base
 					$sale_item = $b2c_sale_item['sale_item'];
 					$I = $b2c_sale_item['inventory'];
 
-					// $uom = new \OpenTHC\UOM($sale_item['uom']);
-					switch ($sale_item['uom']) {
-						case 'ea':
-							$uom = 'Each';
-							break;
-						case 'g':
-							$uom = new \OpenTHC\UOM($sale_item['uom']);
-							$uom = $uom->getName();
-							break;
-					}
+					$uom = new \OpenTHC\UOM($sale_item['uom']);
+					$uom = $uom->getName();
 
 					$transaction = array(
 						'PackageLabel' => $I['guid'],
