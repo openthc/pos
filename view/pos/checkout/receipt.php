@@ -41,7 +41,7 @@ $this->layout_file = sprintf('%s/view/_layout/html-pos.php', APP_ROOT);
 			<input name="sale_id" type="hidden" value="<?= $data['Sale']['id'] ?>">
 			<div class="input-group">
 				<input class="form-control" name="receipt-email" placeholder="client@email.com" type="email">
-				<button class="btn btn-secondary" name="a" value="send-email"><i class="fas fa-envelope-open-text"></i> Send Receipt</button>
+				<button class="btn btn-secondary" name="a" value="send-email"><i class="fas fa-envelope-open-text"></i> Email Receipt</button>
 			</div>
 		</div>
 		</form>
@@ -69,11 +69,24 @@ $this->layout_file = sprintf('%s/view/_layout/html-pos.php', APP_ROOT);
 					}
 					?>
 				</select>
-				<button class="btn btn-warning" formtarget="openthc-print-window" id="send-print" name="a" type="submit" value="send-print"><i class="fas fa-print"></i> Print Receipt</button>
+
+				<!-- <button class="btn btn-warning"
+					formtarget="openthc-print-window" id="send-print" name="a" type="button"
+					value="send-print"><i class="fas fa-print"></i> Print Receipt</button> -->
+
+				<button class="btn btn-warning"
+					id="send-print-frame"
+					type="button"><i class="fas fa-print"></i> Print Receipt</button>
+
 			</div>
 			<p>Warning: Printing kills trees</p>
 		</div>
 		</form>
+
+		<iframe id="print-frame" name="print-frame"
+			src="/pos/checkout/receipt?s=<?= rawurldecode($_GET['id']) ?>&amp;a=pdf"
+			style="border: 1px solid #000; width:100%;"></iframe>
+
 	</div>
 
 
@@ -150,7 +163,7 @@ $(function() {
 
 			break;
 
-		case 'pdf':
+		case 'pdf': // @deprecated
 
 			// Browser Popup
 			var opts = [];
@@ -192,5 +205,41 @@ $(function() {
 		}
 
 	});
+
+	/**
+	 * Print Frame w/PDF
+	 */
+	$('#send-print-frame').on('click', function() {
+
+		var F = document.querySelector('#print-frame');
+		// F.addEventListener('load', function() {
+
+			// console.log('onLoad!');
+
+			// Can't get these to fire
+			// F.contentWindow.addEventListener('beforeprint', function() {
+			// 	console.log('beforeprint!');
+			// });
+
+			// F.contentWindow.addEventListener('afterprint', function() {
+			// 	console.log('onAfterPrint!');
+			// });
+			// F.contentWindow.onafterprint = function() {
+			// 	console.log('onAfterPrint!');
+			// };
+
+			// setTimeout(function() {
+
+				F.contentWindow.focus();
+				F.contentWindow.print();
+
+			// }, 250);
+
+		// });
+
+		return false;
+
+	});
+
 });
 </script>

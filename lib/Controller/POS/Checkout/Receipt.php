@@ -12,6 +12,9 @@ use App\Sale;
 
 class Receipt extends \OpenTHC\Controller\Base
 {
+	/**
+	 * Get the Receipt
+	 */
 	function __invoke($REQ, $RES, $ARG)
 	{
 		$data = array(
@@ -49,7 +52,8 @@ class Receipt extends \OpenTHC\Controller\Base
 			]
 		);
 
-		switch ($_POST['a']) {
+		$action = $_POST['a'] ?: $_GET['a'];
+		switch ($action) {
 		case 'pdf':
 		case 'print':
 		case 'print-receipt':
@@ -60,10 +64,6 @@ class Receipt extends \OpenTHC\Controller\Base
 		case 'send-blank':
 			return $RES->withRedirect('/pos');
 		case 'send-email':
-			$_POST['receipt-email'] = trim(strtolower($_POST['receipt-email']));
-			if (empty($_POST['receipt-email'])) {
-				__exit_text('Invalid Email', 400);
-			}
 			return $this->_send_email($RES, $data);
 		case 'send-phone':
 			return $this->_send_phone($RES);
@@ -117,7 +117,7 @@ class Receipt extends \OpenTHC\Controller\Base
 		$pdf->setSale($S);
 		$pdf->setItems($b2c_item_list);
 		$pdf->render();
-		$name = sprintf('receipt_%s.pdf', $S['id']);
+		$name = sprintf('Receipt_%s.pdf', $S['id']);
 		$pdf->Output($name, 'I');
 
 		exit(0);
@@ -152,9 +152,14 @@ class Receipt extends \OpenTHC\Controller\Base
 		$dbc = $this->_container->DB;
 		$cfg = $dbc->fetchOne("SELECT val FROM auth_company_option WHERE key = 'pos-email-send'");
 		if (empty($cfg)) {
-			_exit_html_fail('<h1>Email Service is not configured</h1>', 501);
+			_exit_html_fail('<h1>Email Service is not configured</h1><p>Please <a href="/settings/receipt">update the settings</a></p>', 501);
 		}
 		$cfg = \json_decode($cfg, true);
+
+		$_POST['receipt-email'] = trim(strtolower($_POST['receipt-email']));
+		if (empty($_POST['receipt-email'])) {
+			__exit_text('Invalid Email', 400);
+		}
 
 		/*
 		$rcpt = $_POST['receipt-email'];

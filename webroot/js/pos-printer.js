@@ -6,7 +6,13 @@
 
 POS.Printer = {
 
-	printLocalBrowser: function() {},
+	/**
+	 *
+	 */
+	printLocalBrowser: function()
+	{
+
+	},
 
 	/**
 	 * Download the Document as PDF and then send to our HTTP Print Queue
@@ -49,6 +55,12 @@ POS.Printer = {
 
 	},
 
-	printServerConnect: function() {},
+	/**
+	 *
+	 */
+	printServerConnect: function() {
+
+
+	},
 
 };
