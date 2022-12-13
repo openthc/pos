@@ -84,7 +84,7 @@ $this->layout_file = sprintf('%s/view/_layout/html-pos.php', APP_ROOT);
 		</form>
 
 		<iframe id="print-frame" name="print-frame"
-			src="/pos/checkout/receipt?s=<?= rawurldecode($_GET['id']) ?>&amp;a=pdf"
+			src="/pos/checkout/receipt?s=<?= rawurldecode($data['Sale']['id']) ?>&amp;a=pdf"
 			style="border: 1px solid #000; width:100%;"></iframe>
 
 	</div>
