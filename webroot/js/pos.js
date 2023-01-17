@@ -205,11 +205,6 @@ $(function() {
 			'color': '#eeeeee',
 		});
 		$(document.body).html('<h1 style="margin:5em; text-align:center;"><i class="fas fa-sync fa-spin"></i> Loading...</h1>');
-		// var $f = $('<form action="/pos" method="post"><input name="a" type="hidden" value="open"></form>');
-		// $(document.body).append($f);
-		// $f.submit();
-		window.location.reload();
-		return false;
 	});
 
 	// Attach Handler to Payment Button
