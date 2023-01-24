@@ -1,6 +1,8 @@
 <?php
 /**
  * PDF Receipt
+ * "72xReceipt" size, which is really 80mm wide paper w/72mm wide print region
+ * And it works better when we make it only 68mm
  *
  * SPDX-License-Identifier: GPL-3.0-only
  */
@@ -12,9 +14,14 @@ class Receipt extends \App\PDF\Base
 	protected $Company;
 	protected $License;
 
+	protected $_receipt_width = 72;
+
 	private $_b2c_sale;
 	private $_item_list = [];
 
+	/**
+	 * Defaults
+	 */
 	function __construct($orientation='P', $unit='mm', $format=array(72, 1000), $unicode=true, $encoding='UTF-8', $diskcache=false, $pdfa=false)
 	{
 		parent::__construct($orientation, $unit, $format, $unicode, $encoding, $diskcache, $pdfa);
@@ -44,35 +51,38 @@ class Receipt extends \App\PDF\Base
 
 	function drawHead()
 	{
-		$this->setXY(0, 5);
 		$this->setFont('freesans', 'B', 18);
 		$this->setFillColor(0x10, 0x10, 0x10);
 		$this->setTextColor(0xff, 0xff, 0xff);
-		$this->cell(72, 4, $_SESSION['Company']['name'], null, null, 'C', true);
+		$this->setXY(0, 5);
+		$this->cell($this->_receipt_width, 4, $_SESSION['Company']['name'], null, null, 'C', true);
 	}
 
+	/**
+	 *
+	 */
 	function drawSummary()
 	{
 		$y = $this->getY();
 
-		$y+= 4;
-		$this->setXY(1, $y);
-		$this->cell(70, 5, 'Subtotal:');
-		$this->setXY(36, $y);
-		$this->cell(35, 5, '$-.--', 0, 0, 'R');
+		$y+= 5;
+		$this->setXY(0, $y);
+		$this->cell(34, 4, 'Subtotal:', 1);
+		$this->setXY(34, $y);
+		$this->cell(34, 4, '$-.--', 0, 0, 'R');
 
 		$y+= 5;
-		$this->setXY(1, $y);
-		$this->cell(70, 5, 'Discount:');
-		$this->setXY(36, $y);
-		$this->cell(35, 5, '$-.--', 0, 0, 'R');
+		$this->setXY(0, $y);
+		$this->cell(34, 4, 'Discount:');
+		$this->setXY(34, $y);
+		$this->cell(34, 4, '$-.--', 0, 0, 'R');
 
 		// Tax A
 		$y+= 5;
-		$this->setXY(1, $y);
-		$this->cell(70, 5, 'Cannabis Tax (Included):');
-		$this->setXY(36, $y);
-		$this->cell(35, 5, '$-.--', 0, 0, 'R');
+		$this->setXY(0, $y);
+		$this->cell(30, 5, 'Cannabis Tax (Included):');
+		$this->setXY(32, $y);
+		$this->cell(34, 5, '$-.--', 0, 0, 'R');
 
 		// Tax B
 		// $y+= 5;
@@ -81,24 +91,24 @@ class Receipt extends \App\PDF\Base
 
 		// Tax C
 		$y+= 5;
-		$this->setXY(1, $y);
-		$this->cell(70, 5, 'Sales Tax (Included):');
-		$this->setXY(36, $y);
-		$this->cell(35, 5, '$-.--', 0, 0, 'R');
+		$this->setXY(0, $y);
+		$this->cell(30, 5, 'Sales Tax (Included):');
+		$this->setXY(32, $y);
+		$this->cell(34, 5, '$-.--', 0, 0, 'R');
 
 		$y += 6;
-		$this->line(1, $y, 71, $y);
+		$this->line(0, $y, 80, $y);
 
 		$y += 2;
 		$this->setFont('', 'B');
 		$this->setXY(1, $y);
 		$this->cell(70, 5, 'Total:');
 		$this->setXY(36, $y);
-		$this->cell(35, 5, '$-.--', 0, 0, 'R');
+		$this->cell(34, 5, '$-.--', 0, 0, 'R');
 		$this->setFont('', '');
 
 		$y += 7;
-		$this->line(1, $y, 71, $y);
+		$this->line(0, $y, 80, $y);
 
 		// Cash Paid
 		$y += 2;
@@ -115,31 +125,37 @@ class Receipt extends \App\PDF\Base
 		$this->setXY(1, $y);
 		$this->cell(70, 5, 'TXN:');
 		$this->setXY(36, $y);
-		$this->cell(35, 5, substr($this->_b2c_sale['id'], 0, 16), 0, 0, 'R');
+		$this->cell(34, 5, substr($this->_b2c_sale['id'], 0, 16), 0, 0, 'R');
 
 		// Transaction Type
 		$y += 5;
 		$this->setXY(1, $y);
 		$this->cell(70, 5, 'TXN Type:');
 		$this->setXY(36, $y);
-		$this->cell(35, 5, 'SALE', 0, 0, 'R');
+		$this->cell(34, 5, 'SALE', 0, 0, 'R');
 
 		// Register / Till Info
 		$y += 5;
 		$this->setXY(1, $y);
 		$this->cell(70, 5, 'REG:');
 		$this->setXY(36, $y);
-		$this->cell(35, 5, $this->_b2c_sale['terminal_id'], 0, 0, 'R');
+		$this->cell(34, 5, $this->_b2c_sale['terminal_id'], 0, 0, 'R');
 
 		// Date/Time
+		$dtC = new \DateTime($this->_b2c_sale['created_at']);
+		$dtC->setTimezone(new \DateTimezone($_SESSION['tz']));
+
 		$y += 5;
 		$this->setXY(1, $y);
-		$this->cell(70, 5, 'DTS:');
+		$this->cell(70, 5, 'Sale Date & Time:');
 		$this->setXY(36, $y);
-		$this->cell(35, 5, _date('Y-m-d H:i', $this->_b2c_sale['created_at'], 'America/Los_Angeles'), 0, 0, 'R');
+		$this->cell(34, 5, $dtC->format('Y-m-d H:i'), 0, 0, 'R');
 
 	}
 
+	/**
+	 *
+	 */
 	function drawTail()
 	{
 		$y = $this->getY();
@@ -152,9 +168,9 @@ class Receipt extends \App\PDF\Base
 		$tail = $this->loadTailText();
 
 		$y += 6;
-		$this->setXY(1, $y);
+		$this->setXY(2, $y);
 		$this->setFont('freesans', '', 10);
-		$this->multicell(70, 5, $tail, null, 'C', null, 1);
+		$this->multicell($this->_receipt_width, 5, $tail, null, 'C', null, 1);
 
 	}
 
@@ -170,7 +186,7 @@ class Receipt extends \App\PDF\Base
 
 		$this->setXY(1, $y);
 		$this->setFont('freesans', '', 10);
-		$this->multicell(70, 5, $foot, null, 'L', null, 1);
+		$this->multicell($this->_receipt_width, 5, $foot, null, 'L', null, 1);
 
 		// If FeedBack Link
 		if (true) {
@@ -206,7 +222,7 @@ class Receipt extends \App\PDF\Base
 	 */
 	function render()
 	{
-		$this->addPage('P', [ 72, 5000 ]);
+		$this->addPage('P', [ $this->_receipt_width, 5000 ]);
 
 		// First render to discover height
 		$this->_renderPrintable();
@@ -215,7 +231,7 @@ class Receipt extends \App\PDF\Base
 
 		// Clear and render correct height
 		$this->deletePage(1);
-		$this->addPage('P', [ 72, $y ]);
+		$this->addPage('P', [ $this->_receipt_width, $y ]);
 		$this->_renderPrintable();
 	}
 
@@ -234,20 +250,20 @@ class Receipt extends \App\PDF\Base
 		$y = 20;
 		foreach ($this->_item_list as $SI) {
 
-			$this->setXY(1, $y);
-			$this->cell(70, 5, $SI['Product']['name'] . ' ' . $SI['Variety']['name']);
+			$this->setXY(0, $y);
+			$this->cell($this->_receipt_width, 5, $SI['Product']['name'] . ' ' . $SI['Variety']['name']);
 
 			$y += 5;
-			$this->setXY(1, $y);
-			$this->cell(70, 5, rtrim($SI['unit_count'], '0.')  . ' x $' . number_format($SI['unit_price'], 2), null, null, 'R');
+			$this->setXY(0, $y);
+			$this->cell($this->_receipt_width, 5, rtrim($SI['unit_count'], '0.')  . ' x $' . number_format($SI['unit_price'], 2), 1, null, 'R');
 
 			$y += 5;
 		}
 		$this->setY($y);
 
 		$this->drawSummary();
-		$this->drawTail();
-		$this->drawFoot();
+		// $this->drawTail();
+		// $this->drawFoot();
 
 	}
 

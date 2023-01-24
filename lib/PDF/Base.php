@@ -10,8 +10,8 @@ namespace App\PDF;
 class Base extends \TCPDF
 {
 	/**
-		Default TCPDF Constructor
-	*/
+	 * Default TCPDF Constructor
+	 */
 	function __construct($orientation='P', $unit='in', $format='LETTER', $unicode=true, $encoding='UTF-8', $diskcache=false, $pdfa=false)
 	{
 		parent::__construct($orientation, $unit, $format, $unicode, $encoding, $diskcache, $pdfa);
@@ -42,8 +42,8 @@ class Base extends \TCPDF
 		$this->setFontSubsetting(true);
 
 		// Cells
-		//$this->setCellMargins(0, 0, 0, 0);
-		//$this->setCellPaddings(0, 0, 0, 0);
+		$this->setCellMargins(0, 0, 0, 0);
+		$this->setCellPaddings(0, 0, 0, 0);
 
 		// Set font
 		$this->setFont('freesans', '', 14, '', true);
