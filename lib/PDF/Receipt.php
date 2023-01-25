@@ -2,7 +2,6 @@
 /**
  * PDF Receipt
  * "72xReceipt" size, which is really 80mm wide paper w/72mm wide print region
- * And it works better when we make it only 68mm
  *
  * SPDX-License-Identifier: GPL-3.0-only
  */
@@ -28,34 +27,73 @@ class Receipt extends \App\PDF\Base
 		$this->setAutoPageBreak(false);
 	}
 
+	/**
+	 *
+	 */
 	function setCompany($x)
 	{
 		$this->Company = $x;
 	}
 
+	/**
+	 *
+	 */
 	function setLicense($x)
 	{
 		$this->License = $x;
 	}
 
+	/**
+	 *
+	 */
 	function setSale($s)
 	{
 		$this->_b2c_sale = $s;
 		$this->setTitle(sprintf('Receipt #%s', $this->_b2c_sale['id']));
 	}
 
+	/**
+	 *
+	 */
 	function setItems($b2c_item_list)
 	{
 		$this->_item_list = $b2c_item_list;
 	}
 
+	/**
+	 *
+	 */
 	function drawHead()
 	{
 		$this->setFont('freesans', 'B', 18);
 		$this->setFillColor(0x10, 0x10, 0x10);
 		$this->setTextColor(0xff, 0xff, 0xff);
-		$this->setXY(0, 5);
+		$this->setXY(0, 4);
 		$this->cell($this->_receipt_width, 4, $_SESSION['Company']['name'], null, null, 'C', true);
+
+		// Receipt ID
+		$this->setFont('freesans', '', 12);
+		$this->setFillColor(0xff, 0xff, 0xff);
+		$this->setTextColor(0x00, 0x00, 0x00);
+
+		$y = 12;
+		$this->setXY(0, $y);
+		$this->cell($this->_receipt_width, 5, sprintf('B2C/%s', substr($this->_b2c_sale['id'], 0, 16)), null, null, 'C');
+
+		// Date/Time
+		$dtC = new \DateTime($this->_b2c_sale['created_at']);
+		if ( ! empty($_SESSION['tz'])) {
+			$dtC->setTimezone(new \DateTimezone($_SESSION['tz']));
+		}
+
+		$y += 6;
+		$this->setXY(0, $y);
+		$this->cell($this->_receipt_width, 5, $dtC->format('Y-m-d H:i'), 0, null, 'C');
+
+		$y += 8;
+		$this->line(0, $y, $this->_receipt_width, $y);
+		$this->setY($y);
+
 	}
 
 	/**
@@ -65,91 +103,74 @@ class Receipt extends \App\PDF\Base
 	{
 		$y = $this->getY();
 
-		$y+= 5;
-		$this->setXY(0, $y);
-		$this->cell(34, 4, 'Subtotal:', 1);
-		$this->setXY(34, $y);
-		$this->cell(34, 4, '$-.--', 0, 0, 'R');
+		$y += 4;
+		$this->line(0, $y, $this->_receipt_width, $y);
 
-		$y+= 5;
+		$y += 2;
 		$this->setXY(0, $y);
-		$this->cell(34, 4, 'Discount:');
-		$this->setXY(34, $y);
-		$this->cell(34, 4, '$-.--', 0, 0, 'R');
+		$this->cell(36, 4, 'Subtotal:');
+		$this->setXY(36, $y);
+		$this->cell(36, 4, number_format($this->b2c_item_total, 2), 0, 0, 'R');
+
+		// if ($this->getAttribute('adj-total')) {
+		// 	$y+= 5;
+		// 	$this->setXY(0, $y);
+		// 	$this->cell(36, 4, 'Discount:');
+		// 	$this->setXY(36, $y);
+		// 	$this->cell(36, 4, '$-.--', 0, 0, 'R');
+		// }
 
 		// Tax A
-		$y+= 5;
+		$y+= 6;
 		$this->setXY(0, $y);
-		$this->cell(30, 5, 'Cannabis Tax (Included):');
-		$this->setXY(32, $y);
-		$this->cell(34, 5, '$-.--', 0, 0, 'R');
+		$this->cell(36, 5, 'Cannabis Tax (Included):');
+		$this->setXY(36, $y);
+		$this->cell(36, 5, number_format($this->b2c_tax0_total, 2), 0, 0, 'R');
 
 		// Tax B
 		// $y+= 5;
 		// $this->setXY(1, $y);
-		// $this->cell(70, 5, 'Excise Tax:');
+		// $this->cell($this->_receipt_width, 5, 'Excise Tax:');
 
 		// Tax C
-		$y+= 5;
+		$y+= 6;
 		$this->setXY(0, $y);
-		$this->cell(30, 5, 'Sales Tax (Included):');
-		$this->setXY(32, $y);
-		$this->cell(34, 5, '$-.--', 0, 0, 'R');
+		$this->cell(36, 5, 'Sales Tax (Included):');
+		$this->setXY(36, $y);
+		$this->cell(36, 5, number_format($this->b2c_tax1_total, 2), 0, 0, 'R');
 
-		$y += 6;
-		$this->line(0, $y, 80, $y);
+		$y += 8;
+		$this->line(0, $y, $this->_receipt_width, $y);
+
+		$full_price = $this->b2c_item_total + $this->b2c_tax0_total + $this->b2c_tax1_total;
 
 		$y += 2;
 		$this->setFont('', 'B');
-		$this->setXY(1, $y);
-		$this->cell(70, 5, 'Total:');
+		$this->setXY(0, $y);
+		$this->cell($this->_receipt_width, 5, 'Total:');
 		$this->setXY(36, $y);
-		$this->cell(34, 5, '$-.--', 0, 0, 'R');
+		$this->cell(36, 5, number_format($full_price, 2), 0, 0, 'R');
 		$this->setFont('', '');
 
 		$y += 7;
-		$this->line(0, $y, 80, $y);
+		$this->line(0, $y, $this->_receipt_width, $y);
 
 		// Cash Paid
 		$y += 2;
-		$this->setXY(1, $y);
-		$this->cell(70, 5, 'Cash Paid:');
+		$this->setXY(0, $y);
+		$this->cell($this->_receipt_width, 5, 'Cash Paid:');
 
 		// Change
 		$y += 5;
-		$this->setXY(1, $y);
-		$this->cell(70, 5, 'Change:');
+		$this->setXY(0, $y);
+		$this->cell($this->_receipt_width, 5, 'Change:');
 
-		// Receipt ID
-		$y += 5;
-		$this->setXY(1, $y);
-		$this->cell(70, 5, 'TXN:');
-		$this->setXY(36, $y);
-		$this->cell(34, 5, substr($this->_b2c_sale['id'], 0, 16), 0, 0, 'R');
-
-		// Transaction Type
-		$y += 5;
-		$this->setXY(1, $y);
-		$this->cell(70, 5, 'TXN Type:');
-		$this->setXY(36, $y);
-		$this->cell(34, 5, 'SALE', 0, 0, 'R');
-
-		// Register / Till Info
-		$y += 5;
-		$this->setXY(1, $y);
-		$this->cell(70, 5, 'REG:');
-		$this->setXY(36, $y);
-		$this->cell(34, 5, $this->_b2c_sale['terminal_id'], 0, 0, 'R');
-
-		// Date/Time
-		$dtC = new \DateTime($this->_b2c_sale['created_at']);
-		$dtC->setTimezone(new \DateTimezone($_SESSION['tz']));
-
-		$y += 5;
-		$this->setXY(1, $y);
-		$this->cell(70, 5, 'Sale Date & Time:');
-		$this->setXY(36, $y);
-		$this->cell(34, 5, $dtC->format('Y-m-d H:i'), 0, 0, 'R');
+		// // Register / Till Info
+		// $y += 5;
+		// $this->setXY(0, $y);
+		// $this->cell($this->_receipt_width, 5, 'REG:');
+		// $this->setXY(36, $y);
+		// $this->cell(36, 5, $this->_b2c_sale['terminal_id'], 0, 0, 'R');
 
 	}
 
@@ -159,21 +180,24 @@ class Receipt extends \App\PDF\Base
 	function drawTail()
 	{
 		$y = $this->getY();
-		$y += 10;
+		$y += 8;
 
 		// Line
-		$this->line(1, $y, 71, $y);
+		$this->line(0, $y, $this->_receipt_width, $y);
 		$y += 1;
 
 		$tail = $this->loadTailText();
 
 		$y += 6;
-		$this->setXY(2, $y);
+		$this->setXY(0, $y);
 		$this->setFont('freesans', '', 10);
 		$this->multicell($this->_receipt_width, 5, $tail, null, 'C', null, 1);
 
 	}
 
+	/**
+	 *
+	 */
 	function drawFoot()
 	{
 		// FOOT
@@ -181,10 +205,10 @@ class Receipt extends \App\PDF\Base
 
 		$y = $this->getY();
 		$y += 1;
-		$this->line(1, $y, 71, $y);
+		$this->line(0, $y, $this->_receipt_width, $y);
 		$y += 1;
 
-		$this->setXY(1, $y);
+		$this->setXY(0, $y);
 		$this->setFont('freesans', '', 10);
 		$this->multicell($this->_receipt_width, 5, $foot, null, 'L', null, 1);
 
@@ -247,23 +271,30 @@ class Receipt extends \App\PDF\Base
 		$this->setTextColor(0x00, 0x00, 0x00);
 
 		$y = $this->getY();
-		$y = 20;
+		$y += 4;
+
 		foreach ($this->_item_list as $SI) {
 
 			$this->setXY(0, $y);
 			$this->cell($this->_receipt_width, 5, $SI['Product']['name'] . ' ' . $SI['Variety']['name']);
 
-			$y += 5;
+			$y += 6;
 			$this->setXY(0, $y);
-			$this->cell($this->_receipt_width, 5, rtrim($SI['unit_count'], '0.')  . ' x $' . number_format($SI['unit_price'], 2), 1, null, 'R');
+			$this->cell($this->_receipt_width, 5, rtrim($SI['unit_count'], '0.')  . ' x $' . number_format($SI['unit_price'], 2), 0, null, 'R');
 
-			$y += 5;
+			$y += 6;
 		}
 		$this->setY($y);
 
 		$this->drawSummary();
-		// $this->drawTail();
-		// $this->drawFoot();
+		$this->drawTail();
+		$this->drawFoot();
+
+		$y = $this->getY();
+		$y += 4;
+
+		$this->line(0, $y, $this->_receipt_width, $y);
+
 
 	}
 
