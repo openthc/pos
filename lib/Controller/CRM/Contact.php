@@ -1,6 +1,8 @@
 <?php
 /**
  * CRM Contact Views
+ *
+ * SPDX-License-Identifier: GPL-3.0-only
  */
 
 namespace App\Controller\CRM;

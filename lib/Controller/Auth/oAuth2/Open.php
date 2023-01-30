@@ -1,6 +1,8 @@
 <?php
 /**
  * Open oAuth2 authentication process
+ *
+ * SPDX-License-Identifier: GPL-3.0-only
  */
 
 namespace App\Controller\Auth\oAuth2;

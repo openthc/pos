@@ -1,6 +1,8 @@
 <?php
 /**
  * oAuth2 Returns Here
+ *
+ * SPDX-License-Identifier: GPL-3.0-only
  */
 
 namespace App\Controller\Auth\oAuth2;
@@ -56,9 +58,10 @@ class Back extends \OpenTHC\Controller\Auth\oAuth2
 
 			$x = $p->getResourceOwner($tok)->toArray();
 
-			$_SESSION['Contact'] = $x['Contact'];
 			$_SESSION['Company'] = $x['Company'];
-			$_SESSION['email'] = $x['Contact']['username'];
+			$_SESSION['Contact'] = $x['Contact'];
+			$_SESSION['License'] = $x['License'];
+			$_SESSION['tz'] = $_SESSION['Company']['tz'];
 
 			return $RES->withRedirect('/auth/init?' . http_build_query([
 				'r' => $_GET['r']

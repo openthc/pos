@@ -1,6 +1,8 @@
 <?php
 /**
  * Initialise an Authenticated Session
+ *
+ * SPDX-License-Identifier: GPL-3.0-only
  */
 
 namespace App\Controller\Auth;
