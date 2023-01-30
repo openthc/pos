@@ -20,6 +20,8 @@ class API extends \OpenTHC\Module\Base
 		// Create Sale
 		$a->post('/b2c', 'App\Controller\API\B2C');
 
+		$a->get('/b2c/receipt/preview', 'App\Controller\API\B2C\Receipt:preview');
+
 		$a->get('/b2c/{id}', 'App\Controller\API\B2C\Single');
 
 		$a->post('/b2c/{id}', 'App\Controller\API\B2C\Single:post');
