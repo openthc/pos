@@ -106,8 +106,8 @@ $app->group('/menu', 'App\Module\Menu')
 	->add('OpenTHC\Middleware\Session');
 
 
-// Settings Interface
-$app->group('/settings', 'App\Module\Settings')
+// Inventory
+$app->group('/inventory', 'App\Module\Inventory')
 	->add('App\Middleware\Menu')
 	->add('App\Middleware\Auth')
 	->add('OpenTHC\Middleware\Session');

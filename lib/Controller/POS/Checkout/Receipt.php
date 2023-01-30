@@ -152,7 +152,7 @@ class Receipt extends \OpenTHC\Controller\Base
 		$dbc = $this->_container->DB;
 		$cfg = $dbc->fetchOne("SELECT val FROM auth_company_option WHERE key = 'pos-email-send'");
 		if (empty($cfg)) {
-			_exit_html_fail('<h1>Email Service is not configured</h1><p>Please <a href="/settings/receipt">update the settings</a></p>', 501);
+			_exit_html_fail('<h1>Email Service is not configured [PCR-155]</h1>', 501);
 		}
 		$cfg = \json_decode($cfg, true);
 
@@ -243,7 +243,7 @@ EOM;
 
 		$cfg = $dbc->fetchOne("SELECT val FROM auth_company_option WHERE key = 'pos-phone-send'");
 		if (empty($cfg)) {
-			_exit_html_fail('<h1>SMS Service is not configured</h1><p>Please <a href="/settings/receipt">update the settings</a></p>', 501);
+			_exit_html_fail('<h1>SMS Service is not configured [PCR-246]</h1>', 501);
 		}
 		$cfg = \json_decode($cfg, true);
 
