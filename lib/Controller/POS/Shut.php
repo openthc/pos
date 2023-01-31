@@ -11,21 +11,27 @@ use Edoceo\Radix\Session;
 
 class Shut extends \OpenTHC\Controller\Base
 {
+	/**
+	 *
+	 */
 	function __invoke($REQ, $RES, $ARG)
 	{
-		$R = $this->_container->Redis;
-		$R->hset(sprintf('pos-terminal-%s', $_SESSION['pos-terminal-id']), array(
-			'ping' => $_SERVER['REQUEST_TIME'],
-			'name' => $_SESSION['Company']['name'],
-			'stat' => 'shut',
-		));
-
 		unset($_SESSION['pos-terminal-id']);
 		unset($_SESSION['pos-terminal-contact']);
 
-		Session::flash('info', 'Signed out of POS Terminal');
+		// $R = $this->_container->Redis;
+		// $R->hset(sprintf('pos-terminal-%s', $_SESSION['pos-terminal-id']), array(
+		// 	'ping' => $_SERVER['REQUEST_TIME'],
+		// 	'name' => $_SESSION['Company']['name'],
+		// 	'stat' => 'shut',
+		// ));
 
-		return $RES->withRedirect('/pos');
+		$data = [];
+		$data['Page'] = [
+			'title' => 'POS :: Terminal :: Shut',
+		];
+
+		return $RES->write( $this->render('pos/terminal/shut.php', $data) );
 
 	}
 }
