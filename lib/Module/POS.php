@@ -13,6 +13,10 @@ class POS extends \OpenTHC\Module\Base
 		$a->post('', 'App\Controller\POS\Main:post');
 
 		$a->get('/fast', 'App\Controller\POS\Fast');
+		$a->get('/open', function($REQ, $RES, $ARG) {
+			unset($_SESSION['Cart']);
+			return $RES->withRedirect('/pos');
+		});
 
 		$a->map([ 'GET', 'POST', 'DELETE' ], '/ajax', 'App\Controller\POS\Ajax');
 

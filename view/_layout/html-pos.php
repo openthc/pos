@@ -39,7 +39,7 @@ header('content-type: text/html; charset=utf-8', true);
 		</div>
 
 		<div class="navbar-text">
-			<a class="btn btn-warning" href="/pos" id="pos-shop-redo" type="button"><i class="fas fa-ban" style="color: var(--bs-dark);"></i></a>
+			<a class="btn btn-warning" href="/pos/open" id="pos-shop-redo"><i class="fas fa-ban" style="color: var(--bs-dark);"></i></a>
 			<a class="btn btn-danger" href="/pos/shut"><i class="fas fa-power-off" style="color: var(--bs-dark);" ></i></a>
 			<!-- <li class="nav-item"><a class="nav-link" href="/settings"><i class="fas fa-cogs"></i></a></li>
 			<li class="nav-item"><a class="nav-link" href="/auth/shut"><i class="fas fa-power-off"></i></a></li> -->

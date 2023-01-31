@@ -1,7 +1,9 @@
 <?php
 /**
  * POS Main
-*/
+ *
+ * SPDX-License-Identifier: GPL-3.0-only
+ */
 
 namespace App\Controller\POS;
 
@@ -44,6 +46,10 @@ class Main extends \OpenTHC\Controller\Base
 			'Page' => array('title' => 'POS :: #' . $_SESSION['pos-terminal-id']),
 		);
 
+		if (empty($_SESSION['Cart']['Contact'])) {
+			return $RES->write( $this->render('pos/terminal/contact.php', $data) );
+		}
+
 		return $RES->write( $this->render('pos/terminal/main.php', $data) );
 
 	}
@@ -59,6 +65,15 @@ class Main extends \OpenTHC\Controller\Base
 			// Lookup Contact by this Auth Code
 			$code = $_POST['code'];
 
+			$dbc = $this->_container->DB;
+
+			$Contact = $dbc->fetch_row('SELECT * FROM auth_contact WHERE auth_code = :a0', [
+				':a0' => $_POST['code'],
+			]);
+			if ( ! empty($Contact['id'])) {
+
+			}
+
 			// Assign to Register Session
 			// Set Expiration in T minutes?
 			$R = $this->_container->Redis;
@@ -71,6 +86,61 @@ class Main extends \OpenTHC\Controller\Base
 			return $RES->withRedirect('/pos');
 
 			break;
+
+		case 'client-contact-update':
+
+			$dbc = $this->_container->DB;
+			$Contact = $dbc->fetchRow('SELECT * FROM contact WHERE code = :c0', [
+				':c0' => $_POST['client-contact-pid'],
+			]);
+			if (empty($Contact['id'])) {
+
+				$Contact = [
+					'id' => _ulid(),
+					'code' => $_POST['client-contact-pid'],
+					'guid' => $_POST['client-contact-pid'],
+					'stat' => '100',
+					'type' => 'client',
+					'fullname' => $_POST['client-contact-pid'],
+					'hash' => '-',
+				];
+
+				$dbc->insert('contact', $Contact);
+
+				// switch ($_SESSION[''])
+				// $cre = \OpenTHC\CRE::factory($_SESSION['cre']);
+				// $cre->setLicense($_SESSION['License']);
+
+				// $res = $cre->contact()->search($_POST['client-contact-pid']);
+
+				// $res = $cre->contact()->single($Contact['guid']);
+
+				// $_POST['client-contact-pid'] = '12-345-678-DD';
+
+				// $res = $cre->contact()->create([
+				// 	'LicenseNumber' => $_POST['client-contact-pid'],
+				// 	// "LicenseEffectiveStartDate": "2015-06-21",
+				// 	// "LicenseEffectiveEndDate": "2016-06-15",
+				// 	// "RecommendedPlants": 6,
+				// 	// "RecommendedSmokableQuantity": 2.0,
+				// 	// "FlowerOuncesAllowed": null,
+				// 	// "ThcOuncesAllowed": null,
+				// 	// "ConcentrateOuncesAllowed": null,
+				// 	// "InfusedOuncesAllowed": null,
+				// 	// "MaxFlowerThcPercentAllowed": null,
+				// 	// "MaxConcentrateThcPercentAllowed": null,
+				// 	// "HasSalesLimitExemption": false,
+				// 	// "ActualDate": "2015-12-15"
+				// ]);
+				// var_dump($res);
+				// exit;
+
+			}
+
+			$_SESSION['Cart']['Contact'] = $Contact;
+
+			return $RES->withRedirect('/pos');
+
 		}
 
 	}
