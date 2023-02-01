@@ -80,7 +80,7 @@ header('content-type: text/html; charset=utf-8', true);
 <script src="https://cdnjs.cloudflare.com/ajax/libs/riot/4.14.0/riot.min.js" integrity="sha256-mxBp2pV/KfjX4uaj+6aEh2MWB7J+j8o6VuOCs4aY7zM=" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <!-- <script src="https://unpkg.com/@zxing/library@latest"></script> -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" integrity="sha256-xUHvBjJ4hahBW8qN9gceFBibSFUzbe9PNttUvehITzY=" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="https://unpkg.com/@zxing/library@0.18.6/umd/index.min.js" integrity="sha256-J5sXEO7LHYtUX4tjXapBjPDpcEHzQNwOwpkKcIhJJAI=" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@zxing/library@0.19.2/umd/index.min.js" integrity="sha256-a0mo/OgjQ26D3n9JRYL4LMTeSx8PV3SYKv2My5wOdHE=" crossorigin="anonymous"></script>
 <script src="/js/pos.js"></script>
 <script src="/js/pos-scanner.js"></script>
 <script src="/js/pos-printer.js"></script>
