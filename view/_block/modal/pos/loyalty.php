@@ -44,7 +44,7 @@ $body = <<<HTML
 HTML;
 
 $foot = <<<HTML
-<button class="btn btn-primary" id="pos-loyalty-apply" name="a" type="submit" value="pos-loyalty-apply"><i class="fas fa-check-square"></i> Apply</button>
+<button class="btn btn-lg btn-primary" id="pos-loyalty-apply" name="a" type="submit" value="pos-loyalty-apply"><i class="fas fa-check-square"></i> Apply</button>
 HTML;
 
 

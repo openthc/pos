@@ -1,3 +1,14 @@
+<?php
+/**
+ * POS Menu Zero
+ *
+ * SPDX-License-Identifier: GPL-3.0-only
+ */
+
+$app_base = rtrim(\OpenTHC\Config::get('openthc/app/base_url'), '/');
+
+?>
+
 <nav class="navbar navbar-expand-md navbar-dark bg-dark sticky-top">
 <div class="container-fluid">
 
@@ -23,7 +34,7 @@
 		</form>
 
 		<ul class="navbar-nav ms-auto">
-			<li class="nav-item"><a class="nav-link" href="/settings"><i class="fas fa-cogs"></i></a></li>
+			<li class="nav-item"><a class="nav-link" href="<?= $app_base ?>/dashboard"><i class="fas fa-cogs"></i></a></li>
 			<li class="nav-item"><a class="nav-link" href="/auth/shut"><i class="fas fa-power-off"></i></a></li>
 		</ul>
 	</div>

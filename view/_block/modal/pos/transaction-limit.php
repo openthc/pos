@@ -22,10 +22,10 @@
 
 	<div class="row" id="pos-foot" style="position:relative;">
 		<div class="col-md-6" style="text-align:center;">
-			<button class="btn btn-outline-warning" id="pos-ticket-reset" type="button"> Reset</button>
+			<button class="btn btn-lg btn-outline-warning" id="pos-ticket-reset" type="button"> Reset</button>
 		</div>
 		<div class="col-md-6" style="text-align:center;">
-			<button class="btn btn-outline-success" type="button">OK</button>
+			<button class="btn btn-lg btn-outline-success" type="button">OK</button>
 		</div>
 	</div>
 

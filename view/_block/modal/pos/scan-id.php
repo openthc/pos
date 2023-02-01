@@ -9,7 +9,7 @@ $body = <<<HTML
 HTML;
 
 $foot = <<<HTML
-<button class="btn btn-outline-primary" disabled name="a" type="button"><i class="fas fa-check-square"></i> Complete</button>
+<button class="btn btn-lg btn-outline-primary" disabled name="a" type="button"><i class="fas fa-check-square"></i> Complete</button>
 HTML;
 
 echo $this->block('modal.php', [

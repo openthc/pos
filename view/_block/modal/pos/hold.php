@@ -15,7 +15,7 @@ HTML;
 
 
 $foot = <<<HTML
-<button class="btn btn-outline-primary" id="pos-modal-sale-hold-save" name="a" type="button" value="save"><i class="fas fa-save"></i> Save</button>
+<button class="btn btn-lg btn-primary" disabled id="pos-modal-sale-hold-save" name="a" type="button" value="save"><i class="fas fa-save"></i> Save</button>
 HTML;
 
 
@@ -25,3 +25,11 @@ echo $this->block('modal.php', [
 	'body' => $body,
 	'foot' => $foot,
 ]);
+
+?>
+
+<script>
+$(function() {
+	$()
+});
+</script>

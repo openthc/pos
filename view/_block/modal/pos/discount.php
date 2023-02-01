@@ -57,7 +57,7 @@ HTML;
 
 
 $foot = <<<HTML
-<button class="btn btn-outline-primary" data-bs-dismiss="modal" id="pos-discount-apply" type="button"><i class="fas fa-check-square"></i> Apply</button>
+<button class="btn btn-lg btn-outline-primary" data-bs-dismiss="modal" id="pos-discount-apply" type="button"><i class="fas fa-check-square"></i> Apply</button>
 HTML;
 
 echo $this->block('modal.php', [
