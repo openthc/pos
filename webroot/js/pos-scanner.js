@@ -15,6 +15,7 @@ POS.Scanner.done = function()
 	var data = POS.Scanner.data.join(' ');
 	data = data.replace(/Shift/g, ' ');
 	data = data.replace(/Control J/g, '<br>--Control J--<br>');
+	data = data.replace(/\[CR\]$/g, '');
 	$('#scan-input-data').html(data);
 
 	if (POS.Scanner.callback) {
