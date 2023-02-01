@@ -143,10 +143,21 @@ SQL;
 		$dbc = $this->_container->DB;
 
 		// $sql = 'SELECT b2c_sale.*, count(b2c_sale_item.id) AS b2c_sale_item_count FROM b2c_sale JOIN b2c_sale_item ON b2c_sale.id = b2c_sale_item.b2c_sale_id  ORDER BY b2c_sale.created_at DESC LIMIT 10';
-		$sql = 'SELECT b2c_sale.*, (SELECT count(b2c_sale_item.id) FROM b2c_sale_item WHERE b2c_sale_item.b2c_sale_id = b2c_sale.id) AS b2c_sale_item_count FROM b2c_sale ORDER BY b2c_sale.created_at DESC LIMIT 10';
-		$sql = 'SELECT b2c_sale.* FROM b2c_sale ORDER BY b2c_sale.created_at DESC LIMIT 10';
+		// $sql = 'SELECT b2c_sale.*, (SELECT count(b2c_sale_item.id) FROM b2c_sale_item WHERE b2c_sale_item.b2c_sale_id = b2c_sale.id) AS b2c_sale_item_count FROM b2c_sale ORDER BY b2c_sale.created_at DESC LIMIT 10';
+		$sql = <<<SQL
+		SELECT b2c_sale.id
+			, b2c_sale.created_at
+			, b2c_sale.item_count
+			, b2c_sale.full_price
+			, b2c_sale.contact_id
+			, b2c_sale.contact_id_client
+		FROM b2c_sale
+		WHERE license_id = :l0
+		ORDER BY b2c_sale.created_at DESC
+		LIMIT 10
+		SQL;
 		$arg = [
-			// ':l0' => $_SESSION['License']['id'],
+			':l0' => $_SESSION['License']['id'],
 			// ':s0' => 200,
 		];
 		$res = $dbc->fetchAll($sql, $arg);
@@ -156,6 +167,7 @@ SQL;
 				<tr>
 					<th>Time</th>
 					<th>Register</th>
+					<th>Status</th>
 					<th class="r">Items</th>
 					<th class="r">Amount</th>
 				</tr>
@@ -165,8 +177,9 @@ SQL;
 			foreach ($res as $rec) {
 				echo '<tr>';
 				echo '<td>' . _date('m/d h:i', $rec['created_at']) . '</td>';
-				echo '<td>' . '???' . '</td>';
-				echo '<td class="r">' . $rec['b2c_sale_item_count'] . '</td>';
+				echo '<td>' . $rec['contact_id'] . '</td>';
+				echo '<td>' . $rec['stat'] . '</td>';
+				echo '<td class="r">' . $rec['item_count'] . '</td>';
 				echo '<td class="r">' . number_format($rec['full_price'], 2) . '</td>';
 				echo '</tr>';
 			}
