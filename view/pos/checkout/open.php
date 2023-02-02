@@ -10,14 +10,49 @@ $this->layout_file = sprintf('%s/view/_layout/html-pos.php', APP_ROOT);
 $head = sprintf('<h1>%s</h1>', _('Client Information'));
 
 $body = <<<HTML
+
 <div class="row mb-4">
 	<div class="col-md-6">
-		<h5>DOB</h5>
+		<h5>Identification:</h5>
+	</div>
+	<div class="col-md-6">
+		<div class="input-group">
+			<input autocomplete="off"
+				class="form-control form-control-lg"
+				id="client-contact-govt-id"
+				name="client-contact-govt-id"
+				placeholder="State / ID"
+				type="text">
+
+			<button class="btn btn-secondary pos-camera-input"
+				data-camera-callback=""
+				x-id="client-contact-dob"
+				type="button"><i class="fas fa-camera"></i></button>
+		</div>
+	</div>
+</div>
+
+
+<div class="row mb-4">
+	<div class="col-md-6">
+		<h5>Name:</h5>
+	</div>
+	<div class="col-md-6">
+		<div class="input-group">
+			<input autocomplete="off" class="form-control form-control-lg" id="client-contact-name" name="client-contact-name" type="text">
+			<!-- <button class="btn btn-secondary" id="pos-camera-input" x-id="client-contact-dob" type="button"><i class="fas fa-camera"></i></button> -->
+		</div>
+	</div>
+</div>
+
+
+<div class="row mb-4">
+	<div class="col-md-6">
+		<h5>DOB:</h5>
 	</div>
 	<div class="col-md-6">
 		<div class="input-group">
 			<input autocomplete="off" class="form-control form-control-lg" id="client-contact-dob" name="client-contact-dob" type="text">
-			<button class="btn btn-secondary" id="client-contact-dob" type="button"><i class="fas fa-camera"></i></button>
 		</div>
 	</div>
 </div>

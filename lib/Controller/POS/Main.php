@@ -11,6 +11,9 @@ use Edoceo\Radix\Session;
 
 class Main extends \OpenTHC\Controller\Base
 {
+	/**
+	 *
+	 */
 	function __invoke($REQ, $RES, $ARG)
 	{
 		$dbc = $this->_container->DB;
@@ -46,8 +49,8 @@ class Main extends \OpenTHC\Controller\Base
 			'Page' => array('title' => 'POS :: #' . $_SESSION['pos-terminal-id']),
 		);
 
-		if (empty($_SESSION['Cart']['Contact'])) {
-			return $RES->write( $this->render('pos/terminal/contact.php', $data) );
+		if (empty($_SESSION['Checkout']['Contact'])) {
+			return $RES->write( $this->render('pos/checkout/open.php', $data) );
 		}
 
 		return $RES->write( $this->render('pos/terminal/main.php', $data) );
@@ -137,7 +140,7 @@ class Main extends \OpenTHC\Controller\Base
 
 			}
 
-			$_SESSION['Cart']['Contact'] = $Contact;
+			$_SESSION['Checkout']['Contact'] = $Contact;
 
 			return $RES->withRedirect('/pos');
 

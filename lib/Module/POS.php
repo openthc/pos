@@ -1,6 +1,8 @@
 <?php
 /**
  * POS Module
+ *
+ * SPDX-License-Identifier: GPL-3.0-only
  */
 
 namespace App\Module;
@@ -14,7 +16,7 @@ class POS extends \OpenTHC\Module\Base
 
 		$a->get('/fast', 'App\Controller\POS\Fast');
 		$a->get('/open', function($REQ, $RES, $ARG) {
-			unset($_SESSION['Cart']);
+			unset($_SESSION['Checkout']);
 			return $RES->withRedirect('/pos');
 		});
 
