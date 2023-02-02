@@ -1,3 +1,13 @@
+<?php
+/**
+ * POS Dashboard
+ *
+ * SPDX-License-Identifier: MIT
+ */
+
+?>
+
+<h1><code><?= __h($_SESSION['License']['code']) ?></code> <?= __h($_SESSION['License']['name']) ?></h1>
 
 <!-- Breadcrumbs-->
 <ol class="breadcrumb">
