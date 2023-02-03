@@ -85,7 +85,7 @@ $body = <<<HTML
 	<div class="col-md-6">
 		<div class="input-group">
 			<input autocomplete="off"
-				class="form-control form-control-lg"
+				class="form-control form-control-lg contact-autocomplete"
 				id="client-contact-pid"
 				name="client-contact-pid"
 				placeholder="AA-BBBB-CCCC-DDDD-EEEE-FFFF-GG"
@@ -113,28 +113,50 @@ $foot.= ' <button class="btn btn-lg btn-secondary" name="a" type="submit" value=
 <script>
 $(function() {
 
-	$('#client-contact-govt-id').on('focus', function() {
+	$govInput = $('#client-contact-govt-id');
+
+	$govInput.on('focus', function() {
 		$('#client-contact-govt-id-scanner').addClass('btn-success').removeClass('btn-outline-secondary');
 	});
 
-	$('#client-contact-govt-id').on('blur', function() {
+	$govInput.on('blur', function() {
 		$('#client-contact-govt-id-scanner').addClass('btn-outline-secondary').removeClass('btn-success');
 	});
 
 	// Scanner Keydown Handler
+	var scan_time = 0;
 	var scan_buffer = [];
+	var text_buffer = [];
 	var scan_skip_next = false;
-	$('#client-contact-govt-id').on('keydown', function(e) {
+	$govInput.on('keydown', function(e) {
 
 		console.log(`${e.key} (${e.code}); skip:${scan_skip_next}`);
+		// if ( ! scan_time) {
+		// 	// scan_time = now()
+		// }
 
 		if (scan_skip_next) {
+			e.preventDefault();
 			scan_skip_next = false;
 			return false;
 		}
 
-		var val = e.key;
+		switch (e.key) {
+			case 'Backspace':
+				text_buffer.pop();
+				return true;
+			case 'Control':
+				e.preventDefault();
+				scan_skip_next = true;
+				break;
+			case 'Enter':
+			case 'Meta':
+			case 'Shift':
+				e.preventDefault();
+				break;
+		}
 
+		var val = e.key;
 		switch (val) {
 			case 'Control':
 			case 'Enter':
@@ -148,26 +170,16 @@ $(function() {
 		scan_buffer.push(val);
 		// }
 
-		switch (e.key) {
-			case 'Control':
-				scan_skip_next = true;
-				break;
-			case 'Enter':
-			case 'Meta':
-			case 'Shift':
-				break;
-		}
-
 		if (val.match(/^[\w\s\/]$/)) {
-			console.log('allow');
-			// return true;
+			text_buffer.push(val);
+			$govInput.val( text_buffer.join('') );
 		}
 
 		return false;
 
 	});
 
-	$('#client-contact-govt-id').on('keyup', _.debounce(function() {
+	$govInput.on('keyup', _.debounce(function() {
 
 		var val = scan_buffer.join('');
 		console.log(`scanned-val:${val}`);
@@ -195,10 +207,12 @@ $(function() {
 				var nameM = val.match(/DAD(\w+)/);
 				console.log(nameM);
 
-				var dob = val.match(/DB\[Shift\]B(\d{2})(\d{2})(\d{4})/);
+				// Some have this odd thing, so we replace it out
+				val = val.replace(/DB\[Shift\]B/, 'DBB');
+				var dob = val.match(/DBB(\d{2})(\d{2})(\d{4})/);
 				console.log(dob);
 
-				$('#client-contact-govt-id').val(`${govST[1]} / ${govID[1]}`);
+				$govInput.val(`${govST[1]} / ${govID[1]}`);
 				$('#client-contact-name').val(`${nameF[1]} ${nameM[1]} ${nameL[1]}`);
 				$('#client-contact-dob').val(`${dob[3]}-${dob[1]}-${dob[2]}`);
 				$('#client-contact-pid').focus();
@@ -209,9 +223,14 @@ $(function() {
 
 	$('#client-contact-govt-id-scanner').on('click', function() {
 		scan_buffer = [];
-		$('#client-contact-govt-id').attr('disabled', false);
-		$('#client-contact-govt-id').val('');
-		$('#client-contact-govt-id').focus();
+		text_buffer = [];
+		$govInput.attr('disabled', false);
+		$govInput.val('');
+		$govInput.focus();
+	});
+
+	$('#contact-autocomplete').autocomplete({
+		source: '/contact/ajax',
 	});
 
 });

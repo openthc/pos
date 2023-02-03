@@ -9,6 +9,9 @@ namespace App\Module;
 
 class POS extends \OpenTHC\Module\Base
 {
+	/**
+	 *
+	 */
 	function __invoke($a)
 	{
 		$a->get('', 'App\Controller\POS\Main');
@@ -24,6 +27,10 @@ class POS extends \OpenTHC\Module\Base
 
 		$a->post('/checkout/commit', 'App\Controller\POS\Checkout\Commit');
 		$a->get('/checkout/done', 'App\Controller\POS\Checkout\Done');
+
+		$a->get('/checkout/open', 'OpenTHC\POS\Controller\POS\Checkout\Open');
+		$a->post('/checkout/open', 'OpenTHC\POS\Controller\POS\Checkout\Open:post');
+
 		$a->map([ 'GET', 'POST' ], '/checkout/receipt', 'App\Controller\POS\Checkout\Receipt');
 
 		$a->post('/cart/ajax', 'App\Controller\POS\Cart\Ajax');
