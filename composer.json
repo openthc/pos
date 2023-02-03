@@ -8,6 +8,8 @@
 		],
 		"psr-4": {
 			"App\\": "./lib",
+			"OpenTHC\\POS\\": "./lib",
+			"OpenTHC\\POS\\Test\\": "./test",
 			"Custom\\": "./Custom"
 		}
 	},
