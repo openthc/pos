@@ -27,6 +27,8 @@ $body = <<<HTML
 				placeholder="State / ID"
 				type="text">
 
+			<input id="client-contact-id" name="client-contact-id" type="hidden" value="">
+
 			<button class="btn btn-success"
 				id="client-contact-govt-id-scanner"
 				type="button"><i class="fas fa-qrcode"></i></button>
@@ -39,7 +41,7 @@ $body = <<<HTML
 	</div>
 </div>
 
-
+<!--
 <div class="row mb-4">
 	<div class="col-md-6">
 		<h5>Name:</h5>
@@ -52,12 +54,12 @@ $body = <<<HTML
 				name="client-contact-name"
 				placeholder="First & Last"
 				type="text">
-			<!-- <button class="btn btn-secondary" id="pos-camera-input" x-id="client-contact-dob" type="button"><i class="fas fa-camera"></i></button> -->
 		</div>
 	</div>
 </div>
+ -->
 
-
+<!--
 <div class="row mb-4">
 	<div class="col-md-6">
 		<h5>DOB:</h5>
@@ -73,7 +75,9 @@ $body = <<<HTML
 		</div>
 	</div>
 </div>
+ -->
 
+<!--
 <div class="alert alert-secondary">
 	If necessary, such as medical sales, input their Patient ID <em><strong>exactly</strong></em> as it appears on their patient identification card.
 </div>
@@ -90,17 +94,23 @@ $body = <<<HTML
 				name="client-contact-pid"
 				placeholder="AA-BBBB-CCCC-DDDD-EEEE-FFFF-GG"
 				type="text">
-			<!-- <div class="input-group-text"><i class="fas fa-hashtag"></i></div> -->
 		</div>
 	</div>
 </div>
-
+-->
 HTML;
 
-
-$foot = '<button class="btn btn-lg btn-primary" name="a" type="submit" value="client-contact-update">Next </button>';
-$foot.= ' <button class="btn btn-lg btn-secondary" name="a" type="submit" value="client-contact-search">Search </button>';
-$foot.= ' <button class="btn btn-lg btn-secondary" name="a" type="submit" value="client-contact-reopen">Reset </button>';
+$foot = [];
+$foot[] = '<div class="d-flex justify-content-between">';
+$foot[] = '<div>';
+$foot[] = '<button class="btn btn-lg btn-primary" name="a" type="submit" value="client-contact-update">Next </button>';
+// $foot[] = '<button class="btn btn-lg btn-secondary" name="a" type="submit" value="client-contact-search">Search </button>';
+$foot[] = '</div>';
+$foot[] = '<div>';
+$foot[] ='<button class="btn btn-lg btn-warning" id="btn-form-reset" type="reset" value="client-contact-reopen">Reset </button>';
+$foot[] = '</div>';
+$foot[] = '</div>';
+$foot = implode(' ', $foot);
 
 ?>
 
@@ -111,6 +121,21 @@ $foot.= ' <button class="btn btn-lg btn-secondary" name="a" type="submit" value=
 </form>
 
 <script>
+var $govInput;
+var scan_buffer = [];
+var text_buffer = [];
+
+function _checkout_open_reopen()
+{
+	scan_buffer = [];
+	text_buffer = [];
+	if ($govInput) {
+		$govInput.attr('readonly', false);
+		$govInput.val('');
+		$govInput.focus();
+	}
+}
+
 $(function() {
 
 	$govInput = $('#client-contact-govt-id');
@@ -125,8 +150,6 @@ $(function() {
 
 	// Scanner Keydown Handler
 	var scan_time = 0;
-	var scan_buffer = [];
-	var text_buffer = [];
 	var scan_skip_next = false;
 	$govInput.on('keydown', function(e) {
 
@@ -143,6 +166,7 @@ $(function() {
 
 		switch (e.key) {
 			case 'Backspace':
+			case 'Delete':
 				text_buffer.pop();
 				return true;
 			case 'Control':
@@ -151,7 +175,7 @@ $(function() {
 				break;
 			case 'Enter':
 			case 'Meta':
-			case 'Shift':
+			// case 'Shift':
 				e.preventDefault();
 				break;
 		}
@@ -170,7 +194,7 @@ $(function() {
 		scan_buffer.push(val);
 		// }
 
-		if (val.match(/^[\w\s\/]$/)) {
+		if (val.match(/^[\w\s\/\-\+]$/)) {
 			text_buffer.push(val);
 			$govInput.val( text_buffer.join('') );
 		}
@@ -190,7 +214,7 @@ $(function() {
 
 				// It's a PDF417 Scan
 				var $self = $(this);
-				$self.attr('disabled', true);
+				$self.attr('readonly', true);
 
 				var govST = val.match(/DAJ(\w+)/);
 				console.log(govST);
@@ -217,21 +241,26 @@ $(function() {
 				$('#client-contact-dob').val(`${dob[3]}-${dob[1]}-${dob[2]}`);
 				$('#client-contact-pid').focus();
 
+				fetch(`/contact/ajax?term=${govID[1]}`)
+					.then(res => res.json())
+					.then(function(res) {
+						debugger;
+					});
 			}
 		}
 	}, 250));
 
-	$('#client-contact-govt-id-scanner').on('click', function() {
-		scan_buffer = [];
-		text_buffer = [];
-		$govInput.attr('disabled', false);
-		$govInput.val('');
-		$govInput.focus();
+	$('#client-contact-govt-id-scanner').on('click', _checkout_open_reopen);
+
+	$('.contact-autocomplete').autocomplete({
+		source: '/contact/ajax',
+		select: function(e, ui) {
+			// debugger;
+			$('#client-contact-id').val(ui.item.id);
+		}
 	});
 
-	$('#contact-autocomplete').autocomplete({
-		source: '/contact/ajax',
-	});
+	$('#btn-form-reset').on('click', _checkout_open_reopen);
 
 });
 </script>
