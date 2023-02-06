@@ -9,12 +9,11 @@ namespace App\Controller\Auth;
 
 class Init extends \OpenTHC\Controller\Base
 {
+	/**
+	 *
+	 */
 	function __invoke($REQ, $RES, $ARG)
 	{
-		if (!empty($_GET['_'])) {
-			// Do Something Special?
-		}
-
 		$ret = $_GET['r'];
 		if (empty($ret)) {
 			$ret = '/dashboard';
