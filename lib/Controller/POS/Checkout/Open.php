@@ -30,7 +30,25 @@ class Open extends \OpenTHC\Controller\Base
 	 */
 	function post($REQ, $RES, $ARG)
 	{
+		switch ($_POST['a']) {
+			case 'client-contact-search':
+				return $this->contact_search($RES);
+			case 'client-contact-update':
+				return $this->contact_open($RES);
+			default:
+				Session::flash('fail', 'Invalid Requset [PCO-045]');
+				return $RES->withRedirect('/pos');
+		}
+	}
+
+	/**
+	 *
+	 */
+	function contact_open($RES)
+	{
 		$dbc = $this->_container->DB;
+
+		$code0 = $_POST['client-contact-pid'];
 
 		$guid0 = $_POST['client-contact-govt-id'];
 		$guid1 = $_POST['client-contact-govt-id'];
@@ -38,10 +56,18 @@ class Open extends \OpenTHC\Controller\Base
 			$guid1 = $m[2];
 		}
 
-		$res_contact = $dbc->fetchAll('SELECT * FROM contact WHERE (guid = :g0 OR guid = :g1 OR guid LIKE :g2)', [
+		$sql = <<<SQL
+		SELECT id, fullname, guid, code
+		FROM contact
+		WHERE (contact.type = 'b2c-client')
+		  AND (guid = :g0 OR guid = :g1 OR guid LIKE :g2 OR code = :c0)
+		ORDER BY id
+		SQL;
+		$res_contact = $dbc->fetchAll($sql, [
 			':g0' => $guid0,
 			':g1' => $guid1,
-			':g2' => sprintf('%%%s', substr($guid1, -6))
+			':g2' => sprintf('%%%s', substr($guid1, -6)),
+			':c0' => $code0,
 		]);
 
 		$Contact = [];

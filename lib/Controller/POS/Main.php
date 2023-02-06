@@ -53,6 +53,8 @@ class Main extends \OpenTHC\Controller\Base
 			return $RES->write( $this->render('pos/checkout/open.php', $data) );
 		}
 
+		$data['Page']['title'] = sprintf('POS :: #%s :: <a href="#" data-bs-toggle="modal" data-bs-target="#pos-modal-checkout-contact">%s</a>', $_SESSION['pos-terminal-id'], $_SESSION['Checkout']['Contact']['id']);
+
 		return $RES->write( $this->render('pos/terminal/main.php', $data) );
 
 	}
@@ -89,60 +91,6 @@ class Main extends \OpenTHC\Controller\Base
 			return $RES->withRedirect('/pos');
 
 			break;
-
-		case 'client-contact-update':
-
-			$dbc = $this->_container->DB;
-			$Contact = $dbc->fetchRow('SELECT * FROM contact WHERE code = :c0', [
-				':c0' => $_POST['client-contact-pid'],
-			]);
-			if (empty($Contact['id'])) {
-
-				$Contact = [
-					'id' => _ulid(),
-					'code' => $_POST['client-contact-pid'],
-					'guid' => $_POST['client-contact-pid'],
-					'stat' => '100',
-					'type' => 'client',
-					'fullname' => $_POST['client-contact-pid'],
-					'hash' => '-',
-				];
-
-				$dbc->insert('contact', $Contact);
-
-				// switch ($_SESSION[''])
-				// $cre = \OpenTHC\CRE::factory($_SESSION['cre']);
-				// $cre->setLicense($_SESSION['License']);
-
-				// $res = $cre->contact()->search($_POST['client-contact-pid']);
-
-				// $res = $cre->contact()->single($Contact['guid']);
-
-				// $_POST['client-contact-pid'] = '12-345-678-DD';
-
-				// $res = $cre->contact()->create([
-				// 	'LicenseNumber' => $_POST['client-contact-pid'],
-				// 	// "LicenseEffectiveStartDate": "2015-06-21",
-				// 	// "LicenseEffectiveEndDate": "2016-06-15",
-				// 	// "RecommendedPlants": 6,
-				// 	// "RecommendedSmokableQuantity": 2.0,
-				// 	// "FlowerOuncesAllowed": null,
-				// 	// "ThcOuncesAllowed": null,
-				// 	// "ConcentrateOuncesAllowed": null,
-				// 	// "InfusedOuncesAllowed": null,
-				// 	// "MaxFlowerThcPercentAllowed": null,
-				// 	// "MaxConcentrateThcPercentAllowed": null,
-				// 	// "HasSalesLimitExemption": false,
-				// 	// "ActualDate": "2015-12-15"
-				// ]);
-				// var_dump($res);
-				// exit;
-
-			}
-
-			$_SESSION['Checkout']['Contact'] = $Contact;
-
-			return $RES->withRedirect('/pos');
 
 		}
 
