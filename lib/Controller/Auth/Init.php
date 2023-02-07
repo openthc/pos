@@ -21,10 +21,13 @@ class Init extends \OpenTHC\Controller\Base
 
 		// Lookup the DSN
 		$dbc_auth = _dbc('auth');
-		$chk = $dbc_auth->fetchRow('SELECT dsn, cre, cre_meta FROM auth_company WHERE id = ?', $_SESSION['Company']['id']);
+		$chk = $dbc_auth->fetchRow('SELECT * FROM auth_company WHERE id = ?', $_SESSION['Company']['id']);
 		if (empty($chk['dsn'])) {
 			_exit_html_fail('<h1>Fatal Database Error [CAC-043]</h1>', 500);
 		}
+
+		$_SESSION['Company'] = $chk;
+		$_SESSION['Company']['cre_meta'] = json_decode($_SESSION['Company']['cre_meta'], true);
 
 		$dbc_user = _dbc($chk['dsn']);
 		$_SESSION['dsn'] = $chk['dsn'];
@@ -41,10 +44,11 @@ class Init extends \OpenTHC\Controller\Base
 		}
 
 		// Save the CRE Stuff?
-		if (!empty($chk['cre_meta'])) {
-			$cre_meta = json_decode($chk['cre_meta'], true);
-			$_SESSION['cre'] = array_merge($_SESSION['cre'], $cre_meta);
-		}
+		// if (!empty($chk['cre_meta'])) {
+		$_SESSION['cre'] = \OpenTHC\CRE::getEngine($_SESSION['Company']['cre']);
+		$_SESSION['cre']['license-key'] = $_SESSION['Company']['cre_meta']['license-key'];
+		// array_merge($_SESSION['cre'], $cre_meta);
+		// }
 
 		// Cleanup some CRE Data
 		if (empty($_SESSION['cre']['license']) && !empty($_SESSION['cre']['auth']['license'])) {
