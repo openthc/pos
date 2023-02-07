@@ -50,7 +50,11 @@ class Main extends \OpenTHC\Controller\Base
 		);
 
 		if (empty($_SESSION['Checkout']['Contact'])) {
-			return $RES->write( $this->render('pos/checkout/open.php', $data) );
+			return $RES->write( $this->render('pos/contact-select.php', $data) );
+		}
+
+		if ($_SESSION['Checkout']['Contact']['stat'] != 200) {
+			return $RES->write( $this->render('pos/contact-verify.php', $data) );
 		}
 
 		$data['Page']['title'] = sprintf('POS :: #%s :: <a href="#" data-bs-toggle="modal" data-bs-target="#pos-modal-checkout-contact">%s</a>', $_SESSION['pos-terminal-id'], $_SESSION['Checkout']['Contact']['id']);
@@ -87,6 +91,9 @@ class Main extends \OpenTHC\Controller\Base
 			$R->set($k, $v, [ 'ttl' => 600 ]);
 
 			$_SESSION['pos-terminal-contact'] = $_SESSION['Contact']['id'];
+
+			$_SESSION['Cart'] = [];
+			$_SESSION['Checkout'] = [];
 
 			return $RES->withRedirect('/pos');
 

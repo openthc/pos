@@ -13,97 +13,39 @@ $body = <<<HTML
 
 <div class="alert alert-secondary">Scan the client's identification card or input their identification details.</div>
 
+<div class="input-group input-group-lg mt-4 mb-4">
 
-<div class="row mb-4">
-	<div class="col-md-6">
-		<h5>Identification:</h5>
-	</div>
-	<div class="col-md-6">
-		<div class="input-group">
-			<input autocomplete="off" autofocus
-				class="form-control form-control-lg"
-				id="client-contact-govt-id"
-				name="client-contact-govt-id"
-				placeholder="State / ID"
-				type="text">
+	<div class="input-group-text">Identification:</div>
 
-			<input id="client-contact-id" name="client-contact-id" type="hidden" value="">
+	<input autocomplete="off" autofocus
+		class="form-control form-control-lg"
+		id="client-contact-govt-id"
+		name="client-contact-govt-id"
+		placeholder="State / ID"
+		type="text">
 
-			<button class="btn btn-success"
-				id="client-contact-govt-id-scanner"
-				type="button"><i class="fas fa-qrcode"></i></button>
+	<input id="client-contact-scanned-id" name="client-contact-scanned-id" type="hidden" value="">
+	<input id="client-contact-id" name="client-contact-id" type="hidden" value="">
+	<input id="client-contact-name" name="client-contact-name" type="hidden">
+	<input id="client-contact-dob" name="client-contact-dob" type="hidden">
 
-			<button class="btn btn-secondary pos-camera-input"
-				data-camera-callback=""
-				x-id="client-contact-dob-camera"
-				type="button"><i class="fas fa-camera"></i></button>
-		</div>
-	</div>
+	<button class="btn btn-success"
+		id="client-contact-govt-id-scanner"
+		type="button"><i class="fas fa-qrcode"></i></button>
+
+	<button class="btn btn-secondary pos-camera-input"
+		data-camera-callback=""
+		x-id="client-contact-dob-camera"
+		type="button"><i class="fas fa-camera"></i></button>
 </div>
 
-<!--
-<div class="row mb-4">
-	<div class="col-md-6">
-		<h5>Name:</h5>
-	</div>
-	<div class="col-md-6">
-		<div class="input-group">
-			<input autocomplete="off"
-				class="form-control form-control-lg"
-				id="client-contact-name"
-				name="client-contact-name"
-				placeholder="First & Last"
-				type="text">
-		</div>
-	</div>
-</div>
- -->
-
-<!--
-<div class="row mb-4">
-	<div class="col-md-6">
-		<h5>DOB:</h5>
-	</div>
-	<div class="col-md-6">
-		<div class="input-group">
-			<input autocomplete="off"
-				class="form-control form-control-lg"
-				id="client-contact-dob"
-				name="client-contact-dob"
-				placeholder="MM/DD/YYYY or YYYY-MM-DD"
-				type="text">
-		</div>
-	</div>
-</div>
- -->
-
-<!--
-<div class="alert alert-secondary">
-	If necessary, such as medical sales, input their Patient ID <em><strong>exactly</strong></em> as it appears on their patient identification card.
-</div>
-
-<div class="row mb-4">
-	<div class="col-md-6">
-		<h5>Patient ID</h5>
-	</div>
-	<div class="col-md-6">
-		<div class="input-group">
-			<input autocomplete="off"
-				class="form-control form-control-lg contact-autocomplete"
-				id="client-contact-pid"
-				name="client-contact-pid"
-				placeholder="AA-BBBB-CCCC-DDDD-EEEE-FFFF-GG"
-				type="text">
-		</div>
-	</div>
-</div>
--->
 HTML;
 
 $foot = [];
 $foot[] = '<div class="d-flex justify-content-between">';
 $foot[] = '<div>';
-$foot[] = '<button class="btn btn-lg btn-primary" name="a" type="submit" value="client-contact-update">Next </button>';
+$foot[] = '<button class="btn btn-lg btn-primary" name="a" type="submit" value="client-contact-update">Next <i class="fas fa-arrow-right"></i></button>';
+$foot[] = '<button class="btn btn-lg btn-secondary" name="a" type="submit" value="client-contact-skip">Skip </button>';
 // $foot[] = '<button class="btn btn-lg btn-secondary" name="a" type="submit" value="client-contact-search">Search </button>';
 $foot[] = '</div>';
 $foot[] = '<div>';
@@ -237,6 +179,7 @@ $(function() {
 				console.log(dob);
 
 				$govInput.val(`${govST[1]} / ${govID[1]}`);
+				$('#client-contact-scanned-id').val('1');
 				$('#client-contact-name').val(`${nameF[1]} ${nameM[1]} ${nameL[1]}`);
 				$('#client-contact-dob').val(`${dob[3]}-${dob[1]}-${dob[2]}`);
 				$('#client-contact-pid').focus();
