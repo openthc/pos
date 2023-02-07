@@ -10,6 +10,9 @@ namespace App\Controller\API\B2C;
 
 class Receipt extends \App\Controller\API\Base
 {
+	/**
+	 *
+	 */
 	function __invoke($REQ, $RES, $ARG)
 	{
 
@@ -57,7 +60,7 @@ class Receipt extends \App\Controller\API\Base
 		$pdf->setSale($b2c);
 		$pdf->setItems($b2c_item_list);
 		$pdf->render();
-		$name = sprintf('receipt_%s.pdf', $b2c['id']);
+		$name = sprintf('Receipt_%s.pdf', $b2c['id']);
 		$pdf->Output($name, 'I');
 
 		exit(0);
