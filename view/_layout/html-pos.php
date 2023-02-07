@@ -51,6 +51,8 @@ header('content-type: text/html; charset=utf-8', true);
 </div>
 </nav>
 
+<?= $this->block('session-flash.php') ?>
+
 <!-- <div id="menu-zero">
 	<div class="menu-item">
 		<button class="btn btn-outline-secondary menu-left-toggle" type="button"><i class="fas fa-bars"></i></button>
@@ -64,6 +66,7 @@ header('content-type: text/html; charset=utf-8', true);
 	</div>
 </div> -->
 <?= $this->body ?>
+
 <div class="shut" id="menu-left">
 	<div class="menu-item">
 		<button class="btn btn-outline-secondary menu-left-toggle" type="button"><i class="fas fa-bars"></i></button>
@@ -86,6 +89,7 @@ header('content-type: text/html; charset=utf-8', true);
 <script src="/js/pos-scanner.js"></script>
 <script src="/js/pos-printer.js"></script>
 <script src="/js/pos-cart.js"></script>
+<!-- <script src="/js/pos-modal-contact.js"></script> -->
 <script src="/js/pos-modal-discount.js"></script>
 <script src="/js/pos-modal-loyalty.js"></script>
 <script src="/js/pos-modal-payment.js"></script>
