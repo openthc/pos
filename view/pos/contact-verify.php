@@ -13,6 +13,19 @@ ob_start();
 ?>
 
 <div class="input-group input-group-lg mb-4">
+	<div class="input-group-text">Customer Type:</div>
+	<select	class="form-control form-control-lg"
+		id="client-contact-type"
+		name="client-contact-type"
+		>
+		<option value="018NY6XC00C0NTACTTYPE000AC">Adult / Recreational</option>
+		<option value="018NY6XC00C0NTACTTYPE000PA">Medical Patient</option>
+		<option value="018NY6XC00C0NTACTTYPE000CG">Medical Caregiver</option>
+	</select>
+</div>
+
+
+<div class="input-group input-group-lg mb-4">
 	<div class="input-group-text">Primary ID:</div>
 	<input autocomplete="off"
 		class="form-control form-control-lg"
@@ -22,6 +35,7 @@ ob_start();
 		type="text"
 		value="<?= __h($_SESSION['Checkout']['Contact']['guid']) ?>">
 </div>
+
 
 <div class="input-group input-group-lg mb-4">
 	<div class="input-group-text">Secondary ID:</div>
@@ -33,6 +47,7 @@ ob_start();
 		type="text"
 		value="<?= __h($_SESSION['Checkout']['Contact']['code']) ?>">
 </div>
+
 
 <div class="input-group input-group-lg mb-4">
 	<div class="input-group-text">Full Name:</div>

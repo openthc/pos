@@ -47,12 +47,16 @@ HTML;
 $foot = [];
 $foot[] = '<div class="d-flex justify-content-between">';
 $foot[] = '<div>';
+
+$foot[] = '<button class="btn btn-lg btn-primary" name="a" type="submit" value="client-contact-update">Next <i class="fas fa-arrow-right"></i></button>';
+
 if ($_SESSION['Checkout']['contact-push']) {
 	unset($_SESSION['Checkout']['contact-push']);
-	$foot[] = '<button class="btn btn-lg btn-primary" name="a" type="submit" value="client-contact-update-force">Use As Is <i class="fas fa-arrow-right"></i></button>';
+	$foot[] = '<button class="btn btn-lg btn-outline-primary" name="a" type="submit" value="client-contact-update-force">Use Anyway <i class="fas fa-arrow-right"></i></button>';
 }
-$foot[] = '<button class="btn btn-lg btn-primary" name="a" type="submit" value="client-contact-update">Next <i class="fas fa-arrow-right"></i></button>';
+
 $foot[] = '<button class="btn btn-lg btn-secondary" name="a" type="submit" value="client-contact-skip">Skip </button>';
+
 $foot[] = '</div>';
 $foot[] = '<div>';
 $foot[] ='<button class="btn btn-lg btn-warning" id="btn-form-reset" type="reset" value="client-contact-reopen">Reset </button>';

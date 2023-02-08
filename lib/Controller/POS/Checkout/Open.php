@@ -70,10 +70,18 @@ class Open extends \OpenTHC\Controller\Base
 	function contact_commit($RES)
 	{
 		$Contact = new Contact($this->_container->DB, $_SESSION['Checkout']['Contact']);
+
 		$Contact['stat'] = Contact::STAT_LIVE;
+		$Contact['fullname'] = $_POST['client-contact-name'];
+		$Contact['code'] = $_POST['client-contact-code'];
+		$m = $Contact->getMeta();
+		$m['client-type'] = $_POST['client-contact-type'];
+		$m['dob'] = $_POST['client-contact-dob'];
+		$Contact['meta'] = json_encode($m);
+
 		$Contact->save('Contact/Update by User');
 
-		$_SESSION['Checkout']['Contact']['stat'] = Contact::STAT_LIVE;
+		$_SESSION['Checkout']['Contact'] = $Contact->toArray();
 
 		return $RES->withRedirect('/pos');
 
@@ -315,7 +323,6 @@ class Open extends \OpenTHC\Controller\Base
 		};
 
 		$Contact2 = $Contact1->toArray();
-		$Contact2['meta'] = json_decode($Contact2['meta'], true);
 
 		$_SESSION['Checkout']['Contact'] = $Contact2;
 
