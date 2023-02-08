@@ -19,8 +19,7 @@ header('content-type: text/html; charset=utf-8', true);
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" integrity="sha256-mUZM63G8m73Mcidfrv5E+Y61y7a12O5mW4ezU3bxqW4=" crossorigin="anonymous" referrerpolicy="no-referrer">
 <link rel="stylesheet" href="https://cdn.openthc.com/jqueryui/1.12.1/jqueryui.css" integrity="sha256-rByPlHULObEjJ6XQxW/flG2r+22R5dKiAoef+aXWfik=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdn.openthc.com/bootstrap/5.1.3/bootstrap.min.css" integrity="sha256-YvdLHPgkqJ8DVUxjjnGVlMMJtNimJ6dYkowFFvp4kKs=" crossorigin="anonymous" referrerpolicy="no-referrer">
-<link href="/css/main.css" rel="stylesheet">
-<!-- <link href="/css/pos.css" rel="stylesheet"> -->
+<link rel="stylesheet" href="/css/main.css">
 <title><?= $data['Page']['title'] ?></title>
 </head>
 <body class="pos">

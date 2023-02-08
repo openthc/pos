@@ -3,14 +3,14 @@
 # Top-Level Make the App Do Stuff Script
 #
 
-set -o errexit
-# set -o nounset
-
 BIN_SELF=$(readlink -f "$0")
 APP_ROOT=$(dirname "$BIN_SELF")
 
-action="$1"
+action="${1:=help}"
 shift
+
+set -o errexit
+set -o nounset
 
 case "$action" in
 # Build the CSS
@@ -21,7 +21,10 @@ css)
 	# // Something
 	./node_modules/.bin/sass \
 		--style compressed \
+		--verbose \
 		./sass:./webroot/css/
+
+	ls -lh webroot/css/
 
 	;;
 
@@ -32,7 +35,7 @@ minify)
 	;;
 
 # Help, the default target
-help|""|*)
+*)
 
 	echo
 	echo "You must supply a make command"
