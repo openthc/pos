@@ -13,6 +13,28 @@ ob_start();
 ?>
 
 <div class="input-group input-group-lg mb-4">
+	<div class="input-group-text">Primary ID:</div>
+	<input autocomplete="off"
+		class="form-control form-control-lg"
+		id="client-contact-guid"
+		name="client-contact-guid"
+		placeholder="Primary Identification Method"
+		type="text"
+		value="<?= __h($_SESSION['Checkout']['Contact']['guid']) ?>">
+</div>
+
+<div class="input-group input-group-lg mb-4">
+	<div class="input-group-text">Secondary ID:</div>
+	<input autocomplete="off"
+		class="form-control form-control-lg"
+		id="client-contact-code"
+		name="client-contact-code"
+		placeholder="Secondary Identification Method"
+		type="text"
+		value="<?= __h($_SESSION['Checkout']['Contact']['code']) ?>">
+</div>
+
+<div class="input-group input-group-lg mb-4">
 	<div class="input-group-text">Full Name:</div>
 	<input autocomplete="off"
 		class="form-control form-control-lg"
@@ -36,11 +58,7 @@ ob_start();
 </div>
 
 
-<div class="alert alert-secondary">
-	If necessary, such as medical sales, input their Patient ID <em><strong>exactly</strong></em> as it appears on their patient identification card.
-</div>
-
-<div class="input-group input-group-lg mb-4">
+<!-- <div class="input-group input-group-lg mb-4">
 	<div class="input-group-text">Patient ID:</div>
 	<input autocomplete="off"
 		class="form-control form-control-lg contact-autocomplete"
@@ -50,8 +68,17 @@ ob_start();
 		type="text"
 		value="<?= __h($_SESSION['Checkout']['Contact']['guid']) ?>">
 </div>
+ -->
 
 <?php
+
+switch ($_SESSION['cre']['id']) {
+	case 'usa/ok':
+		_contact_verify_info_usa_ok($_SESSION['Checkout']['Contact']);
+}
+
+// var_dump($_SESSION['Checkout']['Contact']);
+
 $body = ob_get_clean();
 
 
@@ -77,5 +104,38 @@ $foot = implode(' ', $foot);
 </form>
 
 <?php
-var_dump($_SESSION['Checkout']['Contact']);
+
+function _input_group($pre_text, $name_id, $hint, $val)
+{
+	ob_start();
 ?>
+<div class="input-group input-group-lg mb-4">
+<div class="input-group-text"><?= $pre_text ?></div>
+<input autocomplete="off"
+	class="form-control form-control-lg"
+	id="<?= $name_id ?>"
+	name="<?= $name_id ?>"
+	placeholder="<?= $hint ?>"
+	type="text"
+	value="<?= __h($val) ?>">
+</div>
+<?php
+	return ob_get_clean();
+}
+
+/**
+ *
+ */
+function _contact_verify_info_usa_ok($Contact)
+{
+	$html = _input_group('License Type:', '', '', $Contact['meta']['@cre']['type']);
+	echo str_replace('type="text"', 'readonly type="text"', $html);
+
+	$html = _input_group('License Status:', '', '', $Contact['meta']['@cre']['status']);
+	echo str_replace('type="text"', 'readonly type="text"', $html);
+
+	$html = _input_group('License Expires:', '', '', $Contact['meta']['@cre']['expirationDate']);
+	echo str_replace('type="text"', 'readonly type="text"', $html);
+
+	// var_dump($Contact['meta']);
+}

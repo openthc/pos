@@ -32,12 +32,13 @@ class Open extends \OpenTHC\Controller\Base
 	{
 		switch ($_POST['a']) {
 			case 'client-contact-commit':
-				return $this->contact_open($RES);
+				return $this->contact_commit($RES);
 			case 'client-contact-search':
 				return $this->contact_search($RES);
 			case 'client-contact-skip':
 				$_SESSION['Checkout']['Contact'] = [
 					'id' => '018NY6XC00C0NTACT000WALK1N',
+					'stat' => 200,
 					'name' => 'Walk In',
 				];
 				return $RES->withRedirect('/pos');
@@ -50,11 +51,58 @@ class Open extends \OpenTHC\Controller\Base
 	}
 
 	/**
+	 * Commit the Contact
+	 */
+	function contact_commit($RES)
+	{
+		$Contact = new Contact($this->_container->DB, $_SESSION['Checkout']['Contact']);
+		$Contact['stat'] = Contact::STAT_LIVE;
+		$Contact->save('Contact/Update by User');
+
+		$_SESSION['Checkout']['Contact']['stat'] = Contact::STAT_LIVE;
+
+		return $RES->withRedirect('/pos');
+
+		// $obj = [
+		// 	'LicenseNumber' => '000001',
+		// 	'LicenseEffectiveStartDate' => date('Y-m-d'), // '2015-06-21',
+		// 	'LicenseEffectiveEndDate' => date('Y-m-d', time() + (86400 * 356)),
+		// 	'RecommendedPlants' => '6',
+		// 	'RecommendedSmokableQuantity' => '2.0',
+		// 	'FlowerOuncesAllowed' => null,
+		// 	'ThcOuncesAllowed' => null,
+		// 	'ConcentrateOuncesAllowed' => null,
+		// 	'InfusedOuncesAllowed' => null,
+		// 	'MaxFlowerThcPercentAllowed' => null,
+		// 	'MaxConcentrateThcPercentAllowed' => null,
+		// 	'HasSalesLimitExemption' => false,
+		// 	'ActualDate' => date('Y-m-d'),
+		// ];
+
+		// $cre = \OpenTHC\CRE::factory($_SESSION['cre']);
+		// $cre->setLicense($_SESSION['License']);
+		// $res = $cre->contact()->create($obj);
+
+		// var_dump($res);
+
+		// exit;
+	}
+
+	/**
 	 *
 	 */
 	function contact_open($RES)
 	{
 		$dbc = $this->_container->DB;
+
+		switch ($_SESSION['cre']['id']) {
+			case 'usa/ok':
+				// Has to Lookup on External Site
+				return $this->_contact_search_usa_ok($RES);
+			case 'usa/mt':
+				// Has to Lookup on External Site
+				return $this->_contact_search_usa_ok($RES);
+		}
 
 		// $code0 = $_POST['client-contact-pid'];
 
@@ -76,7 +124,7 @@ class Open extends \OpenTHC\Controller\Base
 
 		switch ($_SESSION['cre']['id']) {
 			case 'usa/mt':
-			case 'usa/ok':
+			case 'usa/or':
 				$cre = \OpenTHC\CRE::factory($_SESSION['cre']);
 				$cre->setLicense($_SESSION['License']);
 				$res = $cre->contact()->single($guid1);
@@ -111,8 +159,8 @@ class Open extends \OpenTHC\Controller\Base
 						];
 						return $RES->withRedirect('/pos');
 					default:
-						Session::flash('fail', $cre->formatError($res));
-						return $RES->withRedirect('/pos');
+						// Session::flash('fail', $cre->formatError($res));
+						// return $RES->withRedirect('/pos');
 				}
 		}
 
@@ -187,6 +235,76 @@ class Open extends \OpenTHC\Controller\Base
 			'code' => 200,
 			'data' => $Contact,
 		];
+
+	}
+
+	/**
+	 * Search a Contact in Oklahoma
+	 */
+	function _contact_search_usa_ok($RES)
+	{
+		$oid = $_POST['client-contact-govt-id'];
+
+		$url = sprintf('https://omma.us.thentiacloud.net/rest/public/patient-verify/search/?licenseNumber=%s&_=%d'
+			, $oid
+			, time()
+		);
+		$req = __curl_init($url);
+		$res = curl_exec($req);
+		if (empty($res)) {
+			$_SESSION['Checkout']['contact-push'] = true;
+			Session::flash('fail', 'Patient Search Failed, Please Try Manually [PCO-249]');
+			Session::flash('fail', 'Visit: <a href="https://omma.us.thentiacloud.net/webs/omma/register/">omma.us.thentiacloud.net/webs/omma/register</a> to perform the lookup');
+			return $RES->withRedirect($_SERVER['HTTP_REFERER']);
+		}
+		$res = json_decode($res, true);
+
+		if (empty($res['result'])) {
+			$_SESSION['Checkout']['contact-push'] = true;
+			Session::flash('fail', 'Patient Search Failed, Please Try Again [PCO-256]');
+			Session::flash('fail', 'Or visit: <a href="https://omma.us.thentiacloud.net/webs/omma/register/">omma.us.thentiacloud.net/webs/omma/register</a> to perform the lookup');
+			return $RES->withRedirect($_SERVER['HTTP_REFERER']);
+		}
+
+		if (empty($res['result']['licenseNumber'])) {
+			$_SESSION['Checkout']['contact-push'] = true;
+			Session::flash('fail', 'Patient Search Failed, Please Try Again [PCO-262]');
+			Session::flash('fail', 'Or visit: <a href="https://omma.us.thentiacloud.net/webs/omma/register/">omma.us.thentiacloud.net/webs/omma/register</a> to perform the lookup');
+			return $RES->withRedirect($_SERVER['HTTP_REFERER']);
+		}
+
+		if ($oid != $res['result']['licenseNumber']) {
+			$_SESSION['Checkout']['contact-push'] = true;
+			Session::flash('fail', 'Patient Search Failed, Invalid ID, Please Try Again [PCO-268]');
+			Session::flash('fail', 'Or visit: <a href="https://omma.us.thentiacloud.net/webs/omma/register/">omma.us.thentiacloud.net/webs/omma/register</a> to perform the lookup');
+			return $RES->withRedirect($_SERVER['HTTP_REFERER']);
+		}
+
+		$Contact0 = $res['result'];
+
+		$dbc = $this->_container->DB;
+
+		$Contact1 = new Contact($dbc); // , [ 'guid' => $res['data']['PatientId'] ]);
+		if ( ! $Contact1->loadBy('guid', $Contact0['licenseNumber'])) {
+			$Contact1['id'] = _ulid();
+			$Contact1['stat'] = 100;
+			$Contact1['guid'] = $Contact0['licenseNumber'];
+			$Contact1['hash'] = '-';
+			$Contact1['type'] = 'b2c-client';
+			$Contact1['fullname'] = ''; // $_POST['client-contact-name'];
+			$Contact1['meta'] = json_encode([
+				'@cre' => $Contact0
+			]);
+			$Contact1->save('Contact/Create in POS by User');
+			Session::flash('info', 'New Contact! Please add necessary details');
+		};
+
+		$Contact2 = $Contact1->toArray();
+		$Contact2['meta'] = json_decode($Contact2['meta'], true);
+
+		$_SESSION['Checkout']['Contact'] = $Contact2;
+
+		return $RES->withRedirect('/pos');
 
 	}
 

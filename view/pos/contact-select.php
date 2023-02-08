@@ -93,57 +93,57 @@ $(function() {
 	// Scanner Keydown Handler
 	var scan_time = 0;
 	var scan_skip_next = false;
-	$govInput.on('keydown', function(e) {
+	// $govInput.on('keydown', function(e) {
 
-		console.log(`${e.key} (${e.code}); skip:${scan_skip_next}`);
-		// if ( ! scan_time) {
-		// 	// scan_time = now()
-		// }
+	// 	console.log(`${e.key} (${e.code}); skip:${scan_skip_next}`);
+	// 	// if ( ! scan_time) {
+	// 	// 	// scan_time = now()
+	// 	// }
 
-		if (scan_skip_next) {
-			e.preventDefault();
-			scan_skip_next = false;
-			return false;
-		}
+	// 	if (scan_skip_next) {
+	// 		e.preventDefault();
+	// 		scan_skip_next = false;
+	// 		return false;
+	// 	}
 
-		switch (e.key) {
-			case 'Backspace':
-			case 'Delete':
-				text_buffer.pop();
-				return true;
-			case 'Control':
-				e.preventDefault();
-				scan_skip_next = true;
-				break;
-			case 'Enter':
-			case 'Meta':
-			// case 'Shift':
-				e.preventDefault();
-				break;
-		}
+	// 	switch (e.key) {
+	// 		case 'Backspace':
+	// 		case 'Delete':
+	// 			text_buffer.pop();
+	// 			return true;
+	// 		case 'Control':
+	// 			e.preventDefault();
+	// 			scan_skip_next = true;
+	// 			break;
+	// 		case 'Enter':
+	// 		case 'Meta':
+	// 		// case 'Shift':
+	// 			e.preventDefault();
+	// 			break;
+	// 	}
 
-		var val = e.key;
-		switch (val) {
-			case 'Control':
-			case 'Enter':
-			case 'Meta':
-			case 'Shift':
-				val = `[${val}]`;
-				break;
-		}
+	// 	var val = e.key;
+	// 	switch (val) {
+	// 		case 'Control':
+	// 		case 'Enter':
+	// 		case 'Meta':
+	// 		case 'Shift':
+	// 			val = `[${val}]`;
+	// 			break;
+	// 	}
 
-		// if (e.key.length == '1') {
-		scan_buffer.push(val);
-		// }
+	// 	// if (e.key.length == '1') {
+	// 	scan_buffer.push(val);
+	// 	// }
 
-		if (val.match(/^[\w\s\/\-\+]$/)) {
-			text_buffer.push(val);
-			$govInput.val( text_buffer.join('') );
-		}
+	// 	if (val.match(/^[\w\s\/\-\+]$/)) {
+	// 		text_buffer.push(val);
+	// 		$govInput.val( text_buffer.join('') );
+	// 	}
 
-		return false;
+	// 	return false;
 
-	});
+	// });
 
 	$govInput.on('keyup', _.debounce(function() {
 
