@@ -1,34 +1,13 @@
 <?php
 /**
  * Modal for Loyalty Program
+ *
+ * SPDX-License-Identifier: GPL-3.0-only
+ *
  * @todo Maybe just one input box for any/all codes?
  */
 
 $body = <<<HTML
-<div class="row mb-4">
-	<div class="col-md-6">
-		<h5>Phone</h5>
-	</div>
-	<div class="col-md-6">
-		<div class="input-group">
-			<input autocomplete="off" class="form-control form-control-lg" id="loyalty-phone" inputmode="tel" type="phone">
-			<div class="input-group-text"><i class="fas fa-hashtag"></i></div>
-		</div>
-	</div>
-</div>
-
-<div class="row mb-4">
-	<div class="col-md-6">
-		<h5>Email</h5>
-	</div>
-	<div class="col-md-6">
-		<div class="input-group">
-			<input autocomplete="off" class="form-control form-control-lg" id="loyalty-email" inputmode="email" type="email">
-			<div class="input-group-text"><i class="fas fa-at"></i></div>
-		</div>
-	</div>
-</div>
-
 <div class="row">
 	<div class="col-md-6">
 		<h5>Code / ID</h5>
@@ -41,6 +20,11 @@ $body = <<<HTML
 		</div>
 	</div>
 </div>
+
+<div id="pos-modal-loyalty-list">
+	<i class="fas fa-sync fa-spin"></i> Loading...
+</div>
+
 HTML;
 
 $foot = <<<HTML
@@ -50,7 +34,7 @@ HTML;
 
 echo $this->block('modal.php', [
 	'modal_id' => 'pos-modal-loyalty',
-	'modal_title' => 'Sales :: Loyalty',
+	'modal_title' => 'Checkout :: Loyalty',
 	'body' => $body,
 	'foot' => $foot,
 ]);

@@ -1,6 +1,8 @@
 <?php
 /**
  * The Payment Modal
+ *
+ * SPDX-License-Identifier: GPL-3.0-only
  */
 
 $body = <<<HTML
@@ -69,7 +71,7 @@ HTML;
 
 echo $this->block('modal.php', [
 	'modal_id' => 'pos-modal-payment',
-	'modal_title' => 'Collect Payment',
+	'modal_title' => 'Checkout :: Payment :: Card',
 	'body' => $body,
 	'foot' => $foot,
 ]);

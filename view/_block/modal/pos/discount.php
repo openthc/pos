@@ -1,6 +1,8 @@
 <?php
 /**
  * Modal for Adding a Discount
+ *
+ * SPDX-License-Identifier: GPL-3.0-only
  */
 
 $body = <<<HTML
@@ -23,8 +25,12 @@ $body = <<<HTML
 	</div>
 </div>
 
+<div id="pos-modal-discount-list">
+</div>
+
+
 <div class="row mb-2">
-	<div class="col-md-8"><h5>Amount Due</h5></div>
+	<div class="col-md-8"><h5>Balance:</h5></div>
 	<div class="col-md-4">
 		<h3 class="pos-checkout-sum" style="text-align:right;"></h3>
 	</div>
@@ -41,7 +47,6 @@ $body = <<<HTML
 		<h3 class="pos-checkout-sum-new" style="text-align:right;">-</h3>
 	</div>
 </div>
-
 
 <!--
 
@@ -62,7 +67,7 @@ HTML;
 
 echo $this->block('modal.php', [
 	'modal_id' => 'pos-modal-discount',
-	'modal_title' => 'Sales :: Discount',
+	'modal_title' => 'Checkout :: Discount',
 	'body' => $body,
 	'foot' => $foot,
 ]);

@@ -1,6 +1,8 @@
 <?php
 /**
  * The ID Scanner Modal
+ *
+ * SPDX-License-Identifier: GPL-3.0-only
  */
 
 $body = <<<HTML

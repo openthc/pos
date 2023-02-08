@@ -1,6 +1,8 @@
 <?php
 /**
  * Modal for Saving the Current Sale
+ *
+ * SPDX-License-Identifier: GPL-3.0-only
  */
 
 
@@ -21,7 +23,7 @@ HTML;
 
 echo $this->block('modal.php', [
 	'modal_id' => 'pos-modal-sale-hold',
-	'modal_title' => 'Sales :: Create Hold',
+	'modal_title' => 'Checkout :: Create Hold',
 	'body' => $body,
 	'foot' => $foot,
 ]);
