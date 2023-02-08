@@ -173,14 +173,14 @@ function chkSaleCost()
 		Weed.POS.sale.sub = 0;
 	}
 
-	Weed.POS.sale.tax_i502 = 0; // Weed.POS.sale.sub * 0.25;
-	Weed.POS.sale.tax_sale = (Weed.POS.sale.sub + Weed.POS.sale.tax_i502) * 0.095;
+	// Weed.POS.sale.tax_i502 = 0; // Weed.POS.sale.sub * 0.25;
+	// Weed.POS.sale.tax_sale = (Weed.POS.sale.sub + Weed.POS.sale.tax_i502) * 0.095;
 	Weed.POS.sale.due	  = Weed.POS.sale.sub + Weed.POS.sale.tax_i502 + Weed.POS.sale.tax_sale;
 
 	// Canonical
 	$('.pos-checkout-sub').html(parseFloat(Weed.POS.sale.sub, 10).toFixed(2));
-	$('.pos-checkout-tax-i502').html(parseFloat(Weed.POS.sale.tax_i502, 10).toFixed(2));
-	$('.pos-checkout-tax-sale').html(parseFloat(Weed.POS.sale.tax_sale, 10).toFixed(2));
+	// $('.pos-checkout-tax-i502').html(parseFloat(Weed.POS.sale.tax_i502, 10).toFixed(2));
+	// $('.pos-checkout-tax-sale').html(parseFloat(Weed.POS.sale.tax_sale, 10).toFixed(2));
 	$('.pos-checkout-sum').html(parseFloat(Weed.POS.sale.due, 10).toFixed(2));
 
 	if (Weed.POS.sale.due <= 0) {
@@ -198,7 +198,7 @@ function chkSaleCost()
 $(function() {
 
 	// Click the Cancel Button
-	$('#pos-shop-redo').on('click touchend', function(e) {
+	$('.pos-checkout-reopen').on('click touchend', function(e) {
 		$(document.body).empty();
 		$(document.body).css({
 			'background': '#101010',
@@ -206,6 +206,8 @@ $(function() {
 		});
 		$(document.body).html('<h1 style="margin:5em; text-align:center;"><i class="fas fa-sync fa-spin"></i> Loading...</h1>');
 	});
+
+	// Shop SHUT?
 
 	// Attach Handler to Payment Button
 	$('#pos-shop-next').on('click', function(e) {
@@ -215,6 +217,74 @@ $(function() {
 		ppFormUpdate();
 
 	});
+
+	// https://github.com/zxing-js/library/blob/master/docs/examples/qr-camera/index.html
+	$('.pos-camera-input').on('click', function() {
+
+		debugger;
+
+		$btn = $(this);
+
+		window.OpenTHC.Camera.exists(function(good) {
+
+			if ( ! good) {
+				$btn.removeClass('btn-primary');
+				$btn.addClass('btn-danger');
+				// $btn.prop('disabled', true);
+				$('#pos-scanner-read-info').text('Invalid Camera Device');
+				$('#pos-scanner-read-info').show();
+				setTimeout(function() {
+					$('#pos-scanner-read-info').hide();
+				}, 5000);
+
+				return;
+			}
+
+			// window.OpenTHC.Camera.open(function(stream) {
+
+			var html = [];
+			html.push('<div id="pos-camera-preview-wrap">');
+			html.push('<video id="pos-camera-preview" style="height:480px; width:640px;"></video>');
+			html.push('<button class="btn btn-outline-danger shut"><i class="fas fa-times"></i></button>');
+			html.push('</div>');
+			$(document.body).append(html.join(''));
+
+			// @see https://github.com/zxing-js/library/issues/432
+			const hints = new Map();
+			const formats = [
+				ZXing.BarcodeFormat.CODE_128,
+				ZXing.BarcodeFormat.QR_CODE,
+				ZXing.BarcodeFormat.PDF_417
+			];
+			hints.set(ZXing.DecodeHintType.POSSIBLE_FORMATS, formats);
+			hints.set(ZXing.DecodeHintType.CHARACTER_SET, 'utf-8');
+			//hints.set(ZXing.DecodeHintType.TRY_HARDER, true);
+			//hints.set(ZXing.DecodeHintType.PURE_BARCODE, true);
+			// var Scanner = new ZXing.BrowserMultiFormatReader(hints);
+			var Scanner = new ZXing.BrowserPDF417Reader(); // hints);
+			Scanner.decodeFromInputVideoDevice('', 'pos-camera-preview')
+			.then(function(res) {
+				console.log(res);
+				$('#barcode-input').val(res);
+				$('#pos-camera-preview-wrap').remove();
+				Scanner.reset();
+				delete Scanner;
+			})
+			.catch((err) => { console.log(err); });
+
+			// window.OpenTHC.Camera.scan(function() {
+			// 	alert('I Got a Scan!!');
+			// });
+
+			$('#pos-camera-preview-wrap .shut').one('click', function() {
+				Scanner.reset();
+				delete Scanner;
+				$('#pos-camera-preview-wrap').remove();
+			});
+
+		});
+	});
+
 
 	/**
 		An Item Size has Changed

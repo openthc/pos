@@ -32,31 +32,43 @@ $this->layout_file = sprintf('%s/view/_layout/html-pos.php', APP_ROOT);
 <div class="row justify-content-center">
 <div class="col-md-8">
 <div class="card">
-	<h3 class="card-header">Print Receipt</h3>
+	<h3 class="card-header">Receipt</h3>
 	<div class="card-body">
-
-		<form autocomplete="off" method="post">
-		<div class="mb-2">
-			<h4>Email</h4>
-			<input name="sale_id" type="hidden" value="<?= $data['Sale']['id'] ?>">
-			<div class="input-group">
-				<input class="form-control" name="receipt-email" placeholder="client@email.com" type="email">
-				<button class="btn btn-secondary" name="a" value="send-email"><i class="fas fa-envelope-open-text"></i> Email Receipt</button>
+		<?php
+		if ( ! empty($data['send-via-email'])) {
+		?>
+			<form autocomplete="off" method="post">
+			<div class="mb-2">
+				<h4>Email</h4>
+				<input name="sale_id" type="hidden" value="<?= $data['Sale']['id'] ?>">
+				<div class="input-group">
+					<input class="form-control" name="receipt-email" placeholder="client@email.com" type="email">
+					<button class="btn btn-secondary" name="a" value="send-email"><i class="fas fa-envelope-open-text"></i> Email Receipt</button>
+				</div>
 			</div>
-		</div>
-		</form>
+			</form>
+		<?php
+		}
+		?>
 
-		<form autocomplete="off" method="post">
-		<div class="mb-2">
-			<h4>Text/SMS</h4>
-			<input name="sale_id" type="hidden" value="<?= $data['Sale']['id'] ?>">
-			<div class="input-group">
-				<input class="form-control" name="receipt-phone" placeholder="(###) ###-####" type="text">
-				<button class="btn btn-secondary" name="a" value="send-phone"><i class="fas fa-sms"></i> Send Receipt</button>
+		<?php
+		if ( ! empty($data['send-via-phone'])) {
+		?>
+			<form autocomplete="off" method="post">
+			<div class="mb-2">
+				<h4>Text/SMS</h4>
+				<input name="sale_id" type="hidden" value="<?= $data['Sale']['id'] ?>">
+				<div class="input-group">
+					<input class="form-control" name="receipt-phone" placeholder="(###) ###-####" type="text">
+					<button class="btn btn-secondary" name="a" value="send-phone"><i class="fas fa-sms"></i> Send Receipt</button>
+				</div>
 			</div>
-		</div>
-		</form>
+			</form>
+		<?php
+		}
+		?>
 
+		<!--
 		<form autocomplete="off" method="post">
 		<div class="mb-2">
 			<h4>Print It</h4>
@@ -70,9 +82,9 @@ $this->layout_file = sprintf('%s/view/_layout/html-pos.php', APP_ROOT);
 					?>
 				</select>
 
-				<!-- <button class="btn btn-warning"
+				<button class="btn btn-warning"
 					formtarget="openthc-print-window" id="send-print" name="a" type="button"
-					value="send-print"><i class="fas fa-print"></i> Print Receipt</button> -->
+					value="send-print"><i class="fas fa-print"></i> Print Receipt</button>
 
 				<button class="btn btn-warning"
 					id="send-print-frame"
@@ -83,6 +95,8 @@ $this->layout_file = sprintf('%s/view/_layout/html-pos.php', APP_ROOT);
 		</div>
 		</form>
 
+		-->
+
 		<iframe id="print-frame" name="print-frame"
 			src="/pos/checkout/receipt?s=<?= rawurldecode($data['Sale']['id']) ?>&amp;a=pdf"
 			style="border: 1px solid #000; width:100%;"></iframe>
@@ -92,7 +106,15 @@ $this->layout_file = sprintf('%s/view/_layout/html-pos.php', APP_ROOT);
 
 	<form autocomplete="off" method="post">
 	<div class="card-footer">
-		<button class="btn btn-primary" name="a" value="send-blank"><i class="fas fa-ban"></i> No Receipt</button>
+		<div class="d-flex justify-content-between">
+			<button class="btn btn-lg btn-primary"
+				id="send-print-frame"
+				type="button"><i class="fas fa-print"></i> Print Receipt</button>
+
+			<button class="btn btn-lg btn-secondary" name="a" value="send-blank"><i class="fas fa-ban"></i> No Receipt</button>
+
+			<a class="btn btn-lg btn-secondary pos-checkout-reopen" href="/pos/open"><i class="fas fa-check-square"></i> Done</a>
+		</div>
 	</div>
 	</form>
 
@@ -103,6 +125,8 @@ $this->layout_file = sprintf('%s/view/_layout/html-pos.php', APP_ROOT);
 
 
 <script>
+var printFrame = null;
+
 function btnErrorFlash($btn)
 {
 	$btn.addClass('btn-outline-danger');
@@ -113,6 +137,44 @@ function btnErrorFlash($btn)
 }
 
 $(function() {
+
+	printFrame = document.querySelector('#print-frame');
+	printFrame.addEventListener('load', function() {
+
+		console.log('printFrame!load');
+
+		// Can't get these to fire
+		printFrame.addEventListener('beforeprint', function(e) {
+			console.log('printFrame!beforeprint');
+		});
+
+		printFrame.contentWindow.addEventListener('beforeprint', function(e) {
+			console.log('printFrame.contentWindow!beforeprint');
+		});
+
+		// printFrame.contentWindow.addEventListener('afterprint', function(e) {
+		// 	console.log('onAfterPrint1!');
+		// });
+
+		var mediaQueryList = printFrame.contentWindow.matchMedia('print');
+		mediaQueryList.addListener(function (evt) {
+			debugger;
+			console.log('print event', evt);
+		});
+		// printFrame.contentWindow.onafterprint = function(e) {
+		// 	console.log('onAfterPrint2!');
+		// };
+
+		// setTimeout(function() {
+
+			// printFrame.contentWindow.focus();
+			// var res = printFrame.contentWindow.print();
+			// console.log('print trigger');
+
+		// }, 250);
+
+	});
+
 
 	$('#send-print').on('click', function() {
 
@@ -211,35 +273,26 @@ $(function() {
 	 */
 	$('#send-print-frame').on('click', function() {
 
-		var F = document.querySelector('#print-frame');
-		// F.addEventListener('load', function() {
+		console.log('#send-print-frame!click');
 
-			// console.log('onLoad!');
+		printFrame.contentWindow.focus();
+		printFrame.contentWindow.print();
 
-			// Can't get these to fire
-			// F.contentWindow.addEventListener('beforeprint', function() {
-			// 	console.log('beforeprint!');
-			// });
-
-			// F.contentWindow.addEventListener('afterprint', function() {
-			// 	console.log('onAfterPrint!');
-			// });
-			// F.contentWindow.onafterprint = function() {
-			// 	console.log('onAfterPrint!');
-			// };
-
-			// setTimeout(function() {
-
-				F.contentWindow.focus();
-				F.contentWindow.print();
-
-			// }, 250);
-
+		// window.addEventListener('mouseover', function(e) {
+		// 	console.log('mousing!!!');
 		// });
 
 		return false;
 
 	});
+
+	<?php
+	if ($data['auto-print']) {
+	?>
+		$('#send-print-frame').trigger('click');
+	<?php
+	}
+	?>
 
 });
 </script>

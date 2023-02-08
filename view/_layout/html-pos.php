@@ -40,7 +40,7 @@ header('content-type: text/html; charset=utf-8', true);
 		</div>
 
 		<div class="navbar-text">
-			<a class="btn btn-warning" href="/pos/open" id="pos-shop-redo"><i class="fas fa-ban" style="color: var(--bs-dark);"></i></a>
+			<a class="btn btn-warning pos-checkout-reopen" href="/pos/open"><i class="fas fa-ban" style="color: var(--bs-dark);"></i></a>
 			<a class="btn btn-danger" href="/pos/shut"><i class="fas fa-power-off" style="color: var(--bs-dark);" ></i></a>
 			<!-- <li class="nav-item"><a class="nav-link" href="/settings"><i class="fas fa-cogs"></i></a></li>
 			<li class="nav-item"><a class="nav-link" href="/auth/shut"><i class="fas fa-power-off"></i></a></li> -->
@@ -53,18 +53,6 @@ header('content-type: text/html; charset=utf-8', true);
 
 <?= $this->block('session-flash.php') ?>
 
-<!-- <div id="menu-zero">
-	<div class="menu-item">
-		<button class="btn btn-outline-secondary menu-left-toggle" type="button"><i class="fas fa-bars"></i></button>
-	</div>
-	<div class="menu-item">
-		<div class="menu-item-text"><?= $data['Page']['title'] ?></div>
-	</div>
-	<div class="menu-item">
-		<a class="btn btn-warning" href="/pos" id="pos-shop-redo" type="button"><i class="fas fa-ban"></i></a>
-		<a class="btn btn-danger" href="/pos/shut"><i class="fas fa-power-off"></i></a>
-	</div>
-</div> -->
 <?= $this->body ?>
 
 <div class="shut" id="menu-left">
