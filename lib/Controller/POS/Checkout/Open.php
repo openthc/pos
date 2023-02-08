@@ -44,6 +44,20 @@ class Open extends \OpenTHC\Controller\Base
 				return $RES->withRedirect('/pos');
 			case 'client-contact-update':
 				return $this->contact_open($RES);
+			case 'client-contact-update-force':
+				$Contact1 = new Contact($this->_container->DB);
+				if ( ! $Contact1->loadBy('guid', $_POST['client-contact-govt-id'])) {
+					$Contact1['id'] = _ulid();
+					$Contact1['stat'] = 100;
+					$Contact1['guid'] = $_POST['client-contact-govt-id'];
+					$Contact1['hash'] = '-';
+					$Contact1['type'] = 'b2c-client';
+					$Contact1->save('Contact/Create in POS by User');
+					Session::flash('info', 'New Contact! Please add necessary details');
+				};
+				$_SESSION['Checkout']['Contact'] = $Contact1->toArray();
+				return $RES->withRedirect('/pos');
+				break;
 			default:
 				Session::flash('fail', 'Invalid Requset [PCO-045]');
 				return $RES->withRedirect('/pos');
@@ -244,6 +258,7 @@ class Open extends \OpenTHC\Controller\Base
 	function _contact_search_usa_ok($RES)
 	{
 		$oid = $_POST['client-contact-govt-id'];
+		$_SESSION['Checkout']['contact-search'] = $oid;
 
 		$url = sprintf('https://omma.us.thentiacloud.net/rest/public/patient-verify/search/?licenseNumber=%s&_=%d'
 			, $oid

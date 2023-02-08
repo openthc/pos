@@ -9,6 +9,8 @@ $this->layout_file = sprintf('%s/view/_layout/html-pos.php', APP_ROOT);
 
 $head = sprintf('<h1>%s</h1>', _('Check In:'));
 
+$govt_id_html = __h($_SESSION['Checkout']['contact-search']);
+
 $body = <<<HTML
 
 <div class="alert alert-secondary">Scan the client's identification card or input their identification details.</div>
@@ -22,7 +24,8 @@ $body = <<<HTML
 		id="client-contact-govt-id"
 		name="client-contact-govt-id"
 		placeholder="State / ID"
-		type="text">
+		type="text"
+		value="{$govt_id_html}">
 
 	<input id="client-contact-scanned-id" name="client-contact-scanned-id" type="hidden" value="">
 	<input id="client-contact-id" name="client-contact-id" type="hidden" value="">
@@ -44,9 +47,12 @@ HTML;
 $foot = [];
 $foot[] = '<div class="d-flex justify-content-between">';
 $foot[] = '<div>';
+if ($_SESSION['Checkout']['contact-push']) {
+	unset($_SESSION['Checkout']['contact-push']);
+	$foot[] = '<button class="btn btn-lg btn-primary" name="a" type="submit" value="client-contact-update-force">Use As Is <i class="fas fa-arrow-right"></i></button>';
+}
 $foot[] = '<button class="btn btn-lg btn-primary" name="a" type="submit" value="client-contact-update">Next <i class="fas fa-arrow-right"></i></button>';
 $foot[] = '<button class="btn btn-lg btn-secondary" name="a" type="submit" value="client-contact-skip">Skip </button>';
-// $foot[] = '<button class="btn btn-lg btn-secondary" name="a" type="submit" value="client-contact-search">Search </button>';
 $foot[] = '</div>';
 $foot[] = '<div>';
 $foot[] ='<button class="btn btn-lg btn-warning" id="btn-form-reset" type="reset" value="client-contact-reopen">Reset </button>';
