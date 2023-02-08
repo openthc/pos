@@ -16,7 +16,7 @@ header('content-type: text/html; charset=utf-8', true);
 <meta name="application-name" content="OpenTHC">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#247420">
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" integrity="sha256-mUZM63G8m73Mcidfrv5E+Y61y7a12O5mW4ezU3bxqW4=" crossorigin="anonymous" referrerpolicy="no-referrer">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" integrity="sha256-/4UQcSmErDzPCMAiuOiWPVVsNN2s3ZY/NsmXNcj0IFc=" crossorigin="anonymous" referrerpolicy="no-referrer">
 <link rel="stylesheet" href="https://cdn.openthc.com/jqueryui/1.12.1/jqueryui.css" integrity="sha256-rByPlHULObEjJ6XQxW/flG2r+22R5dKiAoef+aXWfik=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdn.openthc.com/bootstrap/5.1.3/bootstrap.min.css" integrity="sha256-YvdLHPgkqJ8DVUxjjnGVlMMJtNimJ6dYkowFFvp4kKs=" crossorigin="anonymous" referrerpolicy="no-referrer">
 <link rel="stylesheet" href="/css/main.css">
@@ -40,9 +40,7 @@ header('content-type: text/html; charset=utf-8', true);
 
 		<div class="navbar-text">
 			<a class="btn btn-warning pos-checkout-reopen" href="/pos/open"><i class="fas fa-ban" style="color: var(--bs-dark);"></i></a>
-			<a class="btn btn-danger" href="/pos/shut"><i class="fas fa-power-off" style="color: var(--bs-dark);" ></i></a>
-			<!-- <li class="nav-item"><a class="nav-link" href="/settings"><i class="fas fa-cogs"></i></a></li>
-			<li class="nav-item"><a class="nav-link" href="/auth/shut"><i class="fas fa-power-off"></i></a></li> -->
+			<a class="btn btn-danger pos-checkout-reopen" href="/pos/shut"><i class="fas fa-power-off" style="color: var(--bs-dark);" ></i></a>
 		</div>
 
 	</div>
