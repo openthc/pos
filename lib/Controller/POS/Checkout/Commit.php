@@ -5,7 +5,7 @@
  * SPDX-License-Identifier: GPL-3.0-only
  */
 
-namespace App\Controller\POS\Checkout;
+namespace OpenTHC\POS\Controller\POS\Checkout;
 
 use Edoceo\Radix\Session;
 use Edoceo\Radix\ULID;
@@ -29,7 +29,7 @@ class Commit extends \OpenTHC\Controller\Base
 			$b2c_item_count = 0;
 			$sum_item_price = 0;
 
-			$Sale = new \App\B2C\Sale($dbc);
+			$Sale = new \OpenTHC\POS\B2C\Sale($dbc);
 			$Sale['id'] = ULID::create();
 			$Sale['license_id'] = $License['id'];
 			$Sale['contact_id'] = $_SESSION['Contact']['id'];
@@ -52,12 +52,12 @@ class Commit extends \OpenTHC\Controller\Base
 						continue;
 					}
 
-					$IL = new \App\Lot($dbc, $m[1]);
+					$IL = new \OpenTHC\POS\Lot($dbc, $m[1]);
 					if (empty($IL['id'])) {
 						throw new \Exception('Inventory Lost on Sale [PCC-055]');
 					}
 
-					$P = new \App\Product($dbc, $IL['product_id']);
+					$P = new \OpenTHC\POS\Product($dbc, $IL['product_id']);
 					switch ($P['package_type']) {
 						case 'pack':
 						case 'each':
@@ -71,7 +71,7 @@ class Commit extends \OpenTHC\Controller\Base
 							break;
 					}
 
-					$SI = new \App\B2C\Sale\Item($dbc);
+					$SI = new \OpenTHC\POS\B2C\Sale\Item($dbc);
 					$SI['id'] = ULID::create();
 					$SI['b2c_sale_id'] = $Sale['id'];
 					$SI['inventory_id'] = $IL['id'];
@@ -99,14 +99,14 @@ class Commit extends \OpenTHC\Controller\Base
 				$tax_excise_rate = $tax_excise_rate / 100;
 			}
 			if ($tax_excise_rate > 0) {
-				$SI = new \App\B2C\Sale\Item($dbc);
+				$SI = new \OpenTHC\POS\B2C\Sale\Item($dbc);
 				$SI['id'] = ULID::create();
 				$SI['b2c_sale_id'] = $Sale['id'];
 				$SI['inventory_id'] = -1;
 				$SI['guid'] = '-';
 				$SI['unit_count'] = 1;
 				$SI['unit_price'] = ($sum_item_price * $tax_excise_rate);
-				$SI->setFlag(\App\B2C\Sale\Item::FLAG_TAX_EXCISE);
+				$SI->setFlag(\OpenTHC\POS\B2C\Sale\Item::FLAG_TAX_EXCISE);
 				$SI->save();
 			}
 
@@ -121,14 +121,14 @@ class Commit extends \OpenTHC\Controller\Base
 				$tax_retail_rate = $tax_retail_rate / 100;
 			}
 			if ($tax_retail_rate > 0) {
-				$SI = new \App\B2C\Sale\Item($dbc);
+				$SI = new \OpenTHC\POS\B2C\Sale\Item($dbc);
 				$SI['id'] = ULID::create();
 				$SI['b2c_sale_id'] = $Sale['id'];
 				$SI['inventory_id'] = -1;
 				$SI['guid'] = '-';
 				$SI['unit_count'] = 1;
 				$SI['unit_price'] = ($sum_item_price * $tax_excise_rate);
-				$SI->setFlag(\App\B2C\Sale\Item::FLAG_TAX_RETAIL);
+				$SI->setFlag(\OpenTHC\POS\B2C\Sale\Item::FLAG_TAX_RETAIL);
 				$SI->save();
 			}
 
@@ -246,7 +246,7 @@ class Commit extends \OpenTHC\Controller\Base
 
 		$b2c_item_list = $Sale->getItems();
 		foreach ($b2c_item_list as $b2c_item) {
-			$lot = new \App\Lot($dbc, $b2c_item['inventory_id']);
+			$lot = new \OpenTHC\POS\Lot($dbc, $b2c_item['inventory_id']);
 			$uom = new \OpenTHC\UOM($b2c_item['uom']);
 			$uom = $uom->getName();
 			$obj['Transactions'][] = [

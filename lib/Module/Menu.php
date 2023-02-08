@@ -1,17 +1,19 @@
 <?php
 /**
-	Module for Online and Onsite Menus
-*/
+ * Module for Online and Onsite Menus
+ *
+ * SPDX-License-Identifier: GPL-3.0-only
+ */
 
-namespace App\Module;
+namespace OpenTHC\POS\Module;
 
 class Menu extends \OpenTHC\Module\Base
 {
 	function __invoke($a)
 	{
-		$a->get('', 'App\Controller\Menu\Main');
-		$a->get('/online', 'App\Controller\Menu\Online');
-		$a->get('/onsite', 'App\Controller\Menu\Onsite');
+		$a->get('', 'OpenTHC\POS\Controller\Menu\Main');
+		$a->get('/online', 'OpenTHC\POS\Controller\Menu\Online');
+		$a->get('/onsite', 'OpenTHC\POS\Controller\Menu\Onsite');
 	}
 
 }

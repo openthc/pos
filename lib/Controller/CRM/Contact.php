@@ -5,7 +5,7 @@
  * SPDX-License-Identifier: GPL-3.0-only
  */
 
-namespace App\Controller\CRM;
+namespace OpenTHC\POS\Controller\CRM;
 
 class Contact extends \OpenTHC\Controller\Base
 {

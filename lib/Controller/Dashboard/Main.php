@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: GPL-3.0-only
  */
 
-namespace App\Controller\Dashboard;
+namespace OpenTHC\POS\Controller\Dashboard;
 
 class Main extends \OpenTHC\Controller\Base
 {

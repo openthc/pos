@@ -1,9 +1,11 @@
 <?php
 /**
  * POS Delivery
+ *
+ * SPDX-License-Identifier: GPL-3.0-only
  */
 
-namespace App\Controller\POS;
+namespace OpenTHC\POS\Controller\POS;
 
 class Delivery extends \OpenTHC\Controller\Base
 {

@@ -6,9 +6,9 @@
  */
 
 
-namespace App\Controller\API\B2C;
+namespace OpenTHC\POS\Controller\API\B2C;
 
-class Receipt extends \App\Controller\API\Base
+class Receipt extends \OpenTHC\POS\Controller\API\Base
 {
 	/**
 	 *
@@ -17,10 +17,10 @@ class Receipt extends \App\Controller\API\Base
 	{
 
 		$dbc = _dbc($_SESSION['dsn']);
-		$b2c = new \App\B2C\Sale($dbc, $_GET['s']);
+		$b2c = new \OpenTHC\POS\B2C\Sale($dbc, $_GET['s']);
 		$b2c_item_list = $S->getItems();
 		foreach ($b2c_item_list as $i => $b2ci) {
-			$b2c_item_list[$i]['Inventory'] = new \App\Lot($dbc, $b2ci['inventory_id']);
+			$b2c_item_list[$i]['Inventory'] = new \OpenTHC\POS\Lot($dbc, $b2ci['inventory_id']);
 		}
 
 	}
@@ -54,7 +54,7 @@ class Receipt extends \App\Controller\API\Base
 			];
 		}
 
-		$pdf = new \App\PDF\Receipt();
+		$pdf = new \OpenTHC\POS\PDF\Receipt();
 		$pdf->setCompany( new \OpenTHC\Company($dbc, $_SESSION['Company'] ));
 		$pdf->setLicense( new \OpenTHC\Company($dbc, $_SESSION['License'] ));
 		$pdf->setSale($b2c);

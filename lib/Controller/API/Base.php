@@ -6,7 +6,7 @@
  *
  */
 
-namespace App\Controller\API;
+namespace OpenTHC\POS\Controller\API;
 
 class Base extends \OpenTHC\Controller\Base
 {

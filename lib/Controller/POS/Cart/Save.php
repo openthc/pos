@@ -1,12 +1,15 @@
 <?php
 /**
  * Save a Cart
+ *
+ * SPDX-License-Identifier: GPL-3.0-only
+ *
  * Saves the Posted Data as a HOLD in the database, Triggers Printing
  * @see https://github.com/minciue/cloudprint/pull/6
  * @see http://stackoverflow.com/questions/18523826/printer-settings-with-google-cloud-print
  */
 
-namespace App\Controller\POS\Cart;
+namespace OpenTHC\POS\Controller\POS\Cart;
 
 use Edoceo\Radix\Session;
 

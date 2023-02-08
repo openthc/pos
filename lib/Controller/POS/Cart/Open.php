@@ -1,9 +1,11 @@
 <?php
 /**
  * Given an ID respond with JavaScript that adds those items to the Ticket
+ *
+ * SPDX-License-Identifier: GPL-3.0-only
  */
 
-namespace App\Controller\POS\Cart;
+namespace OpenTHC\POS\Controller\POS\Cart;
 
 use Edoceo\Radix;
 use Edoceo\Radix\Session;

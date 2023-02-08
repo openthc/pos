@@ -1,9 +1,11 @@
 <?php
 /**
  * Make Sure We're Authenticated
+ *
+ * SPDX-License-Identifier: GPL-3.0-only
  */
 
-namespace App\Middleware;
+namespace OpenTHC\POS\Middleware;
 
 class Auth extends \OpenTHC\Middleware\Base
 {

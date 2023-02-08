@@ -7,29 +7,29 @@
  * API Module
  */
 
-namespace App\Module;
+namespace OpenTHC\POS\Module;
 
 class API extends \OpenTHC\Module\Base
 {
 	function __invoke($a)
 	{
-		$a->get('', 'App\Controller\API\Main');
+		$a->get('', 'OpenTHC\POS\Controller\API\Main');
 
-		// $a->post('/print', 'App\Controller\API\Print');
+		// $a->post('/print', 'OpenTHC\POS\Controller\API\Print');
 
 		// Create Sale
-		$a->post('/b2c', 'App\Controller\API\B2C');
+		$a->post('/b2c', 'OpenTHC\POS\Controller\API\B2C');
 
-		$a->get('/b2c/receipt/preview', 'App\Controller\API\B2C\Receipt:preview');
+		$a->get('/b2c/receipt/preview', 'OpenTHC\POS\Controller\API\B2C\Receipt:preview');
 
-		$a->get('/b2c/{id}', 'App\Controller\API\B2C\Single');
+		$a->get('/b2c/{id}', 'OpenTHC\POS\Controller\API\B2C\Single');
 
-		$a->post('/b2c/{id}', 'App\Controller\API\B2C\Single:post');
-		$a->post('/b2c/{id}/item', 'App\Controller\API\B2C\Item');
+		$a->post('/b2c/{id}', 'OpenTHC\POS\Controller\API\B2C\Single:post');
+		$a->post('/b2c/{id}/item', 'OpenTHC\POS\Controller\API\B2C\Item');
 
-		$a->post('/b2c/{id}/verify', 'App\Controller\API\B2C\Single:verify');
-		// $a->post('/b2c/{id}/payment', 'App\Controller\API\B2C\Single:post');
-		$a->post('/b2c/{id}/commit', 'App\Controller\API\B2C\Single:commit');
+		$a->post('/b2c/{id}/verify', 'OpenTHC\POS\Controller\API\B2C\Single:verify');
+		// $a->post('/b2c/{id}/payment', 'OpenTHC\POS\Controller\API\B2C\Single:post');
+		$a->post('/b2c/{id}/commit', 'OpenTHC\POS\Controller\API\B2C\Single:commit');
 
 	}
 

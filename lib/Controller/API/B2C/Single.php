@@ -5,9 +5,9 @@
  * SPDX-License-Identifier: GPL-3.0-only
  */
 
-namespace App\Controller\API\B2C;
+namespace OpenTHC\POS\Controller\API\B2C;
 
-class Single extends \App\Controller\API\Base
+class Single extends \OpenTHC\POS\Controller\API\Base
 {
 	/**
 	 *
@@ -26,7 +26,7 @@ class Single extends \App\Controller\API\Base
 		$dbc = _dbc($this->Company['dsn']);
 
 		// Fetch the Specified B2C Obbject
-		$b2c = new \App\B2C\Sale($dbc, $ARG['id']);
+		$b2c = new \OpenTHC\POS\B2C\Sale($dbc, $ARG['id']);
 		if (empty($b2c['id'])) {
 			__exit_json([
 				'data' => null
@@ -69,7 +69,7 @@ class Single extends \App\Controller\API\Base
 		$dbc->query('BEGIN');
 
 		// Fetch the Specified B2C Obbject
-		$b2c = new \App\B2C\Sale($dbc, $ARG['id']);
+		$b2c = new \OpenTHC\POS\B2C\Sale($dbc, $ARG['id']);
 		if (empty($b2c['id'])) {
 			return $this->failure($RES, 'Not Found [ABS-063]', 404);
 		}
@@ -81,7 +81,7 @@ class Single extends \App\Controller\API\Base
 		$sum_item_price = 0;
 		$b2c_item_list = $b2c->getItems();
 		foreach ($b2c_item_list as $b2c_item) {
-			$IL = new \App\Lot($dbc, $b2c_item['inventory_id']);
+			$IL = new \OpenTHC\POS\Lot($dbc, $b2c_item['inventory_id']);
 			try {
 				$IL->decrement($b2c_item['unit_count']);
 			} catch (\Exception $e) {
@@ -92,10 +92,10 @@ class Single extends \App\Controller\API\Base
 		$b2c['full_price'] = $sum_item_price;
 
 		// Add Tax Line Items?
-		$pr0 = new \App\Product($dbc);
+		$pr0 = new \OpenTHC\POS\Product($dbc);
 		$pr0->loadBy('product_type_id', '018NY6XC00PT000000TAXSALES'); // Well Known Tax Product ID
 
-		$b2c_item = new \App\B2C\Sale\Item($dbc);
+		$b2c_item = new \OpenTHC\POS\B2C\Sale\Item($dbc);
 		$b2c_item['b2c_sale_id'] = $b2c['id'];
 		$b2c_item['inventory_id'] = '01FH12BJ7P47WKE8Q1SQMC5VF6'; // Well known Inventory ID to represent a Tax
 		$b2c_item['unit_count'] = 1;
@@ -103,10 +103,10 @@ class Single extends \App\Controller\API\Base
 		// $b2c_item->save();
 
 		// Add 502 Tax Line Items
-		$pr1 = new \App\Product($dbc);
+		$pr1 = new \OpenTHC\POS\Product($dbc);
 		$pr1->loadBy('product_type_id', '018NY6XC00PT000000TAXOTHER'); // Well Known Tax Product ID
 
-		$b2c_item = new \App\B2C\Sale\Item($dbc);
+		$b2c_item = new \OpenTHC\POS\B2C\Sale\Item($dbc);
 		$b2c_item['b2c_sale_id'] = $b2c['id'];
 		$b2c_item['inventory_id'] = '01FH12CJVQ0BJZD3CDQNHTG6DZ'; // Well known Inventory ID to represent a Tax
 		$b2c_item['unit_count'] = 1;
@@ -142,7 +142,7 @@ class Single extends \App\Controller\API\Base
 		$dbc = _dbc($this->Company['dsn']);
 
 		// Fetch the Specified B2C Obbject
-		$b2c = new \App\B2C\Sale($dbc, $ARG['id']);
+		$b2c = new \OpenTHC\POS\B2C\Sale($dbc, $ARG['id']);
 		if (empty($b2c['id'])) {
 			return $this->failure($RES, 'Not Found [ABS-081]', 400);
 		}

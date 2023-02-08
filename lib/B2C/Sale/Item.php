@@ -1,9 +1,11 @@
 <?php
 /**
  * A Sale Item
-*/
+ *
+ * SPDX-License-Identifier: GPL-3.0-only
+ */
 
-namespace App\B2C\Sale;
+namespace OpenTHC\POS\B2C\Sale;
 
 class Item extends \OpenTHC\SQL\Record
 {

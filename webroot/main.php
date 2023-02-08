@@ -69,74 +69,74 @@ $con['Company'] = function($c0) {
 
 
 // API
-$app->group('/api/v2018', 'App\Module\API');
+$app->group('/api/v2018', 'OpenTHC\POS\Module\API');
 
 
 // Main Page
-$app->group('/dashboard', 'App\Module\Dashboard')
-	->add('App\Middleware\Menu')
-	->add('App\Middleware\Auth')
+$app->group('/dashboard', 'OpenTHC\POS\Module\Dashboard')
+	->add('OpenTHC\POS\Middleware\Menu')
+	->add('OpenTHC\POS\Middleware\Auth')
 	->add('OpenTHC\Middleware\Session');
 
 
 // POS / Register
-$app->group('/pos', 'App\Module\POS')
-	->add('App\Middleware\Menu')
-	->add('App\Middleware\Auth')
+$app->group('/pos', 'OpenTHC\POS\Module\POS')
+	->add('OpenTHC\POS\Middleware\Menu')
+	->add('OpenTHC\POS\Middleware\Auth')
 	->add('OpenTHC\Middleware\Session');
 
 
 // CRM / Loyalty
-$app->group('/crm', 'App\Module\CRM')
-	->add('App\Middleware\Menu')
-	->add('App\Middleware\Auth')
+$app->group('/crm', 'OpenTHC\POS\Module\CRM')
+	->add('OpenTHC\POS\Middleware\Menu')
+	->add('OpenTHC\POS\Middleware\Auth')
 	->add('OpenTHC\Middleware\Session');
 
 
 // B2B Operations
-$app->group('/report', 'App\Module\Report')
-	->add('App\Middleware\Menu')
-	->add('App\Middleware\Auth')
+$app->group('/report', 'OpenTHC\POS\Module\Report')
+	->add('OpenTHC\POS\Middleware\Menu')
+	->add('OpenTHC\POS\Middleware\Auth')
 	->add('OpenTHC\Middleware\Session');
 
 
 // Onsite & Online menus
-$app->group('/menu', 'App\Module\Menu')
-	->add('App\Middleware\Auth')
+$app->group('/menu', 'OpenTHC\POS\Module\Menu')
+	->add('OpenTHC\POS\Middleware\Auth')
 	->add('OpenTHC\Middleware\Session');
 
 
 // Inventory @ deprecated
-$app->group('/inventory', 'App\Module\Inventory')
-	->add('App\Middleware\Menu')
-	->add('App\Middleware\Auth')
+$app->group('/inventory', 'OpenTHC\POS\Module\Inventory')
+	->add('OpenTHC\POS\Middleware\Menu')
+	->add('OpenTHC\POS\Middleware\Auth')
 	->add('OpenTHC\Middleware\Session');
 
 
 // External Shop
-$app->group('/shop', 'App\Module\Shop')
+$app->group('/shop', 'OpenTHC\POS\Module\Shop')
 	->add('OpenTHC\Middleware\Session');
 
 
 // CRM / Loyalty
 $app->get('/contact/ajax', 'OpenTHC\POS\Controller\Contact')
-	->add('App\Middleware\Menu')
-	->add('App\Middleware\Auth')
+	->add('OpenTHC\POS\Middleware\Menu')
+	->add('OpenTHC\POS\Middleware\Auth')
 	->add('OpenTHC\Middleware\Session');
 
 // Vendor
-// $app->group('/vendor', 'App\Module\Vendor')
-// 	->add('App\Middleware\Menu')
-// 	->add('App\Middleware\Auth')
+// $app->group('/vendor', 'OpenTHC\POS\Module\Vendor')
+// 	->add('OpenTHC\POS\Middleware\Menu')
+// 	->add('OpenTHC\POS\Middleware\Auth')
 // 	->add('OpenTHC\Middleware\Session');
 
 
 // Authentication
 $app->group('/auth', function() {
-	$this->get('/open', 'App\Controller\Auth\oAuth2\Open');
-	$this->get('/back', 'App\Controller\Auth\oAuth2\Back');
-	$this->get('/init', 'App\Controller\Auth\Init')->setName('auth/init');
-	$this->get('/connect', 'App\Controller\Auth\Connect'); // would like to merge with Open or Back
+	$this->get('/open', 'OpenTHC\POS\Controller\Auth\oAuth2\Open');
+	$this->get('/back', 'OpenTHC\POS\Controller\Auth\oAuth2\Back');
+	$this->get('/init', 'OpenTHC\POS\Controller\Auth\Init')->setName('auth/init');
+	$this->get('/connect', 'OpenTHC\POS\Controller\Auth\Connect'); // would like to merge with Open or Back
 	$this->get('/ping', 'OpenTHC\Controller\Auth\Ping');
 	$this->get('/shut', 'OpenTHC\POS\Controller\Auth\Shut');
 })
@@ -144,7 +144,7 @@ $app->group('/auth', function() {
 
 
 // Intent
-$app->map(['GET','POST'], '/intent', 'App\Controller\Intent')
+$app->map(['GET','POST'], '/intent', 'OpenTHC\POS\Controller\Intent')
 	->add('OpenTHC\Middleware\Session');
 
 

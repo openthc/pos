@@ -1,9 +1,11 @@
 <?php
 /**
  * A Lot
+ *
+ * SPDX-License-Identifier: GPL-3.0-only
  */
 
-namespace App;
+namespace OpenTHC\POS;
 
 class Lot extends \OpenTHC\SQL\Record
 {

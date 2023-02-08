@@ -5,7 +5,7 @@
  * SPDX-License-Identifier: GPL-3.0-only
  */
 
-namespace App\Controller\Auth;
+namespace OpenTHC\POS\Controller\Auth;
 
 class Connect extends \OpenTHC\Controller\Auth\Connect
 {

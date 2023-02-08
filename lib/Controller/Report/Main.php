@@ -5,7 +5,7 @@
  * SPDX-License-Identifier: GPL-3.0-only
  */
 
-namespace App\Controller\Report;
+namespace OpenTHC\POS\Controller\Report;
 
 use Edoceo\Radix\Session;
 
@@ -33,7 +33,7 @@ class Main extends \OpenTHC\Controller\Base
 
 		$sql = 'SELECT * FROM b2c_sale WHERE license_id = :l0 AND stat = :s0';
 		$b2c_transactions = $dbc->fetchAll($sql, [
-			':s0' => \App\B2C\Sale::STAT_OPEN,
+			':s0' => \OpenTHC\POS\B2C\Sale::STAT_OPEN,
 			':l0' => $_SESSION['License']['id'],
 		]);
 		$data = [];

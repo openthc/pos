@@ -5,7 +5,7 @@
  * SPDX-License-Identifier: GPL-3.0-only
  */
 
-namespace App\Controller\POS\Checkout;
+namespace OpenTHC\POS\Controller\POS\Checkout;
 
 class Done extends \OpenTHC\Controller\Base
 {

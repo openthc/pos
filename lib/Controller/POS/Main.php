@@ -5,7 +5,7 @@
  * SPDX-License-Identifier: GPL-3.0-only
  */
 
-namespace App\Controller\POS;
+namespace OpenTHC\POS\Controller\POS;
 
 use Edoceo\Radix\Session;
 

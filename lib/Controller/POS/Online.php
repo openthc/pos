@@ -1,9 +1,11 @@
 <?php
 /**
  * POS Online
+ *
+ * SPDX-License-Identifier: GPL-3.0-only
  */
 
-namespace App\Controller\POS;
+namespace OpenTHC\POS\Controller\POS;
 
 class Online extends \OpenTHC\Controller\Base
 {

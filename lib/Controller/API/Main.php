@@ -5,9 +5,9 @@
  * SPDX-License-Identifier: GPL-3.0-only
  */
 
-namespace App\Controller\API;
+namespace OpenTHC\POS\Controller\API;
 
-class Main extends \App\Controller\API\Base
+class Main extends \OpenTHC\POS\Controller\API\Base
 {
 
 }

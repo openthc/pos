@@ -6,9 +6,9 @@
  * SPDX-License-Identifier: GPL-3.0-only
  */
 
-namespace App\PDF;
+namespace OpenTHC\POS\PDF;
 
-class Receipt extends \App\PDF\Base
+class Receipt extends \OpenTHC\POS\PDF\Base
 {
 	protected $Company;
 	protected $License;

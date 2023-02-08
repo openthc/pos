@@ -6,9 +6,9 @@
  *
  */
 
-namespace App\Controller\API;
+namespace OpenTHC\POS\Controller\API;
 
-class B2C extends \App\Controller\API\Base
+class B2C extends \OpenTHC\POS\Controller\API\Base
 {
 	function __invoke($REQ, $RES, $ARG)
 	{
@@ -21,7 +21,7 @@ class B2C extends \App\Controller\API\Base
 
 		$dbc = _dbc($this->Company['dsn']);
 
-		$b2c = new \App\B2C\Sale($dbc);
+		$b2c = new \OpenTHC\POS\B2C\Sale($dbc);
 		$b2c['license_id'] = $source_data['license']['id'];
 		$b2c->save();
 

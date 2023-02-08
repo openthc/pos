@@ -5,9 +5,9 @@
  * SPDX-License-Identifier: GPL-3.0-only
  */
 
-namespace App\Controller\API\B2C;
+namespace OpenTHC\POS\Controller\API\B2C;
 
-class Item extends \App\Controller\API\Base
+class Item extends \OpenTHC\POS\Controller\API\Base
 {
 	function __invoke($REQ, $RES, $ARG)
 	{
@@ -33,13 +33,13 @@ class Item extends \App\Controller\API\Base
 		$dbc = _dbc($this->Company['dsn']);
 
 		// Load Sale
-		$b2c = new \App\B2C\Sale($dbc, $ARG['id']);
+		$b2c = new \OpenTHC\POS\B2C\Sale($dbc, $ARG['id']);
 		if (empty($b2c['id'])) {
 			return $this->failure($RES, 'Invalid Sale ID [ABI-032]', 400);
 		}
 
 		// Check Lot
-		$lot = new \App\Lot($dbc, $source_data['lot']['id']);
+		$lot = new \OpenTHC\POS\Lot($dbc, $source_data['lot']['id']);
 		if (empty($lot['id'])) {
 			return $this->failure($RES, 'Invalid Lot [ABI-038]', 400);
 		}
@@ -53,7 +53,7 @@ class Item extends \App\Controller\API\Base
 		}
 
 		// Add Item
-		$b2c_item = new \App\B2C\Sale\Item($dbc);
+		$b2c_item = new \OpenTHC\POS\B2C\Sale\Item($dbc);
 		$b2c_item['b2c_sale_id'] = $b2c['id'];
 		$b2c_item['inventory_id'] = $source_data['lot']['id'];
 		$b2c_item['unit_count'] = floatval($source_data['unit_count']);

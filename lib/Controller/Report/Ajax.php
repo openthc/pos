@@ -5,7 +5,7 @@
  * SPDX-License-Identifier: GPL-3.0-only
  */
 
-namespace App\Controller\Report;
+namespace OpenTHC\POS\Controller\Report;
 
 use Edoceo\Radix\Session;
 
@@ -23,7 +23,7 @@ class Ajax extends \OpenTHC\Controller\Base
 					':pk' => $B2C,
 					':l0' => $_SESSION['License']['id'],
 				]);
-				$B2C = new \App\B2C\Sale($dbc, $B2C);
+				$B2C = new \OpenTHC\POS\B2C\Sale($dbc, $B2C);
 				if ($B2C['id']) {
 					return $this->_push_transaction($RES, $B2C);
 				}
@@ -46,8 +46,8 @@ class Ajax extends \OpenTHC\Controller\Base
 		$item_list = $B2C->getItems();
 		$b2c_sale_item_list = [];
 		foreach ($item_list as $b2c_sale_item) {
-			$I = new \App\Lot($dbc, $b2c_sale_item['inventory_id']);
-			$b2c_sale_item = new \App\B2C\Sale\Item($dbc, $b2c_sale_item);
+			$I = new \OpenTHC\POS\Lot($dbc, $b2c_sale_item['inventory_id']);
+			$b2c_sale_item = new \OpenTHC\POS\B2C\Sale\Item($dbc, $b2c_sale_item);
 			$b2c_sale_item_list[] = [
 				'inventory' => $I,
 				'sale_item' => $b2c_sale_item,

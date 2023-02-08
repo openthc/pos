@@ -1,9 +1,9 @@
 <?php
 /**
- *
+ * @deprecated
  */
 
-namespace App\Product;
+namespace OpenTHC\POS\Product;
 
 class Type extends \OpenTHC\SQL\Record
 {

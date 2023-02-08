@@ -5,10 +5,10 @@
  * SPDX-License-Identifier: GPL-3.0-only
  */
 
-namespace App\Controller\POS\Checkout;
+namespace OpenTHC\POS\Controller\POS\Checkout;
 
-use App\License;
-use App\Sale;
+use OpenTHC\POS\License;
+use OpenTHC\POS\Sale;
 
 class Receipt extends \OpenTHC\Controller\Base
 {
@@ -77,7 +77,7 @@ class Receipt extends \OpenTHC\Controller\Base
 
 		$dbc = $this->_container->DB;
 
-		$S = new \App\B2C\Sale($dbc, $_GET['s']);
+		$S = new \OpenTHC\POS\B2C\Sale($dbc, $_GET['s']);
 		$Sm = json_decode($S['meta'], true);
 
 		$data['cash_incoming'] = $Sm['cash_incoming'];
@@ -94,13 +94,13 @@ class Receipt extends \OpenTHC\Controller\Base
 	{
 		$dbc = $this->_container->DB;
 
-		$S = new \App\B2C\Sale($dbc, $_GET['s']);
+		$S = new \OpenTHC\POS\B2C\Sale($dbc, $_GET['s']);
 
 		$b2c_item_list = [];
 		$res = $S->getItems();
 		foreach ($res as $i => $b2ci) {
 
-			$I = new \App\Lot($dbc, $b2ci['inventory_id']);
+			$I = new \OpenTHC\POS\Lot($dbc, $b2ci['inventory_id']);
 			$P = $dbc->fetchRow('SELECT id, name FROM product WHERE id = :p0', [ ':p0' => $I['product_id'] ]);
 			$V = $dbc->fetchRow('SELECT id, name FROM variety WHERE id = :v0', [ ':v0' => $I['variety_id'] ]);
 
@@ -111,7 +111,7 @@ class Receipt extends \OpenTHC\Controller\Base
 			$b2c_item_list[] = $b2ci;
 		}
 
-		$pdf = new \App\PDF\Receipt();
+		$pdf = new \OpenTHC\POS\PDF\Receipt();
 		$pdf->setCompany( new \OpenTHC\Company($dbc, $_SESSION['Company'] ));
 		$pdf->setLicense( new \OpenTHC\Company($dbc, $_SESSION['License'] ));
 		$pdf->setSale($S);
@@ -173,7 +173,7 @@ class Receipt extends \OpenTHC\Controller\Base
 		}
 		*/
 
-		$T = new \App\B2C\Sale($_GET['s']);
+		$T = new \OpenTHC\POS\B2C\Sale($_GET['s']);
 
 		$data['cart_item_list'] = $T->getItems();
 

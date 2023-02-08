@@ -1,9 +1,11 @@
 <?php
 /**
  * Show the Zero Menu
+ *
+ * SPDX-License-Identifier: GPL-3.0-only
  */
 
-namespace App\Middleware;
+namespace OpenTHC\POS\Middleware;
 
 class Menu extends \OpenTHC\Middleware\Base
 {

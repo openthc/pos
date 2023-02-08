@@ -6,7 +6,7 @@
  * SPDX-License-Identifier: GPL-3.0-only
  */
 
-namespace App\Controller\POS;
+namespace OpenTHC\POS\Controller\POS;
 
 class Ajax extends \OpenTHC\Controller\Base
 {
@@ -202,7 +202,7 @@ class Ajax extends \OpenTHC\Controller\Base
 		}
 
 		// Starts or Ends with the Code
-		// $res = \App\POS::listInventory("%{$q}%");
+		// $res = \OpenTHC\POS\POS::listInventory("%{$q}%");
 		$sql = <<<SQL
 SELECT lot_full.*
 FROM lot_full

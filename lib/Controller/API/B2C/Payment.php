@@ -6,9 +6,9 @@
  *
  */
 
-namespace App\Controller\API\B2C;
+namespace OpenTHC\POS\Controller\API\B2C;
 
-class Payment extends \App\Controller\API\Base
+class Payment extends \OpenTHC\POS\Controller\API\Base
 {
 	function __invoke($REQ, $RES, $ARG)
 	{
@@ -25,7 +25,7 @@ class Payment extends \App\Controller\API\Base
 
 		$dbc = _dbc($this->Company['dsn']);
 
-		$b2c = new \App\B2C\Sale($dbc);
+		$b2c = new \OpenTHC\POS\B2C\Sale($dbc);
 		if (empty($b2c['id'])) {
 			return $this->failure($RES, 'Not Found [ABP-027]', 404);
 		}
