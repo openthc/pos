@@ -1,5 +1,7 @@
 <?php
 /**
+ * Incoming Intent
+ *
  * SPDX-License-Identifier: GPL-3.0-only
  */
 
@@ -34,13 +36,17 @@ class Intent extends \OpenTHC\Controller\Base
 	 */
 	function delivery_auth($RES)
 	{
-		if (empty($_SESSION['intent-delivery-username'])) {
-			$_SESSION['intent-delivery-username'] = 'test+usa-wa-s@openthc.dev';
-		}
+		$data = $this->data;
+
+		// $sso_link = sprintf('/auth/open?r=/')
+
+		// if (empty($_POST['contact-email'])) {
+		// 	return $RES->write( $this->render('intent/delivery-auth-contact.php', $data) );
+		// }
 
 		if ('auth-code' == $_POST['a']) {
 
-			// \\CSRF::verify($_POST['CSRF']);
+			// \CSRF::verify($_POST['CSRF']);
 
 			// Company Database
 			$dbc_auth = _dbc('auth');

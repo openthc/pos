@@ -106,13 +106,6 @@ $app->group('/menu', 'OpenTHC\POS\Module\Menu')
 	->add('OpenTHC\Middleware\Session');
 
 
-// Inventory @ deprecated
-$app->group('/inventory', 'OpenTHC\POS\Module\Inventory')
-	->add('OpenTHC\POS\Middleware\Menu')
-	->add('OpenTHC\POS\Middleware\Auth')
-	->add('OpenTHC\Middleware\Session');
-
-
 // External Shop
 $app->group('/shop', 'OpenTHC\POS\Module\Shop')
 	->add('OpenTHC\Middleware\Session');

@@ -1,3 +1,11 @@
+<?php
+/**
+ * POS Open Terminal
+ *
+ * SPDX-License-Identifier: GPL-3.0-only
+ */
+
+?>
 
 <form autocomplete="off" method="post">
 
