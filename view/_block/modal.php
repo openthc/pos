@@ -21,7 +21,7 @@
 <div class="modal-footer">
 <div class="d-flex" style="width: 100%;">
 	<div style="flex: 1 1 auto;">
-		<button class="btn btn-outline-secondary" data-bs-dismiss="modal" taborder="-1" type="button"><i class="fas fa-times"></i> Cancel</button>
+		<button class="btn btn-lg btn-outline-secondary" data-bs-dismiss="modal" taborder="-1" type="button"><i class="fas fa-times"></i> Cancel</button>
 	</div>
 	<div class="r" style="flex: 1 1 auto;"><?= $data['foot'] ?></div>
 </div>
