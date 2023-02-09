@@ -9,6 +9,8 @@ namespace OpenTHC\POS\Controller\POS;
 
 use Edoceo\Radix\Session;
 
+use OpenTHC\Contact;
+
 class Main extends \OpenTHC\Controller\Base
 {
 	/**
@@ -46,18 +48,19 @@ class Main extends \OpenTHC\Controller\Base
 		}
 
 		$data = array(
-			'Page' => array('title' => 'POS :: #' . $_SESSION['pos-terminal-id']),
+			'Page' => array('title' => sprintf('POS :: %s <code>%s</code>', $_SESSION['License']['name'], $_SESSION['License']['code']))
 		);
 
 		if (empty($_SESSION['Checkout']['Contact'])) {
 			return $RES->write( $this->render('pos/contact-select.php', $data) );
 		}
 
-		if ($_SESSION['Checkout']['Contact']['stat'] != 200) {
+		if ($_SESSION['Checkout']['Contact']['stat'] != Contact::STAT_LIVE) {
 			return $RES->write( $this->render('pos/contact-verify.php', $data) );
 		}
 
-		$data['Page']['title'] = sprintf('POS :: #%s :: <a href="#" data-bs-toggle="modal" data-bs-target="#pos-modal-checkout-contact">%s</a>', $_SESSION['pos-terminal-id'], $_SESSION['Checkout']['Contact']['id']);
+		// <a href="#" data-bs-toggle="modal" data-bs-target="#pos-modal-checkout-contact">%s</a>
+		// $_SESSION['Checkout']['Contact']['id']
 
 		return $RES->write( $this->render('pos/terminal/main.php', $data) );
 
@@ -80,7 +83,7 @@ class Main extends \OpenTHC\Controller\Base
 				':a0' => $_POST['code'],
 			]);
 			if ( ! empty($Contact['id'])) {
-
+				__exit_text('Invalid Contact', 400);
 			}
 
 			// Assign to Register Session
