@@ -9,11 +9,15 @@
     "test": "test"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^6.3.0",
     "@riotjs/cli": "^4.0.3",
     "@riotjs/compiler": "^4.11.0",
+    "bootstrap": "^5.2.3",
+    "jquery": "^3.6.3",
+    "jquery-ui": "^1.13.2",
+    "lodash": "^4.17.21",
     "sass": "^1.32.8"
   },
-  "devDependencies": {},
   "scripts": {
     "test": "test.js"
   },
