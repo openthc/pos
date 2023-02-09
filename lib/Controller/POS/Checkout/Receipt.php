@@ -62,7 +62,7 @@ class Receipt extends \OpenTHC\Controller\Base
 		case 'print-direct-link':
 			return $this->print_direct_link($RES);
 		case 'send-blank':
-			return $RES->withRedirect('/pos');
+			return $RES->withRedirect('/pos/open');
 		case 'send-email':
 			return $this->_send_email($RES, $data);
 		case 'send-phone':
@@ -80,8 +80,14 @@ class Receipt extends \OpenTHC\Controller\Base
 		$S = new \OpenTHC\POS\B2C\Sale($dbc, $_GET['s']);
 		$Sm = json_decode($S['meta'], true);
 
-		$data['cash_incoming'] = $Sm['cash_incoming'];
-		$data['cash_outgoing'] = $Sm['cash_outgoing'];
+		$data['cash_incoming'] = $Sm['_POST']['cash_incoming'];
+		$data['cash_outgoing'] = $Sm['_POST']['cash_outgoing'];
+
+		$Company = new \OpenTHC\Company($dbc, $_SESSION['Company']);
+
+		$data['auto-print'] = $Company->getOption(sprintf('/%s/receipt/print-auto', $License['id']));
+		$data['send-via-email'] = $Company->getOption(sprintf('/%s/receipt/email', $License['id']));
+		$data['send-via-phone'] = $Company->getOption(sprintf('/%s/receipt/phone', $License['id']));
 
 		return $RES->write( $this->render('pos/checkout/receipt.php', $data) );
 
