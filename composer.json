@@ -16,7 +16,7 @@
 		"edoceo/lowline": "2022.0.266",
 		"edoceo/radix": "2021.0.0",
 		"league/oauth2-client": "2.6.1",
-		"openthc/common": "dev-master",
+		"openthc/common": "2023.0",
 		"openthc/cre-adapter": "dev-master",
 		"pear/net_smtp": "1.10.0",
 		"plivo/plivo-php": "4.32.0",
