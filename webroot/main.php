@@ -74,28 +74,24 @@ $app->group('/api/v2018', 'OpenTHC\POS\Module\API');
 
 // Main Page
 $app->group('/dashboard', 'OpenTHC\POS\Module\Dashboard')
-	->add('OpenTHC\POS\Middleware\Menu')
 	->add('OpenTHC\POS\Middleware\Auth')
 	->add('OpenTHC\Middleware\Session');
 
 
 // POS / Register
 $app->group('/pos', 'OpenTHC\POS\Module\POS')
-	->add('OpenTHC\POS\Middleware\Menu')
 	->add('OpenTHC\POS\Middleware\Auth')
 	->add('OpenTHC\Middleware\Session');
 
 
 // CRM / Loyalty
 $app->group('/crm', 'OpenTHC\POS\Module\CRM')
-	->add('OpenTHC\POS\Middleware\Menu')
 	->add('OpenTHC\POS\Middleware\Auth')
 	->add('OpenTHC\Middleware\Session');
 
 
 // B2B Operations
 $app->group('/report', 'OpenTHC\POS\Module\Report')
-	->add('OpenTHC\POS\Middleware\Menu')
 	->add('OpenTHC\POS\Middleware\Auth')
 	->add('OpenTHC\Middleware\Session');
 
@@ -113,13 +109,11 @@ $app->group('/shop', 'OpenTHC\POS\Module\Shop')
 
 // CRM / Loyalty
 $app->get('/contact/ajax', 'OpenTHC\POS\Controller\Contact')
-	->add('OpenTHC\POS\Middleware\Menu')
 	->add('OpenTHC\POS\Middleware\Auth')
 	->add('OpenTHC\Middleware\Session');
 
 // Vendor
 // $app->group('/vendor', 'OpenTHC\POS\Module\Vendor')
-// 	->add('OpenTHC\POS\Middleware\Menu')
 // 	->add('OpenTHC\POS\Middleware\Auth')
 // 	->add('OpenTHC\Middleware\Session');
 
