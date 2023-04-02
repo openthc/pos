@@ -2,7 +2,7 @@
  *
  */
 
- #pos-modal-payment {
+#pos-modal-payment {
 	user-select: none;
 }
 #menu-zero {
@@ -53,6 +53,7 @@
 	left: 5vw;
 	position: absolute;
 	top: 5vh;
+	z-index: 2000;
 }
 
 #pos-camera-preview-wrap .shut {
