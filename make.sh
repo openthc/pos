@@ -64,15 +64,28 @@ vendor)
 	# bootstrap
 	mkdir -p webroot/vendor/bootstrap/
 	cp node_modules/bootstrap/dist/css/bootstrap.min.css webroot/vendor/bootstrap/
+	cp node_modules/bootstrap/dist/css/bootstrap.min.css.map webroot/vendor/bootstrap/
 	cp node_modules/bootstrap/dist/js/bootstrap.bundle.min.js webroot/vendor/bootstrap/
+	cp node_modules/bootstrap/dist/js/bootstrap.bundle.min.js.map webroot/vendor/bootstrap/
 
 	# font awesome
-	mkdir -p webroot/vendor/font-awesome
+	outpath="webroot/vendor/font-awesome"
+	mkdir -p "$outpath"
 	tar \
 		-zx \
 		--strip-components=1 \
 		-f node_modules/@fortawesome/fontawesome-free/fortawesome-fontawesome-free-6.3.0.tgz \
-		-C webroot/vendor/font-awesome
+		-C "$outpath"
+
+	# qrcode
+	mkdir -p webroot/vendor/qrcodejs
+	cp node_modules/qrcodejs/qrcode.min.js webroot/vendor/qrcodejs/
+
+	# chart.js
+	outpath="webroot/vendor/chart.js"
+	mkdir -p "$outpath"
+	cp node_modules/chart.js/dist/chart.umd.js "$outpath/chart.min.js"
+	cp node_modules/chart.js/dist/chart.umd.js.map "$outpath/"
 
 	;;
 

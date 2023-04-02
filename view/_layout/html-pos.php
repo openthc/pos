@@ -16,7 +16,7 @@ header('content-type: text/html; charset=utf-8', true);
 <meta name="application-name" content="OpenTHC">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#247420">
-<link rel="stylesheet" href="/vendor/font-awesome/6.3.0/css/all.min.css" integrity="sha256-/4UQcSmErDzPCMAiuOiWPVVsNN2s3ZY/NsmXNcj0IFc=" crossorigin="anonymous" referrerpolicy="no-referrer">
+<link rel="stylesheet" href="/vendor/font-awesome/css/all.min.css" integrity="sha256-/4UQcSmErDzPCMAiuOiWPVVsNN2s3ZY/NsmXNcj0IFc=" crossorigin="anonymous" referrerpolicy="no-referrer">
 <link rel="stylesheet" href="/vendor/jquery-ui/jquery-ui.min.css" integrity="sha256-VNxxeWv78fBpVZ3cM8LomS7+xUH2IXl6hJ1EKmmCJpY=" crossorigin="anonymous">
 <link rel="stylesheet" href="/vendor/bootstrap/bootstrap.min.css" integrity="sha256-wLz3iY/cO4e6vKZ4zRmo4+9XDpMcgKOvv/zEU3OMlRo=" crossorigin="anonymous" referrerpolicy="no-referrer">
 <link rel="stylesheet" href="/css/main.css">
@@ -68,7 +68,7 @@ header('content-type: text/html; charset=utf-8', true);
 <script src="/vendor/bootstrap/bootstrap.bundle.min.js" integrity="sha256-lSABj6XYH05NydBq+1dvkMu6uiCc/MbLYOFGRkf3iQs=" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/riot/4.14.0/riot.min.js" integrity="sha256-mxBp2pV/KfjX4uaj+6aEh2MWB7J+j8o6VuOCs4aY7zM=" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <!-- <script src="https://unpkg.com/@zxing/library@latest"></script> -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" integrity="sha256-xUHvBjJ4hahBW8qN9gceFBibSFUzbe9PNttUvehITzY=" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="/vendor/qrcodejs/qrcode.min.js" integrity="sha256-xUHvBjJ4hahBW8qN9gceFBibSFUzbe9PNttUvehITzY=" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="https://unpkg.com/@zxing/library@0.19.2/umd/index.min.js" integrity="sha256-a0mo/OgjQ26D3n9JRYL4LMTeSx8PV3SYKv2My5wOdHE=" crossorigin="anonymous"></script>
 <script src="/js/pos.js"></script>
 <script src="/js/pos-scanner.js"></script>
