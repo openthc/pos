@@ -94,30 +94,23 @@ input[type=color] {
 div#session-flash-v1,
 .alert-wrap {
 
-	border: none;
-	margin: 0 auto 1em auto;
-	padding: 0;
-
-	max-width: 1024px;
-
 	div {
 
 		font-size: 150%;
 		font-weight: 700;
-		margin: 0 0 0.5em 0;
 
 		p {
-			margin: 0.50em 0 0.50em 1em;
+			margin: 0.50em 0 0.50em 0;
 			padding: 0;
 		}
 
 		ul {
 			list-style-type: none;
-			margin: 0.50em 0 0.50em 1em;
+			margin: 0 0 0.50em 0;
 			padding: 0;
 		}
 
-    }
+	}
 
 }
 

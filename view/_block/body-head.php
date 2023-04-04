@@ -25,7 +25,7 @@ $app_base = rtrim(\OpenTHC\Config::get('openthc/app/base_url'), '/');
 			<li class="nav-item"><a class="nav-link" href="/crm"><i class="fas fa-users"></i> CRM</a></li>
 		</ul>
 
-		<form action="/search" autocomplete="off" class="d-flex" id="search-form">
+		<form action="/search" autocomplete="off" class="d-flex ms-auto" id="search-form">
 			<div class="input-group">
 				<button class="btn btn-outline-secondary" type="button" id="scanner-search-ready" style="color: rgb(119, 119, 119);"><i class="fas fa-barcode"></i></button>
 				<input autocomplete="off" class="form-control" id="search-q" name="q" placeholder="Search" title="Search (use '/' to focus)" type="text">
@@ -34,7 +34,6 @@ $app_base = rtrim(\OpenTHC\Config::get('openthc/app/base_url'), '/');
 		</form>
 
 		<ul class="navbar-nav ms-auto">
-			<li class="nav-item"><a class="nav-link" href="<?= $app_base ?>/dashboard"><i class="fas fa-cogs"></i></a></li>
 			<li class="nav-item"><a class="nav-link" href="/auth/shut"><i class="fas fa-power-off"></i></a></li>
 		</ul>
 	</div>

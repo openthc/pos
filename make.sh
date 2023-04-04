@@ -38,7 +38,7 @@ minify)
 update)
 
 	composer update --no-dev -a
-	npm update
+	npm install
 
 	./make.sh vendor
 	./make.sh css
