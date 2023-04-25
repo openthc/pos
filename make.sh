@@ -3,14 +3,16 @@
 # Top-Level Make the App Do Stuff Script
 #
 
+set -o errexit
+set -o errtrace
+set -o nounset
+set -o pipefail
+
 BIN_SELF=$(readlink -f "$0")
 APP_ROOT=$(dirname "$BIN_SELF")
 
 action="${1:-}"
 shift
-
-set -o errexit
-set -o nounset
 
 case "$action" in
 # Build the CSS
@@ -35,9 +37,9 @@ minify)
 	;;
 
 # Update all the things
-update)
+install|update)
 
-	composer update --no-dev -a
+	composer update --no-ansi --no-dev --no-progress --quiet --classmap-authoritative
 	npm install
 
 	./make.sh vendor
@@ -70,12 +72,9 @@ vendor)
 
 	# font awesome
 	outpath="webroot/vendor/font-awesome"
-	mkdir -p "$outpath"
-	tar \
-		-zx \
-		--strip-components=1 \
-		-f node_modules/@fortawesome/fontawesome-free/fortawesome-fontawesome-free-6.3.0.tgz \
-		-C "$outpath"
+	mkdir -p "$outpath/"
+	rsync -a "node_modules/@fortawesome/fontawesome-free/css/" "$outpath/css/"
+	rsync -a "node_modules/@fortawesome/fontawesome-free/webfonts/" "$outpath/webfonts/"
 
 	# qrcode
 	mkdir -p webroot/vendor/qrcodejs
