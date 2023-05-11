@@ -5,7 +5,7 @@
  * SPDX-License-Identifier: GPL-3.0-only
  */
 
-$app_base = rtrim(\OpenTHC\Config::get('openthc/app/base_url'), '/');
+// $app_origin = \OpenTHC\Config::get('openthc/app/origin');
 
 ?>
 

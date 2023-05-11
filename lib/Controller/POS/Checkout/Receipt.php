@@ -301,27 +301,4 @@ EOM;
 
 	}
 
-	function _load_email_from_twig($file, $data)
-	{
-		$tlf = new \Twig_Loader_Filesystem(sprintf('%s/twig/email', APP_ROOT));
-		$cfg = array(
-			'strict_variables' => true,
-		);
-		$twig = new \Twig_Environment($tlf, $cfg);
-		$twig->addFilter(new \Twig_SimpleFilter('base64', function($x) {
-			return chunk_split(base64_encode($x), 72);
-		}));
-
-		$base = array(
-			'app_url' => \OpenTHC\Config::get('application/base'),
-			'mail_hash' => sha1(openssl_random_pseudo_bytes(512)),
-		);
-
-		$data = array_merge($base, $data);
-
-		$mail = $twig->render($file, $data);
-
-		return $mail;
-	}
-
 }
