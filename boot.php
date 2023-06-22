@@ -20,6 +20,10 @@ if ( ! \OpenTHC\Config::init(APP_ROOT) ) {
 	_exit_html_fail('<h1>Invalid Application Configuration [POS-017]</h1>', 500);
 }
 
+define('OPENTHC_SERVICE_ID',     getenv('OPENTHC_SERIVCE_ID')     ?: \OpenTHC\Config::get('openthc/pos/id'));
+define('OPENTHC_SERVICE_ORIGIN', getenv('OPENTHC_SERIVCE_ORIGIN') ?: \OpenTHC\Config::get('openthc/pos/origin'));
+
+
 /**
  * Database Connection
  */
