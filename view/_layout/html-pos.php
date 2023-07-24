@@ -16,7 +16,7 @@ header('content-type: text/html; charset=utf-8', true);
 <meta name="application-name" content="OpenTHC">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#247420">
-<link rel="stylesheet" href="/vendor/font-awesome/css/all.min.css" integrity="sha256-/4UQcSmErDzPCMAiuOiWPVVsNN2s3ZY/NsmXNcj0IFc=" crossorigin="anonymous" referrerpolicy="no-referrer">
+<link rel="stylesheet" href="/vendor/font-awesome/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous" referrerpolicy="no-referrer">
 <link rel="stylesheet" href="/vendor/jquery-ui/jquery-ui.min.css" integrity="sha256-VNxxeWv78fBpVZ3cM8LomS7+xUH2IXl6hJ1EKmmCJpY=" crossorigin="anonymous">
 <link rel="stylesheet" href="/vendor/bootstrap/bootstrap.min.css" integrity="sha256-wLz3iY/cO4e6vKZ4zRmo4+9XDpMcgKOvv/zEU3OMlRo=" crossorigin="anonymous" referrerpolicy="no-referrer">
 <link rel="stylesheet" href="/css/main.css">
@@ -63,7 +63,7 @@ header('content-type: text/html; charset=utf-8', true);
 </div>
 
 <script src="/vendor/lodash/lodash.min.js" integrity="sha256-qXBd/EfAdjOA2FGrGAG+b3YBn2tn5A6bhz+LSgYD96k=" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="/vendor/jquery/jquery.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="/vendor/jquery/jquery.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="/vendor/jquery-ui/jquery-ui.min.js" integrity="sha256-lSjKY0/srUM9BE3dPm+c4fBo1dky2v27Gdjm2uoZaL0=" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="/vendor/bootstrap/bootstrap.bundle.min.js" integrity="sha256-lSABj6XYH05NydBq+1dvkMu6uiCc/MbLYOFGRkf3iQs=" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/riot/4.14.0/riot.min.js" integrity="sha256-mxBp2pV/KfjX4uaj+6aEh2MWB7J+j8o6VuOCs4aY7zM=" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
