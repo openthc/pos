@@ -71,10 +71,9 @@ vendor)
 	cp node_modules/bootstrap/dist/js/bootstrap.bundle.min.js.map webroot/vendor/bootstrap/
 
 	# font awesome
-	outpath="webroot/vendor/font-awesome"
-	mkdir -p "$outpath/"
-	rsync -a "node_modules/@fortawesome/fontawesome-free/css/" "$outpath/css/"
-	rsync -a "node_modules/@fortawesome/fontawesome-free/webfonts/" "$outpath/webfonts/"
+	mkdir -p webroot/vendor/fontawesome/css webroot/vendor/fontawesome/webfonts
+	cp node_modules/@fortawesome/fontawesome-free/css/all.min.css webroot/vendor/fontawesome/css/
+	cp node_modules/@fortawesome/fontawesome-free/webfonts/* webroot/vendor/fontawesome/webfonts/
 
 	# qrcode
 	mkdir -p webroot/vendor/qrcodejs
