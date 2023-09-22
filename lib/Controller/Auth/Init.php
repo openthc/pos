@@ -21,7 +21,7 @@ class Init extends \OpenTHC\Controller\Base
 
 		// Lookup the DSN
 		$dbc_auth = _dbc('auth');
-		$chk = $dbc_auth->fetchRow('SELECT * FROM auth_company WHERE id = ?', $_SESSION['Company']['id']);
+		$chk = $dbc_auth->fetchRow('SELECT * FROM auth_company WHERE id = :c0', [ ':c0' => $_SESSION['Company']['id'] ]);
 		if (empty($chk['dsn'])) {
 			_exit_html_fail('<h1>Fatal Database Error [CAC-043]</h1>', 500);
 		}
