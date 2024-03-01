@@ -184,6 +184,24 @@ class Open extends \OpenTHC\Controller\Base
 						// Session::flash('fail', $cre->formatError($res));
 						// return $RES->withRedirect('/pos');
 				}
+		case 'deu':
+		case 'usa/vt':
+			$Contact = new Contact($dbc); // , [ 'guid' => $res['data']['PatientId'] ]);
+			if ( ! $Contact->loadBy('guid', $res['data']['PatientId'])) {
+				$Contact['id'] = _ulid();
+				$Contact['stat'] = 100;
+				$Contact['guid'] = $guid1;
+				$Contact['hash'] = '-';
+				$Contact['type'] = 'b2c-client';
+				$Contact['fullname'] = '';
+				$Contact->save('Contact/Create in POS by User');
+			}
+
+			if ( ! empty($Contact['id'])) {
+				$_SESSION['Checkout']['Contact'] = $Contact->toArray();
+				return $RES->withRedirect('/pos');
+			}
+			break;
 		}
 
 		if (empty($Contact['id'])) {
