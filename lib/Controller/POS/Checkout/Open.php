@@ -184,8 +184,10 @@ class Open extends \OpenTHC\Controller\Base
 						// Session::flash('fail', $cre->formatError($res));
 						// return $RES->withRedirect('/pos');
 				}
+			break;
 		case 'deu':
 		case 'usa/vt':
+		case 'usa/wa':
 			$Contact = new Contact($dbc); // , [ 'guid' => $res['data']['PatientId'] ]);
 			if ( ! $Contact->loadBy('guid', $res['data']['PatientId'])) {
 				$Contact['id'] = _ulid();
@@ -202,6 +204,8 @@ class Open extends \OpenTHC\Controller\Base
 				return $RES->withRedirect('/pos');
 			}
 			break;
+		default:
+			Session::flash('warn', sprintf('Unsupported CRE: %s', $_SESSION['cre']['id']));
 		}
 
 		if (empty($Contact['id'])) {
