@@ -15,7 +15,6 @@
 .vscode/
 bower_components/
 build/
-composer.lock
 Custom/
 etc/
 node_modules/

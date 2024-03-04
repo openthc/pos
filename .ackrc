@@ -2,29 +2,47 @@
 # OpenTHC .ackrc
 #
 
-# @see
-# https://gist.github.com/bracke/6183737
-# https://gist.github.com/chapati23/2988102
-# https://gist.github.com/kevinold/4749656
-
-# --nominifiedjs
-# --pager="less --long-prompt --no-init --no-lessopen --quiet --quit-if-one-screen --RAW-CONTROL-CHARS --line-numbers"
-# --pager="less -R"
-# --type-set=minifiedjs=.min.js
-
 --break
+
+--color
 
 --heading
 
+--smart-case
+
 --sort-files
 
---ignore-dir=.git
---ignore-dir=doxygen
---ignore-dir=node_modules
---ignore-dir=var
---ignore-dir=vendor
---ignore-dir=webroot/doc
---ignore-dir=webroot/dox
---ignore-dir=webroot/sdk
+--ignore-dir=.bundle/
+--ignore-dir=.cache/
+--ignore-dir=.composer/
+--ignore-dir=.git/
+--ignore-dir=.idea/
+--ignore-dir=.local/
+--ignore-dir=.npm/
+--ignore-dir=.vscode/
+--ignore-dir=doxygen/
+--ignore-dir=log-archive/
+--ignore-dir=node_modules/
+--ignore-dir=output-data/
+--ignore-dir=public/
+--ignore-dir=source-data/
+--ignore-dir=tmp/
+--ignore-dir=var/
+--ignore-dir=vendor/
+--ignore-dir=webroot/assets/
+--ignore-dir=webroot/css/
+--ignore-dir=webroot/doc/
+--ignore-dir=webroot/img/
+--ignore-dir=webroot/lib/
+--ignore-dir=webroot/openapi-ui/
+--ignore-dir=webroot/output/
+--ignore-dir=webroot/pub/
+--ignore-dir=webroot/redoc/
+--ignore-dir=webroot/sdk/
+--ignore-dir=webroot/test-output/
+--ignore-dir=webroot/vendor/
 
+
+--ignore-file=is:.phpunit.result.cache
 --ignore-file=is:composer.lock
+--ignore-file=is:package-lock.json
