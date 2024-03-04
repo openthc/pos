@@ -19,7 +19,7 @@ $body_class_list[] = sprintf('m1-%s', $m1_mode);
 <meta name="viewport" content="initial-scale=1, user-scalable=yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#069420">
-<link rel="stylesheet" href="/vendor/font-awesome/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous" referrerpolicy="no-referrer">
+<link rel="stylesheet" href="/vendor/fontawesome/css/all.min.css" integrity="sha256-CTSx/A06dm1B063156EVh15m6Y67pAjZZaQc89LLSrU=" crossorigin="anonymous" referrerpolicy="no-referrer">
 <!-- <link rel="stylesheet" href="/vendor/jquery-ui/jquery-ui.min.css" integrity="sha256-rByPlHULObEjJ6XQxW/flG2r+22R5dKiAoef+aXWfik=" crossorigin="anonymous"> -->
 <link rel="stylesheet" href="/vendor/bootstrap/bootstrap.min.css" integrity="sha256-MBffSnbbXwHCuZtgPYiwMQbfE7z+GOZ7fBPCNB06Z98=" crossorigin="anonymous" referrerpolicy="no-referrer">
 <!-- <link rel="stylesheet" href="/vendor/datatables/css/dataTables.bootstrap4.min.css" integrity="sha256-F+DaKAClQut87heMIC6oThARMuWne8+WzxIDT7jXuPA=" crossorigin="anonymous"> -->
