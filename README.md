@@ -1,15 +1,14 @@
-# Cannabis Retail Softare
+# Cannabis Retail Software
 
 It's a pretty simple web-based point-of-sale, customer loyalty, online-menu system.
-It integrates with BioTrack, MJ Freeway/LeafData and Franwell/METRC or can be used stand-alone.
+IT can be used stand-alone or integrated with BioTrack, CCRS or Metrc.
 
 ## Installation
 
     git clone {this repo}
-    composer update
-    npm update
+    ./make.sh install
     [ update apache config ]
-    certbot
+    certbot ...
     [ update apache config for ssl ]
 
 Once the system is installed you'll have to configure it for your environment.
@@ -99,4 +98,5 @@ here are other offerings.
 
 ### Hardware
 
+* [ELO Touch](https://www.elotouch.com/pos-terminals-paypoint-plus-for-windows.html)
 * [Heckler](https://hecklerdesign.com/)
