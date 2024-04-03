@@ -22,13 +22,12 @@
 		"plivo/plivo-php": "4.32.0",
 		"tuupola/base32": "2.0.0",
 		"twilio/sdk": "6.37.1",
-		"tecnickcom/tcpdf": "6.6.5"
+		"tecnickcom/tcpdf": "6.7.4"
 	},
 	"require-dev": {
-		"behat/behat": "3.12.0",
 		"php-webdriver/webdriver": "1.15.1",
-		"phpmd/phpmd": "2.13.0",
-		"phpstan/phpstan": "1.10.59",
-		"phpunit/phpunit": "9.6.17"
+		"phpmd/phpmd": "2.15.0",
+		"phpstan/phpstan": "1.10.66",
+		"phpunit/phpunit": "9.6.18"
 	}
 }
