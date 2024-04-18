@@ -20,8 +20,11 @@ etc/
 node_modules/
 public/
 release/
+source-data/
 test/*.xsl
+test/phpunit.xml
 var/
 vendor/
 webroot/pub/
 webroot/test-output/
+webroot/vendor/
