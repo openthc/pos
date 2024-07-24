@@ -16,8 +16,8 @@
 		"edoceo/lowline": "2022.0.280",
 		"edoceo/radix": "2021.0.0",
 		"league/oauth2-client": "2.7.0",
-		"openthc/common": "dev-master",
-		"openthc/cre-adapter": "dev-master",
+		"openthc/common": "dev-main",
+		"openthc/cre-adapter": "dev-main",
 		"pear/net_smtp": "1.10.0",
 		"plivo/plivo-php": "4.32.0",
 		"tuupola/base32": "2.0.0",
@@ -27,7 +27,7 @@
 	"require-dev": {
 		"php-webdriver/webdriver": "1.15.1",
 		"phpmd/phpmd": "2.15.0",
-		"phpstan/phpstan": "1.10.66",
-		"phpunit/phpunit": "9.6.18"
+		"phpstan/phpstan": "1.11.8",
+		"phpunit/phpunit": "9.6.20"
 	}
 }
