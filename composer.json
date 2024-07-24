@@ -22,7 +22,7 @@
 		"plivo/plivo-php": "4.32.0",
 		"tuupola/base32": "2.0.0",
 		"twilio/sdk": "6.37.1",
-		"tecnickcom/tcpdf": "6.7.4"
+		"tecnickcom/tcpdf": "6.7.5"
 	},
 	"require-dev": {
 		"php-webdriver/webdriver": "1.15.1",
