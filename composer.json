@@ -2,14 +2,14 @@
 	"name": "openthc/pos",
 	"description": "Cannabis Retail Point of Sale",
 	"license": "GPL-3.0-only",
+	"version": "420.24.272",
 	"autoload": {
 		"exclude-from-classmap": [
 			"vendor/erusev/parsedown-extra/test"
 		],
 		"psr-4": {
 			"OpenTHC\\POS\\": "./lib",
-			"OpenTHC\\POS\\Test\\": "./test",
-			"Custom\\": "./Custom"
+			"OpenTHC\\POS\\Test\\": "./test"
 		}
 	},
 	"require": {
@@ -19,10 +19,8 @@
 		"openthc/common": "dev-main",
 		"openthc/cre-adapter": "dev-main",
 		"pear/net_smtp": "1.10.0",
-		"plivo/plivo-php": "4.32.0",
 		"tuupola/base32": "2.0.0",
-		"twilio/sdk": "6.37.1",
-		"tecnickcom/tcpdf": "6.7.4"
+		"tecnickcom/tcpdf": "6.7.5"
 	},
 	"require-dev": {
 		"php-webdriver/webdriver": "1.15.1",
