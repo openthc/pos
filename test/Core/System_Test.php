@@ -3,6 +3,8 @@
  * Test Expected System Commands
  */
 
+namespace OpenTHC\POS\Test\Core;
+
 class System_Test extends \Test\Base
 {
 	function test_convert()

@@ -3,7 +3,7 @@
  *
  */
 
-namespace Test\Core;
+namespace OpenTHC\POS\Test\Core;
 
 class Core_Test extends \Test\Base
 {

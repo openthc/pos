@@ -3,6 +3,8 @@
  * Test our Configuration
  */
 
+namespace OpenTHC\POS\Test\Core;
+
 class Config_Test extends \Test\Base
 {
 	function test_config_file()

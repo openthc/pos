@@ -4,7 +4,7 @@
  * Lower Level Unit Tester with HTTP Handlers
  */
 
-namespace Test;
+namespace OpenTHC\POS\Test;
 
 class Base extends \OpenTHC\Test\Base {
 
