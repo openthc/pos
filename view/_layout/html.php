@@ -19,9 +19,8 @@ $body_class_list[] = sprintf('m1-%s', $m1_mode);
 <meta name="viewport" content="initial-scale=1, user-scalable=yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#069420">
-<link rel="stylesheet" href="/vendor/fontawesome/css/all.min.css" integrity="sha256-CTSx/A06dm1B063156EVh15m6Y67pAjZZaQc89LLSrU=" crossorigin="anonymous" referrerpolicy="no-referrer">
-<!-- <link rel="stylesheet" href="/vendor/jquery-ui/jquery-ui.min.css" integrity="sha256-rByPlHULObEjJ6XQxW/flG2r+22R5dKiAoef+aXWfik=" crossorigin="anonymous"> -->
-<link rel="stylesheet" href="/vendor/bootstrap/bootstrap.min.css" integrity="sha256-MBffSnbbXwHCuZtgPYiwMQbfE7z+GOZ7fBPCNB06Z98=" crossorigin="anonymous" referrerpolicy="no-referrer">
+<link rel="stylesheet" href="/vendor/fontawesome/css/all.min.css">
+<link rel="stylesheet" href="/vendor/bootstrap/bootstrap.min.css">
 <!-- <link rel="stylesheet" href="/vendor/datatables/css/dataTables.bootstrap4.min.css" integrity="sha256-F+DaKAClQut87heMIC6oThARMuWne8+WzxIDT7jXuPA=" crossorigin="anonymous"> -->
 <!-- <link rel="stylesheet" href="https://cdn.openthc.com/css/www/0.0.2/main.css" crossorigin="anonymous"> -->
 <!-- <link rel="stylesheet" href="https://cdn.openthc.com/css/www/0.0.2/menu-tlr.css" crossorigin="anonymous"> -->
@@ -35,11 +34,11 @@ $body_class_list[] = sprintf('m1-%s', $m1_mode);
 <?= $this->body ?>
 </div>
 
-<script src="/vendor/lodash/lodash.min.js" integrity="sha256-qXBd/EfAdjOA2FGrGAG+b3YBn2tn5A6bhz+LSgYD96k=" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="/vendor/jquery/jquery.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="/vendor/bootstrap/bootstrap.bundle.min.js" integrity="sha256-gvZPYrsDwbwYJLD5yeBfcNujPhRoGOY831wwbIzz3t0=" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="/vendor/qrcodejs/qrcode.min.js" integrity="sha256-xUHvBjJ4hahBW8qN9gceFBibSFUzbe9PNttUvehITzY=" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="/vendor/chart.js/chart.min.js" integrity="sha256-kJV6QFiOvYKbRWdhfNEwB2OKJ2w1y+8aH7mBGSHy8mY=" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="/vendor/lodash/lodash.min.js"></script>
+<script src="/vendor/jquery/jquery.min.js"></script>
+<script src="/vendor/bootstrap/bootstrap.bundle.min.js"></script>
+<script src="/vendor/qrcodejs/qrcode.min.js"></script>
+<script src="/vendor/chart.js/chart.min.js"></script>
 <!-- <script src="https://app.openthc.com/js/app.js"></script> -->
 <script src="/js/pos.js"></script>
 <script>

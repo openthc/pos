@@ -34,11 +34,13 @@ $body = <<<HTML
 
 	<button class="btn btn-success"
 		id="client-contact-govt-id-scanner"
+		title="Use the Scanner"
 		type="button"><i class="fas fa-qrcode"></i></button>
 
 	<button class="btn btn-secondary pos-camera-input"
 		data-camera-callback=""
 		x-id="client-contact-dob-camera"
+		title="Use the Device Camera Scanner"
 		type="button"><i class="fas fa-camera"></i></button>
 </div>
 
@@ -59,7 +61,7 @@ $foot[] = '<button class="btn btn-lg btn-secondary" name="a" type="submit" value
 
 $foot[] = '</div>';
 $foot[] = '<div>';
-$foot[] ='<button class="btn btn-lg btn-warning" id="btn-form-reset" type="reset" value="client-contact-reopen">Reset </button>';
+$foot[] ='<button class="btn btn-lg btn-warning" id="btn-form-reset" type="reset" value="client-contact-reopen">Reset <i class="fas fa-ban"></i></button>';
 $foot[] = '</div>';
 $foot[] = '</div>';
 $foot = implode(' ', $foot);
