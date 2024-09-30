@@ -26,6 +26,10 @@ class Init extends \OpenTHC\Controller\Base
 			_exit_html_fail('<h1>Fatal Database Error [CAC-043]</h1>', 500);
 		}
 
+		// if (empty($_SESSION['Company']['cre'])) {
+		// 	_exit_html_fail('<h1>Company Configuration requires CRE [CAC-030]</h1>', 500);
+		// }
+
 		$_SESSION['Company'] = $chk;
 		$_SESSION['Company']['cre_meta'] = json_decode($_SESSION['Company']['cre_meta'], true);
 
@@ -35,7 +39,16 @@ class Init extends \OpenTHC\Controller\Base
 
 		// Find the Default License?
 		if (empty($_SESSION['License'])) {
-			$License = $dbc_user->fetchRow('SELECT * FROM license WHERE flag & :f1 = :f1 ORDER BY id LIMIT 1', [ ':f1' => 0x01000000 ]);
+			$sql = <<<SQL
+			SELECT *
+			FROM license
+			WHERE type IN ('Retail', 'MMJ')
+			AND flag & :f1 = :f1
+			ORDER BY id LIMIT 1
+			SQL;
+			$License = $dbc_user->fetchRow($sql, [
+				':f1' => 0x01000000
+			]);
 			$_SESSION['License'] = $License;
 		} else {
 			// Reload License
