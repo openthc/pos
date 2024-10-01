@@ -1,29 +1,24 @@
 <?php
 /**
- * OpenTHC POS Configuration Example
+ * Example OpenTHC POS Configuration
  */
-
-// 'Client ID, Could be Public Key'
-$my_client_id = '010PENTHCX0000SVC000000P0S'; // pos.openthc.example;
-$my_client_pk = 'pos.openthc.example';
-$my_client_sk = 'SK/pos.openthc.example';
 
 $cfg = [];
 
 // Database
 $cfg['database'] = [
 	'auth' => [
-		'hostname' => 'sql0',
+		'hostname' => 'localhost',
 		'username' => 'openthc_auth',
 		'password' => 'openthc_auth',
 		'database' => 'openthc_auth',
 	],
 	'main' => [
-		'hostname' => 'sql0',
+		'hostname' => 'localhost',
 		'username' => 'openthc_main',
 		'password' => 'openthc_main',
 		'database' => 'openthc_main',
-	],
+	]
 ];
 
 // Redis
@@ -36,31 +31,36 @@ $cfg['statsd'] = [
 	'hostname' => '127.0.0.1',
 ];
 
-// OpenTHC
+// OpenTHC Services
 $cfg['openthc'] = [
 	'app' => [
 		'origin' => 'https://app.openthc.example',
-		'public' => 'App Public Key',
-		'secret' => $my_client_sk,
-		// 'scope' => 'contact company',
+		'public' => '/* APP SERVICE PUBLIC KEY */',
+	],
+	'b2b' => [
+		'origin' => 'https://b2b.openthc.example',
+		'public' => 'x',
+		'secret' => 'x',
 	],
 	'dir' => [
 		'origin' => 'https://dir.openthc.example',
-		'public' => 'Directory Public Key',
-		// 'secret' => '',
+		'public' => '/* DIR SERVICE PUBLIC KEY */',
 	],
 	'pipe' => [
 		'origin' => 'https://pipe.openthc.example',
-		// 'scope' => 'pipe cre',
+		'public' => '/* PIPE SERVICE PUBLIC KEY */',
 	],
 	'pos' => [
-		'id' => '/* POS Service ULID */',
+		'id' => '/* POS SERVICE ULID */',
 		'origin' => 'https://pos.openthc.example',
+		'public' => '/* POS SERVICE PUBLIC KEY */',
+		'secret' => '/* POS SERVICE SECRET KEY */',
 	],
 	'sso' => [
 		'origin' => 'https://sso.openthc.example',
-		'oauth-client-id' => '/* POS SERVICE ULID */',
-		'oauth-client-sk' => '/* POS SERVICE Client Secret */'
+		'public' => '/* SSO SERVICE PUBLIC KEY */',
+		'client-id' => '/* POS SERVICE ULID */',
+		'client-sk' => '/* POS SERVICE SSO CLIENT SECRET KEY */'
 		// 'scope' => 'contact company profile cre pos',
 	]
 ];
