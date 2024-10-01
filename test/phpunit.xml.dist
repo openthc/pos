@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+	OpenTHC PHPUnit Configuration File
+-->
+<phpunit
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd"
+	backupGlobals="false"
+	backupStaticAttributes="false"
+	bootstrap="../boot.php"
+	cacheResult="false"
+	colors="true"
+	convertErrorsToExceptions="true"
+	convertNoticesToExceptions="true"
+	convertWarningsToExceptions="true"
+	processIsolation="false"
+	stopOnError="false"
+	stopOnFailure="false"
+	stopOnRisky="false"
+	timeoutForSmallTests="1"
+	timeoutForMediumTests="10"
+	timeoutForLargeTests="60"
+	verbose="false"
+	>
+
+	<coverage />
+
+	<php>
+
+		<const name="OPENTHC_TEST_ORIGIN" value="https://pos.openthc.example.com" />
+
+		<!-- If defined, it will spew debug -->
+		<!-- <const name="OPENTHC_TEST_HTTP_DEBUG" value="0" /> -->
+
+		<!-- Do you WebDriver (Selenium, BrowserStack, etc) -->
+		<const name="OPENTHC_TEST_WEBDRIVER_URL" value="" />
+
+	</php>
+
+	<testsuites>
+		<testsuite name="All">
+			<directory>.</directory>
+		</testsuite>
+	</testsuites>
+
+</phpunit>

@@ -9,13 +9,13 @@ namespace OpenTHC\POS\Test;
 class Base extends \OpenTHC\Test\Base {
 
 	protected $ghc; // API Guzzle HTTP Client
-	protected $raw; // Raw Response Buffer
 
-	// protected function setUp() : void
-	// {
-	// 	// $this->ghc = $this->_api();
-	// }
-
+	function setup() : void
+	{
+		$this->client = $this->getGuzzleClient([
+			'base_uri' => OPENTHC_TEST_ORIGIN
+		]);
+	}
 
 	/**
 		HTTP Utility
@@ -35,29 +35,6 @@ class Base extends \OpenTHC\Test\Base {
 	{
 		$res = $this->ghc->post($url, array('json' => $arg));
 		return $res;
-	}
-
-	function _data_stash_get()
-	{
-		if (is_file($f)) {
-			if (is_readable($f)) {
-				$x = file_get_contents($f);
-				$x = json_decode($x, true);
-				return $x;
-			}
-		}
-
-		return null;
-
-	}
-
-	function _data_stash_put($f, $d)
-	{
-		if (!is_string($d)) {
-			$d = json_encode($d);
-		}
-
-		return file_put_contents($f, $d);
 	}
 
 }

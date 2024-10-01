@@ -5,26 +5,22 @@
 
 namespace OpenTHC\POS\Test\Webhook;
 
-class Weedmaps_Test extends
+class Weedmaps_Test extends \OpenTHC\POS\Test\Base
 {
-
 	function test_draft()
 	{
-		$url = sprintf('%s/webhook/weedmaps/order', OPENTHC_TEST_ORIGIN);
-		$req = _curl_init($url);
-		$res = _curl_post_json($url, $body, $head);
-
-
-
+		$res = $this->client->post('/webhook/weedmaps/order', [ 'json' => [
+			'status' => 'PENDING',
+		]]);
+		$this->assertValidResponse($res);
 	}
 
 	function test_pending()
 	{
-		$url = sprintf('%s/webhook/weedmaps/order', OPENTHC_TEST_ORIGIN);
-		$req = _curl_init($url);
-		$res = _curl_post_json($url, $body, $head);
-
-
+		$res = $this->client->post('/webhook/weedmaps/order', [ 'json' => [
+			'status' => 'PENDING',
+		]]);
+		$this->assertValidResponse($res);
 	}
 
 }

@@ -5,7 +5,7 @@
 
 namespace OpenTHC\POS\Test\Core;
 
-class Config_Test extends \Test\Base
+class Config_Test extends \OpenTHC\POS\Test\Base
 {
 	function test_config_file()
 	{
@@ -35,39 +35,45 @@ class Config_Test extends \Test\Base
 
 			'statsd/hostname',
 
-			'metabase/hostname',
-			'metabase/username',
-			'metabase/password',
-			'metabase/embedkey',
+			// 'metabase/hostname',
+			// 'metabase/username',
+			// 'metabase/password',
+			// 'metabase/embedkey',
 
-			'openthc/cic/hostname',
-
-			'openthc/dir/hostname',
+			'openthc/dir/origin',
 			'openthc/dir/public',
-			'openthc/dir/secret',
 
-			'openthc/lab/hostname',
-			'openthc/lab/public',
-			'openthc/lab/secret',
+			'openthc/pos/origin',
+			'openthc/pos/public',
+			'openthc/pos/secret',
+			'openthc/pos/client-id',
+			'openthc/pos/client-sk',
 
-			'openthc/pos/hostname',
+			'openthc/b2b/origin', // Menu New Name
 
-			'openthc/b2b/hostname', // Menu New Name
-			'openthc/menu/hostname', // Menu Old Name
+			// 'openthc/ops/origin',
+			// 'openthc/ops/public',
+			// 'openthc/ops/secret',
 
-			'openthc/ops/hostname',
-			'openthc/ops/public',
-			'openthc/ops/secret',
-
-			'openthc/sso/hostname',
+			'openthc/sso/origin',
 			'openthc/sso/public',
-			'openthc/sso/secret',
 
 		];
 
 		foreach ($key_list as $k) {
 			$v = \OpenTHC\Config::get($k);
-			$this->assertNotEmpty($v);
+			$this->assertNotEmpty($v, sprintf('Config %s is missing', $k));
+		}
+
+		$key_list = [
+			'openthc/app/secret',
+			'openthc/dir/secret',
+			'openthc/sso/secret',
+		];
+
+		foreach ($key_list as $k) {
+			$v = \OpenTHC\Config::get($k);
+			$this->assertNotEmpty($v, sprintf('Config %s should be empty/unset', $k));
 		}
 
 	}
@@ -77,14 +83,18 @@ class Config_Test extends \Test\Base
 	 */
 	function test_api()
 	{
-		$cfg = \OpenTHC\Config::get('api');
+		$cfg = \OpenTHC\Config::get('openthc/pos');
 		$this->assertIsArray($cfg);
 
-		$this->assertArrayHasKey('authhash', $cfg);
-		$this->assertNotEmpty($cfg['authhash']);
+		$this->assertArrayHasKey('client-id', $cfg);
+		$this->assertNotEmpty($cfg['client-id']);
 
-		$this->assertArrayHasKey('hostname', $cfg);
-		$this->assertNotEmpty($cfg['hostname']);
+		$this->assertArrayHasKey('client-pk', $cfg);
+		$this->assertNotEmpty($cfg['client-pk']);
+
+		$this->assertArrayHasKey('client-sk', $cfg);
+		$this->assertNotEmpty($cfg['client-sk']);
+
 	}
 
 	/**
@@ -97,9 +107,12 @@ class Config_Test extends \Test\Base
 		$this->assertNotEmpty($h);
 
 		$k = _random_hash();
-		Service_Redis::set($k, 'TEST');
-		$v = Service_Redis::get($k);
-		$this->assertEquals('TEST', $v);
+		$r = new \Redis();
+		$r->connect($h);
+		$r->set($k, 'TEST');
+
+		$x = $r->get($k);
+		$this->assertEquals('TEST', $x);
 
 	}
 
