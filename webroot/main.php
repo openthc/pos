@@ -136,36 +136,7 @@ $app->map(['GET','POST'], '/intent', 'OpenTHC\POS\Controller\Intent')
 
 
 // Webhooks
-$app->group('/webhook', function() {
-
-	$this->post('/weedmaps/order', function($REQ, $RES, $ARG) {
-
-		$file = sprintf('%s/var/weedmaps-order-%s.txt', APP_ROOT, \Edoceo\Radix\ULID::create());
-		$json = file_get_contents('php://input');
-		file_put_contents($file, json_encode([
-			'_GET' => $_GET,
-			'_POST' => $_POST,
-			'_ENV' => $_ENV,
-			'_BODY' => $json
-		]));
-
-		$data = json_decode($json, true);
-		switch ($data['status']) {
-			case 'DRAFT':
-				__exit_json($data);
-				break;
-			case 'PENDING':
-				__exit_json($data);
-				break;
-		}
-
-		__exit_json([
-			'data' => null,
-			'meta' => [ 'detail' => 'Request Not Handled' ]
-		], 400);
-
-	});
-});
+$app->group('/webhook', 'OpenTHC\POS\Module\Webhook');
 
 
 // Custom Middleware?
