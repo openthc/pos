@@ -7,6 +7,8 @@
 
 namespace OpenTHC\POS\Controller\Shop;
 
+use Edoceo\Radix\ULID;
+
 class Cart extends \OpenTHC\Controller\Base
 {
 	/**
@@ -91,7 +93,7 @@ class Cart extends \OpenTHC\Controller\Base
 				$cart = sprintf('cart-%s', $Company['id']);
 
 				$b2b_sale = [];
-				$b2b_sale['id'] = _ulid();
+				$b2b_sale['id'] = ULID::create();
 				$b2b_sale['company'] = $Company;
 
 				$product_want_list = $this->load_cart_product_list($Company['id']);

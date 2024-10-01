@@ -9,6 +9,7 @@ namespace OpenTHC\POS\Controller\POS\Cart;
 
 use Edoceo\Radix;
 use Edoceo\Radix\Session;
+use Edoceo\Radix\ULID;
 
 use OpenTHC\Contact;
 
@@ -33,7 +34,7 @@ class Ajax extends \OpenTHC\Controller\Base
 				$chk = $dbc->fetchRow($sql, $arg);
 				if (empty($C)) {
 					$C = new Contact($dbc);
-					$C['id'] = _ulid();
+					$C['id'] = ULID::create();
 					$C['guid'] = $C['id'];
 					$C['fullname'] = $x;
 					$C['phone'] = $x;
@@ -51,7 +52,7 @@ class Ajax extends \OpenTHC\Controller\Base
 				$chk = $dbc->fetchRow($sql, $arg);
 				if (empty($C)) {
 					$C = new Contact($dbc);
-					$C['id'] = _ulid();
+					$C['id'] = ULID::create();
 					$C['guid'] = $C['id'];
 					$C['fullname'] = $x;
 					$C['email'] = $x;
@@ -69,7 +70,7 @@ class Ajax extends \OpenTHC\Controller\Base
 				$chk = $dbc->fetchRow($sql, $arg);
 				if (empty($C)) {
 					$C = new Contact($dbc);
-					$C['id'] = _ulid();
+					$C['id'] = ULID::create();
 					$C['guid'] = $C['id'];
 					$C['fullname'] = $x;
 					$C['altid'] = $x;

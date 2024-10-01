@@ -140,7 +140,7 @@ $app->group('/webhook', function() {
 
 	$this->post('/weedmaps/order', function($REQ, $RES, $ARG) {
 
-		$file = sprintf('%s/var/weedmaps-order-%s.txt', APP_ROOT, _ulid());
+		$file = sprintf('%s/var/weedmaps-order-%s.txt', APP_ROOT, \Edoceo\Radix\ULID::create());
 		$json = file_get_contents('php://input');
 		file_put_contents($file, json_encode([
 			'_GET' => $_GET,

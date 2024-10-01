@@ -8,6 +8,7 @@
 namespace OpenTHC\POS\Controller\POS\Checkout;
 
 use Edoceo\Radix\Session;
+use Edoceo\Radix\ULID;
 
 use OpenTHC\Contact;
 
@@ -47,7 +48,7 @@ class Open extends \OpenTHC\Controller\Base
 			case 'client-contact-update-force':
 				$Contact1 = new Contact($this->_container->DB);
 				if ( ! $Contact1->loadBy('guid', $_POST['client-contact-govt-id'])) {
-					$Contact1['id'] = _ulid();
+					$Contact1['id'] = ULID::create();
 					$Contact1['stat'] = 100;
 					$Contact1['guid'] = $_POST['client-contact-govt-id'];
 					$Contact1['hash'] = '-';
@@ -154,7 +155,7 @@ class Open extends \OpenTHC\Controller\Base
 					case 200:
 						$Contact = new Contact($dbc); // , [ 'guid' => $res['data']['PatientId'] ]);
 						if ( ! $Contact->loadBy('guid', $res['data']['PatientId'])) {
-							$Contact['id'] = _ulid();
+							$Contact['id'] = ULID::create();
 							$Contact['stat'] = 100;
 							$Contact['guid'] = $res['data']['PatientId'];
 							$Contact['hash'] = '-';
@@ -190,7 +191,7 @@ class Open extends \OpenTHC\Controller\Base
 		case 'usa/wa':
 			$Contact = new Contact($dbc); // , [ 'guid' => $res['data']['PatientId'] ]);
 			if ( ! $Contact->loadBy('guid', $res['data']['PatientId'])) {
-				$Contact['id'] = _ulid();
+				$Contact['id'] = ULID::create();
 				$Contact['stat'] = 100;
 				$Contact['guid'] = $guid1;
 				$Contact['hash'] = '-';
@@ -251,7 +252,7 @@ class Open extends \OpenTHC\Controller\Base
 				];
 				// Create
 				// $Contact = new Contact($dbc);
-				// $Contact['id'] = _ulid();
+				// $Contact['id'] = ULID::create();
 				// $Contact['stat'] = 100;
 				// $Contact['guid'] = $_POST['client-contact-govt-id'];
 				// $Contact['hash'] = '-';
@@ -331,7 +332,7 @@ class Open extends \OpenTHC\Controller\Base
 
 		$Contact1 = new Contact($dbc); // , [ 'guid' => $res['data']['PatientId'] ]);
 		if ( ! $Contact1->loadBy('guid', $Contact0['licenseNumber'])) {
-			$Contact1['id'] = _ulid();
+			$Contact1['id'] = ULID::create();
 			$Contact1['stat'] = 100;
 			$Contact1['guid'] = $Contact0['licenseNumber'];
 			$Contact1['hash'] = '-';

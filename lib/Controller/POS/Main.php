@@ -8,6 +8,7 @@
 namespace OpenTHC\POS\Controller\POS;
 
 use Edoceo\Radix\Session;
+use Edoceo\Radix\ULID;
 
 use OpenTHC\Contact;
 
@@ -31,7 +32,7 @@ class Main extends \OpenTHC\Controller\Base
 
 
 		if (empty($_SESSION['pos-terminal-id'])) {
-			$_SESSION['pos-terminal-id'] = _ulid();
+			$_SESSION['pos-terminal-id'] = ULID::create();
 		}
 
 		// if ('auth' == $_GET['v']) {

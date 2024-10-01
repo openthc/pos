@@ -7,6 +7,8 @@
 
 namespace OpenTHC\POS\Controller\Shop;
 
+use Edoceo\Radix\ULID;
+
 class Checkout extends \OpenTHC\Controller\Base
 {
 	/**
@@ -94,7 +96,7 @@ class Checkout extends \OpenTHC\Controller\Base
 					// Search Global Directory?
 					// $dir = new \OpenTHC\Service\OpenTHC('dir');
 					// $chk = $dir->get(sprintf('/api/contact/search?q=%s', rawurlencode($_POST['contact-email'])));
-					$chk = _ulid();
+					$chk = ULID::create();
 					$rec = [
 						'id' => $chk,
 						'type' => 'client',

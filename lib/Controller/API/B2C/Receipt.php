@@ -8,6 +8,8 @@
 
 namespace OpenTHC\POS\Controller\API\B2C;
 
+use Edoceo\Radix\ULID;
+
 class Receipt extends \OpenTHC\POS\Controller\API\Base
 {
 	/**
@@ -39,7 +41,7 @@ class Receipt extends \OpenTHC\POS\Controller\API\Base
 		for ($idx=0; $idx<10; $idx++) {
 			$b2c_item_list[] = [
 				'Inventory' => [
-					'guid' => _ulid()
+					'guid' => ULID::create()
 				],
 				'Lot' => [],
 				'Product' => [

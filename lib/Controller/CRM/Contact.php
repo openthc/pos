@@ -7,6 +7,8 @@
 
 namespace OpenTHC\POS\Controller\CRM;
 
+use Edoceo\Radix\ULID;
+
 class Contact extends \OpenTHC\Controller\Base
 {
 	function __invoke($REQ, $RES, $ARG)
@@ -29,7 +31,7 @@ class Contact extends \OpenTHC\Controller\Base
 		$dbc = $this->_container->DB;
 
 		$rec = [
-			'id' => _ulid(),
+			'id' => ULID::create(),
 			'fullname' => trim($_POST['contact-name']),
 			'email' => trim(strtolower($_POST['contact-email'])),
 			'phone' => trim($_POST['contact-phone']),
