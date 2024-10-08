@@ -146,49 +146,58 @@ class Open extends \OpenTHC\Controller\Base
 		$res_contact = $this->contact_search($guid0, $guid1);
 
 		switch ($_SESSION['cre']['id']) {
-			case 'usa/mt':
-			case 'usa/or':
-				$cre = \OpenTHC\CRE::factory($_SESSION['cre']);
-				$cre->setLicense($_SESSION['License']);
-				$res = $cre->contact()->single($guid1);
-				switch ($res['code']) {
-					case 200:
-						$Contact = new Contact($dbc); // , [ 'guid' => $res['data']['PatientId'] ]);
-						if ( ! $Contact->loadBy('guid', $res['data']['PatientId'])) {
-							$Contact['id'] = ULID::create();
-							$Contact['stat'] = 100;
-							$Contact['guid'] = $res['data']['PatientId'];
-							$Contact['hash'] = '-';
-							$Contact['type'] = 'b2c-client';
-							$Contact['fullname'] = ''; // $_POST['client-contact-name'];
-							$Contact['meta'] = json_encode([
-								'@cre' => $res['data']
-							]);
-							$Contact->save('Contact/Create in POS by User');
-						};
+		case 'usa/mt':
+		case 'usa/or':
+			$cre = \OpenTHC\CRE::factory($_SESSION['cre']);
+			$cre->setLicense($_SESSION['License']);
+			$res = $cre->contact()->single($guid1);
+			switch ($res['code']) {
+				case 200:
+					$Contact = new Contact($dbc); // , [ 'guid' => $res['data']['PatientId'] ]);
+					if ( ! $Contact->loadBy('guid', $res['data']['PatientId'])) {
+						$Contact['id'] = ULID::create();
+						$Contact['stat'] = 100;
+						$Contact['guid'] = $res['data']['PatientId'];
+						$Contact['hash'] = '-';
+						$Contact['type'] = 'b2c-client';
+						$Contact['fullname'] = ''; // $_POST['client-contact-name'];
+						$Contact['meta'] = json_encode([
+							'@cre' => $res['data']
+						]);
+						$Contact->save('Contact/Create in POS by User');
+					};
 
-						if ( ! empty($Contact['id'])) {
-							$_SESSION['Checkout']['Contact'] = $Contact->toArray();
-							return $RES->withRedirect('/pos');
-						}
-
-						break;
-					case 404:
-						$_SESSION['Checkout']['Contact'] = [
-							'id' => '',
-							'guid' => $guid1,
-							'stat' => 100,
-							'type' => 'b2c-client',
-						];
+					if ( ! empty($Contact['id'])) {
+						$_SESSION['Checkout']['Contact'] = $Contact->toArray();
 						return $RES->withRedirect('/pos');
-					default:
-						// Session::flash('fail', $cre->formatError($res));
-						// return $RES->withRedirect('/pos');
-				}
+					}
+
+					break;
+				case 404:
+					$_SESSION['Checkout']['Contact'] = [
+						'id' => '',
+						'guid' => $guid1,
+						'stat' => 100,
+						'type' => 'b2c-client',
+					];
+					return $RES->withRedirect('/pos');
+				default:
+					// Session::flash('fail', $cre->formatError($res));
+					// return $RES->withRedirect('/pos');
+			}
+
 			break;
+
+		case 'usa/nm':
+
+			// Nothing?
+
+			// break;
+
 		case 'deu':
 		case 'usa/vt':
 		case 'usa/wa':
+
 			$Contact = new Contact($dbc); // , [ 'guid' => $res['data']['PatientId'] ]);
 			if ( ! $Contact->loadBy('guid', $res['data']['PatientId'])) {
 				$Contact['id'] = ULID::create();
@@ -200,11 +209,8 @@ class Open extends \OpenTHC\Controller\Base
 				$Contact->save('Contact/Create in POS by User');
 			}
 
-			if ( ! empty($Contact['id'])) {
-				$_SESSION['Checkout']['Contact'] = $Contact->toArray();
-				return $RES->withRedirect('/pos');
-			}
 			break;
+
 		default:
 			Session::flash('warn', sprintf('Unsupported CRE: %s', $_SESSION['cre']['id']));
 		}
