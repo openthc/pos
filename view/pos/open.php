@@ -24,9 +24,9 @@
 		<div class="numpad-grid" style="padding:0.5vw;"><button class="btn btn-outline-primary btn-action" type="button" value="7">7</button></div>
 		<div class="numpad-grid" style="padding:0.5vw;"><button class="btn btn-outline-primary btn-action" type="button" value="8">8</button></div>
 		<div class="numpad-grid" style="padding:0.5vw;"><button class="btn btn-outline-primary btn-action" type="button" value="9">9</button></div>
-		<div class="numpad-grid" style="padding:0.5vw;"><button class="btn btn-outline-secondary btn-action" disabled type="button" value="x"><i class="fas fa-arrow-left"></i></button></div>
+		<div class="numpad-grid" style="padding:0.5vw;"><button class="btn btn-outline-secondary btn-action" disabled id="btn-auth-back" type="button" value="x"><i class="fas fa-arrow-left"></i></button></div>
 		<div class="numpad-grid" style="padding:0.5vw;"><button class="btn btn-outline-primary btn-action" type="button" value="0">0</button></div>
-		<div class="numpad-grid" style="padding:0.5vw;"><button class="btn btn-outline-success" disabled name="a" type="submit" value="auth-code"><i class="fas fa-arrow-right"></i></button></div>
+		<div class="numpad-grid" style="padding:0.5vw;"><button class="btn btn-outline-success" disabled id="btn-auth-next" name="a" type="submit" value="auth-code"><i class="fas fa-arrow-right"></i></button></div>
 	</div>
 
 </div>

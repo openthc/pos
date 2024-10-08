@@ -17,7 +17,15 @@ HTML;
 
 
 $foot = <<<HTML
-<button class="btn btn-lg btn-primary" disabled id="pos-modal-sale-hold-save" name="a" type="button" value="save"><i class="fas fa-save"></i> Save</button>
+<button
+	class="btn btn-lg btn-primary"
+	disabled
+	id="pos-modal-sale-hold-save"
+	name="a"
+	type="button"
+	value="save">
+		<i class="fas fa-save"></i> Save
+</button>
 HTML;
 
 
@@ -32,6 +40,13 @@ echo $this->block('modal.php', [
 
 <script>
 $(function() {
-	$()
+	$btn = $('#pos-modal-sale-hold-save');
+	$('#customer-name').on('blur change keyup', function(e) {
+		if (this.value.length > 1) {
+			$btn.attr('disabled', false);
+		} else {
+			$btn.attr('disabled', true);
+		}
+	});
 });
 </script>
