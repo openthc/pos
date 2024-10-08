@@ -26,9 +26,9 @@ class Init extends \OpenTHC\Controller\Base
 			_exit_html_fail('<h1>Fatal Database Error [CAC-043]</h1>', 500);
 		}
 
-		// if (empty($_SESSION['Company']['cre'])) {
-		// 	_exit_html_fail('<h1>Company Configuration requires CRE [CAC-030]</h1>', 500);
-		// }
+		if (empty($_SESSION['Company']['cre'])) {
+			_exit_html_fail('<h1>Company Configuration requires CRE [CAC-030]</h1>', 500);
+		}
 
 		$_SESSION['Company'] = $chk;
 		$_SESSION['Company']['cre_meta'] = json_decode($_SESSION['Company']['cre_meta'], true);
