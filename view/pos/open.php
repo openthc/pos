@@ -24,9 +24,9 @@
 		<div class="numpad-grid" style="padding:0.5vw;"><button class="btn btn-outline-primary btn-action" type="button" value="7">7</button></div>
 		<div class="numpad-grid" style="padding:0.5vw;"><button class="btn btn-outline-primary btn-action" type="button" value="8">8</button></div>
 		<div class="numpad-grid" style="padding:0.5vw;"><button class="btn btn-outline-primary btn-action" type="button" value="9">9</button></div>
-		<div class="numpad-grid" style="padding:0.5vw;"><button class="btn btn-outline-secondary btn-action" type="button" value="x"><i class="fas fa-arrow-left"></i></button></div>
+		<div class="numpad-grid" style="padding:0.5vw;"><button class="btn btn-outline-secondary btn-action" disabled type="button" value="x"><i class="fas fa-arrow-left"></i></button></div>
 		<div class="numpad-grid" style="padding:0.5vw;"><button class="btn btn-outline-primary btn-action" type="button" value="0">0</button></div>
-		<div class="numpad-grid" style="padding:0.5vw;"><button class="btn btn-outline-success" name="a" type="submit" value="auth-code"><i class="fas fa-arrow-right"></i></button></div>
+		<div class="numpad-grid" style="padding:0.5vw;"><button class="btn btn-outline-success" disabled name="a" type="submit" value="auth-code"><i class="fas fa-arrow-right"></i></button></div>
 	</div>
 
 </div>
@@ -34,6 +34,7 @@
 
 
 <script>
+// Greek Letters
 var char_list = [
 	'&alpha;'
 	, '&beta;'
@@ -76,6 +77,9 @@ var code_mask = [];
 var code_auth = document.querySelector('#auth-code');
 var code_view = document.querySelector('#auth-code-view');
 
+var btnBack = document.querySelector('#btn-auth-back');
+var btnNext = document.querySelector('#btn-auth-next');
+
 $(function() {
 
 	$('.btn-action').on('click', function() {
@@ -86,12 +90,27 @@ $(function() {
 			code_mask.pop();
 		} else {
 			code_list.push(x);
-			var c = char_list[ code_list.length - 1 ];
+			// var c = char_list[ code_list.length - 1 ];
+			var c = var c = '&#9679;';
 			code_mask.push(c);
 		}
 
 		code_auth.value = code_list.join('');
 		code_view.innerHTML = code_mask.join('');
+
+		if (code_auth.value.length > 0) {
+			btnBack.disabled = false;
+		} else {
+			btnBack.disabled = true;
+		}
+
+		if (code_auth.value.length >= 4) {
+			btnNext.disabled = false;
+			btnNext.classList = 'btn btn-success';
+		} else {
+			btnNext.disabled = true;
+			btnNext.classList = 'btn btn-outline-success';
+		}
 
 	});
 
