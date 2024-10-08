@@ -97,8 +97,17 @@ $this->layout_file = sprintf('%s/view/_layout/html-pos.php', APP_ROOT);
 
 		-->
 
+		<?php
+		$src = '';
+		$src = '/loading.html?' . http_build_query([
+			'r' => '/pos/checkout/receipt?' . http_build_query([
+				'a' => 'pdf',
+				's' => $data['Sale']['id'],
+			])
+		]);
+		?>
 		<iframe id="print-frame" name="print-frame"
-			src="/pos/checkout/receipt?s=<?= rawurldecode($data['Sale']['id']) ?>&amp;a=pdf"
+			src="<?= $src ?>"
 			style="border: 1px solid #000; width:100%;"></iframe>
 
 	</div>

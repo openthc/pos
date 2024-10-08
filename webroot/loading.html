@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
-<title>Document Loading</title>
+<title>Loading...</title>
 <style>
 body {
 	background: #101010;
@@ -35,23 +35,16 @@ main > header > h1 {
 main > section {
 	flex: 1 1 100%;
 }
-main > footer {
-	flex: 1 0 auto;
-	font-family: monospace;
-	color: #e0e0e0;
-	padding: 1em 0;
-}
 </style>
 </head>
 <body>
 <main>
 <header>
-	<h1>Document Loading...</h1>
+	<h1>Loading...</h1>
 </header>
 <section>
-	<img src="https://cdn.openthc.com/img/icon.png">
+	<img alt="OpenTHC Icon" src="https://openthc.org/img/icon.png">
 </section>
-<footer>Loading...</footer>
 </main>
 <script>
 var usp = new URLSearchParams(window.location.search);
@@ -72,17 +65,6 @@ if (usp.has('r')) {
 
 	window.location = r;
 }
-
-	// // Hint?
-	// var h = document.getElementById('txt-hint');
-	// h.innerHTML = 'Sending you to: ' + arg_page['r'];
-
-	// // Timeout?
-	// var t = 500;
-	// if (arg_page['t']) {
-	// 	t = parseInt( arg_page['t'], 10) || 0;
-	// }
-
 </script>
 </body>
 </html>
