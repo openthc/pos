@@ -2,16 +2,6 @@
 # OpenTHC .ackrc
 #
 
---break
-
---color
-
---heading
-
---smart-case
-
---sort-files
-
 --ignore-dir=.bundle/
 --ignore-dir=.cache/
 --ignore-dir=.composer/
