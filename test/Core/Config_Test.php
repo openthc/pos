@@ -67,13 +67,17 @@ class Config_Test extends \OpenTHC\POS\Test\Base
 
 		$key_list = [
 			'openthc/app/secret',
+			'openthc/b2b/secret',
+			'openthc/cre/secret',
 			'openthc/dir/secret',
+			'openthc/lab/secret',
+			'openthc/pipe/secret',
 			'openthc/sso/secret',
 		];
 
 		foreach ($key_list as $k) {
 			$v = \OpenTHC\Config::get($k);
-			$this->assertNotEmpty($v, sprintf('Config %s should be empty/unset', $k));
+			$this->assertEmpty($v, sprintf('Config %s should be empty/unset', $k));
 		}
 
 	}

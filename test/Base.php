@@ -17,6 +17,29 @@ class Base extends \OpenTHC\Test\Base {
 		]);
 	}
 
+	function makeBearerToken()
+	{
+		// Client Public Key
+		$cpk = \OpenTHC\Config::get('openthc/pos/public');
+		// Client Secret Key
+		$csk = \OpenTHC\Config::get('openthc/pos/secret');
+		// Server Public Key (same as Client when requesting to self)
+		$spk = \OpenTHC\Config::get('openthc/pos/public');
+
+		// Crypto Box of Data
+		$box = json_encode([
+			'pk' => $cpk,
+			'ts' => time(),
+			'contact' => '',
+			'company' => '',
+			'license' => '',
+		]);
+		$box = \OpenTHC\Sodium::encrypt($box, $csk, $spk);
+		$box = \OpenTHC\Sodium::b64encode($box);
+
+		return sprintf('Bearer v2024/%s/%s', $cpk, $box);
+	}
+
 	/**
 		HTTP Utility
 	*/

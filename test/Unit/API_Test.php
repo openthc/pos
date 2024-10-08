@@ -13,7 +13,7 @@ class API_Test extends \OpenTHC\POS\Test\Base
 
 		$arg = [
 			'headers' => [
-				'Authorization' => sprintf('Bearer %s', $key),
+				'Authorization' => $this->makeBearerToken(),
 				'openthc-contact-id' => '',
 				'openthc-company-id' => '',
 				'openthc-license-id' => '',
@@ -39,7 +39,7 @@ class API_Test extends \OpenTHC\POS\Test\Base
 		$url = sprintf('/api/v2018/b2c/%s/item', $b2c_sale->id);
 		$arg = [
 			'headers' => [
-				'Authorization' => sprintf('Bearer %s', $key),
+				'Authorization' => $this->makeBearerToken(),
 			],
 			'json' => [
 				'inventory' => [ 'id' => '' ],
@@ -64,7 +64,7 @@ class API_Test extends \OpenTHC\POS\Test\Base
 		$url = sprintf('/api/v2018/b2c/%s', $b2c_sale->id);
 		$arg = [
 			'headers' => [
-				'Authorization' => sprintf('Bearer %s', $key),
+				'Authorization' => $this->makeBearerToken(),
 			],
 		];
 		$res = $this->client->get($url);
@@ -83,7 +83,7 @@ class API_Test extends \OpenTHC\POS\Test\Base
 		$url = sprintf('/api/v2018/b2c/%s/verify', $b2c_sale->id);
 		$arg = [
 			'headers' => [
-				'Authorization' => sprintf('Bearer %s', $key),
+				'Authorization' => $this->makeBearerToken(),
 			],
 		];
 		$res = $this->client->post($url);
@@ -100,7 +100,7 @@ class API_Test extends \OpenTHC\POS\Test\Base
 		$url = sprintf('/api/v2018/b2c/%s/commit', $b2c_sale->id);
 		$arg = [
 			'headers' => [
-				'Authorization' => sprintf('Bearer %s', $key),
+				'Authorization' => $this->makeBearerToken(),
 			],
 			'json' => [
 				'key' => 'val',
@@ -120,7 +120,7 @@ class API_Test extends \OpenTHC\POS\Test\Base
 		$url = sprintf('/api/v2018/b2c/%s/commit', $b2c_sale->id);
 		$arg = [
 			'headers' => [
-				'Authorization' => sprintf('Bearer %s', $key),
+				'Authorization' => $this->makeBearerToken(),
 			],
 			'json' => [
 				'key' => 'val',
