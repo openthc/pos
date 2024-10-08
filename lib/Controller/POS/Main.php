@@ -42,12 +42,6 @@ class Main extends \OpenTHC\Controller\Base
 			return $RES->write( $this->render('pos/open.php', $data) );
 		}
 
-		if ('scan' == $_GET['v']) {
-			$data = [];
-			$data['Page'] = [ 'title' => 'ID Scanner'];
-			return $RES->write( $this->render('pos/scan-id.php', $data) );
-		}
-
 		$data = array(
 			'Page' => array('title' => sprintf('POS :: %s <code>%s</code>', $_SESSION['License']['name'], $_SESSION['License']['code']))
 		);

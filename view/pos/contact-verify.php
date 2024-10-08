@@ -14,7 +14,7 @@ ob_start();
 
 <div class="input-group input-group-lg mb-4">
 	<div class="input-group-text">Customer Type:</div>
-	<select	class="form-control form-control-lg"
+	<select	class="form-select form-select-lg"
 		id="client-contact-type"
 		name="client-contact-type"
 		>

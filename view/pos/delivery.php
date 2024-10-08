@@ -60,7 +60,7 @@
 				<tfoot>
 					<tr>
 						<td colspan="2">
-							<select class="form-control">
+							<select class="form-select">
 						<?php
 						foreach ($data['contact_list'] as $c) {
 							printf('<option value="%s">%s</option>', $c['id'], __h($c['name']));

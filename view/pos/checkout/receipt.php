@@ -73,7 +73,7 @@ $this->layout_file = sprintf('%s/view/_layout/html-pos.php', APP_ROOT);
 		<div class="mb-2">
 			<h4>Print It</h4>
 			<div class="input-group">
-				<select class="form-control" id="printer-list">
+				<select class="form-select" id="printer-list">
 					<option>- Select Printer -</option>
 					<?php
 					foreach ($data['printer_list'] as $p) {
@@ -142,6 +142,8 @@ $(function() {
 	printFrame.addEventListener('load', function() {
 
 		console.log('printFrame!load');
+
+		// These events never fire because the content type is PDF
 
 		// Can't get these to fire
 		printFrame.addEventListener('beforeprint', function(e) {
@@ -275,12 +277,13 @@ $(function() {
 
 		console.log('#send-print-frame!click');
 
+		// This will trigger when the print dialog closes
+		// window.addEventListener('mouseover', function(e) {
+		// 	console.log('window!mouseover');
+		// });
+
 		printFrame.contentWindow.focus();
 		printFrame.contentWindow.print();
-
-		// window.addEventListener('mouseover', function(e) {
-		// 	console.log('mousing!!!');
-		// });
 
 		return false;
 
