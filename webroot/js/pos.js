@@ -180,7 +180,7 @@ function chkSaleCost()
 	// Canonical
 	$('.pos-checkout-sub').html(parseFloat(Weed.POS.sale.sub, 10).toFixed(2));
 	// $('.pos-checkout-tax-i502').html(parseFloat(Weed.POS.sale.tax_i502, 10).toFixed(2));
-	// $('.pos-checkout-tax-sale').html(parseFloat(Weed.POS.sale.tax_sale, 10).toFixed(2));
+	$('.pos-checkout-tax-total').html(parseFloat(Weed.POS.sale.tax_sale, 10).toFixed(2));
 	$('.pos-checkout-sum').html(parseFloat(Weed.POS.sale.due, 10).toFixed(2));
 
 	if (Weed.POS.sale.due <= 0) {
@@ -245,7 +245,9 @@ $(function() {
 			var html = [];
 			html.push('<div id="pos-camera-preview-wrap">');
 			html.push('<video id="pos-camera-preview" style="height:480px; width:640px;"></video>');
+			html.push('<div class="close-wrap">');
 			html.push('<button class="btn btn-outline-danger shut"><i class="fas fa-times"></i></button>');
+			html.push('</div>');
 			html.push('</div>');
 			$(document.body).append(html.join(''));
 

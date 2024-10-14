@@ -17,7 +17,7 @@ $body = <<<HTML
 	</div>
 	-->
 	<div class="col-md-4">
-		<h4>Sales Tax: $<span class="pos-checkout-tax-sale" data-amount="0">-.--</span></h4>
+		<h4>Sales Tax: $<span class="pos-checkout-tax-total" data-amount="0">-.--</span></h4>
 	</div>
 	<div class="col-md-4">
 		<h4 style="color:#f00000;">Total Due: $<span class="pos-checkout-sum"></span></h4>
