@@ -14,22 +14,18 @@ class Base extends \OpenTHC\Controller\Base
 	{
 		$c['phpErrorHandler'] = function($c) {
 			return function($REQ, $RES, $ERR) {
-				// var_dump($ERR);
-				// exit(0);
 				__exit_json([
-					'data' => null
-					, 'meta' => [ 'detail' => 'Fatal Error [ERR-001]' ]
+					'data' => null,
+					'meta' => [ 'note' => 'Fatal Error [ERR-001]' ]
 				], 500);
 			};
 		};
 
 		$c['errorHandler'] = function($c) {
 			return function($REQ, $RES, $ERR) {
-				// var_dump($ERR);
-				// exit;
 				__exit_json([
-					'data' => null
-					, 'meta' => [ 'detail' => 'Fatal Error [ERR-002]' ]
+					'data' => null,
+					'meta' => [ 'note' => 'Fatal Error [ERR-002]' ]
 				], 500);
 			};
 		};
@@ -56,79 +52,113 @@ class Base extends \OpenTHC\Controller\Base
 	 */
 	function auth_parse()
 	{
-		$auth = trim($_SERVER['HTTP_AUTHORIZATION']);
-		if (empty($auth)) {
-			$auth = 'Bearer ' . trim($_GET['bearer']);
-		}
-
-		// Prefer Bearer
-		$tok = preg_match('/^Bearer (.+)$/', $auth, $m) ? $m[1] : null;
-		if (empty($tok)) {
-			// Token is the Legacy Way (and should be removed)
-			$tok = preg_match('/^Token (.+)$/', $auth, $m) ? $m[1] : null;
-		}
-
-		if (empty($tok)) {
+		$auth = $_SERVER['HTTP_AUTHORIZATION'];
+		if ( ! preg_match('/^Bearer v2024\/([\w\-]{43})\/([\w\-]+)$/', $auth, $m)) {
 			__exit_json(array(
 				'data' => null,
-				'meta' => [ 'detail' => 'Bearer Not Provided [CAA-048]' ],
+				'meta' => [ 'note' => 'Invalid Authorization [CAB-068]' ],
 			), 403);
 		}
 
-		$dbc_auth = _dbc('auth');
+		$cpk = $m[1];
+		$box = $m[2];
+		$box = \OpenTHC\Sodium::b64decode($box);
 
-		$sql = 'SELECT meta FROM auth_context_ticket WHERE id = ?';
-		$arg = array($tok);
-		$res = $dbc_auth->fetchRow($sql, $arg);
-		if (empty($res)) {
-			__exit_json(array(
-				'data' => null,
-				'meta' => [ 'detail' => "Bearer Token Not Found [CAA-060]" ],
-			), 403);
-		}
-
-		$act = json_decode($res['meta'], true);
+		$ssk = \OpenTHC\Config::get('openthc/pos/secret');
+		$act = \OpenTHC\Sodium::decrypt($box, $ssk, $cpk);
 		if (empty($act)) {
 			__exit_json(array(
 				'data' => null,
-				'meta' => [ 'detail' => 'Bearer Not Valid [CAA-086]' ],
+				'meta' => [ 'note' => 'Invalid Service Key [CAB-094]' ],
 			), 403);
 		}
-
-		if (empty($act['company'])) {
+		$act = json_decode($act);
+		if (empty($act)) {
 			__exit_json(array(
 				'data' => null,
-				'meta' => [ 'detail' => 'Bearer Data Corrupted [CAA-076]' ],
+				'meta' => [ 'note' => 'Invalid Service Key [CAB-101]' ],
+			), 403);
+		}
+		if (sodium_compare($act->pk, $cpk) !== 0) {
+			__exit_json(array(
+				'data' => null,
+				'meta' => [ 'note' => 'Invalid Service Key [CAB-107]' ],
 			), 403);
 		}
 
-		$Company = $dbc_auth->fetchRow('SELECT id, name, dsn FROM auth_company WHERE id = :c0', [ ':c0' => $act['company'] ]);
+		// Time Check
+		$dt0 = new \DateTime();
+		$dt1 = \DateTime::createFromFormat('U', $act->ts);
+		$age = $dt0->diff($dt1, true);
+		if (($age->d != 0) || ($age->h != 0) || ($age->i > 5)) {
+			return $RES->withStatus(400)->withJson([
+				'data' => null,
+				'meta' => [ 'note' => 'Invalid Date [MCA-110]' ]
+			]);
+		}
+
+		if (empty($act->company)) {
+			__exit_json(array(
+				'data' => null,
+				'meta' => [ 'note' => 'Bearer Data Corrupted [CAB-103]' ],
+			), 403);
+		}
+
+		if (empty($act->contact)) {
+			__exit_json(array(
+				'data' => null,
+				'meta' => [ 'note' => 'Bearer Data Corrupted [CAB-110]' ],
+			), 403);
+		}
+
+		// Find Service Lookup CPK and See if we Trust Them
+		$dbc_auth = _dbc('auth');
+
+		$Service = $dbc_auth->fetchRow('SELECT * FROM auth_service WHERE code = :s0', [
+			':s0' => $cpk,
+		]);
+		if (empty($Service['id'])) {
+			__exit_json(array(
+				'data' => null,
+				'meta' => [ 'note' => 'Service Not Found [CAB-084]' ],
+			), 403);
+		}
+
+		$Company = $dbc_auth->fetchRow('SELECT id, name, dsn FROM auth_company WHERE id = :c0', [ ':c0' => $act->company ]);
 		if (empty($Company['id'])) {
 			__exit_json(array(
 				'data' => null,
-				'meta' => [ 'detail' => 'Invalid Authentication [CAA-095]' ],
+				'meta' => [ 'note' => 'Invalid Authentication [CAB-095]' ],
 			), 403);
 		}
 
 		if (empty($Company['dsn'])) {
 			__exit_json(array(
 				'data' => null,
-				'meta' => [ 'detail' => 'Invalid Configuration [CAA-072]' ],
+				'meta' => [ 'note' => 'Invalid Configuration [CAB-072]' ],
 			), 501);
 		}
 
-		$this->Company = $Company;
-		$this->Contact = [];
-
-		// Set Contact
-		if (!empty($res['contact'])) {
-			if (is_array($res['contact'])) { // v3
-				$this->Contact = $res['contact'];
-			} elseif (is_string($res['contact'])) {
-				$this->Contact['id'] = $res['contact'];
-			}
+		$Contact = $dbc_auth->fetchRow('SELECT id, username FROM auth_contact WHERE id = :c0', [ ':c0' => $act->contact ]);
+		if (empty($Contact['id'])) {
+			__exit_json(array(
+				'data' => null,
+				'meta' => [ 'note' => 'Invalid Authentication [CAB-095]' ],
+			), 403);
 		}
 
+		$this->Company = $Company;
+		$this->Contact = $Contact;
+
+	}
+
+	function findService()
+	{
+		// Check Redis
+
+		// Check Database
+
+		// Return
 	}
 
 	/**
@@ -138,7 +168,7 @@ class Base extends \OpenTHC\Controller\Base
 	{
 		return $RES->withJSON([
 			'data' => null
-			, 'meta' => [ 'detail' => $text ]
+			, 'meta' => [ 'note' => $text ]
 		], $code, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 	}
 
@@ -151,7 +181,7 @@ class Base extends \OpenTHC\Controller\Base
 
 		__exit_json([
 			'data' => $_SERVER,
-			'meta' => [ 'detail' => 'Not Implemented [CAB-098]' ],
+			'meta' => [ 'note' => 'Not Implemented [CAB-098]' ],
 		], 501);
 
 	}
