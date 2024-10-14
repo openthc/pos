@@ -12,6 +12,9 @@ use Edoceo\Radix\ULID;
 
 class Commit extends \OpenTHC\Controller\Base
 {
+	/**
+	 *
+	 */
 	function __invoke($REQ, $RES, $ARG)
 	{
 		$_POST['cash_incoming'] = floatval($_POST['cash_incoming']);
@@ -21,6 +24,14 @@ class Commit extends \OpenTHC\Controller\Base
 
 		$Company = new \OpenTHC\Company($dbc, $_SESSION['Company']);
 		$License = new \OpenTHC\License($dbc, $_SESSION['License']['id']);
+
+		$tax_incl = $Company->getOption(sprintf('/%s/b2b-item-price-adjust/tax-included', $License['id']));
+		$tax_list = [];
+		$tax0_pct = $Company->getOption(sprintf('/%s/b2b-item-price-adjust/010PENTHC00BIPA0SST03Q484J', $License['id'])); // State
+		$tax1_pct = $Company->getOption(sprintf('/%s/b2b-item-price-adjust/010PENTHC00BIPA0C0T620S2M2', $License['id'])); // County
+		$tax2_pct = $Company->getOption(sprintf('/%s/b2b-item-price-adjust/010PENTHC0PDTNJ1WNK5H9S6T3', $License['id'])); // City
+		$tax3_pct = $Company->getOption(sprintf('/%s/b2b-item-price-adjust/010PENTHC0PDTSV845B6FEEGCF', $License['id'])); // Regional
+		$tax4_pct = $Company->getOption(sprintf('/%s/b2b-item-price-adjust/010PENTHC00BIPA0ET0FNBCKMH', $License['id'])); // Excise
 
 		try {
 
@@ -76,11 +87,14 @@ class Commit extends \OpenTHC\Controller\Base
 					$SI['b2c_sale_id'] = $Sale['id'];
 					$SI['inventory_id'] = $IL['id'];
 					$SI['unit_count'] = $qty;
-					$SI['unit_price']= floatval($IL['sell']);
+					$SI['unit_price'] = floatval($IL['sell']);
 					$SI['uom'] = $uom;
 					$SI->save('B2C/Sale/Item/Create');
 
 					$IL->decrement($qty);
+
+					// Foreach tax_list as $tax
+					//  insert into b2b_sale_item_tax (b2b_sale_id, b2b_sale_item_id, tax_plan_id, tax_amount)
 
 					$sum_item_price += ($SI['unit_price'] * $SI['unit_count']);
 
@@ -89,48 +103,43 @@ class Commit extends \OpenTHC\Controller\Base
 
 			// Excise Taxes
 			// $opt_help->get('/%s/)
-			// $Company->getOption(sprintf('%s/', $_SESSION['License']['id']));
-			$arg = [
-				':k' => sprintf('/%s/tax-excise-rate', $_SESSION['License']['id']),
-			];
-			$tax_excise_rate = $dbc->fetchOne('SELECT val FROM base_option WHERE key = :k', $arg);
-			$tax_excise_rate = floatval($tax_excise_rate);
-			if ($tax_excise_rate > 1) {
-				$tax_excise_rate = $tax_excise_rate / 100;
-			}
-			if ($tax_excise_rate > 0) {
-				$SI = new \OpenTHC\POS\B2C\Sale\Item($dbc);
-				$SI['id'] = ULID::create();
-				$SI['b2c_sale_id'] = $Sale['id'];
-				$SI['inventory_id'] = -1;
-				$SI['guid'] = '-';
-				$SI['unit_count'] = 1;
-				$SI['unit_price'] = ($sum_item_price * $tax_excise_rate);
-				$SI->setFlag(\OpenTHC\POS\B2C\Sale\Item::FLAG_TAX_EXCISE);
-				$SI->save();
-			}
+			// $tax_excise_rate = $tax4_pct;
+			// if ($tax_excise_rate > 1) {
+			// 	$tax_excise_rate = $tax_excise_rate / 100;
+			// }
+			// if ($tax_excise_rate > 0) {
+			// 	$SI = new \OpenTHC\POS\B2C\Sale\Item($dbc);
+			// 	$SI['id'] = ULID::create();
+			// 	$SI['b2c_sale_id'] = $Sale['id'];
+			// 	// $SI['inventory_id'] = '';
+			// 	$SI['guid'] = '-';
+			// 	$SI['unit_count'] = 1;
+			// 	$SI['unit_price'] = ($sum_item_price * $tax_excise_rate);
+			// 	$SI->setFlag(\OpenTHC\POS\B2C\Sale\Item::FLAG_TAX_EXCISE);
+			// 	// $SI->save();
+			// }
 
 			// Retail/Sales Taxes
 			// $License->opt('tax-retail-rate') ??
-			$arg = [
-				':k' => sprintf('/%s/tax-retail-rate', $_SESSION['License']['id']),
-			];
-			$tax_retail_rate = $dbc->fetchOne('SELECT val FROM base_option WHERE key = :k', $arg);
-			$tax_retail_rate = floatval($tax_retail_rate);
-			if ($tax_retail_rate > 1) {
-				$tax_retail_rate = $tax_retail_rate / 100;
-			}
-			if ($tax_retail_rate > 0) {
-				$SI = new \OpenTHC\POS\B2C\Sale\Item($dbc);
-				$SI['id'] = ULID::create();
-				$SI['b2c_sale_id'] = $Sale['id'];
-				$SI['inventory_id'] = -1;
-				$SI['guid'] = '-';
-				$SI['unit_count'] = 1;
-				$SI['unit_price'] = ($sum_item_price * $tax_excise_rate);
-				$SI->setFlag(\OpenTHC\POS\B2C\Sale\Item::FLAG_TAX_RETAIL);
-				$SI->save();
-			}
+			// $arg = [
+			// 	':k' => sprintf('/%s/tax-retail-rate', $_SESSION['License']['id']),
+			// ];
+			// $tax_retail_rate = $dbc->fetchOne('SELECT val FROM base_option WHERE key = :k', $arg);
+			// $tax_retail_rate = floatval($tax_retail_rate);
+			// if ($tax_retail_rate > 1) {
+			// 	$tax_retail_rate = $tax_retail_rate / 100;
+			// }
+			// if ($tax_retail_rate > 0) {
+			// 	$SI = new \OpenTHC\POS\B2C\Sale\Item($dbc);
+			// 	$SI['id'] = ULID::create();
+			// 	$SI['b2c_sale_id'] = $Sale['id'];
+			// 	$SI['inventory_id'] = -1;
+			// 	$SI['guid'] = '-';
+			// 	$SI['unit_count'] = 1;
+			// 	$SI['unit_price'] = ($sum_item_price * $tax_excise_rate);
+			// 	$SI->setFlag(\OpenTHC\POS\B2C\Sale\Item::FLAG_TAX_RETAIL);
+			// 	// $SI->save();
+			// }
 
 			$Sale['item_count'] = $b2c_item_count;
 			$Sale['full_price'] = $sum_item_price + $tax0 + $tax1;
@@ -145,7 +154,7 @@ class Commit extends \OpenTHC\Controller\Base
 
 		$dbc->query('COMMIT');
 
-		Session::flash('info', 'Sale Confirmed, Transaction #' . $Sale['id']);
+		Session::flash('info', sprintf('Sale Confirmed, Transaction #%s', $Sale['guid']));
 
 		return $RES->withRedirect('/pos/checkout/receipt?s=' . $Sale['id']);
 
@@ -173,8 +182,29 @@ class Commit extends \OpenTHC\Controller\Base
 	 */
 	function send_to_biotrack($b2c_sale)
 	{
-		$rbe = App::rbe();
+		$cre = \OpenTHC\CRE::factory($_SESSION['cre']);
+		$cre->setLicense($_SESSION['License']);
+
+		switch ($_SESSION['cre']['id']) {
+		case 'usa/nm':
+			return $this->send_to_biotrack_v2022($cre, $b2c_sale);
+		default:
+			return $this->send_to_biotrack_v2014($cre, $b2c_sale);
+		}
+	}
+
+	// Sale Dispense v1
+	function send_to_biotrack_v2014($cre, $b2c_sale)
+	{
+		$dbc = $this->_container->DB;
+		$rdb = $this->_container->Redis;
+
+		$b2c_item_list = $b2c_sale->getItems();
+
 		// $res = $rbe->card_lookup($_POST['mmj-mp'], $_POST['mmj-cg']);
+
+		$b2c_term = '';
+		$b2c_time = new \DateTime($b2c_sale['created_at'], new \DateTimezone('America/Denver'));
 
 		$S['json'] = json_decode($S['json'], true);
 
@@ -195,8 +225,6 @@ class Commit extends \OpenTHC\Controller\Base
 				}
 			}
 		}
-
-		throw new Exception('What to Do HEre');
 
 		if (count($inv_list)) {
 			$res = $rbe->sale_dispense($inv_list, strtotime($S['dts']));
@@ -222,6 +250,92 @@ class Commit extends \OpenTHC\Controller\Base
 
 	}
 
+	function send_to_biotrack_v2022($cre, $b2c_sale)
+	{
+		// New Stuff Here
+		$dbc = $this->_container->DB;
+		$rdb = $this->_container->Redis;
+
+		$b2c_item_list = $b2c_sale->getItems();
+
+		$b2c_time = new \DateTime($b2c_sale['created_at'], new \DateTimezone('America/Denver'));
+
+		// Sale Dispense v3
+		// https://documenter.getpostman.com/view/15944043/UVktqDR2#bee52c63-f4bf-46ce-a6d2-34099afdb09b
+		/*
+		Client error: `
+		POST https://v3.api.nm.trace.biotrackthc.net/v1/dispense` resulted in a `400 Bad Request` response:
+		 {"Error":"Error reading JSON body:
+		 parsing time \"\"2024-09-28T16:20:00-0600\"\" as \"\"2006-01-02T15:04:05Z07:00\"\":
+		 c (truncated...
+		*/
+		// "Error": "Error reading JSON body: parsing time \"\"2024-09-28T16:20:00-0600\"\" as \"\"2006-01-02T15:04:05Z07:00\"\": cannot parse \"-0600\"\" as \"Z07:00\""
+		// It's using GOLANG as the Parser, so properly put all things in floatval
+		$req = [];
+		$req['LocationLicense'] = $_SESSION['License']['code'];
+		$req['Type'] = 'RECREATIONAL';
+		// https://www.php.net/manual/en/class.datetimeinterface.php#datetimeinterface.constants.iso8601
+		// PHP ISO8601 is NOT CORRECT, so use ATOM
+		$req['Datetime'] = $b2c_time->format(\DateTimeInterface::ATOM);
+		$req['RequestID'] = $b2c_sale['id'];
+		$req['ExternalID'] = $b2c_sale['id'];
+		// PatientCardKey
+		// 'TerminalID' => $b2c_term
+		$req['Items'] = [];
+		foreach ($b2c_item_list as $b2c_item) {
+			// $I = new Lot($b2c_item['inventory_id']);
+			$Inv = new \OpenTHC\POS\Lot($dbc, $b2c_item['inventory_id']);
+			$req['Items'][] = [
+				'Barcode' => $Inv['guid'],
+				'Quantity' => floatval($b2c_item['unit_count']),
+				'Price' => floatval(sprintf('%0.2f', $b2c_item['unit_price'])),
+				'Tax' => [
+					'Excise' => 0,
+					'Other' => floatval($b2c_item['unit_price'] * $b2c_item['unit_count'] * 0.12),
+				]
+			];
+		}
+
+		// Authenticate and then Checkout
+
+		// Needs a good CRE-Adapter or BONG to work
+		$ghc = new \GuzzleHttp\Client([
+			// 'base_uri' => 'https://v3.api.nm.trace.biotrackthc.net/',
+			'base_uri' => 'https://bunk.openthc.dev/biotrack/v2022/',
+			'http_errors' => false,
+			// 'cookie'
+		]);
+
+		$sid = $rdb->get('/cre/biotrack2023/sid');
+		if (empty($sid)) {
+
+			$res = $ghc->post('v1/login', [ 'json' => [
+				'UBI' => $_SESSION['Company']['cre_meta']['company'],
+				'Username' => $_SESSION['Company']['cre_meta']['username'],
+				'Password' => $_SESSION['Company']['cre_meta']['password'],
+			]]);
+
+			$res = json_decode($res->getBody()->getContents());
+			$sid = $res->Session;
+
+			$rdb->set('/cre/biotrack2023/sid', $sid, [ 'ttl' => 3600 ]);
+		}
+
+		$res = $ghc->post('v1/dispense', [
+			'json' => $req,
+			'headers' => [
+				'Authorization' => sprintf('Bearer %s', $sid)
+			]
+		]);
+		$res = $res->getBody()->getContents();
+		$res = json_decode($res);
+		$b2c_sale['guid'] = $res->TransactionID;
+		$b2c_sale['guid'] = sprintf('tid:%s', $res->TransactionID);
+
+		return $b2c_sale;
+
+	}
+
 	/**
 	 * Execute Sale in Metrc
 	 */
@@ -233,8 +347,27 @@ class Commit extends \OpenTHC\Controller\Base
 		$cre->setLicense($_SESSION['License']);
 
 		$obj = [];
-		$obj['SalesCustomerType'] = 'Patient'; // 'Consumer',  'Caregiver'; 'ExternalPatient';
 		$obj['SalesDateTime'] = date(\DateTime::ISO8601);
+
+		// 'Consumer', 'Caregiver'; 'ExternalPatient', 'Patient'
+		switch ($_SESSION['Checkout']['Contact']['id']) {
+			case '018NY6XC00C0NTACT000WALK1N':
+				$obj['SalesCustomerType'] = 'Consumer';
+				break;
+			default:
+				$obj['SalesCustomerType'] = 'Patient';
+				$obj['PatientLicenseNumber'] = $_SESSION['Checkout']['Contact']['guid'];
+				break;
+		}
+		switch ($_SESSION['Checkout']['Contact']['type']) {
+			case '018NY6XC00C0NTACTTYPE000AC':
+				$obj['SalesCustomerType'] = 'Consumer';
+				break;
+			case '018NY6XC00C0NTACTTYPE000PA': // Well Known ULID
+				$obj['SalesCustomerType'] = 'Patient';
+				$obj['PatientLicenseNumber'] = $_SESSION['Checkout']['Contact']['guid'];
+				break;
+		}
 
 		// @todo Fix assumptions about Customer, add Patient/Caregiver UX
 		// $obj['PatientLicenseNumber'] = '12-345-678-DD'; //  $Sale['contact_list']['']; '000001';
@@ -250,24 +383,24 @@ class Commit extends \OpenTHC\Controller\Base
 			$uom = new \OpenTHC\UOM($b2c_item['uom']);
 			$uom = $uom->getName();
 			$obj['Transactions'][] = [
-				'CityTax' => null,
-				'CountyTax' => null,
-				'DiscountAmount' => null,
-				'ExciseTax' => null,
-				'InvoiceNumber' => null,
-				'MunicipalTax' => null,
+				// 'CityTax' => null,
+				// 'CountyTax' => null,
+				// 'DiscountAmount' => null,
+				// 'ExciseTax' => null,
+				'InvoiceNumber' => $b2c_item['id'],
+				// 'MunicipalTax' => null,
 				'PackageLabel' => $lot['guid'],
-				'Price' => $b2c_item['unit_price'],
+				// 'Price' => $b2c_item['unit_price'],
 				'Quantity' => $b2c_item['unit_count'],
-				'SalesTax' => null,
-				'SubTotal' => null,
+				// 'SalesTax' => null,
+				// 'SubTotal' => $b2c_item['unit_price'],
 				'TotalAmount' => ($b2c_item['unit_price'] * $b2c_item['unit_count']),
 				'UnitOfMeasure' => $uom,
-				'UnitThcContent' => null,
-				'UnitThcContentUnitOfMeasure' => null,
-				'UnitThcPercent' => '1',
-				'UnitWeight' => null,
-				'UnitWeightUnitOfMeasure' => null,
+				// 'UnitThcContent' => null,
+				// 'UnitThcContentUnitOfMeasure' => null,
+				// 'UnitThcPercent' => null,
+				// 'UnitWeight' => null,
+				// 'UnitWeightUnitOfMeasure' => null,
 			];
 		}
 
@@ -279,7 +412,15 @@ class Commit extends \OpenTHC\Controller\Base
 		$Sale['meta'] = json_encode($m);
 		$Sale['stat'] = $res['code'];
 
-		if (200 == $res['code']) {
+		switch ($res['code']) {
+			case 200:
+				// Great
+				break;
+			default:
+				Session::flash('warn', $cre->formatError($res));
+				break;
+		}
+		// if (200 == $res['code']) {
 			// This is not finding the transaction
 			// $cre->setTimeAlpha(date(\DateTime::ISO8601, $_SERVER['REQUEST_TIME'] - 60));
 			// $cre->setTimeOmega(date(\DateTime::ISO8601, $_SERVER['REQUEST_TIME'] + 60));
@@ -287,7 +428,7 @@ class Commit extends \OpenTHC\Controller\Base
 			// foreach ($res['data'] as $chk_b2c) {
 			// 	$objB = $api->single($chk_b2c['Id']);
 			// }
-		}
+		// }
 
 		return $Sale;
 
