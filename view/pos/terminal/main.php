@@ -48,7 +48,7 @@ $this->layout_file = sprintf('%s/view/_layout/html-pos.php', APP_ROOT);
 <div class="pos-foot-wrap">
 	<div id="pos-terminal-sub-wrap">
 		<div class="sub-info-item-wrap"><h3>Total: $<span class="pos-checkout-sub">0.00</span></h3></div>
-		<div class="sub-info-item-wrap"><h3>Taxes: $<span class="pos-checkout-tax-sale">0.00</span></h3></div>
+		<div class="sub-info-item-wrap"><h3>Taxes: $<span class="pos-checkout-tax-total">0.00</span></h3></div>
 		<div class="sub-info-item-wrap"><h3>Due: $<span class="pos-checkout-sum">0.00</span></h3></div>
 	</div>
 	<div id="pos-terminal-cmd-wrap">

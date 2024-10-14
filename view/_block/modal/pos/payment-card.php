@@ -11,13 +11,8 @@ $body = <<<HTML
 	<div class="col-md-4">
 		<h4>Sub-Total: $<span class="pos-checkout-sub" data-amount="0">-.--</span></h4>
 	</div>
-	<!--
-	<div class="pure-u-1-4" style="text-align:center;">
-		<h4>I-502 Tax: $<span class="pos-checkout-tax-i502" data-amount="<?=$tax_i502?>"><?=number_format($tax_i502, 2)?></span></h4>
-	</div>
-	-->
 	<div class="col-md-4">
-		<h4>Sales Tax: $<span class="pos-checkout-tax-total" data-amount="0">-.--</span></h4>
+		<h4>Taxes: $<span class="pos-checkout-tax-total" data-amount="0">-.--</span></h4>
 	</div>
 	<div class="col-md-4">
 		<h4 style="color:#f00000;">Total Due: $<span class="pos-checkout-sum"></span></h4>

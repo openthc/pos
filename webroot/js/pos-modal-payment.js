@@ -176,7 +176,6 @@ $(function() {
 		$('#psi-form').append('<input name="a" type="hidden" value="pos-done">');
 		$('#psi-form').append('<input name="due" type="hidden" value="' + Weed.POS.sale.due + '">');
 		$('#psi-form').append('<input name="sub" type="hidden" value="' + Weed.POS.sale.sub + '">');
-		$('#psi-form').append('<input name="tax_i502" type="hidden" value="' + Weed.POS.sale.tax_i502 + '">');
 		$('#psi-form').append('<input name="tax_sale" type="hidden" value="' + Weed.POS.sale.tax_sale + '">');
 		$('#psi-form').append('<input name="pay" type="hidden" value="' + $('#payment-cash-incoming').val() + '">'); // @deprecated
 		$('#psi-form').append('<input name="name" type="hidden" value="' + $('#customer-name').val() + '">');

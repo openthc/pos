@@ -64,7 +64,6 @@ Weed.POS = {
 	sale: {
 		due: 0,
 		sum: 0,
-		tax_i502: 0,
 		tax_sale: 0,
 		setVal: function(k, v) {
 			var self = this; // The Sale. object
@@ -173,13 +172,10 @@ function chkSaleCost()
 		Weed.POS.sale.sub = 0;
 	}
 
-	// Weed.POS.sale.tax_i502 = 0; // Weed.POS.sale.sub * 0.25;
-	// Weed.POS.sale.tax_sale = (Weed.POS.sale.sub + Weed.POS.sale.tax_i502) * 0.095;
-	Weed.POS.sale.due	  = Weed.POS.sale.sub + Weed.POS.sale.tax_i502 + Weed.POS.sale.tax_sale;
+	Weed.POS.sale.due	  = Weed.POS.sale.sub + Weed.POS.sale.tax_sale;
 
 	// Canonical
 	$('.pos-checkout-sub').html(parseFloat(Weed.POS.sale.sub, 10).toFixed(2));
-	// $('.pos-checkout-tax-i502').html(parseFloat(Weed.POS.sale.tax_i502, 10).toFixed(2));
 	$('.pos-checkout-tax-total').html(parseFloat(Weed.POS.sale.tax_sale, 10).toFixed(2));
 	$('.pos-checkout-sum').html(parseFloat(Weed.POS.sale.due, 10).toFixed(2));
 
