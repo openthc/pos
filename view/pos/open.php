@@ -91,7 +91,7 @@ $(function() {
 		} else {
 			code_list.push(x);
 			// var c = char_list[ code_list.length - 1 ];
-			var c = var c = '&#9679;';
+			var c = '&#9679;';
 			code_mask.push(c);
 		}
 
