@@ -70,16 +70,16 @@ class Commit extends \OpenTHC\Controller\Base
 
 					$P = new \OpenTHC\POS\Product($dbc, $IL['product_id']);
 					switch ($P['package_type']) {
-						case 'pack':
-						case 'each':
-							$b2c_item_count += $qty;
-							$uom = 'ea';
-							break;
-						case 'bulk':
-							$b2c_item_count++;
-							$uom = new \OpenTHC\UOM($P['package_unit_uom']);
-							$uom = $uom->getStub();
-							break;
+					case 'pack':
+					case 'each':
+						$b2c_item_count += $qty;
+						$uom = 'ea';
+						break;
+					case 'bulk':
+						$b2c_item_count++;
+						$uom = new \OpenTHC\UOM($P['package_unit_uom']);
+						$uom = $uom->getStub();
+						break;
 					}
 
 					$SI = new \OpenTHC\POS\B2C\Sale\Item($dbc);
@@ -166,12 +166,15 @@ class Commit extends \OpenTHC\Controller\Base
 	function sendToCRE($Sale)
 	{
 		switch ($_SESSION['cre']['engine']) {
-			case 'biotrack':
-				$Sale = $this->send_to_biotrack($Sale);
-				break;
-			case 'metrc':
-				$Sale = $this->send_to_metrc($Sale);
-				break;
+		case 'biotrack':
+			$Sale = $this->send_to_biotrack($Sale);
+			break;
+		case 'metrc':
+			$Sale = $this->send_to_metrc($Sale);
+			break;
+		case 'openthc':
+			$Sale = $this->send_to_openthc($Sale);
+			break;
 		}
 
 		return $Sale;
@@ -182,9 +185,6 @@ class Commit extends \OpenTHC\Controller\Base
 	 */
 	function send_to_biotrack($b2c_sale)
 	{
-		$cre = \OpenTHC\CRE::factory($_SESSION['cre']);
-		$cre->setLicense($_SESSION['License']);
-
 		switch ($_SESSION['cre']['id']) {
 		case 'usa/nm':
 			return $this->send_to_biotrack_v2022($cre, $b2c_sale);
@@ -194,51 +194,45 @@ class Commit extends \OpenTHC\Controller\Base
 	}
 
 	// Sale Dispense v1
-	function send_to_biotrack_v2014($cre, $b2c_sale)
+	function send_to_biotrack_v2014($b2c_sale)
 	{
 		$dbc = $this->_container->DB;
 		$rdb = $this->_container->Redis;
 
 		$b2c_item_list = $b2c_sale->getItems();
 
-		// $res = $rbe->card_lookup($_POST['mmj-mp'], $_POST['mmj-cg']);
+		$cre = \OpenTHC\CRE::factory($_SESSION['cre']);
+		$cre->setLicense($_SESSION['License']);
+		// $res = $cre->card_lookup($_POST['mmj-mp'], $_POST['mmj-cg']);
 
 		$b2c_term = '';
 		$b2c_time = new \DateTime($b2c_sale['created_at'], new \DateTimezone('America/Denver'));
 
-		$S['json'] = json_decode($S['json'], true);
+		$b2c_item_list = $b2c_sale->getItems();
 
-		$inv_list = array();
-		foreach ($S['json'] as $k => $v) {
-
-			if (preg_match('/^item\-(\d+)$/', $k, $m)) {
-
-				$I = new Inventory($m[1]);
-				$s = $S['json'][sprintf('size-%d', $I['id'])];
-
-				if ($I->isRegulated()) {
-					$inv_list[] = array(
-						'barcodeid' => $I['guid'],
-						'quantity' => intval($s),
-						'price' => sprintf('%0.2f', $I['sell']),
-					);
-				}
+		$inv_list = [];
+		foreach ($b2c_item_list as $b2c_item) {
+			$Inv = new Inventory($m[1]);
+			if ($Inv->isRegulated()) {
+				$inv_list[] = array(
+					'barcodeid' => $Inv['guid'],
+					'quantity' => intval($b2c_item['unit_count']),
+					'price' => sprintf('%0.2f', $b2c_item['unit_price']),
+				);
 			}
 		}
 
 		if (count($inv_list)) {
-			$res = $rbe->sale_dispense($inv_list, strtotime($S['dts']));
+			$res = $cre->sale_dispense($inv_list, $b2c_time->format('U'));
 			switch ($res['success']) {
 			case 0:
 				// Tri
-				Session::flash('fail', $rbe->formatError($res));
-				Radix::redirect('/pos/sale?id=' . $S['id']);
+				Session::flash('fail', $cre->formatError($res));
+				Radix::redirect('/pos/sale?id=' . $b2c_sale['id']);
 				break;
 			case 1:
-				Session::flash('info', "Sale {$S['id']} Assigned Transaction {$S['tid']}");
-				//syslog(LOG_NOTICE, "Sale {$S['id']} Assigned Transaction {$S['tid']}");
-				$S->save();
-				//Task::done($task);
+				$b2c_sale['guid'] = sprintf('tid:%s', $res['transactionid']);
+				Session::flash('info', "Sale {$b2c_sale['id']} Assigned Transaction {$res['transactionid']}");
 				break;
 			}
 		} else {
@@ -250,15 +244,18 @@ class Commit extends \OpenTHC\Controller\Base
 
 	}
 
-	function send_to_biotrack_v2022($cre, $b2c_sale)
+	/**
+	 *
+	 */
+	function send_to_biotrack_v2022($b2c_sale)
 	{
 		// New Stuff Here
 		$dbc = $this->_container->DB;
 		$rdb = $this->_container->Redis;
 
-		$b2c_item_list = $b2c_sale->getItems();
-
 		$b2c_time = new \DateTime($b2c_sale['created_at'], new \DateTimezone('America/Denver'));
+
+		$b2c_item_list = $b2c_sale->getItems();
 
 		// Sale Dispense v3
 		// https://documenter.getpostman.com/view/15944043/UVktqDR2#bee52c63-f4bf-46ce-a6d2-34099afdb09b
@@ -329,7 +326,7 @@ class Commit extends \OpenTHC\Controller\Base
 		]);
 		$res = $res->getBody()->getContents();
 		$res = json_decode($res);
-		$b2c_sale['guid'] = $res->TransactionID;
+		// $b2c_sale['guid'] = $res->TransactionID;
 		$b2c_sale['guid'] = sprintf('tid:%s', $res->TransactionID);
 
 		return $b2c_sale;
@@ -432,6 +429,14 @@ class Commit extends \OpenTHC\Controller\Base
 
 		return $Sale;
 
+	}
+
+	/**
+	 *
+	 */
+	function send_to_openthc($b2c_sale)
+	{
+		throw new \Exception('Not Implemented');
 	}
 
 }
