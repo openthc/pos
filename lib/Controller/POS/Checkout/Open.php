@@ -37,7 +37,7 @@ class Open extends \OpenTHC\Controller\Base
 			case 'client-contact-search':
 				return $this->contact_search($RES);
 			case 'client-contact-skip':
-				$_SESSION['Checkout']['Contact'] = [
+				$_SESSION['Cart']['Contact'] = [
 					'id' => '018NY6XC00C0NTACT000WALK1N',
 					'stat' => 200,
 					'name' => 'Walk In',
@@ -56,7 +56,7 @@ class Open extends \OpenTHC\Controller\Base
 					$Contact1->save('Contact/Create in POS by User');
 					Session::flash('info', 'New Contact! Please add necessary details');
 				};
-				$_SESSION['Checkout']['Contact'] = $Contact1->toArray();
+				$_SESSION['Cart']['Contact'] = $Contact1->toArray();
 				return $RES->withRedirect('/pos');
 				break;
 			default:
@@ -70,7 +70,7 @@ class Open extends \OpenTHC\Controller\Base
 	 */
 	function contact_commit($RES)
 	{
-		$Contact = new Contact($this->_container->DB, $_SESSION['Checkout']['Contact']);
+		$Contact = new Contact($this->_container->DB, $_SESSION['Cart']['Contact']);
 
 		$Contact['stat'] = Contact::STAT_LIVE;
 		$Contact['fullname'] = $_POST['client-contact-name'];
@@ -82,7 +82,7 @@ class Open extends \OpenTHC\Controller\Base
 
 		$Contact->save('Contact/Update by User');
 
-		$_SESSION['Checkout']['Contact'] = $Contact->toArray();
+		$_SESSION['Cart']['Contact'] = $Contact->toArray();
 
 		return $RES->withRedirect('/pos');
 
@@ -168,13 +168,13 @@ class Open extends \OpenTHC\Controller\Base
 					};
 
 					if ( ! empty($Contact['id'])) {
-						$_SESSION['Checkout']['Contact'] = $Contact->toArray();
+						$_SESSION['Cart']['Contact'] = $Contact->toArray();
 						return $RES->withRedirect('/pos');
 					}
 
 					break;
 				case 404:
-					$_SESSION['Checkout']['Contact'] = [
+					$_SESSION['Cart']['Contact'] = [
 						'id' => '',
 						'guid' => $guid1,
 						'stat' => 100,
@@ -220,7 +220,7 @@ class Open extends \OpenTHC\Controller\Base
 			return $RES->withRedirect('/pos');
 		}
 
-		$_SESSION['Checkout']['Contact'] = $Contact->toArray();
+		$_SESSION['Cart']['Contact'] = $Contact->toArray();
 
 		return $RES->withRedirect('/pos');
 
@@ -295,7 +295,7 @@ class Open extends \OpenTHC\Controller\Base
 	function _contact_search_usa_ok($RES)
 	{
 		$oid = $_POST['client-contact-govt-id'];
-		$_SESSION['Checkout']['contact-search'] = $oid;
+		$_SESSION['Cart']['contact-search'] = $oid;
 
 		$url = sprintf('https://omma.us.thentiacloud.net/rest/public/patient-verify/search/?licenseNumber=%s&_=%d'
 			, $oid
@@ -304,7 +304,7 @@ class Open extends \OpenTHC\Controller\Base
 		$req = __curl_init($url);
 		$res = curl_exec($req);
 		if (empty($res)) {
-			$_SESSION['Checkout']['contact-push'] = true;
+			$_SESSION['Cart']['contact-push'] = true;
 			Session::flash('fail', 'Patient Search Failed, Please Try Manually [PCO-249]');
 			Session::flash('fail', 'Visit: <a href="https://omma.us.thentiacloud.net/webs/omma/register/">omma.us.thentiacloud.net/webs/omma/register</a> to perform the lookup');
 			return $RES->withRedirect($_SERVER['HTTP_REFERER']);
@@ -312,21 +312,21 @@ class Open extends \OpenTHC\Controller\Base
 		$res = json_decode($res, true);
 
 		if (empty($res['result'])) {
-			$_SESSION['Checkout']['contact-push'] = true;
+			$_SESSION['Cart']['contact-push'] = true;
 			Session::flash('fail', 'Patient Search Failed, Please Try Again [PCO-256]');
 			Session::flash('fail', 'Or visit: <a href="https://omma.us.thentiacloud.net/webs/omma/register/">omma.us.thentiacloud.net/webs/omma/register</a> to perform the lookup');
 			return $RES->withRedirect($_SERVER['HTTP_REFERER']);
 		}
 
 		if (empty($res['result']['licenseNumber'])) {
-			$_SESSION['Checkout']['contact-push'] = true;
+			$_SESSION['Cart']['contact-push'] = true;
 			Session::flash('fail', 'Patient Search Failed, Please Try Again [PCO-262]');
 			Session::flash('fail', 'Or visit: <a href="https://omma.us.thentiacloud.net/webs/omma/register/">omma.us.thentiacloud.net/webs/omma/register</a> to perform the lookup');
 			return $RES->withRedirect($_SERVER['HTTP_REFERER']);
 		}
 
 		if ($oid != $res['result']['licenseNumber']) {
-			$_SESSION['Checkout']['contact-push'] = true;
+			$_SESSION['Cart']['contact-push'] = true;
 			Session::flash('fail', 'Patient Search Failed, Invalid ID, Please Try Again [PCO-268]');
 			Session::flash('fail', 'Or visit: <a href="https://omma.us.thentiacloud.net/webs/omma/register/">omma.us.thentiacloud.net/webs/omma/register</a> to perform the lookup');
 			return $RES->withRedirect($_SERVER['HTTP_REFERER']);
@@ -353,7 +353,7 @@ class Open extends \OpenTHC\Controller\Base
 
 		$Contact2 = $Contact1->toArray();
 
-		$_SESSION['Checkout']['Contact'] = $Contact2;
+		$_SESSION['Cart']['Contact'] = $Contact2;
 
 		return $RES->withRedirect('/pos');
 

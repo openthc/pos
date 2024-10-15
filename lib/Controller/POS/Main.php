@@ -46,16 +46,16 @@ class Main extends \OpenTHC\Controller\Base
 			'Page' => array('title' => sprintf('POS :: %s <code>%s</code>', $_SESSION['License']['name'], $_SESSION['License']['code']))
 		);
 
-		if (empty($_SESSION['Checkout']['Contact'])) {
+		if (empty($_SESSION['Cart']['Contact'])) {
 			return $RES->write( $this->render('pos/contact-select.php', $data) );
 		}
 
-		if ($_SESSION['Checkout']['Contact']['stat'] != Contact::STAT_LIVE) {
+		if ($_SESSION['Cart']['Contact']['stat'] != Contact::STAT_LIVE) {
 			return $RES->write( $this->render('pos/contact-verify.php', $data) );
 		}
 
 		// <a href="#" data-bs-toggle="modal" data-bs-target="#pos-modal-checkout-contact">%s</a>
-		// $_SESSION['Checkout']['Contact']['id']
+		// $_SESSION['Cart']['Contact']['id']
 
 		return $RES->write( $this->render('pos/terminal/main.php', $data) );
 
@@ -91,7 +91,6 @@ class Main extends \OpenTHC\Controller\Base
 			$_SESSION['pos-terminal-contact'] = $_SESSION['Contact']['id'];
 
 			$_SESSION['Cart'] = [];
-			$_SESSION['Checkout'] = [];
 
 			return $RES->withRedirect('/pos');
 

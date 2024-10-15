@@ -19,7 +19,7 @@ class POS extends \OpenTHC\Module\Base
 
 		$a->get('/fast', 'OpenTHC\POS\Controller\POS\Fast');
 		$a->get('/open', function($REQ, $RES, $ARG) {
-			unset($_SESSION['Checkout']);
+			unset($_SESSION['Cart']);
 			return $RES->withRedirect('/pos');
 		});
 

@@ -33,7 +33,7 @@ ob_start();
 		name="client-contact-guid"
 		placeholder="Primary Identification Method"
 		type="text"
-		value="<?= __h($_SESSION['Checkout']['Contact']['guid']) ?>">
+		value="<?= __h($_SESSION['Cart']['Contact']['guid']) ?>">
 </div>
 
 
@@ -45,7 +45,7 @@ ob_start();
 		name="client-contact-code"
 		placeholder="Secondary Identification Method"
 		type="text"
-		value="<?= __h($_SESSION['Checkout']['Contact']['code']) ?>">
+		value="<?= __h($_SESSION['Cart']['Contact']['code']) ?>">
 </div>
 
 
@@ -57,7 +57,7 @@ ob_start();
 		name="client-contact-name"
 		placeholder="First & Last"
 		type="text"
-		value="<?= __h($_SESSION['Checkout']['Contact']['fullname']) ?>">
+		value="<?= __h($_SESSION['Cart']['Contact']['fullname']) ?>">
 </div>
 
 
@@ -69,7 +69,7 @@ ob_start();
 		name="client-contact-dob"
 		placeholder="MM/DD/YYYY or YYYY-MM-DD"
 		type="text"
-		value="<?= __h($_SESSION['Checkout']['Contact']['meta']['dob']) ?>">
+		value="<?= __h($_SESSION['Cart']['Contact']['meta']['dob']) ?>">
 </div>
 
 
@@ -81,7 +81,7 @@ ob_start();
 		name="client-contact-pid"
 		placeholder="AA-BBBB-CCCC-DDDD-EEEE-FFFF-GG"
 		type="text"
-		value="<?= __h($_SESSION['Checkout']['Contact']['guid']) ?>">
+		value="<?= __h($_SESSION['Cart']['Contact']['guid']) ?>">
 </div>
  -->
 
@@ -89,10 +89,10 @@ ob_start();
 
 switch ($_SESSION['cre']['id']) {
 	case 'usa/ok':
-		_contact_verify_info_usa_ok($_SESSION['Checkout']['Contact']);
+		_contact_verify_info_usa_ok($_SESSION['Cart']['Contact']);
 }
 
-// var_dump($_SESSION['Checkout']['Contact']);
+// var_dump($_SESSION['Cart']['Contact']);
 
 $body = ob_get_clean();
 

@@ -27,11 +27,11 @@ $_input_group = function($pre_text, $name_id, $hint, $val)
 
 ob_start();
 
-echo $_input_group('Name', '', '', $_SESSION['Checkout']['Contact']['fullname']);
-echo $_input_group('Patient ID', '', '', $_SESSION['Checkout']['Contact']['guid']);
-echo $_input_group('Code', '', '', $_SESSION['Checkout']['Contact']['code']);
-echo $_input_group('Phone', 'pos-client-contact-phone', '', $_SESSION['Checkout']['Contact']['phone']);
-echo $_input_group('Email', 'pos-client-contact-email', '', $_SESSION['Checkout']['Contact']['email']);
+echo $_input_group('Name', '', '', $_SESSION['Cart']['Contact']['fullname']);
+echo $_input_group('Patient ID', '', '', $_SESSION['Cart']['Contact']['guid']);
+echo $_input_group('Code', '', '', $_SESSION['Cart']['Contact']['code']);
+echo $_input_group('Phone', 'pos-client-contact-phone', '', $_SESSION['Cart']['Contact']['phone']);
+echo $_input_group('Email', 'pos-client-contact-email', '', $_SESSION['Cart']['Contact']['email']);
 
 $body = ob_get_clean();
 
@@ -43,7 +43,7 @@ HTML;
 
 echo $this->block('modal.php', [
 	'modal_id' => 'pos-modal-customer-info',
-	'modal_title' => 'Checkout :: Customer Information',
+	'modal_title' => 'Cart :: Customer Information',
 	'body' => $body,
 	'foot' => $foot,
 ]);

@@ -46,7 +46,7 @@ class Commit extends \OpenTHC\Controller\Base
 			$Sale['contact_id'] = $_SESSION['Contact']['id'];
 			$Sale['guid'] = $Sale['id'];
 			$Sale['meta'] = json_encode([
-				'_SESSION/Checkout' => $_SESSION['Checkout'],
+				'_SESSION/Cart' => $_SESSION['Cart'],
 				'_POST' => $_POST,
 			]);
 			$Sale->save('B2C/Sale/Create');
@@ -347,22 +347,22 @@ class Commit extends \OpenTHC\Controller\Base
 		$obj['SalesDateTime'] = date(\DateTime::ISO8601);
 
 		// 'Consumer', 'Caregiver'; 'ExternalPatient', 'Patient'
-		switch ($_SESSION['Checkout']['Contact']['id']) {
+		switch ($_SESSION['Cart']['Contact']['id']) {
 			case '018NY6XC00C0NTACT000WALK1N':
 				$obj['SalesCustomerType'] = 'Consumer';
 				break;
 			default:
 				$obj['SalesCustomerType'] = 'Patient';
-				$obj['PatientLicenseNumber'] = $_SESSION['Checkout']['Contact']['guid'];
+				$obj['PatientLicenseNumber'] = $_SESSION['Cart']['Contact']['guid'];
 				break;
 		}
-		switch ($_SESSION['Checkout']['Contact']['type']) {
+		switch ($_SESSION['Cart']['Contact']['type']) {
 			case '018NY6XC00C0NTACTTYPE000AC':
 				$obj['SalesCustomerType'] = 'Consumer';
 				break;
 			case '018NY6XC00C0NTACTTYPE000PA': // Well Known ULID
 				$obj['SalesCustomerType'] = 'Patient';
-				$obj['PatientLicenseNumber'] = $_SESSION['Checkout']['Contact']['guid'];
+				$obj['PatientLicenseNumber'] = $_SESSION['Cart']['Contact']['guid'];
 				break;
 		}
 

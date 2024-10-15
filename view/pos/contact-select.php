@@ -9,7 +9,7 @@ $this->layout_file = sprintf('%s/view/_layout/html-pos.php', APP_ROOT);
 
 $head = sprintf('<h1>%s</h1>', _('Check In:'));
 
-$govt_id_html = __h($_SESSION['Checkout']['contact-search']);
+$govt_id_html = __h($_SESSION['Cart']['contact-search']);
 
 $body = <<<HTML
 
@@ -52,8 +52,8 @@ $foot[] = '<div>';
 
 $foot[] = '<button class="btn btn-lg btn-primary" name="a" type="submit" value="client-contact-update">Next <i class="fas fa-arrow-right"></i></button>';
 
-if ($_SESSION['Checkout']['contact-push']) {
-	unset($_SESSION['Checkout']['contact-push']);
+if ($_SESSION['Cart']['contact-push']) {
+	unset($_SESSION['Cart']['contact-push']);
 	$foot[] = '<button class="btn btn-lg btn-outline-primary" name="a" type="submit" value="client-contact-update-force">Use Anyway <i class="fas fa-arrow-right"></i></button>';
 }
 

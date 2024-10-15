@@ -124,26 +124,4 @@ switch ($_POST['a']) {
 
 	}
 
-	private function insert_cart($RES)
-	{
-		if (empty($_SESSION['cart'])) $_SESSION['cart'] = new Radix_Cart();
-
-		if (empty($_POST['inventory_id'])) {
-			Session::flash('warn', 'An Inventory Item is required to add to a Sales process');
-			return(0);
-		}
-
-		$I = new Inventory($_POST['inventory_id']);
-		if (empty($I['id'])) {
-			Session::flash('fail', 'Inventory Item not found');
-			return(0);
-		}
-
-		$_SESSION['cart']->add(array(
-			'name' => $I['variety'],
-			'size' => $_POST['size'],
-			'cost' => $I['sell'],
-		));
-
-	}
 }
