@@ -78,7 +78,7 @@ $this->layout_file = sprintf('%s/view/_layout/html-pos.php', APP_ROOT);
 		<div class="cmd-item">
 			<button class="btn btn-lg btn-secondary"
 				data-bs-toggle="modal"
-				data-bs-target="#pos-modal-checkout-option"
+				data-bs-target="#pos-modal-cart-option"
 				disabled
 				id="pos-ticket-options"
 				type="button">
