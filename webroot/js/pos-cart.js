@@ -32,10 +32,10 @@ function Cart_addItem(obj)
 
 	// @note why have inv-item on here?
 	var html = `
-<div class="container pb-2 inv-item psi-item-item"
+<div class="container pb-2 inv-item cart-item"
 	data-id="${obj.id}"
+	data-inventory-id="${obj.id}"
 	data-weight="${obj.weight}"
-	data-price="${obj.price}"
 	id="psi-item-${obj.id}">
 
 <div class="row">
@@ -46,7 +46,7 @@ function Cart_addItem(obj)
 	<div class="col-md-4">
 		<div class="input-group">
 			<label class="input-group-text">Qty:</label>
-			<input class="form-control psi-item-size" data-id="${obj.id}" id="psi-item-${obj.id}-unit-count" name="item-${obj.id}-unit-count" type="number" value="${obj.qty}">
+			<input class="form-control" data-id="${obj.id}" id="psi-item-${obj.id}-unit-count" name="item-${obj.id}-unit-count" type="number" value="${obj.qty}">
 		</div>
 	</div>
 	<div class="col-md-4">
@@ -61,7 +61,7 @@ function Cart_addItem(obj)
 		</div>
 	</div>
 	<div class="col-md-4" style="text-align:right;">
-		<h3><span id="psi-item-${obj.id}-sale">${full_price.toFixed(2)}</span></h3>
+		<h3><span id="psi-item-${obj.id}-full-price">${full_price.toFixed(2)}</span></h3>
 	</div>
 </div>
 </div>`;
@@ -90,10 +90,10 @@ function Cart_addItem_flash(inv_id)
 {
 	// $(`#psi-item-${inv_id}-unit-count`).focus();
 	$(`#psi-item-${inv_id}-unit-count`).addClass('text-danger');
-	$(`#psi-item-${inv_id}-sale`).addClass('text-danger');
+	$(`#psi-item-${inv_id}-full-price`).addClass('text-danger');
 	setTimeout(function() {
 		$(`#psi-item-${inv_id}-unit-count`).removeClass('text-danger');
-		$(`#psi-item-${inv_id}-sale`).removeClass('text-danger');
+		$(`#psi-item-${inv_id}-full-price`).removeClass('text-danger');
 	}, 321);
 }
 
@@ -103,14 +103,14 @@ $(function() {
 	$('#cart-list-wrap').on('click', '.fa-times', function() {
 
 		// Remove Parent
-		$(this).closest('.psi-item-item').remove();
+		$(this).closest('.cart-item').remove();
 
 		chkSaleCost();
 
 	});
 
 	// If on-screen keyboard is muted, use this popup modal
-	//	$('#cart-list-wrap').on('focus', '.psi-item-size', function(e) {
+	//	$('#cart-list-wrap').on('focus', '.cart-item input', function(e) {
 	//		Weed.modal( $('#pos-modal-number-input') );
 	//		$('#app-modal-wrap').css('width', '480px');
 	//		$('#pos-modal-number-input').show();

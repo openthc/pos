@@ -20,6 +20,13 @@ var OpenTHC = OpenTHC || {};
 
 OpenTHC.POS = {
 
+	Cart: {
+		unit_count: 0,
+		unit_price: 0,
+		tax_total: 0,
+		full_price: 0,
+	},
+
 	init_done:false,
 	init:function(m)
 	{
@@ -88,11 +95,11 @@ OpenTHC.POS.Ticket = {
 		var cur_24 = 0; // Extract to Inhale
 		var cur_28 = 0; // Usable
 
-		$('.psi-item-item').each(function(i, n) {
+		$('.cart-item').each(function(i, n) {
 
 			var inv_id = $(n).data('id');
 
-			var q = $(`#psi-item-${inv_id}-sale`).val();
+			var q = $(`#psi-item-${inv_id}-unit-count`).val();
 			if (isNaN(q)) {
 				console.log('OpenTHC.POS.Ticket.checkSaleLimits - Bad Quantity for Item: ' + inv_id);
 				return(0);
@@ -153,24 +160,21 @@ function chkSaleCost()
 
 	OpenTHC.POS.sale.sub = 0;
 
-	$('.psi-item-item').each(function(x, n) {
+	// Find All Line Items
+	$('.cart-item').each(function(x, n) {
 
 		var inv_id = $(n).data('id');
-		var q = $(`#psi-item-${inv_id}-sale`).val();
-
-		if (isNaN(q)) {
-			console.log('chkSaleCost - Bad Q');
+		var unit_count = $(`#psi-item-${inv_id}-unit-count`).val();
+		if (isNaN(unit_count)) {
+			console.log('chkSaleCost ! invalid unit_count');
 		}
 
-		var r = $(n).data('price');
-		if (isNaN(r)) {
-			r = $('#inv-item-' + inv_id).data('price');
-			if (isNaN(r)) {
-				console.log('chkSaleCost - Bad R');
-			}
-		}
+		var unit_price = $(`#psi-item-${inv_id}-unit-price`).val();
+		unit_price = parseFloat(unit_price);
 
-		OpenTHC.POS.sale.sub += (q * r);
+		OpenTHC.POS.Cart.full_price += (unit_count * unit_price);
+		OpenTHC.POS.sale.sub += (unit_count * unit_price);
+
 	});
 
 	if (isNaN(OpenTHC.POS.sale.sub)) {
@@ -292,19 +296,19 @@ $(function() {
 	/**
 		An Item Size has Changed
 	*/
-	$(document).on('change', '.psi-item-size', function(e) {
+	$(document).on('change', '.cart-item input', function(e) {
 
-		console.log('item-size!change');
+		console.log('.cart-item input!change');
 
-		var i = $(this).data('id');
-		var q = $(this).val();
-		var r = $('#inv-item-' + i).data('price');
-		var p = q * r;
+		var inv_id = this.getAttribute('data-id');
+		var unit_count = parseFloat( $(`#item-${inv_id}-unit-count`).val() );
+		var unit_price = parseFloat( $(`#inv-item-${inv_id}-unit-price`).val() );
+		var item_price = unit_count * unit_price;
 
-		$('#psi-item-' + i + '-sale').html(p.toFixed(2));
+		$(`#psi-item-${inv_id}-full-price`).html(item_price.toFixed(2));
 
-		if (q <= 0) {
-			$('#psi-item-' + i).remove();
+		if (unit_count <= 0) {
+			$('#psi-item-' + inv_id).remove();
 		}
 
 		chkSaleCost();
@@ -312,11 +316,12 @@ $(function() {
 
 	$(document).on('change', '.pos-cart-unit-price', function(e) {
 		// My Item ID Price has Changed
-		var i = this.getAttribute('data-id');
-		var q = parseFloat($(`#item-${i}-unit-count`).val());
-		var p = parseFloat(this.value);
-		var s = q * p;
-		$(`#psi-item-${i}-sale`).html(s.toFixed(2));
+		var inv_id = this.getAttribute('data-id');
+		var unit_count = parseFloat($(`#item-${inv_id}-unit-count`).val());
+		var unit_price = parseFloat(this.value);
+		var item_price = unit_count * unit_price;
+
+		$(`#psi-item-${i}-full-price`).html(s.toFixed(2));
 	});
 
 	// Open A Link in a Modal Thing
