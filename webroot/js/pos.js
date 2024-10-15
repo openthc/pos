@@ -21,8 +21,9 @@ var OpenTHC = OpenTHC || {};
 OpenTHC.POS = {
 
 	Cart: {
-		unit_count: 0,
-		unit_price: 0,
+		item_count: 0,  // Count of Line Items
+		item_price_total: 0,  // Total of Line Items
+		unit_count: 0,  // Total Count of Units
 		tax_total: 0,
 		full_price: 0,
 	},
@@ -75,13 +76,7 @@ OpenTHC.POS = {
 	},
 	sale: {
 		due: 0,
-		sum: 0,
 		tax_sale: 0,
-		setVal: function(k, v) {
-			var self = this; // The Sale. object
-			self[k] = v;
-			// Recalc All the Things?
-		}
 	}
 };
 
@@ -158,13 +153,18 @@ function chkSaleCost()
 {
 	console.log('chkSaleCost()');
 
-	OpenTHC.POS.sale.sub = 0;
+	OpenTHC.POS.Cart.item_count = 0;
+	OpenTHC.POS.Cart.item_price_total = 0;
+	OpenTHC.POS.Cart.unit_count = 0;
+	OpenTHC.POS.Cart.full_price = 0;
+
 
 	// Find All Line Items
 	$('.cart-item').each(function(x, n) {
 
 		var inv_id = $(n).data('id');
 		var unit_count = $(`#psi-item-${inv_id}-unit-count`).val();
+		unit_count = parseFloat(unit_count);
 		if (isNaN(unit_count)) {
 			console.log('chkSaleCost ! invalid unit_count');
 		}
@@ -172,19 +172,17 @@ function chkSaleCost()
 		var unit_price = $(`#psi-item-${inv_id}-unit-price`).val();
 		unit_price = parseFloat(unit_price);
 
-		OpenTHC.POS.Cart.full_price += (unit_count * unit_price);
-		OpenTHC.POS.sale.sub += (unit_count * unit_price);
+		OpenTHC.POS.Cart.item_count++;
+		OpenTHC.POS.Cart.item_price_total += (unit_count * unit_price);
+		OpenTHC.POS.Cart.unit_count += unit_count;
 
 	});
 
-	if (isNaN(OpenTHC.POS.sale.sub)) {
-		OpenTHC.POS.sale.sub = 0;
-	}
-
-	OpenTHC.POS.sale.due	  = OpenTHC.POS.sale.sub + OpenTHC.POS.sale.tax_sale;
+	OpenTHC.POS.sale.due	  = OpenTHC.POS.Cart.item_price_total + OpenTHC.POS.sale.tax_sale;
 
 	// Canonical
-	$('.pos-checkout-sub').html(parseFloat(OpenTHC.POS.sale.sub, 10).toFixed(2));
+	$('.pos-checkout-item-count').html( OpenTHC.POS.Cart.unit_count );
+	$('.pos-checkout-sub').html(parseFloat(OpenTHC.POS.Cart.item_price_total, 10).toFixed(2));
 	$('.pos-checkout-tax-total').html(parseFloat(OpenTHC.POS.sale.tax_sale, 10).toFixed(2));
 	$('.pos-checkout-sum').html(parseFloat(OpenTHC.POS.sale.due, 10).toFixed(2));
 

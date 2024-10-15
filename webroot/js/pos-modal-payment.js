@@ -1,9 +1,10 @@
 /**
+ * JavaScript Handlers for the POS Payment Modal
  *
+ * SPDX-License-Identifier: GPL-3.0-only
  */
 
 var ppCashPaid_List = new Array();
-
 
 function ppFormUpdate()
 {
@@ -174,8 +175,8 @@ $(function() {
 
 		$('#psi-form').attr('action', '/pos/checkout/commit');
 		$('#psi-form').append('<input name="a" type="hidden" value="pos-done">');
-		$('#psi-form').append('<input name="due" type="hidden" value="' + OpenTHC.POS.sale.due + '">');
-		$('#psi-form').append('<input name="sub" type="hidden" value="' + OpenTHC.POS.sale.sub + '">');
+		$('#psi-form').append('<input name="due" type="hidden" value="' + OpenTHC.POS.Cart.full_price + '">');
+		$('#psi-form').append('<input name="sub" type="hidden" value="' + OpenTHC.POS.Cart.item_price_total + '">');
 		$('#psi-form').append('<input name="tax_sale" type="hidden" value="' + OpenTHC.POS.sale.tax_sale + '">');
 		$('#psi-form').append('<input name="pay" type="hidden" value="' + $('#payment-cash-incoming').val() + '">'); // @deprecated
 		$('#psi-form').append('<input name="name" type="hidden" value="' + $('#customer-name').val() + '">');
