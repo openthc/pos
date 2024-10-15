@@ -1,4 +1,4 @@
-/* global $:false, Weed:false */
+/* global $:false, OpenTHC:false */
 /* eslint browser:0, multivar:1, white:1, no-console: "off" */
 /**
 	Point-of-Sale JavaSCript
@@ -16,32 +16,37 @@ window.ulid = function()
 }
 
 
-var Weed = Weed || {};
+var OpenTHC = OpenTHC || {};
 
-Weed.POS = {
+OpenTHC.POS = {
 
 	init_done:false,
 	init:function(m)
 	{
-		// Some times the browswer can fire load twice, so trap that
-		if (Weed.POS.init_done) return(0);
-		Weed.POS.init_done = true;
+		// Some times the browswer can fire load twice?, so trap that
+		if (OpenTHC.POS.init_done) {
+			console.log('OpenTHC.POS.init() - 2nd');
+			return;
+		}
 
 		switch (m) {
 		case 'front':
 			// Save O as terminal ID?
-			Weed.POS.pull();
+			OpenTHC.POS.pull();
 			setInterval(function() {
-				Weed.POS.pull();
+				OpenTHC.POS.pull();
 			}, 2345);
 			break;
 		}
+
+		OpenTHC.POS.init_done = true;
+
 	},
 	ping_tick: null,
 	ping: function() {
 		$.get('/pos/ajax?a=ping');
-		if (null === Weed.POS.ping_tick) {
-			Weed.POS.ping_tick = setInterval(Weed.POS.ping, 60 * 1000);
+		if (null === OpenTHC.POS.ping_tick) {
+			OpenTHC.POS.ping_tick = setInterval(OpenTHC.POS.ping, 60 * 1000);
 			return;
 		}
 	},
@@ -74,7 +79,7 @@ Weed.POS = {
 };
 
 
-Weed.POS.Ticket = {
+OpenTHC.POS.Ticket = {
 
 	checkSaleLimits: function()
 	{
@@ -89,13 +94,13 @@ Weed.POS.Ticket = {
 
 			var q = $('#psi-item-' + id + '-size').val();
 			if (isNaN(q)) {
-				console.log('Weed.POS.Ticket.checkSaleLimits - Bad Quantity for Item: ' + id);
+				console.log('OpenTHC.POS.Ticket.checkSaleLimits - Bad Quantity for Item: ' + id);
 				return(0);
 			}
 
 			var w = $(n).data('weight');
 			if (isNaN(w)) {
-				console.log('Weed.POS.Ticket.checkSaleLimits - Bad Weight for Item: ' + id);
+				console.log('OpenTHC.POS.Ticket.checkSaleLimits - Bad Weight for Item: ' + id);
 				return(0);
 			}
 
@@ -146,7 +151,7 @@ function chkSaleCost()
 {
 	console.log('chkSaleCost()');
 
-	Weed.POS.sale.sub = 0;
+	OpenTHC.POS.sale.sub = 0;
 
 	$('.psi-item-item').each(function(x, n) {
 
@@ -165,29 +170,29 @@ function chkSaleCost()
 			}
 		}
 
-		Weed.POS.sale.sub += (q * r);
+		OpenTHC.POS.sale.sub += (q * r);
 	});
 
-	if (isNaN(Weed.POS.sale.sub)) {
-		Weed.POS.sale.sub = 0;
+	if (isNaN(OpenTHC.POS.sale.sub)) {
+		OpenTHC.POS.sale.sub = 0;
 	}
 
-	Weed.POS.sale.due	  = Weed.POS.sale.sub + Weed.POS.sale.tax_sale;
+	OpenTHC.POS.sale.due	  = OpenTHC.POS.sale.sub + OpenTHC.POS.sale.tax_sale;
 
 	// Canonical
-	$('.pos-checkout-sub').html(parseFloat(Weed.POS.sale.sub, 10).toFixed(2));
-	$('.pos-checkout-tax-total').html(parseFloat(Weed.POS.sale.tax_sale, 10).toFixed(2));
-	$('.pos-checkout-sum').html(parseFloat(Weed.POS.sale.due, 10).toFixed(2));
+	$('.pos-checkout-sub').html(parseFloat(OpenTHC.POS.sale.sub, 10).toFixed(2));
+	$('.pos-checkout-tax-total').html(parseFloat(OpenTHC.POS.sale.tax_sale, 10).toFixed(2));
+	$('.pos-checkout-sum').html(parseFloat(OpenTHC.POS.sale.due, 10).toFixed(2));
 
-	if (Weed.POS.sale.due <= 0) {
+	if (OpenTHC.POS.sale.due <= 0) {
 		$('.pos-checkout-sum').parent().css('color', '');
 		$('#pos-terminal-cmd-wrap button').attr('disabled', 'disabled');
-	} else if (Weed.POS.sale.due > 0) {
+	} else if (OpenTHC.POS.sale.due > 0) {
 		$('.pos-checkout-sum').parent().css('color', '#f00000');
 		$('#pos-terminal-cmd-wrap button').removeAttr('disabled');
 	}
 
-	Weed.POS.push($('#psi-form').serializeArray());
+	OpenTHC.POS.push($('#psi-form').serializeArray());
 
 }
 

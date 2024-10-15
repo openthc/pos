@@ -7,7 +7,7 @@ var ppCashPaid_List = new Array();
 
 function ppFormUpdate()
 {
-	var full = Weed.POS.sale.due;
+	var full = OpenTHC.POS.sale.due;
 	var cash = parseFloat($('#payment-cash-incoming').text(), 10);
 	var need = (full - cash);
 	var back = (cash - full);
@@ -174,9 +174,9 @@ $(function() {
 
 		$('#psi-form').attr('action', '/pos/checkout/commit');
 		$('#psi-form').append('<input name="a" type="hidden" value="pos-done">');
-		$('#psi-form').append('<input name="due" type="hidden" value="' + Weed.POS.sale.due + '">');
-		$('#psi-form').append('<input name="sub" type="hidden" value="' + Weed.POS.sale.sub + '">');
-		$('#psi-form').append('<input name="tax_sale" type="hidden" value="' + Weed.POS.sale.tax_sale + '">');
+		$('#psi-form').append('<input name="due" type="hidden" value="' + OpenTHC.POS.sale.due + '">');
+		$('#psi-form').append('<input name="sub" type="hidden" value="' + OpenTHC.POS.sale.sub + '">');
+		$('#psi-form').append('<input name="tax_sale" type="hidden" value="' + OpenTHC.POS.sale.tax_sale + '">');
 		$('#psi-form').append('<input name="pay" type="hidden" value="' + $('#payment-cash-incoming').val() + '">'); // @deprecated
 		$('#psi-form').append('<input name="name" type="hidden" value="' + $('#customer-name').val() + '">');
 		$('#psi-form').append(`<input name="cash_incoming" type="hidden" value="${cash_incoming}">`);

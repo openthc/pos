@@ -304,7 +304,7 @@ $(function() {
 	});
 
 	$('#pos-modal-number-input #pmni-back').on('click', function(e) {
-		Weed.modal('shut');
+		$('pos-modal-number-input').modal('hide');
 		return false;
 	});
 
@@ -319,7 +319,7 @@ $(function() {
 		node.change();
 		chkSaleCost();
 
-		Weed.modal('shut');
+		$('pos-modal-number-input').modal('hide');
 
 		return false;
 	});

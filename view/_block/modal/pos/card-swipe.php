@@ -30,14 +30,14 @@ $(function() {
 
 	// Close when Cancel is clicked
 	$('#pos-card-back').on('click', function() {
-		Weed.modal('shut');
+		$('#pos-modal-checkout-card-swipe').modal('shut');
 	});
 
 });
 </script>
 
 echo $this->block('modal.php', [
-	'modal_id' => 'pos-modal-scan-id',
+	'modal_id' => 'pos-modal-checkout-card-swipe',
 	'modal_title' => 'Scan ID',
 	'body' => $body,
 	'foot' => $foot,

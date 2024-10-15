@@ -60,7 +60,7 @@ function Cart_addItem(obj)
 	Cart_addItem_flash(obj.id);
 	chkSaleCost();
 
-	Weed.POS.Ticket.checkSaleLimits();
+	OpenTHC.POS.Ticket.checkSaleLimits();
 
 	$('#cart-list-empty').hide();
 }

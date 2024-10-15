@@ -52,20 +52,6 @@ $(function() {
 	//      rfs.call(el);
 	//});
 
-	// $('#pos-terminal-id').on('click', function() {
-	// 	// Weed.bodyDim();
-	// 	//$.get('/pos/ajax/tid', function() {
-	// 	var html = '';
-	// 	html+= '<div style="background: #fdfdfd; border:4px solid #000; height: 400px; margin: 0px auto; width: 400px;">';
-	// 	// html+= '<img src="http://chart.apis.google.com/chart?cht=qr&chs=400x400&chl=<?= rawurlencode('https://weedtraqr.com/pos/front?t=' . $_SESSION['pos-terminal-id']) ?>&chld=H|0">';
-	// 	html+= '</div>';
-	// 	Weed.modal(html);
-	// });
-
-	// $('#pos-sign-out').on('click', function() {
-	// 	window.location = '/auth/pin';
-	// });
-
 });
 </script>
 <?= $this->foot_script ?>
