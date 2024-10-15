@@ -99,7 +99,7 @@ echo $this->block('modal/pos/scan-id.php');
 echo $this->block('modal/pos/hold.php');
 echo $this->block('modal/pos/discount.php');
 echo $this->block('modal/pos/loyalty.php');
-echo $this->block('modal/pos/ticket-options.php');
+echo $this->block('modal/pos/cart-options.php');
 echo $this->block('modal/pos/payment-cash.php');
 echo $this->block('modal/pos/payment-card.php');
 // echo $this->block('modal/pos/card-swipe.php')
