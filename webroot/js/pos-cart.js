@@ -32,17 +32,17 @@ function Cart_addItem(obj)
 
 	// @note why have inv-item on here?
 	var html = `
-<div class="inv-item psi-item-item"
+<div class="container pb-2 inv-item psi-item-item"
 	data-id="${obj.id}"
 	data-weight="${obj.weight}"
 	data-price="${obj.price}"
 	id="psi-item-${obj.id}">
 
-<div class="row" style="margin:0;">
+<div class="row">
 	<div class="col-md-10" style="vertical-align:baseline;"><h4>${obj.name}</h4></div>
 	<div class="col-md-2" style="text-align:right;"><i class="fas fa-times" data-id="${obj.id}" style="color:#f00; cursor:grab; font-size: 24px; margin:8px;"></i></div>
 </div>
-<div class="row" style="margin:0;">
+<div class="row">
 	<div class="col-md-4">
 		<div class="input-group">
 			<label class="input-group-text">Qty:</label>
@@ -51,12 +51,13 @@ function Cart_addItem(obj)
 	</div>
 	<div class="col-md-4">
 		<div class="input-group">
-			<label class="input-group-text">ea:</label>
+
 			<input class="form-control pos-cart-unit-price"
 				data-id="${obj.id}"
 				id="psi-item-${obj.id}-unit-price"
 				name="item-${obj.id}-unit-price"
 				type="number" value="${obj.price.toFixed(2)}">
+			<label class="input-group-text">ea:</label>
 		</div>
 	</div>
 	<div class="col-md-4" style="text-align:right;">
@@ -85,15 +86,14 @@ function Cart_addItem_Alt(obj)
 /**
 	Blink the Item
 */
-
 function Cart_addItem_flash(inv_id)
 {
 	// $(`#psi-item-${inv_id}-unit-count`).focus();
-	$(`#psi-item-${inv_id}-unit-count`).addClass('pos-warn');
-	$(`#psi-item-${inv_id}-sale`).addClass('pos-warn');
+	$(`#psi-item-${inv_id}-unit-count`).addClass('text-danger');
+	$(`#psi-item-${inv_id}-sale`).addClass('text-danger');
 	setTimeout(function() {
-		$(`#psi-item-${inv_id}-unit-count`).removeClass('pos-warn');
-		$(`#psi-item-${inv_id}-sale`).removeClass('pos-warn');
+		$(`#psi-item-${inv_id}-unit-count`).removeClass('text-danger');
+		$(`#psi-item-${inv_id}-sale`).removeClass('text-danger');
 	}, 321);
 }
 
