@@ -76,7 +76,7 @@ header('content-type: text/html; charset=utf-8', true);
 <!-- <script src="/js/pos-modal-contact.js"></script> -->
 <script src="/js/pos-modal-discount.js"></script>
 <script src="/js/pos-modal-loyalty.js"></script>
-<script src="/js/pos-modal-checkout-options.js"></script>
+<script src="/js/pos-modal-cart-options.js"></script>
 <script src="/js/pos-modal-payment.js"></script>
 <script src="/js/pos-camera.js"></script>
 <script>
