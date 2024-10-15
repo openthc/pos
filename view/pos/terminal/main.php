@@ -47,9 +47,10 @@ $this->layout_file = sprintf('%s/view/_layout/html-pos.php', APP_ROOT);
 
 <div class="pos-foot-wrap">
 	<div id="pos-terminal-sub-wrap">
+		<div class="sub-info-item-wrap"><h3>Items: #<span class="pos-checkout-item-count">0</span></h3></div>
 		<div class="sub-info-item-wrap"><h3>Total: $<span class="pos-checkout-sub">0.00</span></h3></div>
 		<div class="sub-info-item-wrap"><h3>Taxes: $<span class="pos-checkout-tax-total">0.00</span></h3></div>
-		<div class="sub-info-item-wrap"><h3>Due: $<span class="pos-checkout-sum">0.00</span></h3></div>
+		<div class="sub-info-item-wrap"><h3>Final: $<span class="pos-checkout-sum">0.00</span></h3></div>
 	</div>
 	<div id="pos-terminal-cmd-wrap">
 		<!--
@@ -75,6 +76,15 @@ $this->layout_file = sprintf('%s/view/_layout/html-pos.php', APP_ROOT);
 			</button>
 		</div>
 		<div class="cmd-item">
+			<button class="btn btn-lg btn-secondary"
+				data-bs-toggle="modal"
+				data-bs-target="#pos-modal-checkout-option"
+				disabled
+				id="pos-ticket-options"
+				type="button">
+				<i class="fa-solid fa-wrench"></i><span class="btn-text"> Options</span></button>
+		</div>
+		<div class="cmd-item">
 			<button class="btn btn-lg btn-success" data-bs-toggle="modal" data-bs-target="#pos-modal-payment" disabled id="pos-shop-next" type="button">
 				<i class="far fa-money-bill-alt"></i><span class="btn-text"> Payment</span>
 			</button>
@@ -89,6 +99,7 @@ echo $this->block('modal/pos/scan-id.php');
 echo $this->block('modal/pos/hold.php');
 echo $this->block('modal/pos/discount.php');
 echo $this->block('modal/pos/loyalty.php');
+echo $this->block('modal/pos/ticket-options.php');
 echo $this->block('modal/pos/payment-cash.php');
 echo $this->block('modal/pos/payment-card.php');
 // echo $this->block('modal/pos/card-swipe.php')

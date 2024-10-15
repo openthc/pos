@@ -66,7 +66,6 @@ header('content-type: text/html; charset=utf-8', true);
 <script src="/vendor/jquery/jquery.min.js"></script>
 <script src="/vendor/jquery/jquery-ui.min.js"></script>
 <script src="/vendor/bootstrap/bootstrap.bundle.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/riot/4.14.0/riot.min.js" integrity="sha256-mxBp2pV/KfjX4uaj+6aEh2MWB7J+j8o6VuOCs4aY7zM=" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <!-- <script src="https://unpkg.com/@zxing/library@latest"></script> -->
 <script src="/vendor/qrcodejs/qrcode.min.js"></script>
 <script src="https://unpkg.com/@zxing/library@0.19.2/umd/index.min.js" integrity="sha256-a0mo/OgjQ26D3n9JRYL4LMTeSx8PV3SYKv2My5wOdHE=" crossorigin="anonymous"></script>
@@ -77,6 +76,7 @@ header('content-type: text/html; charset=utf-8', true);
 <!-- <script src="/js/pos-modal-contact.js"></script> -->
 <script src="/js/pos-modal-discount.js"></script>
 <script src="/js/pos-modal-loyalty.js"></script>
+<script src="/js/pos-modal-checkout-options.js"></script>
 <script src="/js/pos-modal-payment.js"></script>
 <script src="/js/pos-camera.js"></script>
 <script>
