@@ -92,7 +92,7 @@ OpenTHC.POS.Ticket = {
 
 			var inv_id = $(n).data('id');
 
-			var q = $($(`#psi-item-${inv_id}-sale`).val();
+			var q = $(`#psi-item-${inv_id}-sale`).val();
 			if (isNaN(q)) {
 				console.log('OpenTHC.POS.Ticket.checkSaleLimits - Bad Quantity for Item: ' + inv_id);
 				return(0);
@@ -156,7 +156,7 @@ function chkSaleCost()
 	$('.psi-item-item').each(function(x, n) {
 
 		var inv_id = $(n).data('id');
-		var q = $($(`#psi-item-${inv_id}-sale`).val();
+		var q = $(`#psi-item-${inv_id}-sale`).val();
 
 		if (isNaN(q)) {
 			console.log('chkSaleCost - Bad Q');
