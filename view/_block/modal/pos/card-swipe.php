@@ -11,10 +11,10 @@
 <div style="margin:8px;">
 	<div class="row">
 		<div class="col-md-6" style="text-align:center;">
-			<div style="padding:4px;"><input class="psi-item-size" placeholder="Transaction" type="text" style="width:100%;"></div>
+			<div style="padding:4px;"><input class="form-control" placeholder="Transaction" type="text" style="width:100%;"></div>
 		</div>
 		<div class="col-md-6" style="text-align:right;">
-			<div style="padding:4px;"><input class="psi-item-size" id="pp-card-confirm" placeholder="Amount" style="width: 6em;" type="number" min="0" step="0.01"></div>
+			<div style="padding:4px;"><input class="form-control" id="pp-card-confirm" placeholder="Amount" style="width: 6em;" type="number" min="0" step="0.01"></div>
 		</div>
 	</div>
 	<div class="row">

@@ -90,17 +90,17 @@ OpenTHC.POS.Ticket = {
 
 		$('.psi-item-item').each(function(i, n) {
 
-			var id = $(n).data('id');
+			var inv_id = $(n).data('id');
 
-			var q = $('#psi-item-' + id + '-size').val();
+			var q = $($(`#psi-item-${inv_id}-sale`).val();
 			if (isNaN(q)) {
-				console.log('OpenTHC.POS.Ticket.checkSaleLimits - Bad Quantity for Item: ' + id);
+				console.log('OpenTHC.POS.Ticket.checkSaleLimits - Bad Quantity for Item: ' + inv_id);
 				return(0);
 			}
 
 			var w = $(n).data('weight');
 			if (isNaN(w)) {
-				console.log('OpenTHC.POS.Ticket.checkSaleLimits - Bad Weight for Item: ' + id);
+				console.log('OpenTHC.POS.Ticket.checkSaleLimits - Bad Weight for Item: ' + inv_id);
 				return(0);
 			}
 
@@ -155,8 +155,8 @@ function chkSaleCost()
 
 	$('.psi-item-item').each(function(x, n) {
 
-		var i = $(n).data('id');
-		var q = $('#psi-item-' + i + '-size').val();
+		var inv_id = $(n).data('id');
+		var q = $($(`#psi-item-${inv_id}-sale`).val();
 
 		if (isNaN(q)) {
 			console.log('chkSaleCost - Bad Q');
@@ -164,7 +164,7 @@ function chkSaleCost()
 
 		var r = $(n).data('price');
 		if (isNaN(r)) {
-			r = $('#inv-item-' + i).data('price');
+			r = $('#inv-item-' + inv_id).data('price');
 			if (isNaN(r)) {
 				console.log('chkSaleCost - Bad R');
 			}
@@ -308,6 +308,15 @@ $(function() {
 		}
 
 		chkSaleCost();
+	});
+
+	$(document).on('change', '.pos-cart-unit-price', function(e) {
+		// My Item ID Price has Changed
+		var i = this.getAttribute('data-id');
+		var q = parseFloat($(`#item-${i}-unit-count`).val());
+		var p = parseFloat(this.value);
+		var s = q * p;
+		$(`#psi-item-${i}-sale`).html(s.toFixed(2));
 	});
 
 	// Open A Link in a Modal Thing

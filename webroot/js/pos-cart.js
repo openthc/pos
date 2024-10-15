@@ -22,7 +22,7 @@ function Cart_addItem(obj)
 
 	// @todo Move Clicked Item to Top Row
 	if ($('#psi-item-' + obj.id).length > 0) {
-		var q = $('#psi-item-' + obj.id + '-size').val();
+		var q = $(`#psi-item-${obj.id}-unit-count`).val();
 		q = parseFloat(q, 10) || 1;
 		obj.qty += q;
 		$('#psi-item-' + obj.id).remove();
@@ -44,10 +44,20 @@ function Cart_addItem(obj)
 </div>
 <div class="row" style="margin:0;">
 	<div class="col-md-4">
-		<input class="form-control psi-item-size" data-id="${obj.id}" id="psi-item-${obj.id}-size" name="qty-${obj.id}" type="number" value="${obj.qty}">
+		<div class="input-group">
+			<label class="input-group-text">Qty:</label>
+			<input class="form-control psi-item-size" data-id="${obj.id}" id="psi-item-${obj.id}-unit-count" name="item-${obj.id}-unit-count" type="number" value="${obj.qty}">
+		</div>
 	</div>
 	<div class="col-md-4">
-		<h3 style="margin:0; padding:0;">${obj.price.toFixed(2)}</h3>
+		<div class="input-group">
+			<label class="input-group-text">ea:</label>
+			<input class="form-control pos-cart-unit-price"
+				data-id="${obj.id}"
+				id="psi-item-${obj.id}-unit-price"
+				name="item-${obj.id}-unit-price"
+				type="number" value="${obj.price.toFixed(2)}">
+		</div>
 	</div>
 	<div class="col-md-4" style="text-align:right;">
 		<h3><span id="psi-item-${obj.id}-sale">${full_price.toFixed(2)}</span></h3>
@@ -78,12 +88,12 @@ function Cart_addItem_Alt(obj)
 
 function Cart_addItem_flash(inv_id)
 {
-	// $('#psi-item-' + inv_id + '-size').focus();
-	$('#psi-item-' + inv_id + '-size').addClass('pos-warn');
-	$('#psi-item-' + inv_id + '-sale').addClass('pos-warn');
+	// $(`#psi-item-${inv_id}-unit-count`).focus();
+	$(`#psi-item-${inv_id}-unit-count`).addClass('pos-warn');
+	$(`#psi-item-${inv_id}-sale`).addClass('pos-warn');
 	setTimeout(function() {
-		$('#psi-item-' + inv_id + '-size').removeClass('pos-warn');
-		$('#psi-item-' + inv_id + '-sale').removeClass('pos-warn');
+		$(`#psi-item-${inv_id}-unit-count`).removeClass('pos-warn');
+		$(`#psi-item-${inv_id}-sale`).removeClass('pos-warn');
 	}, 321);
 }
 

@@ -98,7 +98,7 @@
 						$b2c_item['item_list'] = [];
 					}
 					foreach ($b2c_item as $k => $v) {
-						if (preg_match('/^qty-(\w+)$/', $k, $m)) {
+						if (preg_match('/^item\-(\w+)\-unit\-count$/', $k, $m)) {
 							$b2c_item['item_list'][] = [
 								'id' => $m[1],
 							];

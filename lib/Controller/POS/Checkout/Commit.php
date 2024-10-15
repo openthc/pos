@@ -56,19 +56,19 @@ class Commit extends \OpenTHC\Controller\Base
 				// @todo Need to Handle "Special" line items
 				// Like, Loyalty or Tax or ??? -- Could those be "system" class Inventory to add to a ticket?
 				// And Don't Decrement Them?
-				if (preg_match('/^qty\-(\w+)/', $key, $m)) {
+				if (preg_match('/^item\-(\w+)\-unit\-count$/', $key, $m)) {
 
 					$qty = floatval($_POST[$key]);
 					if ($qty <= 0) {
 						continue;
 					}
 
-					$IL = new \OpenTHC\POS\Lot($dbc, $m[1]);
-					if (empty($IL['id'])) {
+					$Inv = new \OpenTHC\POS\Lot($dbc, $m[1]);
+					if (empty($Inv['id'])) {
 						throw new \Exception('Inventory Lost on Sale [PCC-055]');
 					}
 
-					$P = new \OpenTHC\POS\Product($dbc, $IL['product_id']);
+					$P = new \OpenTHC\POS\Product($dbc, $Inv['product_id']);
 					switch ($P['package_type']) {
 					case 'pack':
 					case 'each':
@@ -85,13 +85,16 @@ class Commit extends \OpenTHC\Controller\Base
 					$SI = new \OpenTHC\POS\B2C\Sale\Item($dbc);
 					$SI['id'] = ULID::create();
 					$SI['b2c_sale_id'] = $Sale['id'];
-					$SI['inventory_id'] = $IL['id'];
+					$SI['inventory_id'] = $Inv['id'];
 					$SI['unit_count'] = $qty;
-					$SI['unit_price'] = floatval($IL['sell']);
+					$SI['unit_price'] = floatval($Inv['sell']);
+					if (isset($_POST[sprintf('item-%s-unit-price', $Inv['id'])])) {
+						$SI['unit_price'] = $_POST[sprintf('item-%s-unit-price', $Inv['id'])];
+					}
 					$SI['uom'] = $uom;
 					$SI->save('B2C/Sale/Item/Create');
 
-					$IL->decrement($qty);
+					$Inv->decrement($qty);
 
 					// Foreach tax_list as $tax
 					//  insert into b2b_sale_item_tax (b2b_sale_id, b2b_sale_item_id, tax_plan_id, tax_amount)

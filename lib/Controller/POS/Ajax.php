@@ -106,7 +106,7 @@ class Ajax extends \OpenTHC\Controller\Base
 			case 'general':
 			case 'inside':
 				foreach ($rec['meta'] as $k => $v) {
-					if (preg_match('/^qty-(\w+)$/', $k, $m)) {
+					if (preg_match('/^item\-(\w+)\-unit\-count$/', $k, $m)) {
 
 						$sql = <<<SQL
 						SELECT lot_full.*

@@ -25,7 +25,7 @@ class Open extends \OpenTHC\Controller\Base
 			echo '$(function() { ';
 
 			foreach ($SH['json'] as $k=>$v) {
-				if (preg_match('/^qty-(\d+)$/', $k, $m)) {
+				if (preg_match('/^item\-(\w+)\-unit\-count$/', $k, $m)) {
 				//$
 					$I = new Inventory($m[1]);
 					$name = substr($I['guid'], -4) . ': ' . $I['name'];
