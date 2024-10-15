@@ -301,8 +301,8 @@ $(function() {
 		console.log('.cart-item input!change');
 
 		var inv_id = this.getAttribute('data-id');
-		var unit_count = parseFloat( $(`#item-${inv_id}-unit-count`).val() );
-		var unit_price = parseFloat( $(`#inv-item-${inv_id}-unit-price`).val() );
+		var unit_count = parseFloat( $(`#psi-item-${inv_id}-unit-count`).val() );
+		var unit_price = parseFloat( $(`#psi-item-${inv_id}-unit-price`).val() );
 		var item_price = unit_count * unit_price;
 
 		$(`#psi-item-${inv_id}-full-price`).html(item_price.toFixed(2));
@@ -312,16 +312,6 @@ $(function() {
 		}
 
 		chkSaleCost();
-	});
-
-	$(document).on('change', '.pos-cart-unit-price', function(e) {
-		// My Item ID Price has Changed
-		var inv_id = this.getAttribute('data-id');
-		var unit_count = parseFloat($(`#item-${inv_id}-unit-count`).val());
-		var unit_price = parseFloat(this.value);
-		var item_price = unit_count * unit_price;
-
-		$(`#psi-item-${i}-full-price`).html(s.toFixed(2));
 	});
 
 	// Open A Link in a Modal Thing
