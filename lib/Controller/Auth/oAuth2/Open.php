@@ -45,7 +45,7 @@ class Open extends \OpenTHC\Controller\Auth\oAuth2
 				$jwt = JWT::verify($_GET['jwt'], $key);
 
 				$_SESSION['Contact'] = [
-					'id' => $chk->sub,
+					'id' => $jwt->sub,
 				];
 				if (empty($_SESSION['Contact']['id'])) {
 					return $RES->withJSON(['meta' => [ 'note' => 'Invalid Contact [AOO-035]' ]], 400);
@@ -59,7 +59,7 @@ class Open extends \OpenTHC\Controller\Auth\oAuth2
 				}
 
 				$_SESSION['License'] = [
-					'id' => $chk->license,
+					'id' => $jwt->license,
 				];
 				if (empty($_SESSION['License']['id'])) {
 					return $RES->withJSON(['meta' => [ 'note' => 'Invalid License [AOO-049]' ]], 400);

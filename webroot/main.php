@@ -120,6 +120,7 @@ $app->get('/contact/ajax', 'OpenTHC\POS\Controller\Contact')
 
 // Authentication
 $app->group('/auth', function() {
+	$this->get('', 'OpenTHC\POS\Controller\Auth\oAuth2\Open');
 	$this->get('/open', 'OpenTHC\POS\Controller\Auth\oAuth2\Open');
 	$this->get('/back', 'OpenTHC\POS\Controller\Auth\oAuth2\Back');
 	$this->get('/init', 'OpenTHC\POS\Controller\Auth\Init')->setName('auth/init');

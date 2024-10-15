@@ -21,21 +21,22 @@ class Init extends \OpenTHC\Controller\Base
 
 		// Lookup the DSN
 		$dbc_auth = _dbc('auth');
-		$chk = $dbc_auth->fetchRow('SELECT * FROM auth_company WHERE id = :c0', [ ':c0' => $_SESSION['Company']['id'] ]);
-		if (empty($chk['dsn'])) {
+		$Company0 = $dbc_auth->fetchRow('SELECT * FROM auth_company WHERE id = :c0', [ ':c0' => $_SESSION['Company']['id'] ]);
+		if (empty($Company0['dsn'])) {
 			_exit_html_fail('<h1>Fatal Database Error [CAC-043]</h1>', 500);
 		}
 
-		if (empty($_SESSION['Company']['cre'])) {
+		if (empty($Company0['cre'])) {
 			_exit_html_fail('<h1>Company Configuration requires CRE [CAC-030]</h1>', 500);
 		}
 
-		$_SESSION['Company'] = $chk;
-		$_SESSION['Company']['cre_meta'] = json_decode($_SESSION['Company']['cre_meta'], true);
+		$dbc_user = _dbc($Company0['dsn']);
+		$Company1 = $dbc_user->fetchRow('SELECT * FROM auth_company WHERE id = :c0', [ ':c0' => $_SESSION['Company']['id'] ]);
+		$_SESSION['dsn'] = $Company0['dsn'];
+		unset($Company0['dsn']);
 
-		$dbc_user = _dbc($chk['dsn']);
-		$_SESSION['dsn'] = $chk['dsn'];
-		unset($_SESSION['Company']['dsn']);
+		$_SESSION['Company'] = array_merge($Company0, $Company1);
+		$_SESSION['Company']['cre_meta'] = json_decode($_SESSION['Company']['cre_meta'], true);
 
 		// Find the Default License?
 		if (empty($_SESSION['License'])) {
