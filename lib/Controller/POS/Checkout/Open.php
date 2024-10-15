@@ -133,7 +133,7 @@ class Open extends \OpenTHC\Controller\Base
 		$gov_id_type = null;
 		$guid0 = $_POST['client-contact-govt-id'];
 		if (preg_match('/^([\w\- ]{4,32})$/', $guid0)) {
-			$gov_id_type = 'PATIENT_ID';
+			$gov_id_type = 'CONTACT_ID';
 		} elseif (preg_match('/.*ANSI.*/', $guid0)) {
 			$gov_id_type = 'STATE_ID';
 		}
@@ -188,18 +188,13 @@ class Open extends \OpenTHC\Controller\Base
 
 			break;
 
-		case 'usa/nm':
-
-			// Nothing?
-
-			// break;
-
 		case 'deu':
+		case 'usa/nm':
 		case 'usa/vt':
 		case 'usa/wa':
 
 			$Contact = new Contact($dbc); // , [ 'guid' => $res['data']['PatientId'] ]);
-			if ( ! $Contact->loadBy('guid', $res['data']['PatientId'])) {
+			if ( ! $Contact->loadBy('guid', $guid0)) {
 				$Contact['id'] = ULID::create();
 				$Contact['stat'] = 100;
 				$Contact['guid'] = $guid1;

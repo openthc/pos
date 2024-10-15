@@ -13,9 +13,19 @@ $govt_id_html = __h($_SESSION['Cart']['contact-search']);
 
 $body = <<<HTML
 
-<div class="alert alert-secondary">Scan the client's identification card or input their identification details.</div>
+<div class="alert alert-secondary mb-4">Scan the client's identification card or input their identification details.</div>
 
-<div class="input-group input-group-lg mt-4 mb-4">
+<div class="input-group input-group-lg mb-4">
+
+	<div class="input-group-text">Transaction:</div>
+	<select class="form-select form-select-lg" id="pos-cart-type" name="pos-cart-type">
+		<option value="REC">Recreational</option>
+		<option value="MED">Medical</option>
+	</select>
+
+</div>
+
+<div class="input-group input-group-lg mb-4">
 
 	<div class="input-group-text">Identification:</div>
 

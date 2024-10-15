@@ -54,9 +54,6 @@ class Main extends \OpenTHC\Controller\Base
 			return $RES->write( $this->render('pos/contact-verify.php', $data) );
 		}
 
-		// <a href="#" data-bs-toggle="modal" data-bs-target="#pos-modal-checkout-contact">%s</a>
-		// $_SESSION['Cart']['Contact']['id']
-
 		return $RES->write( $this->render('pos/terminal/main.php', $data) );
 
 	}
