@@ -18,6 +18,7 @@ if ( ! is_file(__DIR__ . '/vendor/autoload.php')) {
 }
 
 require_once(__DIR__ . '/boot.php');
+chdir(APP_ROOT);
 
 $doc = <<<DOC
 OpenTHC Directory Make Helper
