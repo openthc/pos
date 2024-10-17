@@ -17,8 +17,8 @@ if ( ! is_file(__DIR__ . '/vendor/autoload.php')) {
 	var_dump($ret);
 }
 
-require_once(__DIR__ . '/boot.php');
-chdir(APP_ROOT);
+require_once(__DIR__ . '/vendor/autoload.php');
+chdir(__DIR__);
 
 $doc = <<<DOC
 OpenTHC Directory Make Helper
@@ -78,25 +78,8 @@ $cmd = implode(' ', $cmd);
 echo shell_exec($cmd);
 echo "\n";
 
-create_homepage();
+Make::create_homepage('pos');
 
-/**
- *
- */
-function create_homepage() {
-
-	$cfg = \OpenTHC\Config::get('openthc/pos/origin');
-	$url = sprintf('%s/home', $cfg);
-	$req = _curl_init($url);
-	$res = curl_exec($req);
-	$inf = curl_getinfo($req);
-	if (200 == $inf['http_code']) {
-		$file = sprintf('%s/webroot/index.html', APP_ROOT);
-		$data = $res;
-		file_put_contents($file, $data);
-	}
-
-}
 
 
 function install_file(string $s, string $t) : bool
