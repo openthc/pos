@@ -6,7 +6,9 @@
 
 use OpenTHC\Make;
 
-if ( ! is_file(__DIR__ . '/vendor/autoload.php')) {
+define('APP_ROOT', __DIR__);
+
+if ( ! is_file(APP_ROOT . '/vendor/autoload.php')) {
 	$cmd = [];
 	$cmd[] = 'composer';
 	$cmd[] = 'install';
@@ -17,8 +19,8 @@ if ( ! is_file(__DIR__ . '/vendor/autoload.php')) {
 	var_dump($ret);
 }
 
-require_once(__DIR__ . '/vendor/autoload.php');
-chdir(__DIR__);
+require_once(APP_ROOT . '/vendor/autoload.php');
+chdir(APP_ROOT);
 
 $doc = <<<DOC
 OpenTHC Directory Make Helper
