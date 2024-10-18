@@ -20,7 +20,7 @@
 <?php
 foreach ($data['contact_list'] as $c) {
 	echo '<tr>';
-	printf('<td>%s</td>', __h($c['fullname']) );
+	printf('<td><a href="/crm/contact/%s">%s</a></td>', $c['id'], __h($c['fullname']) );
 	printf('<td>%s</td>', $c['email'] );
 	printf('<td>%s</td>', $c['phone'] );
 	echo '</tr>';
