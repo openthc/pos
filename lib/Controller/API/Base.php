@@ -8,8 +8,13 @@
 
 namespace OpenTHC\POS\Controller\API;
 
-class Base extends \OpenTHC\POS\Controller\Base
+class Base extends \OpenTHC\Controller\Base
 {
+	use \OpenTHC\POS\Traits\OpenAuthBox;
+	use \OpenTHC\POS\Traits\FindContact;
+	use \OpenTHC\POS\Traits\FindCompany;
+	use \OpenTHC\POS\Traits\FindService;
+
 	function __construct($c)
 	{
 		$c['phpErrorHandler'] = function($c) {

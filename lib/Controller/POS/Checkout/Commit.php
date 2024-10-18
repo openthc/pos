@@ -347,7 +347,7 @@ class Commit extends \OpenTHC\Controller\Base
 		$cre->setLicense($_SESSION['License']);
 
 		$obj = [];
-		$obj['SalesDateTime'] = date(\DateTime::ISO8601);
+		$obj['SalesDateTime'] = date(\DateTime::RFC3339);
 
 		// 'Consumer', 'Caregiver'; 'ExternalPatient', 'Patient'
 		switch ($_SESSION['Cart']['Contact']['id']) {

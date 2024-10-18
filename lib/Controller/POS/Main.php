@@ -23,7 +23,7 @@ class Main extends \OpenTHC\Controller\Base
 
 		$sql = <<<SQL
 		SELECT count(id)
-		FROM inventory_full_full
+		FROM inventory_full
 		WHERE license_id = :l0
 			AND stat = 200
 			AND qty > 0

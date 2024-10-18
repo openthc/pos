@@ -31,16 +31,22 @@ class Open extends \OpenTHC\Controller\Auth\oAuth2
 
 		if ( ! empty($_GET['box'])) {
 
-			$this->dbc = _dbc('auth');
-			$act = $this->open_auth_box($m[1], $m[2]);
-			$Service = $this->findService($act->pk);
-			$Contact = $this->findContact($act->contact);
-			$Company = $this->findCompany($act->company);
+			$box = $_GET['box'];
 
-			$_SESSION['Contact'] = $Contact;
-			$_SESSION['Company'] = $Company;
+			if (preg_match('/^v2024\/([\w\-]{43})\/([\w\-]+)$/', $box, $m)) {
 
-			return $RES->withRedirect('/auth/init');
+				$this->dbc = _dbc('auth');
+				$act = $this->open_auth_box($m[1], $m[2]);
+				$Service = $this->findService($act->pk);
+				$Contact = $this->findContact($act->contact);
+				$Company = $this->findCompany($act->company);
+
+				$_SESSION['Contact'] = $Contact;
+				$_SESSION['Company'] = $Company;
+
+				return $RES->withRedirect('/auth/init');
+
+			}
 		}
 
 		// @deprecated
