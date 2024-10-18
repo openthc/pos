@@ -30,14 +30,14 @@ foreach ($data['product_list'] as $p) {
 				<div>
 					<button
 						class="btn btn-outline-success btn-product-add"
-						data-lot-id="<?= $p['lot_id'] ?>"
+						data-inventory-id="<?= $p['inventory_id'] ?>"
 						data-product-id="<?= $p['product_id'] ?>">
 							<i class="fas fa-cart-plus"></i> Add
 					</button>
 				</div>
 			</div>
 			<div style="background: #dddddd; padding: 0 0.25rem;">
-				Lot: <span style="font-family: monospace; font-size: 80%;"><?= $p['id'] ?></span>
+				Inventory: <span style="font-family: monospace; font-size: 80%;"><?= $p['id'] ?></span>
 			</div>
 		</div>
 	</div>
@@ -57,7 +57,7 @@ $(function() {
 		var form = new FormData();
 		form.set('a', 'cart-add');
 		form.set('company-id', '<?= $_GET['c'] ?>');
-		form.set('lot-id', btn0.dataset.lotId);
+		form.set('inventory-id', btn0.dataset.inventoryId);
 		form.set('product-id', btn0.dataset.productId);
 		form.set('qty', 1);
 

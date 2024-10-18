@@ -63,7 +63,7 @@ class Commit extends \OpenTHC\Controller\Base
 						continue;
 					}
 
-					$Inv = new \OpenTHC\POS\Lot($dbc, $m[1]);
+					$Inv = new \OpenTHC\POS\Inventory($dbc, $m[1]);
 					if (empty($Inv['id'])) {
 						throw new \Exception('Inventory Lost on Sale [PCC-055]');
 					}
@@ -283,8 +283,8 @@ class Commit extends \OpenTHC\Controller\Base
 		// 'TerminalID' => $b2c_term
 		$req['Items'] = [];
 		foreach ($b2c_item_list as $b2c_item) {
-			// $I = new Lot($b2c_item['inventory_id']);
-			$Inv = new \OpenTHC\POS\Lot($dbc, $b2c_item['inventory_id']);
+			// $I = new Inventory($b2c_item['inventory_id']);
+			$Inv = new \OpenTHC\POS\Inventory($dbc, $b2c_item['inventory_id']);
 			$req['Items'][] = [
 				'Barcode' => $Inv['guid'],
 				'Quantity' => floatval($b2c_item['unit_count']),
@@ -379,7 +379,7 @@ class Commit extends \OpenTHC\Controller\Base
 
 		$b2c_item_list = $Sale->getItems();
 		foreach ($b2c_item_list as $b2c_item) {
-			$lot = new \OpenTHC\POS\Lot($dbc, $b2c_item['inventory_id']);
+			$inv = new \OpenTHC\POS\Inventory($dbc, $b2c_item['inventory_id']);
 			$uom = new \OpenTHC\UOM($b2c_item['uom']);
 			$uom = $uom->getName();
 			$obj['Transactions'][] = [
@@ -389,7 +389,7 @@ class Commit extends \OpenTHC\Controller\Base
 				// 'ExciseTax' => null,
 				'InvoiceNumber' => $b2c_item['id'],
 				// 'MunicipalTax' => null,
-				'PackageLabel' => $lot['guid'],
+				'PackageLabel' => $inv['guid'],
 				// 'Price' => $b2c_item['unit_price'],
 				'Quantity' => $b2c_item['unit_count'],
 				// 'SalesTax' => null,

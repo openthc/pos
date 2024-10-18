@@ -30,8 +30,8 @@ class Cart extends \OpenTHC\Controller\Base
 		$data['product_list'] = [];
 		foreach ($product_list as $p) {
 			$data['product_list'][] = [
-				'lot' => [
-					'id' => $p['lot_id']
+				'inventory' => [
+					'id' => $p['inventory_id']
 				]
 				, 'product' => [
 					'id' => $p['product_id']
@@ -39,7 +39,7 @@ class Cart extends \OpenTHC\Controller\Base
 					, 'sell' => $p['sell']
 				]
 				, 'variety' => $p['variety']
-				, 'qty' => $_SESSION[$cart][ $p['lot_id'] ]
+				, 'qty' => $_SESSION[$cart][ $p['inventory_id'] ]
 			];
 		}
 
@@ -58,7 +58,7 @@ class Cart extends \OpenTHC\Controller\Base
 			case 'cart-add':
 
 				$c = $_POST['company-id'];
-				$i = $_POST['lot-id'];
+				$i = $_POST['inventory-id'];
 
 				$cart = sprintf('cart-%s', $c);
 
@@ -100,10 +100,9 @@ class Cart extends \OpenTHC\Controller\Base
 				foreach ($product_want_list as $p) {
 
 					$b2b_item = [];
-					$b2b_item['lot_id'] = $p['lot_id']; // @deprecated
-					$b2b_item['qty'] = $_SESSION[$cart][$p['lot_id']];
-					$b2b_item['lot'] = [
-						'id' => $p['lot_id']
+					$b2b_item['qty'] = $_SESSION[$cart][$p['inventory_id']];
+					$b2b_item['inventory'] = [
+						'id' => $p['inventory_id']
 					];
 					$b2b_item['product'] = [
 						'id' => $p['product_id'],
@@ -155,42 +154,42 @@ class Cart extends \OpenTHC\Controller\Base
 		$dbc_user = _dbc($Company['dsn']);
 
 		$sql = <<<SQL
- SELECT inventory.id AS lot_id,
-    inventory.license_id,
-    inventory.created_at,
-    inventory.guid,
-    inventory.stat,
-    inventory.flag,
-    inventory.qty,
-    inventory.qa_cbd AS cbd,
-    inventory.qa_thc AS thc,
-    COALESCE(inventory.sell, product.sell) AS sell,
-    inventory.tags,
-    inventory.variety_id AS variety_id,
-    variety.name AS variety_name,
-    inventory.product_id,
-    product.name AS product_name,
-    product.package_type,
-    product.package_pack_qom,
-    product.package_pack_uom,
-    product.package_unit_qom,
-    product.package_unit_uom,
-    product.package_dose_qty,
-    product.package_dose_qom,
-    product.package_dose_uom,
-    product_type.id AS product_type_id,
-    product_type.name AS product_type_name,
-    product_type.mode AS product_type_mode,
-    product_type.unit AS product_type_unit
-   FROM inventory
-     JOIN variety ON inventory.variety_id::text = variety.id::text
-     JOIN product ON inventory.product_id::text = product.id::text
-     JOIN product_type ON product.product_type_id::text = product_type.id::text
-    WHERE product_type.id NOT IN ('018NY6XC00PR0DUCTTYPE00000', '018NY6XC00PR0DUCTTYPE00001', '018NY6XC00PR0DUCTTYPETY5AT', '018NY6XC00PT8AXVZGNZN3A0QT')
-		AND inventory.stat = 200 AND inventory.qty > 0
-		AND inventory.id IN ({product_id_list})
-	ORDER BY product_type_name, product_name, package_unit_uom
-SQL;
+		SELECT inventory.id AS inventory_id,
+			inventory.license_id,
+			inventory.created_at,
+			inventory.guid,
+			inventory.stat,
+			inventory.flag,
+			inventory.qty,
+			inventory.qa_cbd AS cbd,
+			inventory.qa_thc AS thc,
+			COALESCE(inventory.sell, product.sell) AS sell,
+			inventory.tags,
+			inventory.variety_id AS variety_id,
+			variety.name AS variety_name,
+			inventory.product_id,
+			product.name AS product_name,
+			product.package_type,
+			product.package_pack_qom,
+			product.package_pack_uom,
+			product.package_unit_qom,
+			product.package_unit_uom,
+			product.package_dose_qty,
+			product.package_dose_qom,
+			product.package_dose_uom,
+			product_type.id AS product_type_id,
+			product_type.name AS product_type_name,
+			product_type.mode AS product_type_mode,
+			product_type.unit AS product_type_unit
+		FROM inventory
+			JOIN variety ON inventory.variety_id::text = variety.id::text
+			JOIN product ON inventory.product_id::text = product.id::text
+			JOIN product_type ON product.product_type_id::text = product_type.id::text
+			WHERE product_type.id NOT IN ('018NY6XC00PR0DUCTTYPE00000', '018NY6XC00PR0DUCTTYPE00001', '018NY6XC00PR0DUCTTYPETY5AT', '018NY6XC00PT8AXVZGNZN3A0QT')
+				AND inventory.stat = 200 AND inventory.qty > 0
+				AND inventory.id IN ({product_id_list})
+			ORDER BY product_type_name, product_name, package_unit_uom
+		SQL;
 
 		$cart = sprintf('cart-%s', $c);
 		$product_want = $_SESSION[$cart];

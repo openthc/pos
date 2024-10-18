@@ -46,7 +46,7 @@ class Ajax extends \OpenTHC\Controller\Base
 		$item_list = $B2C->getItems();
 		$b2c_sale_item_list = [];
 		foreach ($item_list as $b2c_sale_item) {
-			$I = new \OpenTHC\POS\Lot($dbc, $b2c_sale_item['inventory_id']);
+			$I = new \OpenTHC\POS\Inventory($dbc, $b2c_sale_item['inventory_id']);
 			$b2c_sale_item = new \OpenTHC\POS\B2C\Sale\Item($dbc, $b2c_sale_item);
 			$b2c_sale_item_list[] = [
 				'inventory' => $I,
@@ -112,7 +112,7 @@ class Ajax extends \OpenTHC\Controller\Base
 					case 200:
 						// $chk = $cre->b2c()->sync(); // @todo
 						// $chk = $cre->b2c()->transactions()->sync(); // @todo
-						// $chk = $cre->lot()->sync(); // @todo
+						// $chk = $cre->inventory()->sync(); // @todo
 						$RES = $RES->withStatus(201)
 							->withHeader('Content-type', 'application/json')
 							->withJson([

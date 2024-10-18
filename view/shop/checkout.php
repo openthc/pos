@@ -25,7 +25,7 @@ foreach ($data['b2b_sale']['item_list'] as $idx => $b2b_item) {
 	printf('<td><h3>%d: %s</h3></td>', $idx + 1, $b2b_item['product']['name']);
 	printf('<td><h3>%s</h3></td>', $b2b_item['variety']['name']);
 	printf('<td class="r"><input class="form-control form-control-ld r" name="product-%s" type="number" min="0" step="1" value="%d">'
-		, $b2b_item['lot_id']
+		, $b2b_item['inventory_id']
 		, $b2b_item['qty']
 	);
 	echo '</tr>';

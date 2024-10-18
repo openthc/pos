@@ -106,7 +106,7 @@ class Receipt extends \OpenTHC\Controller\Base
 		$res = $S->getItems();
 		foreach ($res as $i => $b2ci) {
 
-			$I = new \OpenTHC\POS\Lot($dbc, $b2ci['inventory_id']);
+			$I = new \OpenTHC\POS\Inventory($dbc, $b2ci['inventory_id']);
 			$P = $dbc->fetchRow('SELECT id, name FROM product WHERE id = :p0', [ ':p0' => $I['product_id'] ]);
 			$V = $dbc->fetchRow('SELECT id, name FROM variety WHERE id = :v0', [ ':v0' => $I['variety_id'] ]);
 

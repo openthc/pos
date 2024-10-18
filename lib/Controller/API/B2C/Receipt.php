@@ -22,7 +22,7 @@ class Receipt extends \OpenTHC\POS\Controller\API\Base
 		$b2c = new \OpenTHC\POS\B2C\Sale($dbc, $_GET['s']);
 		$b2c_item_list = $S->getItems();
 		foreach ($b2c_item_list as $i => $b2ci) {
-			$b2c_item_list[$i]['Inventory'] = new \OpenTHC\POS\Lot($dbc, $b2ci['inventory_id']);
+			$b2c_item_list[$i]['Inventory'] = new \OpenTHC\POS\Inventory($dbc, $b2ci['inventory_id']);
 		}
 
 	}
@@ -46,7 +46,7 @@ class Receipt extends \OpenTHC\POS\Controller\API\Base
 				'Inventory' => [
 					'guid' => ULID::create()
 				],
-				'Lot' => [],
+				'Inventory' => [],
 				'Product' => [
 					'name' => 'Text/Product'
 				],

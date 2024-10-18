@@ -21,7 +21,15 @@ class Main extends \OpenTHC\Controller\Base
 	{
 		$dbc = $this->_container->DB;
 
-		$sql = 'SELECT count(id) FROM lot_full WHERE license_id = :l0 AND stat = 200 AND qty > 0 AND sell IS NOT NULL and sell > 0';
+		$sql = <<<SQL
+		SELECT count(id)
+		FROM inventory_full_full
+		WHERE license_id = :l0
+			AND stat = 200
+			AND qty > 0
+			AND sell IS NOT NULL
+			AND sell > 0
+		SQL;
 		$arg = [
 			':l0' => $_SESSION['License']['id']
 		];

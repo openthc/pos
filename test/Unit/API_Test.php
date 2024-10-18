@@ -159,7 +159,7 @@ class API_Test extends \OpenTHC\POS\Test\Base
 #   -X 'POST' \
 #   --header 'authorization: Bearer uEu72zR6brePjYdt6J2pIBzf5SfcJ9K4ccz0Q1AELI65EAW88QbBuFOXDUUEA_g7' \
 #   --header 'content-type: application/json' \
-#   --data '{ "license": { "id": "$OPENTHC_LICENSE" } , "b2c": { "id": $B2C_SALE_ID }, "lot": { "id": "01FCH7F3AADC2BENAM4V7JBT8Q" }, "unit_count": 5, "unit_price": 5 }'
+#   --data '{ "license": { "id": "$OPENTHC_LICENSE" } , "b2c": { "id": $B2C_SALE_ID }, "inventory": { "id": "01FCH7F3AADC2BENAM4V7JBT8Q" }, "unit_count": 5, "unit_price": 5 }'
 
 # # Commit
 # curl 'https://app.djb.openthc.dev/api/v2017/b2c/commit' \

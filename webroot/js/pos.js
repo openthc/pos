@@ -366,7 +366,7 @@ $(function() {
 
 	});
 
-	$('#pos-lot-search').on('click', function() {
+	$('#pos-inventory-search').on('click', function() {
 		var val = document.querySelector('#barcode-input').value;
 		searchInventory(val);
 	});

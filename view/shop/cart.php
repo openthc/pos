@@ -35,7 +35,7 @@ foreach ($data['product_list'] as $p) {
 				<div>
 					<input
 						class="form-control form-control-lg r"
-						data-lot-id="<?= $p['lot']['id'] ?>"
+						data-inventory-id="<?= $p['inventory']['id'] ?>"
 						data-product-id="<?= $p['product']['id'] ?>"
 						value="<?= $p['qty'] ?>"
 					>

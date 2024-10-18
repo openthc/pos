@@ -109,32 +109,32 @@ class Ajax extends \OpenTHC\Controller\Base
 					if (preg_match('/^item\-(\w+)\-unit\-count$/', $k, $m)) {
 
 						$sql = <<<SQL
-						SELECT lot_full.*
-						FROM lot_full
+						SELECT inventory_full.*
+						FROM inventory_full
 						WHERE license_id = :l0
 						AND stat = 200
 						AND qty > 0
 						AND (sell IS NOT NULL AND sell > 0)
-						AND lot_id = :pk
+						AND inventory_id = :pk
 						SQL;
 
-						$lot = $dbc->fetchRow($sql, [
+						$inv = $dbc->fetchRow($sql, [
 							':l0' => $_SESSION['License']['id'],
 							':pk' => $m[1]
 						]);
 
 						$ret_data[] = [
-							'id' => $lot['id'],
+							'id' => $inv['id'],
 							'qty' => $v,  // @deprecated
 							'unit_count' => $v,
-							'unit_price' => $lot['sell'],
+							'unit_price' => $inv['sell'],
 							'product' => [
-								'id' => $lot['product_id'],
-								'name' => $lot['product_name']
+								'id' => $inv['product_id'],
+								'name' => $inv['product_name']
 							],
 							'package' => [
 								'id' => '',
-								'name' => sprintf('%s %s', rtrim($lot['package_unit_qom'], '0'), $lot['package_unit_uom'])
+								'name' => sprintf('%s %s', rtrim($inv['package_unit_qom'], '0'), $inv['package_unit_uom'])
 							]
 						];
 					}
@@ -148,31 +148,31 @@ class Ajax extends \OpenTHC\Controller\Base
 				foreach ($b2c['item_list'] as $b2c_item) {
 
 					$sql = <<<SQL
-					SELECT lot_full.*
-					FROM lot_full
+					SELECT inventory_full.*
+					FROM inventory_full
 					WHERE license_id = :l0
 						AND stat = 200
 						AND qty > 0
 						AND (sell IS NOT NULL AND sell > 0)
-						AND lot_id = :pk
+						AND inventory_id = :pk
 					SQL;
 
-					$lot = $dbc->fetchRow($sql, [
+					$inv = $dbc->fetchRow($sql, [
 						':l0' => $_SESSION['License']['id'],
-						':pk' => $b2c_item['lot_id']
+						':pk' => $b2c_item['inventory_id']
 					]);
 
 					// Response Data
 					$ret_data[] = [
-						'id' => $b2c_item['lot_id']
+						'id' => $b2c_item['inventory_id']
 						, 'name' => sprintf('%s: %s / %s', substr($rec['guid'], -4), $b2c_item['product']['name'], $b2c_item['variety']['name'])
 						, 'qty' => $b2c_item['qty']  // @deprecated
 						, 'unit_count' => $b2c_item['qty']
-						, 'unit_price' => $lot['sell']
+						, 'unit_price' => $inv['sell']
 						, 'product' => $b2c_item['product']
 						, 'package' => [
 							'id' => ''
-							, 'name' => sprintf('%s %s', rtrim($lot['package_unit_qom'], '0'), $lot['package_unit_uom'])
+							, 'name' => sprintf('%s %s', rtrim($inv['package_unit_qom'], '0'), $inv['package_unit_uom'])
 						]
 						, 'variety' => $b2c_item['variety']
 					];
@@ -204,13 +204,13 @@ class Ajax extends \OpenTHC\Controller\Base
 		// Starts or Ends with the Code
 		// $res = \OpenTHC\POS\POS::listInventory("%{$q}%");
 		$sql = <<<SQL
-SELECT lot_full.*
-FROM lot_full
-WHERE license_id = :l0
-  AND stat = 200
-  AND qty > 0
-  AND (sell IS NOT NULL AND sell > 0)
-SQL;
+		SELECT inventory_full.*
+		FROM inventory_full
+		WHERE license_id = :l0
+			AND stat = 200
+			AND qty > 0
+			AND (sell IS NOT NULL AND sell > 0)
+		SQL;
 		$arg = array(
 			':l0' => $_SESSION['License']['id'],
 		);

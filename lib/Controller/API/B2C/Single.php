@@ -81,9 +81,9 @@ class Single extends \OpenTHC\POS\Controller\API\Base
 		$sum_item_price = 0;
 		$b2c_item_list = $b2c->getItems();
 		foreach ($b2c_item_list as $b2c_item) {
-			$IL = new \OpenTHC\POS\Lot($dbc, $b2c_item['inventory_id']);
+			$Inv = new \OpenTHC\POS\Inventory($dbc, $b2c_item['inventory_id']);
 			try {
-				$IL->decrement($b2c_item['unit_count']);
+				$Inv->decrement($b2c_item['unit_count']);
 			} catch (\Exception $e) {
 				// Ignore
 			}

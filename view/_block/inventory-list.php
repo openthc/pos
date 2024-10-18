@@ -1,7 +1,7 @@
 <table class="table table-sm">
 <thead class="thead-dark">
 	<tr>
-		<th>Lot</th>
+		<th>Inventory ID</th>
 		<th>Product</th>
 		<th>Package</th>
 		<th class="r">QTY</th>

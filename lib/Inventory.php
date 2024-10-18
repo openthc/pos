@@ -1,13 +1,13 @@
 <?php
 /**
- * A Lot
+ * A Inventory
  *
  * SPDX-License-Identifier: GPL-3.0-only
  */
 
 namespace OpenTHC\POS;
 
-class Lot extends \OpenTHC\SQL\Record
+class Inventory extends \OpenTHC\SQL\Record
 {
 	protected $_table = 'inventory';
 
