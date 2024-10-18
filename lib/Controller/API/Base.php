@@ -8,7 +8,7 @@
 
 namespace OpenTHC\POS\Controller\API;
 
-class Base extends \OpenTHC\Controller\Base
+class Base extends \OpenTHC\POS\Controller\Base
 {
 	function __construct($c)
 	{
@@ -69,129 +69,20 @@ class Base extends \OpenTHC\Controller\Base
 			), 403);
 		}
 
-		$cpk = $m[1];
-		$box = $m[2];
-		$box = \OpenTHC\Sodium::b64decode($box);
+		$act = $this->open_auth_box($m[1], $m[2]);
 
-		$ssk = \OpenTHC\Config::get('openthc/pos/secret');
-		$act = \OpenTHC\Sodium::decrypt($box, $ssk, $cpk);
-		if (empty($act)) {
-			__exit_json(array(
-				'data' => null,
-				'meta' => [ 'note' => 'Invalid Service Key [CAB-094]' ],
-			), 403);
-		}
-		$act = json_decode($act);
-		if (empty($act)) {
-			__exit_json(array(
-				'data' => null,
-				'meta' => [ 'note' => 'Invalid Service Key [CAB-101]' ],
-			), 403);
-		}
-		if (sodium_compare($act->pk, $cpk) !== 0) {
-			__exit_json(array(
-				'data' => null,
-				'meta' => [ 'note' => 'Invalid Service Key [CAB-107]' ],
-			), 403);
-		}
-
-		// Time Check
-		$dt0 = new \DateTime();
-		$dt1 = \DateTime::createFromFormat('U', $act->ts);
-		$age = $dt0->diff($dt1, true);
-		if (($age->d != 0) || ($age->h != 0) || ($age->i > 5)) {
-			return $RES->withStatus(400)->withJson([
-				'data' => null,
-				'meta' => [ 'note' => 'Invalid Date [MCA-110]' ]
-			]);
-		}
-
-		if (empty($act->contact)) {
-			__exit_json(array(
-				'data' => null,
-				'meta' => [ 'note' => 'Bearer Data Corrupted [CAB-103]' ],
-			), 403);
-		}
-
-		if (empty($act->company)) {
-			__exit_json(array(
-				'data' => null,
-				'meta' => [ 'note' => 'Bearer Data Corrupted [CAB-110]' ],
-			), 403);
-		}
-
-		$dbc_auth = _dbc('auth');
+		$this->dbc = $dbc_auth = _dbc('auth');
 
 		// Find Service Lookup CPK and See if we Trust Them
-		$Service = $this->findService($dbc_auth, $cpk);
-
-		// Contact
-		$Contact = $dbc_auth->fetchRow('SELECT id, username FROM auth_contact WHERE id = :c0', [ ':c0' => $act->contact ]);
-		if (empty($Contact['id'])) {
-			__exit_json(array(
-				'data' => null,
-				'meta' => [ 'note' => 'Invalid Authentication [CAB-095]' ],
-			), 403);
-		}
-
-		// Company
-		$Company = $dbc_auth->fetchRow('SELECT id, name, dsn FROM auth_company WHERE id = :c0', [ ':c0' => $act->company ]);
-		if (empty($Company['id'])) {
-			__exit_json(array(
-				'data' => null,
-				'meta' => [ 'note' => 'Invalid Authentication [CAB-095]' ],
-			), 403);
-		}
-
-		if (empty($Company['dsn'])) {
-			__exit_json(array(
-				'data' => null,
-				'meta' => [ 'note' => 'Invalid Configuration [CAB-072]' ],
-			), 501);
-		}
+		$Service = $this->findService($act->pk);
+		$Contact = $this->findContact($act->contact);
+		$Company = $this->findCompany($act->company);
 
 		$this->Service = $Service;
 		$this->Contact = $Contact;
 		$this->Company = $Company;
 
 		// License?
-
-	}
-
-	function findService($dbc, $pk)
-	{
-		// Check Redis
-		$rdb = $this->Redis;
-
-		// Check Database
-		// v0
-		$Service = $dbc->fetchRow('SELECT * FROM auth_service WHERE code = :s0', [
-			':s0' => $pk,
-		]);
-
-		// v1 -- Keypair
-		if (empty($Service['id'])) {
-
-			$sql = <<<SQL
-			SELECT id, service_id
-			FROM auth_service_keypair
-			WHERE pk = :pk
-			AND deleted_at IS NULL
-			AND (expires_at IS NULL OR expires_at <= now())
-			SQL;
-			$Keypair = $dbc->fetchRow($sql, [ ':pk' => $pk ]);
-			if ( ! empty($Keypair['id'])) {
-				$Service = $dbc->fetchRow('SELECT * FROM auth_service WHERE id = :s0', [
-					':s0' => $Keypair['service_id'],
-				]);
-			}
-		}
-
-		if (empty($Service['id'])) {
-			throw new \Exception('Service Not Found [CAB-084]', 403);
-		}
-
-		return $Service;
 
 	}
 

@@ -24,6 +24,20 @@ class Open extends \OpenTHC\Controller\Auth\oAuth2
 
 		$ret_path = $this->_get_return_path();
 
+		if ( ! empty($_GET['box'])) {
+
+			$this->dbc = _dbc('auth');
+			$act = $this->open_auth_box($m[1], $m[2]);
+			$Service = $this->findService($act->pk);
+			$Contact = $this->findContact($act->contact);
+			$Company = $this->findCompany($act->company);
+
+			$_SESSION['Contact'] = $Contact;
+			$_SESSION['Company'] = $Company;
+
+			return $RES->withRedirect('/auth/init');
+		}
+
 		// @deprecated
 		if ( ! empty($_GET['jwt'])) {
 
