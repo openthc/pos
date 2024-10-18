@@ -24,6 +24,7 @@ class Open extends \OpenTHC\Controller\Auth\oAuth2
 
 		$ret_path = $this->_get_return_path();
 
+		// @deprecated
 		if ( ! empty($_GET['jwt'])) {
 
 			// $p = $this->getProvider();
@@ -77,7 +78,7 @@ class Open extends \OpenTHC\Controller\Auth\oAuth2
 
 		$p = $this->getProvider($ret_path);
 		$url = $p->getAuthorizationUrl([
-			'scope' => 'pos company contact',
+			'scope' => 'contact company license pos',
 		]);
 
 		$_SESSION['oauth2-state'] = $p->getState();

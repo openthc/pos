@@ -125,6 +125,7 @@ class Base extends \OpenTHC\Controller\Base
 		// Find Service Lookup CPK and See if we Trust Them
 		$Service = $this->findService($dbc_auth, $cpk);
 
+		// Contact
 		$Contact = $dbc_auth->fetchRow('SELECT id, username FROM auth_contact WHERE id = :c0', [ ':c0' => $act->contact ]);
 		if (empty($Contact['id'])) {
 			__exit_json(array(
@@ -133,7 +134,7 @@ class Base extends \OpenTHC\Controller\Base
 			), 403);
 		}
 
-		//
+		// Company
 		$Company = $dbc_auth->fetchRow('SELECT id, name, dsn FROM auth_company WHERE id = :c0', [ ':c0' => $act->company ]);
 		if (empty($Company['id'])) {
 			__exit_json(array(
@@ -149,20 +150,23 @@ class Base extends \OpenTHC\Controller\Base
 			), 501);
 		}
 
+		$this->Service = $Service;
 		$this->Contact = $Contact;
 		$this->Company = $Company;
 
+		// License?
+
 	}
 
-	function findService()
+	function findService($dbc, $pk)
 	{
 		// Check Redis
-		$rdb = _rdb();
+		$rdb = $this->Redis;
 
 		// Check Database
 		// v0
-		$Service = $dbc_auth->fetchRow('SELECT * FROM auth_service WHERE code = :s0', [
-			':s0' => $cpk,
+		$Service = $dbc->fetchRow('SELECT * FROM auth_service WHERE code = :s0', [
+			':s0' => $pk,
 		]);
 
 		// v1 -- Keypair
@@ -175,9 +179,9 @@ class Base extends \OpenTHC\Controller\Base
 			AND deleted_at IS NULL
 			AND (expires_at IS NULL OR expires_at <= now())
 			SQL;
-			$Keypair = $dbc_auth->fetchRow($sql, [ ':pk' => $cpk ]);
+			$Keypair = $dbc->fetchRow($sql, [ ':pk' => $pk ]);
 			if ( ! empty($Keypair['id'])) {
-				$Service = $dbc_auth->fetchRow('SELECT * FROM auth_service WHERE id = :s0', [
+				$Service = $dbc->fetchRow('SELECT * FROM auth_service WHERE id = :s0', [
 					':s0' => $Keypair['service_id'],
 				]);
 			}
