@@ -27,11 +27,11 @@ class Commit extends \OpenTHC\Controller\Base
 
 		$tax_incl = $Company->getOption(sprintf('/%s/b2b-item-price-adjust/tax-included', $License['id']));
 		$tax_list = [];
-		$tax0_pct = $Company->getOption(sprintf('/%s/b2b-item-price-adjust/010PENTHC00BIPA0SST03Q484J', $License['id'])); // State
-		$tax1_pct = $Company->getOption(sprintf('/%s/b2b-item-price-adjust/010PENTHC00BIPA0C0T620S2M2', $License['id'])); // County
-		$tax2_pct = $Company->getOption(sprintf('/%s/b2b-item-price-adjust/010PENTHC0PDTNJ1WNK5H9S6T3', $License['id'])); // City
-		$tax3_pct = $Company->getOption(sprintf('/%s/b2b-item-price-adjust/010PENTHC0PDTSV845B6FEEGCF', $License['id'])); // Regional
-		$tax4_pct = $Company->getOption(sprintf('/%s/b2b-item-price-adjust/010PENTHC00BIPA0ET0FNBCKMH', $License['id'])); // Excise
+		$tax_list['010PENTHC00BIPA0SST03Q484J'] = $Company->getOption(sprintf('/%s/b2b-item-price-adjust/010PENTHC00BIPA0SST03Q484J', $License['id'])); // State
+		$tax_list['010PENTHC00BIPA0C0T620S2M2'] = $Company->getOption(sprintf('/%s/b2b-item-price-adjust/010PENTHC00BIPA0C0T620S2M2', $License['id'])); // County
+		$tax_list['010PENTHC0PDTNJ1WNK5H9S6T3'] = $Company->getOption(sprintf('/%s/b2b-item-price-adjust/010PENTHC0PDTNJ1WNK5H9S6T3', $License['id'])); // City
+		$tax_list['010PENTHC0PDTSV845B6FEEGCF'] = $Company->getOption(sprintf('/%s/b2b-item-price-adjust/010PENTHC0PDTSV845B6FEEGCF', $License['id'])); // Regional
+		$tax_list['010PENTHC00BIPA0ET0FNBCKMH'] = $Company->getOption(sprintf('/%s/b2b-item-price-adjust/010PENTHC00BIPA0ET0FNBCKMH', $License['id'])); // Excise
 
 		try {
 
@@ -44,6 +44,7 @@ class Commit extends \OpenTHC\Controller\Base
 			$Sale['id'] = ULID::create();
 			$Sale['license_id'] = $License['id'];
 			$Sale['contact_id'] = $_SESSION['Contact']['id'];
+			$Sale['contact_id_client'] = $_SESSION['Cart']['Contact']['id'];
 			$Sale['guid'] = $Sale['id'];
 			$Sale['meta'] = json_encode([
 				'_SESSION/Cart' => $_SESSION['Cart'],
@@ -159,7 +160,16 @@ class Commit extends \OpenTHC\Controller\Base
 
 		Session::flash('info', sprintf('Sale Confirmed, Transaction #%s', $Sale['guid']));
 
-		return $RES->withRedirect('/pos/checkout/receipt?s=' . $Sale['id']);
+		$url = sprintf('/pos/checkout/receipt?s=%s', $Sale['id']);
+
+		// if (is_ajax()) {
+		if ( ! empty($_SERVER['HTTP_X_REQUESTED_WITH'])) {
+			return $RES->withJSON([
+				'data' => $url,
+			]);
+		}
+
+		return $RES->withRedirect($url);
 
 	}
 
@@ -186,13 +196,13 @@ class Commit extends \OpenTHC\Controller\Base
 	/**
 	 * Execute Sale in BioTrack
 	 */
-	function send_to_biotrack($b2c_sale)
+	function send_to_biotrack($Sale)
 	{
 		switch ($_SESSION['cre']['id']) {
 		case 'usa/nm':
-			return $this->send_to_biotrack_v2022($cre, $b2c_sale);
+			return $this->send_to_biotrack_v2022($Sale);
 		default:
-			return $this->send_to_biotrack_v2014($cre, $b2c_sale);
+			return $this->send_to_biotrack_v2014($Sale);
 		}
 	}
 
@@ -295,13 +305,14 @@ class Commit extends \OpenTHC\Controller\Base
 				]
 			];
 		}
+		// __exit_text($req);
 
 		// Authenticate and then Checkout
 
 		// Needs a good CRE-Adapter or BONG to work
 		$ghc = new \GuzzleHttp\Client([
-			// 'base_uri' => 'https://v3.api.nm.trace.biotrackthc.net/',
-			'base_uri' => 'https://bunk.openthc.dev/biotrack/v2022/',
+			'base_uri' => 'https://v3.api.nm.trace.biotrackthc.net/',
+			// 'base_uri' => 'https://bunk.openthc.dev/biotrack/v2022/',
 			'http_errors' => false,
 			// 'cookie'
 		]);
@@ -318,7 +329,7 @@ class Commit extends \OpenTHC\Controller\Base
 			$res = json_decode($res->getBody()->getContents());
 			$sid = $res->Session;
 
-			$rdb->set('/cre/biotrack2023/sid', $sid, [ 'ttl' => 3600 ]);
+			$rdb->set('/cre/biotrack2023/sid', $sid, [ 'ttl' => 1800 ]);
 		}
 
 		$res = $ghc->post('v1/dispense', [
@@ -329,7 +340,10 @@ class Commit extends \OpenTHC\Controller\Base
 		]);
 		$res = $res->getBody()->getContents();
 		$res = json_decode($res);
-		// $b2c_sale['guid'] = $res->TransactionID;
+		if (empty($res->TransactionID)) {
+			throw new \Exception('Failed to Execute Transaction in CRE [PCC-354]');
+		}
+
 		$b2c_sale['guid'] = sprintf('tid:%s', $res->TransactionID);
 
 		return $b2c_sale;

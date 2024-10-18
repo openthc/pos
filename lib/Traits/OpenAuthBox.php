@@ -7,7 +7,7 @@ namespace OpenTHC\POS\Traits;
 
 trait OpenAuthBox
 {
-	function open_auth_box(string $cpk, string $box) : array
+	function open_auth_box(string $cpk, string $box) : object
 	{
 		$box = \OpenTHC\Sodium::b64decode($box);
 
