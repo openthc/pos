@@ -11,6 +11,11 @@ use OpenTHC\JWT;
 
 class Open extends \OpenTHC\Controller\Auth\oAuth2
 {
+	use \OpenTHC\POS\Traits\OpenAuthBox;
+	use \OpenTHC\POS\Traits\FindContact;
+	use \OpenTHC\POS\Traits\FindCompany;
+	use \OpenTHC\POS\Traits\FindService;
+
 	/**
 	 *
 	 */
