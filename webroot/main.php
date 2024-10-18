@@ -124,7 +124,6 @@ $app->group('/auth', function() {
 	$this->get('/open', 'OpenTHC\POS\Controller\Auth\oAuth2\Open');
 	$this->get('/back', 'OpenTHC\POS\Controller\Auth\oAuth2\Back');
 	$this->get('/init', 'OpenTHC\POS\Controller\Auth\Init')->setName('auth/init');
-	$this->get('/connect', 'OpenTHC\POS\Controller\Auth\Connect'); // would like to merge with Open or Back
 	$this->get('/ping', 'OpenTHC\Controller\Auth\Ping');
 	$this->get('/shut', 'OpenTHC\POS\Controller\Auth\Shut');
 })
