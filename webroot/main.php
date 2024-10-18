@@ -139,12 +139,6 @@ $app->map(['GET','POST'], '/intent', 'OpenTHC\POS\Controller\Intent')
 $app->group('/webhook', 'OpenTHC\POS\Module\Webhook');
 
 
-// Custom Middleware?
-$f = sprintf('%s/Custom/boot.php', APP_ROOT);
-if (is_file($f)) {
-	require_once($f);
-}
-
 // Execute
 $app->run();
 
