@@ -15,7 +15,7 @@ class Base extends \OpenTHC\Controller\Base
 		$c['phpErrorHandler'] = function($c) {
 			return function($REQ, $RES, $ERR) {
 				__exit_json([
-					'data' => null,
+					'data' => $ERR,
 					'meta' => [ 'note' => 'Fatal Error [ERR-001]' ]
 				], 500);
 			};
@@ -23,10 +23,19 @@ class Base extends \OpenTHC\Controller\Base
 
 		$c['errorHandler'] = function($c) {
 			return function($REQ, $RES, $ERR) {
+
+				// $ERR is an Exception
+
+				$ret_code = 500;
+				$err_code = $ERR->getCode();
+
 				__exit_json([
 					'data' => null,
-					'meta' => [ 'note' => 'Fatal Error [ERR-002]' ]
-				], 500);
+					'meta' => [
+						'note' => 'Fatal Error [ERR-002]',
+						'error' => $ERR->getMessage(),
+					]
+				], $err_code ?: $ret_code);
 			};
 		};
 
@@ -97,33 +106,34 @@ class Base extends \OpenTHC\Controller\Base
 			]);
 		}
 
-		if (empty($act->company)) {
+		if (empty($act->contact)) {
 			__exit_json(array(
 				'data' => null,
 				'meta' => [ 'note' => 'Bearer Data Corrupted [CAB-103]' ],
 			), 403);
 		}
 
-		if (empty($act->contact)) {
+		if (empty($act->company)) {
 			__exit_json(array(
 				'data' => null,
 				'meta' => [ 'note' => 'Bearer Data Corrupted [CAB-110]' ],
 			), 403);
 		}
 
-		// Find Service Lookup CPK and See if we Trust Them
 		$dbc_auth = _dbc('auth');
 
-		$Service = $dbc_auth->fetchRow('SELECT * FROM auth_service WHERE code = :s0', [
-			':s0' => $cpk,
-		]);
-		if (empty($Service['id'])) {
+		// Find Service Lookup CPK and See if we Trust Them
+		$Service = $this->findService($dbc_auth, $cpk);
+
+		$Contact = $dbc_auth->fetchRow('SELECT id, username FROM auth_contact WHERE id = :c0', [ ':c0' => $act->contact ]);
+		if (empty($Contact['id'])) {
 			__exit_json(array(
 				'data' => null,
-				'meta' => [ 'note' => 'Service Not Found [CAB-084]' ],
+				'meta' => [ 'note' => 'Invalid Authentication [CAB-095]' ],
 			), 403);
 		}
 
+		//
 		$Company = $dbc_auth->fetchRow('SELECT id, name, dsn FROM auth_company WHERE id = :c0', [ ':c0' => $act->company ]);
 		if (empty($Company['id'])) {
 			__exit_json(array(
@@ -139,26 +149,46 @@ class Base extends \OpenTHC\Controller\Base
 			), 501);
 		}
 
-		$Contact = $dbc_auth->fetchRow('SELECT id, username FROM auth_contact WHERE id = :c0', [ ':c0' => $act->contact ]);
-		if (empty($Contact['id'])) {
-			__exit_json(array(
-				'data' => null,
-				'meta' => [ 'note' => 'Invalid Authentication [CAB-095]' ],
-			), 403);
-		}
-
-		$this->Company = $Company;
 		$this->Contact = $Contact;
+		$this->Company = $Company;
 
 	}
 
 	function findService()
 	{
 		// Check Redis
+		$rdb = _rdb();
 
 		// Check Database
+		// v0
+		$Service = $dbc_auth->fetchRow('SELECT * FROM auth_service WHERE code = :s0', [
+			':s0' => $cpk,
+		]);
 
-		// Return
+		// v1 -- Keypair
+		if (empty($Service['id'])) {
+
+			$sql = <<<SQL
+			SELECT id, service_id
+			FROM auth_service_keypair
+			WHERE pk = :pk
+			AND deleted_at IS NULL
+			AND (expires_at IS NULL OR expires_at <= now())
+			SQL;
+			$Keypair = $dbc_auth->fetchRow($sql, [ ':pk' => $cpk ]);
+			if ( ! empty($Keypair['id'])) {
+				$Service = $dbc_auth->fetchRow('SELECT * FROM auth_service WHERE id = :s0', [
+					':s0' => $Keypair['service_id'],
+				]);
+			}
+		}
+
+		if (empty($Service['id'])) {
+			throw new \Exception('Service Not Found [CAB-084]', 403);
+		}
+
+		return $Service;
+
 	}
 
 	/**

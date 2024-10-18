@@ -32,6 +32,9 @@ class Receipt extends \OpenTHC\POS\Controller\API\Base
 	 */
 	function preview($REQ, $RES, $ARG)
 	{
+
+		$this->auth_parse();
+
 		$b2c = [
 			'id' => 'PREVIEW',
 			'created_at' => '1969-04-20T16:20:00 America/Los_Angeles',
@@ -56,9 +59,11 @@ class Receipt extends \OpenTHC\POS\Controller\API\Base
 			];
 		}
 
+		$dbc = _dbc($this->Company['dsn']);
+
 		$pdf = new \OpenTHC\POS\PDF\Receipt();
-		$pdf->setCompany( new \OpenTHC\Company($dbc, $_SESSION['Company'] ));
-		$pdf->setLicense( new \OpenTHC\Company($dbc, $_SESSION['License'] ));
+		$pdf->setCompany( new \OpenTHC\Company($dbc, $this->Company ));
+		$pdf->setLicense( new \OpenTHC\Company($dbc, $this->License ));
 		$pdf->setSale($b2c);
 		$pdf->setItems($b2c_item_list);
 		$pdf->render();
