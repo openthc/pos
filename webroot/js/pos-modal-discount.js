@@ -21,7 +21,7 @@ $(function() {
 
 		console.log('pos-modal-discount!show');
 
-		due = parseFloat($('.pos-checkout-sum').first().html(), 10) || 0;
+		due = parseFloat($('.pos-checkout-sum').first().html()) || 0;
 
 		//	$('#pos-modal-discount-list').load('/pos/ajax', { a: 'discount-list' });
 
@@ -31,7 +31,7 @@ $(function() {
 	// Detect Change and Reset Other One (fix resets pct)
 	$('#pos-checkout-discount-fix').on('blur keyup', function(e) {
 
-		var fix = Math.abs(parseFloat($(this).val(), 10) || 0);
+		var fix = Math.abs(parseFloat($(this).val()) || 0);
 		if (fix !== 0) {
 
 			$('#pos-checkout-discount-pct').val('');
@@ -45,7 +45,7 @@ $(function() {
 	// Percent Discount
 	$('#pos-checkout-discount-pct').on('blur keyup', function(e) {
 
-		var pct = Math.abs(parseFloat($(this).val(), 10) || 0);
+		var pct = Math.abs(parseFloat($(this).val()) || 0);
 		if (pct !== 0) {
 
 			$('#pos-checkout-discount-fix').val('');

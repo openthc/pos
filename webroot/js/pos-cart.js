@@ -17,18 +17,18 @@ function Cart_addItem(obj)
 	if ( ! obj.qty ) {
 		obj.qty = 1;
 	}
-	obj.qty = parseFloat(obj.qty, 10) || 0;
-	obj.price = parseFloat(obj.price, 10) || 0;
+	obj.qty = parseFloat(obj.qty) || 0;
+	obj.price = parseFloat(obj.price) || 0;
 
 	// @todo Move Clicked Item to Top Row
 	if ($('#psi-item-' + obj.id).length > 0) {
 		var q = $(`#psi-item-${obj.id}-unit-count`).val();
-		q = parseFloat(q, 10) || 1;
+		q = parseFloat(q) || 1;
 		obj.qty += q;
 		$('#psi-item-' + obj.id).remove();
 	}
 
-	var full_price = obj.price * obj.qty;
+	obj.full_price = obj.price * obj.qty;
 
 	// @note why have inv-item on here?
 	var html = `
@@ -61,7 +61,7 @@ function Cart_addItem(obj)
 		</div>
 	</div>
 	<div class="col-md-4" style="text-align:right;">
-		<h3><span id="psi-item-${obj.id}-full-price">${full_price.toFixed(2)}</span></h3>
+		<h3><span id="psi-item-${obj.id}-full-price">${obj.full_price.toFixed(2)}</span></h3>
 	</div>
 </div>
 </div>`;
@@ -114,7 +114,7 @@ $(function() {
 	//		Weed.modal( $('#pos-modal-number-input') );
 	//		$('#app-modal-wrap').css('width', '480px');
 	//		$('#pos-modal-number-input').show();
-	//		$('#pos-modal-number-input-live').html( parseFloat($(e.target).val(), 10).toFixed(2) );
+	//		$('#pos-modal-number-input-live').html( parseFloat($(e.target).val()).toFixed(2) );
 	//		$('#pos-modal-number-input-live').attr('data-first', 'true');
 	//		$('#pos-modal-number-input-live').attr('data-update', $(e.target).attr('id'));
 	//	});

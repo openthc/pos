@@ -9,7 +9,7 @@ var ppCashPaid_List = new Array();
 function ppFormUpdate()
 {
 	var full = OpenTHC.POS.sale.due;
-	var cash = parseFloat($('#payment-cash-incoming').text(), 10);
+	var cash = parseFloat($('#payment-cash-incoming').text());
 	var need = (full - cash);
 	var back = (cash - full);
 
@@ -78,8 +78,8 @@ function ppAddCash(n)
 
 	var full = $('#pos-cost-due').data('amount'); // @todo is this wrong?
 
-	var add = parseFloat( $(n).data('amount'), 10 );
-	var cur = parseFloat( $('#payment-cash-incoming').text(), 10 );
+	var add = parseFloat( $(n).data('amount') );
+	var cur = parseFloat( $('#payment-cash-incoming').text() );
 	if (!cur) cur = 0;
 
 	var cash = (cur + add);

@@ -182,9 +182,9 @@ function chkSaleCost()
 
 	// Canonical
 	$('.pos-checkout-item-count').html( OpenTHC.POS.Cart.unit_count );
-	$('.pos-checkout-sub').html(parseFloat(OpenTHC.POS.Cart.item_price_total, 10).toFixed(2));
-	$('.pos-checkout-tax-total').html(parseFloat(OpenTHC.POS.sale.tax_sale, 10).toFixed(2));
-	$('.pos-checkout-sum').html(parseFloat(OpenTHC.POS.sale.due, 10).toFixed(2));
+	$('.pos-checkout-sub').html(parseFloat(OpenTHC.POS.Cart.item_price_total).toFixed(2));
+	$('.pos-checkout-tax-total').html(parseFloat(OpenTHC.POS.sale.tax_sale).toFixed(2));
+	$('.pos-checkout-sum').html(parseFloat(OpenTHC.POS.sale.due).toFixed(2));
 
 	if (OpenTHC.POS.sale.due <= 0) {
 		$('.pos-checkout-sum').parent().css('color', '');
