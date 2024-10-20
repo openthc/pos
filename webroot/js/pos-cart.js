@@ -71,8 +71,6 @@ function Cart_addItem(obj)
 	Cart_addItem_flash(obj.id);
 	chkSaleCost();
 
-	OpenTHC.POS.Ticket.checkSaleLimits();
-
 	$('#cart-list-empty').hide();
 }
 

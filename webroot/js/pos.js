@@ -82,69 +82,6 @@ OpenTHC.POS = {
 
 
 OpenTHC.POS.Ticket = {
-
-	checkSaleLimits: function()
-	{
-		var cur_22 = 0; // Solid Infused
-		var cur_23 = 0; // Liquid Infused
-		var cur_24 = 0; // Extract to Inhale
-		var cur_28 = 0; // Usable
-
-		$('.cart-item').each(function(i, n) {
-
-			var inv_id = $(n).data('id');
-
-			var q = $(`#psi-item-${inv_id}-unit-count`).val();
-			if (isNaN(q)) {
-				console.log('OpenTHC.POS.Ticket.checkSaleLimits - Bad Quantity for Item: ' + inv_id);
-				return(0);
-			}
-
-			var w = $(n).data('weight');
-			if (isNaN(w)) {
-				console.log('OpenTHC.POS.Ticket.checkSaleLimits - Bad Weight for Item: ' + inv_id);
-				return(0);
-			}
-
-			var k = $(n).data('kind');
-			switch (k) {
-			case 22:
-				cur_22 += (w * q);
-				break;
-			case 23:
-				cur_23 += (w * q);
-				break;
-			case 24:
-				cur_24 += (w * q);
-				break;
-			case 28:
-				cur_28 += (w * q);
-				break;
-			}
-
-		});
-
-		var pass = true;
-		if (cur_22 > 453) {
-			pass = false;
-		}
-		if (cur_23 > 2000) {
-			pass = false;
-		}
-		if (cur_24 > 7) {
-			pass = false;
-		}
-		if (cur_28 > 28) {
-			pass = false;
-		}
-
-		if (!pass) {
-			Weed.modal( $('#pos-modal-transaction-limit') );
-			$('#pos-modal-transaction-limit').show();
-		}
-
-	}
-
 };
 
 

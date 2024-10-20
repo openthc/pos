@@ -82,37 +82,6 @@ class Ajax extends \OpenTHC\Controller\Base
 				}
 			}
 		}
-/*
-switch ($_POST['a']) {
-	case 'dispense':
-		$s['data'] = json_encode(array(
-			'barcodeid' => $_POST['barcodeid'],
-			'quantity' => $_POST['quantity'],
-			'price' => $_POST['price']
-		));
-		break;
-
-	case 'void':
-		$s['transactionid'] = $_POST['transactionid'];
-		break;
-
-	case 'modify':
-		$s['transactionid'] = $_POST['transactionid'];
-		$s['barcodeid'] = $_POST['barcodeid'];
-		$s['price'] = $_POST['price'];
-		$s['item_number'] = $_POST['item_number'];
-		break;
-
-	case 'refund':
-		$s['data'] = json_encode(array(
-			'barcodeid' => $_POST['barcodeid'],
-			'quantity' => $_POST['quantity'],
-			'price' => $_POST['price']
-
-		));
-		break;
-}
-*/
 
 		return $RES->withJSON([
 			'data' => [
