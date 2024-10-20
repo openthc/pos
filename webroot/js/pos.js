@@ -28,28 +28,6 @@ OpenTHC.POS = {
 		full_price: 0,
 	},
 
-	init_done:false,
-	init:function(m)
-	{
-		// Some times the browswer can fire load twice?, so trap that
-		if (OpenTHC.POS.init_done) {
-			console.log('OpenTHC.POS.init() - 2nd');
-			return;
-		}
-
-		switch (m) {
-		case 'front':
-			// Save O as terminal ID?
-			OpenTHC.POS.pull();
-			setInterval(function() {
-				OpenTHC.POS.pull();
-			}, 2345);
-			break;
-		}
-
-		OpenTHC.POS.init_done = true;
-
-	},
 	ping_tick: null,
 	ping: function() {
 		$.get('/pos/ajax?a=ping');

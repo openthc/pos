@@ -59,6 +59,20 @@ class Ajax extends \OpenTHC\Controller\Base
 
 		case 'hold-open':
 			return $this->hold_open($RES);
+		case 'ping':
+
+			if (!empty($_SESSION['pos-terminal-id'])) {
+				$k = "pos-terminal-{$_SESSION['pos-terminal-id']}";
+				$this->_container->Redis->hset($k, 'ping', $_SERVER['REQUEST_TIME']);
+			}
+
+			return $RES->withJSON([
+				'data' => '',
+				'meta' => [],
+			]);
+
+			break;
+
 		case 'push':
 
 				$k = sprintf('pos-terminal-card', $_SESSION['pos-terminal-id']);
@@ -268,111 +282,6 @@ function __old_ajax_shit($RES)
 
 		echo '</div>';
 		echo '</div>';
-		break;
-
-	case 'ping':
-
-		if (!empty($_SESSION['pos-terminal-id'])) {
-			$k = "pos-terminal-{$_SESSION['pos-terminal-id']}";
-			$this->_container->Redis->hset($k, 'ping', $_SERVER['REQUEST_TIME']);
-		}
-
-		header('content-type: application/javascript');
-		die('// pong');
-
-		break;
-
-	case 'pull':
-
-		$chk = $this->_container->Redis->hget('pos-terminal-' . $_SESSION['pos-terminal-id'] . '-cart');
-		if (empty($chk)) {
-			echo '<div class="col-md-12">';
-			echo '<h1>Cart is Empty</h1>';
-			echo '</div>';
-			exit(0);
-		}
-		ksort($chk);
-
-		// $last = $_SESSION['pos-last-cart-draw-hash'];
-		// $hash = md5(serialize($chk));
-		// if ($last == $hash) {
-		// 	header('HTTP/1.1 304 Not Modified', true, 304);
-		// 	exit(0);
-		// }
-
-		foreach ($chk as $k => $v) {
-			if (preg_match('/^item\-(\d+)$/', $k , $m)) {
-
-				$I = new Inventory($m[1]);
-				$si = $this->_container->Redis->hget('variety/' . strtolower($I['name']));
-
-				echo '<div class="col-md-9">';
-				echo '<h2>';
-				if ($chk["size-{$I['id']}"] > 1) {
-					echo ($chk["size-{$I['id']}"] . 'x ');
-				}
-				echo h($I['name']);
-				if (!empty($si['kind'])) echo ' (' . $si['kind'] . ')';
-				echo '</h2>';
-				echo '</div>';
-				echo '<div class="col-md-3" style="text-align:right;">';
-				echo number_format($I['sell'] * $chk["size-{$I['id']}"], 2);
-				echo '</div>';
-
-				// Description
-				if (!empty($si['text'])) {
-					echo '<div class="col-md-12">';
-					echo '<p>' . h($si['text']) . '</p>';
-					echo '</div>';
-				}
-
-				$img_list = array();
-				foreach ($si as $k => $v) {
-					if (preg_match('/^photo-(\d+)-mini$/', $k, $m)) {
-						$img_list[] = '<img src="' . preg_replace('/^http:/', 'https:', $v) . '" style="margin:0px 0px 4px 4px;">';
-					}
-				}
-				echo '<div class="col-md-12">' . implode('', $img_list) . '</div>';
-
-				$flv_list = array();
-				foreach ($si as $k => $v) {
-					if (preg_match('/^flavor-(.+)$/', $k, $m)) {
-						$buf = '<div class="col-md-8"><h3>' . h($m[1]) . '</h3></div>';
-						$buf.= '<div class="col-md-4">';
-						$buf.= '<div class="meter green nostripes"><span style="text-align:center; width: ' . floatval($v) . '%">' . sprintf('%0.1f', floatval($v)) . '%</span></div>';
-						$buf.= '</div>';
-						$flv_list[] = $buf;
-					}
-				}
-				if (count($flv_list)) {
-					echo '<div class="col-md-12">';
-					echo implode('', $flv_list);
-					echo '</div>';
-				}
-
-				$neg_list = array();
-				foreach ($si as $k => $v) {
-					if (preg_match('/^negative-(.+)$/', $k, $m)) {
-						$buf = '<div class="col-md-8"><h3>' . h($m[1]) . '</h3></div>';
-						$buf.= '<div class="col-md-4">';
-						$buf.= '<div class="meter orange nostripes"><span style="text-align:center; width: ' . floatval($v) . '%">' . sprintf('%0.1f', floatval($v)) . '%</span></div>';
-						$buf.= '</div>';
-						$neg_list[] = $buf;
-					}
-				}
-				if (count($neg_list)) {
-					echo '<div class="col-md-12">';
-					echo implode('', $neg_list);
-					echo '</div>';
-				}
-
-			}
-		}
-
-		echo '</div>';
-
-		$_SESSION['pos-last-cart-draw-hash'] = $hash;
-
 		break;
 
 	}
