@@ -58,61 +58,6 @@ OpenTHC.POS = {
 	}
 };
 
-
-OpenTHC.POS.Ticket = {
-};
-
-
-
-function chkSaleCost()
-{
-	console.log('chkSaleCost()');
-
-	OpenTHC.POS.Cart.item_count = 0;
-	OpenTHC.POS.Cart.item_price_total = 0;
-	OpenTHC.POS.Cart.unit_count = 0;
-	OpenTHC.POS.Cart.full_price = 0;
-
-
-	// Find All Line Items
-	$('.cart-item').each(function(x, n) {
-
-		var inv_id = $(n).data('id');
-		var unit_count = $(`#psi-item-${inv_id}-unit-count`).val();
-		unit_count = parseFloat(unit_count);
-		if (isNaN(unit_count)) {
-			console.log('chkSaleCost ! invalid unit_count');
-		}
-
-		var unit_price = $(`#psi-item-${inv_id}-unit-price`).val();
-		unit_price = parseFloat(unit_price);
-
-		OpenTHC.POS.Cart.item_count++;
-		OpenTHC.POS.Cart.item_price_total += (unit_count * unit_price);
-		OpenTHC.POS.Cart.unit_count += unit_count;
-
-	});
-
-	OpenTHC.POS.sale.due	  = OpenTHC.POS.Cart.item_price_total + OpenTHC.POS.sale.tax_sale;
-
-	// Canonical
-	$('.pos-checkout-item-count').html( OpenTHC.POS.Cart.unit_count );
-	$('.pos-checkout-sub').html(parseFloat(OpenTHC.POS.Cart.item_price_total).toFixed(2));
-	$('.pos-checkout-tax-total').html(parseFloat(OpenTHC.POS.sale.tax_sale).toFixed(2));
-	$('.pos-checkout-sum').html(parseFloat(OpenTHC.POS.sale.due).toFixed(2));
-
-	if (OpenTHC.POS.sale.due <= 0) {
-		$('.pos-checkout-sum').parent().css('color', '');
-		$('#pos-terminal-cmd-wrap button').attr('disabled', 'disabled');
-	} else if (OpenTHC.POS.sale.due > 0) {
-		$('.pos-checkout-sum').parent().css('color', '#f00000');
-		$('#pos-terminal-cmd-wrap button').removeAttr('disabled');
-	}
-
-	OpenTHC.POS.push($('#psi-form').serializeArray());
-
-}
-
 $(function() {
 
 	// Click the Cancel Button
@@ -224,7 +169,7 @@ $(function() {
 			$('#psi-item-' + inv_id).remove();
 		}
 
-		chkSaleCost();
+		OpenTHC.POS.Cart.update();
 	});
 
 	// Open A Link in a Modal Thing
@@ -300,6 +245,8 @@ $(function() {
 	// Load the Sale Ticket
 	$('#sale-hold-list').on('click', 'a', function() {
 		console.log('sale-hold-list a!click');
+		alert('Not Implemented (yet)');
+		return;
 		$('#menu-left').removeClass('open');
 		fetch(`/pos/ajax?a=hold-open&id=${this.hash.replace('#', '')}`)
 		.then(res => res.json())

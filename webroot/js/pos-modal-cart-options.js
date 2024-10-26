@@ -8,8 +8,8 @@ $(function() {
 
 	$('#pos-cart-option-save').on('click', function() {
 
-		OpenTHC.POS.Ticket.date = $('#cart-option-date').val();
-		OpenTHC.POS.Ticket.time = $('#cart-option-time').val();
+		OpenTHC.POS.Cart.date = $('#cart-option-date').val();
+		OpenTHC.POS.Cart.time = $('#cart-option-time').val();
 
 		// var $b = $(this);
 		// $b.html('<i class="fas fa-sync fa-spin"></i> Working...');
