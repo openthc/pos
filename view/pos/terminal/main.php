@@ -276,7 +276,7 @@ $(function() {
 			unit_price: $(this).data('price'), // v1
 			qty: 1,
 			unit_count: 1, // v1
-			unit_price:total: '?.??',
+			unit_price_total: '?.??',
 		});
 
 		return false;
@@ -382,6 +382,13 @@ $(function() {
 
 		return false;
 	});
+
+	<?php
+	if ( ! empty($data['cart']['item_count'])) {
+		echo "$('#cart-list-empty').html('<div class=\"alert alert-warning\">Loading...</div>');\n";
+		echo "\tOpenTHC.POS.Cart.reload();\n";
+	};
+	?>
 });
 </script>
 
