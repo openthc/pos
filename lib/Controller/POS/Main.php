@@ -62,6 +62,22 @@ class Main extends \OpenTHC\Controller\Base
 			return $RES->write( $this->render('pos/contact-verify.php', $data) );
 		}
 
+		// Get a Cart ID
+		if (empty($_GET['cart'])) {
+			return $RES->withRedirect(sprintf('/pos?cart=%s', \Edoceo\Radix\ULID::create()));
+		}
+
+		$data['cart'] = [];
+		$data['cart']['id'] = $_GET['cart'];
+
+		$key = sprintf('/%s/cart/%s', $_SESSION['License']['id'], $data['cart']['id']);
+
+		$rdb = $this->_container->Redis;
+		$chk = $rdb->get($key);
+		if ( ! empty($chk)) {
+			$data['cart'] = json_decode($chk, true);
+		}
+
 		return $RES->write( $this->render('pos/terminal/main.php', $data) );
 
 	}

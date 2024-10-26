@@ -67,7 +67,7 @@ class Ajax extends \OpenTHC\Controller\Base
 			}
 
 			return $RES->withJSON([
-				'data' => '',
+				'data' => null,
 				'meta' => [],
 			]);
 
@@ -75,18 +75,19 @@ class Ajax extends \OpenTHC\Controller\Base
 
 		case 'push':
 
-				$k = sprintf('pos-terminal-card', $_SESSION['pos-terminal-id']);
-				$this->_container->Redis->del($k);
-				$x = $this->_container->Redis->set($k, json_encode($_POST));
+			$k = sprintf('pos-terminal-card', $_SESSION['pos-terminal-id']);
+			$this->_container->Redis->del($k);
+			$x = $this->_container->Redis->set($k, json_encode($_POST));
 
-				return $RES->withJSON(array(
-					'data' => null,
-					'meta' => [ 'detail' => 'success' ],
-				));
+			return $RES->withJSON(array(
+				'data' => null,
+				'meta' => [],
+			));
 
 			break;
-			case 'search':
-				return $this->_search($RES);
+
+		case 'search':
+			return $this->_search($RES);
 			break;
 		}
 

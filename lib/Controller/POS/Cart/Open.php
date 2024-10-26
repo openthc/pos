@@ -36,7 +36,7 @@ class Open extends \OpenTHC\Controller\Base
 				}
 			}
 
-			echo 'chkSaleCost(); ';
+			echo 'OpenTHC.POS.Cart.update(); ';
 			echo '});';
 			echo '</script>';
 

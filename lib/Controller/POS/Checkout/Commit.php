@@ -20,133 +20,111 @@ class Commit extends \OpenTHC\Controller\Base
 		$_POST['cash_incoming'] = floatval($_POST['cash_incoming']);
 		$_POST['cash_outgoing'] = floatval($_POST['cash_outgoing']);
 
+		$key = sprintf('/%s/cart/%s', $_SESSION['License']['id'], $_POST['cart_id']);
+		$Cart0 = $this->_container->Redis->get($key);
+		$Cart0 = json_decode($Cart0);
+		if (empty($Cart0)) {
+			throw new \Exception('Invalid Cart [PCC-027]');
+		}
+		$dt0 = new \DateTime();
+		if (( ! empty($_POST['cart-date'])) && ( ! empty($_POST['cart-time'])) ) {
+			$dtX = sprintf('%sT%s', $_POST['cart-date'], $_POST['cart-time']);
+			$dt0 = new \DateTime($dtX, new \DateTimezone($_SESSION['Company']['tz']));
+		}
+		// __exit_text([
+		// 	'_POST' => $_POST,
+		// 	'Cart0' => $Cart0
+		// ]);
+
 		$dbc = $this->_container->DB;
 
 		$Company = new \OpenTHC\Company($dbc, $_SESSION['Company']);
 		$License = new \OpenTHC\License($dbc, $_SESSION['License']['id']);
 
-		$tax_incl = $Company->getOption(sprintf('/%s/b2b-item-price-adjust/tax-included', $License['id']));
-		$tax_list = [];
-		$tax_list['010PENTHC00BIPA0SST03Q484J'] = $Company->getOption(sprintf('/%s/b2b-item-price-adjust/010PENTHC00BIPA0SST03Q484J', $License['id'])); // State
-		$tax_list['010PENTHC00BIPA0C0T620S2M2'] = $Company->getOption(sprintf('/%s/b2b-item-price-adjust/010PENTHC00BIPA0C0T620S2M2', $License['id'])); // County
-		$tax_list['010PENTHC0PDTNJ1WNK5H9S6T3'] = $Company->getOption(sprintf('/%s/b2b-item-price-adjust/010PENTHC0PDTNJ1WNK5H9S6T3', $License['id'])); // City
-		$tax_list['010PENTHC0PDTSV845B6FEEGCF'] = $Company->getOption(sprintf('/%s/b2b-item-price-adjust/010PENTHC0PDTSV845B6FEEGCF', $License['id'])); // Regional
-		$tax_list['010PENTHC00BIPA0ET0FNBCKMH'] = $Company->getOption(sprintf('/%s/b2b-item-price-adjust/010PENTHC00BIPA0ET0FNBCKMH', $License['id'])); // Excise
-
 		try {
 
 			$dbc->query('BEGIN');
 
-			$b2c_item_count = 0;
-			$sum_item_price = 0;
-
 			$Sale = new \OpenTHC\POS\B2C\Sale($dbc);
 			$Sale['id'] = ULID::create();
+			$Sale['guid'] = $Sale['id'];
+			$Sale['created_at'] = $dt0->format(\DateTime::RFC3339);
 			$Sale['license_id'] = $License['id'];
 			$Sale['contact_id'] = $_SESSION['Contact']['id'];
 			$Sale['contact_id_client'] = $_SESSION['Cart']['Contact']['id'];
-			$Sale['guid'] = $Sale['id'];
+			// $Sale['agent_contact_id'] = $_SESSION['Contact']['id'];//
+			// $Sale['buyer_contact_id'] = //
+			// $Sale['source_contact_id'] =
+			// $Sale['target_contact_id'] =
 			$Sale['meta'] = json_encode([
-				'_SESSION/Cart' => $_SESSION['Cart'],
 				'_POST' => $_POST,
+				'Cart' => $Cart0,
 			]);
+			// __exit_text($Sale);
 			$Sale->save('B2C/Sale/Create');
 
-			$key_list = array_keys($_POST);
-			foreach ($key_list as $key) {
+			foreach ($Cart0->item_list as $b2c_id => $b2c_item) {
 				// @todo Need to Handle "Special" line items
 				// Like, Loyalty or Tax or ??? -- Could those be "system" class Inventory to add to a ticket?
 				// And Don't Decrement Them?
-				if (preg_match('/^item\-(\w+)\-unit\-count$/', $key, $m)) {
-
-					$qty = floatval($_POST[$key]);
-					if ($qty <= 0) {
+				$b2c_item->unit_count = floatval($b2c_item->unit_count);
+				if ($b2c_item->unit_count <= 0) {
 						continue;
-					}
+				}
 
-					$Inv = new \OpenTHC\POS\Inventory($dbc, $m[1]);
-					if (empty($Inv['id'])) {
+				$Inv = new \OpenTHC\POS\Inventory($dbc, $b2c_item->id);
+				if (empty($Inv['id'])) {
 						throw new \Exception('Inventory Lost on Sale [PCC-055]');
-					}
+				}
 
-					$P = new \OpenTHC\POS\Product($dbc, $Inv['product_id']);
-					switch ($P['package_type']) {
-					case 'pack':
-					case 'each':
-						$b2c_item_count += $qty;
+				$P = new \OpenTHC\POS\Product($dbc, $Inv['product_id']);
+				switch ($P['package_type']) {
+				case 'pack':
+				case 'each':
 						$uom = 'ea';
 						break;
-					case 'bulk':
-						$b2c_item_count++;
+				case 'bulk':
 						$uom = new \OpenTHC\UOM($P['package_unit_uom']);
 						$uom = $uom->getStub();
 						break;
-					}
+				}
 
-					$SI = new \OpenTHC\POS\B2C\Sale\Item($dbc);
-					$SI['id'] = ULID::create();
-					$SI['b2c_sale_id'] = $Sale['id'];
-					$SI['inventory_id'] = $Inv['id'];
-					$SI['unit_count'] = $qty;
-					$SI['unit_price'] = floatval($Inv['sell']);
-					if (isset($_POST[sprintf('item-%s-unit-price', $Inv['id'])])) {
-						$SI['unit_price'] = $_POST[sprintf('item-%s-unit-price', $Inv['id'])];
-					}
-					$SI['uom'] = $uom;
-					$SI->save('B2C/Sale/Item/Create');
+				$SI = new \OpenTHC\POS\B2C\Sale\Item($dbc);
+				$SI['id'] = ULID::create();
+				$SI['b2c_sale_id'] = $Sale['id'];
+				$SI['inventory_id'] = $Inv['id'];
+				$SI['uom'] = $uom;
+				$SI['unit_count'] = $b2c_item->unit_count;
+				$SI['unit_price'] = floatval($Inv['sell']);
+				if (isset($b2c_item->unit_price)) {
+						$SI['unit_price'] = $b2c_item->unit_price;
+				}
+				// +Fees
+				// -Discount
+				// +/- Adjustment
+				// +Tax
+				// $SI['full_price'] = (full + taxes)
+				$SI->save('B2C/Sale/Item/Create');
 
-					$Inv->decrement($qty);
+				$Inv->decrement($b2c_item->unit_count);
 
-					// Foreach tax_list as $tax
-					//  insert into b2b_sale_item_tax (b2b_sale_id, b2b_sale_item_id, tax_plan_id, tax_amount)
-
-					$sum_item_price += ($SI['unit_price'] * $SI['unit_count']);
+				// Add the Sale Item taxes Here
+				foreach ($b2c_item->tax_list as $tax_ulid => $tax_line) {
+					$dbc->insert('b2c_sale_item_adjust', [
+						'id' => \Edoceo\Radix\ULID::create(),
+						'b2c_sale_id' => $Sale['id'],
+						'b2c_sale_item_id' => $SI['id'],
+						'adjust_id' => $tax_ulid,
+						'name' => 'Tax',
+						'amount' => $tax_line,
+					]);
 
 				}
+
 			}
 
-			// Excise Taxes
-			// $opt_help->get('/%s/)
-			// $tax_excise_rate = $tax4_pct;
-			// if ($tax_excise_rate > 1) {
-			// 	$tax_excise_rate = $tax_excise_rate / 100;
-			// }
-			// if ($tax_excise_rate > 0) {
-			// 	$SI = new \OpenTHC\POS\B2C\Sale\Item($dbc);
-			// 	$SI['id'] = ULID::create();
-			// 	$SI['b2c_sale_id'] = $Sale['id'];
-			// 	// $SI['inventory_id'] = '';
-			// 	$SI['guid'] = '-';
-			// 	$SI['unit_count'] = 1;
-			// 	$SI['unit_price'] = ($sum_item_price * $tax_excise_rate);
-			// 	$SI->setFlag(\OpenTHC\POS\B2C\Sale\Item::FLAG_TAX_EXCISE);
-			// 	// $SI->save();
-			// }
-
-			// Retail/Sales Taxes
-			// $License->opt('tax-retail-rate') ??
-			// $arg = [
-			// 	':k' => sprintf('/%s/tax-retail-rate', $_SESSION['License']['id']),
-			// ];
-			// $tax_retail_rate = $dbc->fetchOne('SELECT val FROM base_option WHERE key = :k', $arg);
-			// $tax_retail_rate = floatval($tax_retail_rate);
-			// if ($tax_retail_rate > 1) {
-			// 	$tax_retail_rate = $tax_retail_rate / 100;
-			// }
-			// if ($tax_retail_rate > 0) {
-			// 	$SI = new \OpenTHC\POS\B2C\Sale\Item($dbc);
-			// 	$SI['id'] = ULID::create();
-			// 	$SI['b2c_sale_id'] = $Sale['id'];
-			// 	$SI['inventory_id'] = -1;
-			// 	$SI['guid'] = '-';
-			// 	$SI['unit_count'] = 1;
-			// 	$SI['unit_price'] = ($sum_item_price * $tax_excise_rate);
-			// 	$SI->setFlag(\OpenTHC\POS\B2C\Sale\Item::FLAG_TAX_RETAIL);
-			// 	// $SI->save();
-			// }
-
-			$Sale['item_count'] = $b2c_item_count;
-			$Sale['full_price'] = $sum_item_price + $tax0 + $tax1;
+			$Sale['item_count'] = $Cart0->item_count;
+			$Sale['full_price'] = $Cart0->full_price;
 			$Sale->save('B2C/Sale/Commit');
 
 		} catch (\Exception $e) {
@@ -305,7 +283,7 @@ class Commit extends \OpenTHC\Controller\Base
 				]
 			];
 		}
-		// __exit_text($req);
+		__exit_text($req);
 
 		// Authenticate and then Checkout
 

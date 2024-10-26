@@ -15,11 +15,36 @@ use OpenTHC\Contact;
 
 class Ajax extends \OpenTHC\Controller\Base
 {
+	protected $tax_info;
+
+	/**
+	 *
+	 */
 	function __invoke($REQ, $RES, $ARG)
 	{
+		// Load Tax Data
+		$this->initTaxData();
+
 		switch ($_POST['a']) {
 		case 'cart-add':
-			return $this->cart_insert($RES);
+		case 'cart-insert':
+			return $this->insert($REQ, $RES);
+		case 'cart-reload':
+			return $this->show_current_state($REQ, $RES);
+		case 'cart-update':
+		case 'update':
+			return $this->update($REQ, $RES);
+		case 'cart-option-save':
+
+			$dbc = $this->_container->DB;
+
+			// Do Something
+
+			return $RES->withJSON([
+				'data' => null,
+				'meta' => [ 'note' => 'Not Implemented [PCA-028]' ],
+			], 501);
+
 		case 'loyalty':
 
 			$dbc = $this->_container->DB;
@@ -84,12 +109,175 @@ class Ajax extends \OpenTHC\Controller\Base
 		}
 
 		return $RES->withJSON([
+			'data' => null,
+			'meta' => [ 'note' => 'Invalid Request' ]
+		], 400);
+
+	}
+
+	/**
+	 *
+	 */
+	function insert($REQ, $RES)
+	{
+		$rdb = $this->_container->Redis;
+
+		$b2c_cart = $_POST['cart'];
+		$b2c_cart = json_decode($b2c_cart, true);
+		$b2c_item = $_POST['item'];
+		$b2c_item = json_decode($b2c_item, true);
+		$b2c_item['unit_price'] = $b2c_item['price'];
+		$b2c_item['unit_price_total'] = $b2c_item['unit_price'] * $b2c_item['qty'];
+
+		$key = sprintf('/%s/cart/%s', $_SESSION['License']['id'], $b2c_cart['id']);
+
+		$Cart = $rdb->get($key);
+		if ( ! empty($Cart)) {
+			$Cart = json_decode($Cart, true);
+		} else {
+			$Cart = [];
+			$Cart['id'] = $b2c_cart['id'];
+			$Cart['key'] = sprintf('/%s/cart/%s', $_SESSION['License']['id'], $Cart['id']);
+			$Cart['item_list'] = [];
+		};
+
+		// Add Taxes
+		$b2c_item['tax_list'] = [];
+		$b2c_item['tax_total'] = 0;
+		foreach ($this->tax_info->tax_list as $tax_ulid => $tax_rate) {
+			if ( ! empty($tax_rate)) {
+				if ($tax_rate > 0) {
+					$tax_rate = $tax_rate / 100;
+				}
+				$tax_cost = $b2c_item['unit_price_total'] * $tax_rate;
+				$b2c_item['tax_list'][$tax_ulid] = $tax_cost;
+				$b2c_item['tax_total'] += $tax_cost;
+			}
+		}
+		$b2c_item['full_price'] = $b2c_item['unit_price_total'] + $b2c_item['tax_total'];
+		// Format
+		$b2c_item['unit_price'] = sprintf('%0.2f', $b2c_item['unit_price']);
+		$b2c_item['unit_price_total'] = sprintf('%0.2f', $b2c_item['unit_price_total']);
+		$b2c_item['full_price'] = sprintf('%0.2f', $b2c_item['full_price']);
+
+		$Cart['item_list'][ $b2c_item['id'] ] = $b2c_item;
+
+		$Cart['item_count']       = 0;
+		$Cart['unit_count']       = 0;
+		$Cart['unit_price_total'] = 0;
+		// $Cart['unit_price'] = 0;
+		$Cart['tax_total']        = 0;
+		$Cart['full_price']       = 0;
+
+		foreach ($Cart['item_list'] as $b2c_item) {
+			$Cart['item_count'] += 1;
+			$Cart['unit_count'] += $b2c_item['qty'];
+			$Cart['unit_price_total'] += $b2c_item['unit_price_total'];
+			// $Cart['unit_price']
+			$Cart['tax_total']  += array_sum($b2c_item['tax_list']);
+			$Cart['full_price'] += $b2c_item['full_price'];
+		}
+
+		$Cart['unit_price_total'] = sprintf('%0.2f', $Cart['unit_price_total']);
+		$Cart['tax_total']  = sprintf('%0.2f', $Cart['tax_total']);
+		$Cart['full_price'] = sprintf('%0.2f', $Cart['full_price']);
+
+		$rdb->set($Cart['key'], json_encode($Cart), [ 'ex' => '43200' ]);
+
+		$ret = [
+			'Cart' => $Cart,
+			'meta' => [],
+		];
+
+		return $RES->withJSON($ret);
+
+	}
+
+	function show_current_state($REQ, $RES)
+	{
+		$b2c_cart = $_POST['cart'];
+		$b2c_cart = json_decode($b2c_cart, true);
+
+		$key = sprintf('/%s/cart/%s', $_SESSION['License']['id'], $b2c_cart['id']);
+
+		$rdb = $this->_container->Redis;
+		$Cart = $rdb->get($key);
+		if ( ! empty($Cart)) {
+			$Cart = json_decode($Cart);
+		} else {
+			$Cart = [
+				'item_list' => [],
+				'item_count' => 0,
+				'item_',
+			];
+		}
+
+		$ret = [
 			'data' => [
-				'name' => $C['fullname'],
-				'rank' => 0,
+				'Cart' => $Cart,
 			],
-			'meta' => [ 'detail' => 'success' ]
-		]);
+			'meta' => [],
+		];
+
+		return $RES->withJSON($ret);
+
+	}
+
+	/**
+	 *
+	 */
+	function update($REQ, $RES)
+	{
+		$rdb = $this->_container->Redis;
+
+		$b2c_cart = $_POST['cart'];
+		$b2c_cart = json_decode($b2c_cart, true);
+		// $b2c_item = $_POST['item'];
+
+		// Now Create the HTML for the Whole Cart
+
+		// Store Cart w/ID, Update and Send Back?
+		// $k = sprintf('pos-terminal-card', $_SESSION['pos-terminal-id']);
+		// $this->_container->Redis->del($k);
+		// $x = $this->_container->Redis->set($k, json_encode($_POST));
+
+		return $RES->withJSON(array(
+			'data' => $_POST,
+			'meta' => [ ],
+		));
+
+	}
+
+	/**
+	 *
+	 */
+	private function initTaxData() : void
+	{
+		// Load Tax Data
+		$rdb = $this->_container->Redis;
+		$key = sprintf('/%s/tax-info', $_SESSION['License']['id']);
+		// $tax_info = $rdb->get($key);
+		if ( ! empty($tax_info)) {
+			$this->tax_info = json_decode($tax_info);
+			return;
+		}
+
+		$dbc = $this->_container->DB;
+
+		$Company = new \OpenTHC\Company($dbc, $_SESSION['Company']);
+		$License = new \OpenTHC\License($dbc, $_SESSION['License']['id']);
+
+		$this->tax_info = new \stdClass();
+		$this->tax_info->tax_incl = $Company->getOption(sprintf('/%s/b2c-item-price-adjust/tax-included', $License['id']));
+		$this->tax_info->tax_list = new \stdClass();
+
+		$this->tax_info->tax_list->{'010PENTHC00BIPA0SST03Q484J'} = floatval($Company->getOption(sprintf('/%s/b2c-item-price-adjust/010PENTHC00BIPA0SST03Q484J', $License['id']))); // State
+		$this->tax_info->tax_list->{'010PENTHC00BIPA0C0T620S2M2'} = floatval($Company->getOption(sprintf('/%s/b2c-item-price-adjust/010PENTHC00BIPA0C0T620S2M2', $License['id']))); // County
+		$this->tax_info->tax_list->{'010PENTHC0PDTNJ1WNK5H9S6T3'} = floatval($Company->getOption(sprintf('/%s/b2c-item-price-adjust/010PENTHC0PDTNJ1WNK5H9S6T3', $License['id']))); // City
+		$this->tax_info->tax_list->{'010PENTHC0PDTSV845B6FEEGCF'} = floatval($Company->getOption(sprintf('/%s/b2c-item-price-adjust/010PENTHC0PDTSV845B6FEEGCF', $License['id']))); // Regional
+		$this->tax_info->tax_list->{'010PENTHC00BIPA0ET0FNBCKMH'} = floatval($Company->getOption(sprintf('/%s/b2c-item-price-adjust/010PENTHC00BIPA0ET0FNBCKMH', $License['id']))); // Excise
+
+		$rdb->set($key, json_encode($this->tax_info), [ 'ex' => '1800' ]);
 
 	}
 
