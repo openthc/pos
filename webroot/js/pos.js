@@ -19,14 +19,7 @@ window.ulid = function()
 var OpenTHC = OpenTHC || {};
 
 OpenTHC.POS = {
-
-	Cart: {
-		item_count: 0,  // Count of Line Items
-		item_price_total: 0,  // Total of Line Items
-		unit_count: 0,  // Total Count of Units
-		tax_total: 0,
-		full_price: 0,
-	},
+	Cart: { /** From pos-cart.js */ },
 
 	ping_tick: null,
 	ping: function() {
@@ -47,14 +40,6 @@ OpenTHC.POS = {
 				break;
 			}
 		});
-	},
-	push: function(fd)
-	{
-		$.post('/pos/ajax?a=push', fd);
-	},
-	sale: {
-		due: 0,
-		tax_sale: 0,
 	}
 };
 
@@ -170,6 +155,7 @@ $(function() {
 		}
 
 		OpenTHC.POS.Cart.update();
+
 	});
 
 	// Open A Link in a Modal Thing

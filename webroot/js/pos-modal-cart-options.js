@@ -21,9 +21,9 @@ $(function() {
 		// 	time: $('#checkout-option-time').val(),
 		// };
 
-		$.post('/pos/cart/ajax', arg, function(body, stat) {
+		// $.post('/pos/cart/ajax', arg, function(body, stat) {
 			$('#pos-modal-cart-option').modal('hide');
-		});
+		// });
 
 	});
 });

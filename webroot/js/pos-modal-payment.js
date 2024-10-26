@@ -8,7 +8,7 @@ var ppCashPaid_List = new Array();
 
 function ppFormUpdate()
 {
-	var full = OpenTHC.POS.sale.due;
+	var full = OpenTHC.POS.sale.full_price;
 	var cash = parseFloat($('#payment-cash-incoming').text());
 	var need = (full - cash);
 	var back = (cash - full);
@@ -76,7 +76,7 @@ function ppAddCash(n)
 {
 	console.log('ppAddCash');
 
-	var full = $('#pos-cost-due').data('amount'); // @todo is this wrong?
+	var full = OpenTHC.POS.Cart.full_price;
 
 	var add = parseFloat( $(n).data('amount') );
 	var cur = parseFloat( $('#payment-cash-incoming').text() );
@@ -173,12 +173,15 @@ $(function() {
 		var cash_incoming = $('#payment-cash-incoming').text();
 		var cash_outgoing = $('#payment-cash-outgoing').text();
 
+		// Append to existing form to capture all the other existing inputs
 		$('#psi-form').attr('action', '/pos/checkout/commit');
 		$('#psi-form').append('<input name="a" type="hidden" value="pos-done">');
+		$('#psi-form').append(`<input name="cart_id" type="hidden" value="${OpenTHC.POS.Cart.id}">`);
+		$('#psi-form').append(`<input name="cart-date" type="hidden" value="${OpenTHC.POS.Cart.date}">`);
+		$('#psi-form').append(`<input name="cart-time" type="hidden" value="${OpenTHC.POS.Cart.time}">`);
 		$('#psi-form').append('<input name="due" type="hidden" value="' + OpenTHC.POS.Cart.full_price + '">');
-		$('#psi-form').append('<input name="sub" type="hidden" value="' + OpenTHC.POS.Cart.item_price_total + '">');
-		$('#psi-form').append('<input name="tax_sale" type="hidden" value="' + OpenTHC.POS.sale.tax_sale + '">');
-		$('#psi-form').append('<input name="pay" type="hidden" value="' + $('#payment-cash-incoming').val() + '">'); // @deprecated
+		$('#psi-form').append('<input name="sub" type="hidden" value="' + OpenTHC.POS.Cart.unit_price_total + '">');
+		$('#psi-form').append('<input name="tax_sale" type="hidden" value="' + OpenTHC.POS.Cart.tax_total + '">');
 		$('#psi-form').append('<input name="name" type="hidden" value="' + $('#customer-name').val() + '">');
 		$('#psi-form').append(`<input name="cash_incoming" type="hidden" value="${cash_incoming}">`);
 		$('#psi-form').append(`<input name="cash_outgoing" type="hidden" value="${cash_outgoing}">`);

@@ -34,7 +34,7 @@ $this->layout_file = sprintf('%s/view/_layout/html-pos.php', APP_ROOT);
 	</div>
 	<div class="pos-sale-wrap">
 		<!-- Items on the Ticket -->
-		<form action="/pos/pay" autocomplete="off" id="psi-form" method="post">
+		<form action="" autocomplete="off" id="psi-form" method="post">
 		<div id="cart-list-wrap" style="overflow-x:auto;">
 			<div id="cart-list-empty" style="margin: 10%; text-align:center;">
 				<h4 class="alert alert-dark">Purchase Ticket Data Appears Here</h4>
@@ -106,6 +106,55 @@ echo $this->block('modal/pos/payment-card.php');
 // echo $this->block('modal/pos/transaction-limit.php')
 // echo $this->block('modal/pos/keypad.php')
 ?>
+
+<template id="b2c-item-row-template">
+<div class="container pb-2 inv-item cart-item" style="opacity:0.50"
+	data-id="{$obj->id}"
+	data-inventory-id="{$obj->id}"
+	data-weight="{$obj->weight}"
+	id="psi-item-{$obj->id}">
+
+	<div class="row">
+		<div class="col-md-10" style="vertical-align:baseline;"><h4>{$obj->name}</h4></div>
+		<div class="col-md-2" style="text-align:right;">
+			<i class="fas fa-times b2c-item-remove"
+				data-id="{$obj->id}"
+				id="btn-{$obj->id}-delete"
+				style="color:#f00; cursor:grab; font-size: 24px; margin:8px;"></i>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-4">
+			<div class="input-group">
+				<label class="input-group-text">Qty:</label>
+				<input class="form-control b2c-item-unit-count"
+					data-id="{$obj->id}"
+					id="psi-item-{$obj->id}-unit-count"
+					name="item-{$obj->id}-unit-count" type="number" value="{$obj->qty}">
+			</div>
+		</div>
+		<div class="col-md-4">
+			<div class="input-group">
+				<input class="form-control b2c-item-unit-price"
+					data-id="{$obj->id}"
+					id="psi-item-{$obj->id}-unit-price"
+					name="item-{$obj->id}-unit-price"
+					type="number" value="{$obj->unit_price}">
+				<label class="input-group-text">ea</label>
+			</div>
+		</div>
+		<div class="col-md-4" style="text-align:right;">
+			<h3><span class="b2c-item-unit-price-total" id="psi-item-{$obj->id}-full-price">{$obj->unit_price_total}</span></h3>
+		</div>
+	</div>
+</div>
+</template>
+
+
+<script>
+OpenTHC.POS.Cart.id = '<?= $data['cart']['id'] ?>';
+</script>
+
 
 <script>
 /**
@@ -218,15 +267,16 @@ $(function() {
 
 	});
 
-	// searchInventory('');
-
 	$('#pos-item-list').on('click', '.inv-item', function(e) {
-		Cart_addItem({
+		OpenTHC.POS.Cart.insert({
 			id: $(this).data('id'),
 			name: $(this).data('name'),
 			weight: $(this).data('weight'),
-			price: $(this).data('price'),
-			qty: 1
+			price: $(this).data('price'), // v0
+			unit_price: $(this).data('price'), // v1
+			qty: 1,
+			unit_count: 1, // v1
+			unit_price:total: '?.??',
 		});
 
 		return false;
@@ -270,8 +320,6 @@ $(function() {
 	//		 showTitle:true
 	//	 })
 	// });
-
-	//Weed.POS.push({});
 
 	// Watch for Barcode Scanns Here
 	// $(document).on('keypress', function() {
@@ -328,7 +376,7 @@ $(function() {
 		var node = $('#' + nid);
 		node.val( $('#pos-modal-number-input-live').html() );
 		node.change();
-		chkSaleCost();
+		OpenTHC.POS.Cart.update();
 
 		$('pos-modal-number-input').modal('hide');
 
