@@ -69,24 +69,24 @@ class Commit extends \OpenTHC\Controller\Base
 				// And Don't Decrement Them?
 				$b2c_item->unit_count = floatval($b2c_item->unit_count);
 				if ($b2c_item->unit_count <= 0) {
-						continue;
+					continue;
 				}
 
 				$Inv = new \OpenTHC\POS\Inventory($dbc, $b2c_item->id);
 				if (empty($Inv['id'])) {
-						throw new \Exception('Inventory Lost on Sale [PCC-055]');
+					throw new \Exception('Inventory Lost on Sale [PCC-055]');
 				}
 
 				$P = new \OpenTHC\POS\Product($dbc, $Inv['product_id']);
 				switch ($P['package_type']) {
 				case 'pack':
 				case 'each':
-						$uom = 'ea';
-						break;
+					$uom = 'ea';
+					break;
 				case 'bulk':
-						$uom = new \OpenTHC\UOM($P['package_unit_uom']);
-						$uom = $uom->getStub();
-						break;
+					$uom = new \OpenTHC\UOM($P['package_unit_uom']);
+					$uom = $uom->getStub();
+					break;
 				}
 
 				$SI = new \OpenTHC\POS\B2C\Sale\Item($dbc);
@@ -97,7 +97,7 @@ class Commit extends \OpenTHC\Controller\Base
 				$SI['unit_count'] = $b2c_item->unit_count;
 				$SI['unit_price'] = floatval($Inv['sell']);
 				if (isset($b2c_item->unit_price)) {
-						$SI['unit_price'] = $b2c_item->unit_price;
+					$SI['unit_price'] = $b2c_item->unit_price;
 				}
 				// +Fees
 				// -Discount
@@ -137,6 +137,9 @@ class Commit extends \OpenTHC\Controller\Base
 		$dbc->query('COMMIT');
 
 		Session::flash('info', sprintf('Sale Confirmed, Transaction #%s', $Sale['guid']));
+
+		// $key = sprintf('/%s/cart/%s', $_SESSION['License']['id'], $data['cart']['id']);
+		// $rdb->del($key);
 
 		$url = sprintf('/pos/checkout/receipt?s=%s', $Sale['id']);
 
@@ -429,9 +432,24 @@ class Commit extends \OpenTHC\Controller\Base
 	/**
 	 *
 	 */
-	function send_to_openthc($b2c_sale)
+	function send_to_openthc($Sale)
 	{
 		throw new \Exception('Not Implemented');
+
+		$cre = \OpenTHC\CRE::factory($_SESSION['cre']);
+		$cre->setLicense($_SESSION['License']);
+
+		// $res = $cre->b2c()->create($Sale);
+
+		$b2c_item_list = $Sale->getItems();
+		foreach ($b2c_item_list as $b2c_item) {
+			// $cre->b2c($Sale['id'])->addItem($Sale['id'], $b2c_item);
+		}
+
+		// $cre->b2c($Sale['id'])->commit();
+
+		return $Sale;
+
 	}
 
 }
