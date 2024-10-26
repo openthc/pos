@@ -185,7 +185,9 @@ class Ajax extends \OpenTHC\Controller\Base
 		$rdb->set($Cart['key'], json_encode($Cart), [ 'ex' => '43200' ]);
 
 		$ret = [
-			'Cart' => $Cart,
+			'data' => [
+				'Cart' => $Cart,
+			],
 			'meta' => [],
 		];
 
