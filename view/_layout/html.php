@@ -22,7 +22,7 @@ $body_class_list[] = sprintf('m1-%s', $m1_mode);
 <link rel="stylesheet" href="/vendor/fontawesome/css/all.min.css">
 <link rel="stylesheet" href="/vendor/bootstrap/bootstrap.min.css">
 <!-- <link rel="stylesheet" href="/vendor/datatables/css/dataTables.bootstrap4.min.css"> -->
- <link rel="stylesheet" href="/css/main.css">
+<link rel="stylesheet" href="/css/main.css">
 <title><?= __h(strip_tags($this->data['Page']['title'])) ?></title>
 </head>
 <body class="<?= implode(' ', $body_class_list) ?>" data-menu-left-mode="<?= $m1_mode ?>">
