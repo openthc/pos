@@ -21,11 +21,9 @@ $body_class_list[] = sprintf('m1-%s', $m1_mode);
 <meta name="theme-color" content="#069420">
 <link rel="stylesheet" href="/vendor/fontawesome/css/all.min.css">
 <link rel="stylesheet" href="/vendor/bootstrap/bootstrap.min.css">
-<!-- <link rel="stylesheet" href="/vendor/datatables/css/dataTables.bootstrap4.min.css" integrity="sha256-F+DaKAClQut87heMIC6oThARMuWne8+WzxIDT7jXuPA=" crossorigin="anonymous"> -->
-<!-- <link rel="stylesheet" href="https://cdn.openthc.com/css/www/0.0.2/main.css" crossorigin="anonymous"> -->
-<!-- <link rel="stylesheet" href="https://cdn.openthc.com/css/www/0.0.2/menu-tlr.css" crossorigin="anonymous"> -->
-<link rel="stylesheet" href="/css/main.css">
-<title><?= h(strip_tags($this->data['Page']['title'])) ?></title>
+<!-- <link rel="stylesheet" href="/vendor/datatables/css/dataTables.bootstrap4.min.css"> -->
+ <link rel="stylesheet" href="/css/main.css">
+<title><?= __h(strip_tags($this->data['Page']['title'])) ?></title>
 </head>
 <body class="<?= implode(' ', $body_class_list) ?>" data-menu-left-mode="<?= $m1_mode ?>">
 <?= $this->block('body-head.php') ?>
