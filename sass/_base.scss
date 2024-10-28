@@ -77,7 +77,7 @@ button u {
 }
 /* Fix Select Widths on List pages */
 .filter-input-wrap select {
-       max-width: 20em;
+	max-width: 20em;
 }
 
 /*
@@ -290,18 +290,18 @@ div.clue-star {
 }
 
 @-webkit-keyframes clue_pulse {
-  0% {
-    -webkit-transform: scale(1);
-            transform: scale(1);
-  }
-  50% {
-    -webkit-transform: scale(1.50);
-            transform: scale(1.50);
-  }
-  100% {
-    -webkit-transform: scale(1);
-            transform: scale(1);
-  }
+	0% {
+		-webkit-transform: scale(1);
+				transform: scale(1);
+	}
+	50% {
+		-webkit-transform: scale(1.50);
+				transform: scale(1.50);
+	}
+	100% {
+		-webkit-transform: scale(1);
+				transform: scale(1);
+	}
 }
 
 
@@ -461,8 +461,8 @@ body.pos {
 
 	display: flex;
 	flex-direction: column;
-	flex-wrap: nowrap;
-	align-items: stretch;
+	// flex-wrap: nowrap;
+	// align-items: stretch;
 	height: 100%;
 
 	#pos-menu-wrap {
@@ -548,10 +548,10 @@ body.pos {
 	*/
 
 	-webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
 	user-select: none;
 }
 
@@ -560,8 +560,7 @@ body.pos {
 */
 .pos-foot-wrap {
 
-	background: #343a40;
-	color: #f0f0f0;
+	background: var(--bs-gray-800);
 
 	#pos-terminal-sub-wrap {
 
@@ -572,6 +571,7 @@ body.pos {
 		}
 
 		.sub-info-item-wrap h3 {
+			color: var(--bs-white);
 			line-height:48px;
 			margin: 0;
 			padding: 0;
