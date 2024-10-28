@@ -17,17 +17,19 @@ class Ajax extends \OpenTHC\Controller\Base
 	{
 		session_write_close();
 
-
 		switch ($_SERVER['REQUEST_METHOD']) {
-			case 'DELETE':
+		case 'DELETE':
 
-				// Only the HOLD ID DELETE
-				if (preg_match('/^01\w{24}$/', $_GET['id'])) {
-					$dbc = $this->_container->DB;
-					$dbc->query('DELETE FROM b2c_sale_hold WHERE id = :pk', [ ':pk' => $_GET['id'] ]);
-				}
+			// Only the HOLD ID DELETE
+			if (preg_match('/^01\w{24}$/', $_GET['id'])) {
+				$dbc = $this->_container->DB;
+				$dbc->query('DELETE FROM b2c_sale_hold WHERE id = :pk', [ ':pk' => $_GET['id'] ]);
+			}
 
-				_exit_text('', 204);
+			return $RES->withJSON([
+				'data' => null,
+				'meta' => [],
+			]);
 
 		}
 
