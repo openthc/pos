@@ -80,7 +80,7 @@ HTML;
 $foot = <<<HTML
 <button class="btn btn-lg btn-warning" id="pos-pay-undo" type="button"><i class="fas fa-undo"></i> Undo</button>
 <button class="btn btn-lg btn-primary" disabled id="pos-payment-commit" name="a" type="submit" value="pos-done">
-	<i class="fas fa-check-square"></i> Complete
+	<i class="fas fa-check-square"></i> Commit
 </button>
 HTML;
 
