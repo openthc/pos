@@ -17,7 +17,7 @@ $this->layout_file = sprintf('%s/view/_layout/html-pos.php', APP_ROOT);
 			<!-- Scanner/Search Input Area -->
 			<div id="pos-scanner-read" style="background: #ccc; flex: 1 0 auto; padding: 0.5rem; position:relative;">
 				<div class="input-group">
-					<button class="btn btn-primary" id="pos-camera-input" type="button"><i class="fas fa-camera"></i></button>
+					<button class="btn btn-primary pos-camera-input" type="button"><i class="fas fa-camera"></i></button>
 					<input autofocus class="form-control" id="barcode-input" name="barcode" type="text">
 					<button class="btn btn-secondary" id="pos-inventory-search" type="button"><i class="fas fa-search"></i></button>
 				</div>
@@ -53,14 +53,19 @@ $this->layout_file = sprintf('%s/view/_layout/html-pos.php', APP_ROOT);
 		<div class="sub-info-item-wrap"><h3>Final: $<span class="pos-checkout-sum">0.00</span></h3></div>
 	</div>
 	<div id="pos-terminal-cmd-wrap">
-		<!--
-		@deprecated this can be done by the Camera feature now
-		<div class="cmd-item">
-			<button class="btn btn-primary" id="pos-checkout-scan-id" data-bs-toggle="modal" data-bs-target="#pos-modal-scan-id" type="button">
+		<!-- @deprecated this can be done by the Checkin or Camera feature now	-->
+		<!-- <div class="cmd-item">
+			<button class="btn btn-lg btn-primary" id="pos-checkout-scan-id" data-bs-toggle="modal" data-bs-target="#pos-modal-scan-id" type="button">
 				<i class="far fa-id-card"></i><span class="btn-text"> Scan ID</span>
 			</button>
+		</div> -->
+		<!--
+		<div class="cmd-item">
+			<button class="btn btn-lg btn-primary" data-bs-toggle="modal" data-bs-target="#pos-modal-customer-info" type="button">
+				<i class="fas fa-user"></i><span class="btn-text"> Customer</span>
+			</button>
 		</div>
-		-->
+		 -->
 		<div class="cmd-item">
 			<button class="btn btn-lg btn-primary" data-bs-toggle="modal" data-bs-target="#pos-modal-sale-hold" disabled id="pos-shop-save" type="button">
 				<i class="fas fa-save"></i><span class="btn-text"> Save</span></button>
@@ -95,7 +100,8 @@ $this->layout_file = sprintf('%s/view/_layout/html-pos.php', APP_ROOT);
 </div>
 
 <?php
-echo $this->block('modal/pos/scan-id.php');
+// echo $this->block('modal/pos/scan-id.php');
+// echo $this->block('modal/pos/customer-info.php');
 echo $this->block('modal/pos/hold.php');
 echo $this->block('modal/pos/discount.php');
 echo $this->block('modal/pos/loyalty.php');
@@ -183,78 +189,17 @@ function searchInventory(x)
 
 $(function() {
 
-	// https://github.com/zxing-js/library/blob/master/docs/examples/qr-camera/index.html
-	$('#pos-camera-input').on('click', function() {
-		window.OpenTHC.Camera.exists(function(good) {
-
-			if ( ! good) {
-				$('#pos-camera-input').removeClass('btn-primary');
-				$('#pos-camera-input').addClass('btn-danger');
-				// $('#pos-camera-input').prop('disabled', true);
-				$('#pos-scanner-read-info').text('Invalid Camera Device');
-				$('#pos-scanner-read-info').show();
-				setTimeout(function() {
-					$('#pos-scanner-read-info').hide();
-				}, 5000);
-
-				return;
-			}
-
-			// window.OpenTHC.Camera.open(function(stream) {
-
-			var html = [];
-			html.push('<div id="pos-camera-preview-wrap">');
-			html.push('<video id="pos-camera-preview" style="height:480px; width:640px;"></video>');
-			html.push('<button class="btn btn-outline-danger shut"><i class="fas fa-times"></i></button>');
-			html.push('</div>');
-			$(document.body).append(html.join(''));
-
-			// @see https://github.com/zxing-js/library/issues/432
-			const hints = new Map();
-			const formats = [
-				ZXing.BarcodeFormat.CODE_128,
-				ZXing.BarcodeFormat.QR_CODE,
-				ZXing.BarcodeFormat.PDF_417
-			];
-			hints.set(ZXing.DecodeHintType.POSSIBLE_FORMATS, formats);
-			hints.set(ZXing.DecodeHintType.CHARACTER_SET, 'utf-8');
-			//hints.set(ZXing.DecodeHintType.TRY_HARDER, true);
-			//hints.set(ZXing.DecodeHintType.PURE_BARCODE, true);
-			var Scanner = new ZXing.BrowserMultiFormatReader(hints);
-			Scanner.decodeFromInputVideoDevice('', 'pos-camera-preview')
-			.then(function(res) {
-				console.log(res);
-				$('#barcode-input').val(res);
-				$('#pos-camera-preview-wrap').remove();
-				Scanner.reset();
-				delete Scanner;
-			})
-			.catch((err) => { console.log(err); });
-
-			// window.OpenTHC.Camera.scan(function() {
-			// 	alert('I Got a Scan!!');
-			// });
-
-			$('#pos-camera-preview-wrap .shut').one('click', function() {
-				Scanner.reset();
-				delete Scanner;
-				$('#pos-camera-preview-wrap').remove();
-			});
-
-		});
-	});
-
 	$("#barcode-input").on('keyup', function() {
 
 		var val = this.value;
 		if (0 === val.length) {
-			$('.pos-item-wrap .inv-item').show();
+			$('#pos-item-list .inv-item').show();
 			return;
 		}
 
 		// Now Filter the Grid or Table
 		var rex = new RegExp(val, 'gim');
-		$('.pos-item-wrap .inv-item').each(function(i, n) {
+		$('#pos-item-list .inv-item').each(function(i, n) {
 
 			$(n).show();
 
@@ -387,26 +332,8 @@ $(function() {
 	if ( ! empty($data['cart']['item_count'])) {
 		echo "$('#cart-list-empty').html('<div class=\"alert alert-warning\">Loading...</div>');\n";
 		echo "\tOpenTHC.POS.Cart.reload();\n";
-	};
-	?>
-});
-</script>
-
-<?php
-if ($data['cart_item_list']) {
-?>
-<script>
-	<?php
-	foreach ($data['cart_item_list'] as $ci) {
-		printf('Cart_addItem(%s)', json_encode([
-			'id' => $ci['id'],
-			'name' => $ci['name'],
-			'weight' => $ci['weight'],
-			'price' => $ci['price'],
-			'qty' => $ci['qty']
-		]));
 	}
 	?>
+
+});
 </script>
-<?php
-}
