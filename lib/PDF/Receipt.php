@@ -13,10 +13,19 @@ class Receipt extends \OpenTHC\POS\PDF\Base
 	protected $Company;
 	protected $License;
 
-	protected $_receipt_width = 72;
+	protected $_width_full = 72;
 
 	private $_b2c_sale;
 	private $_item_list = [];
+
+	private $_init_x = 2;
+	private $_width_view = 68;
+	private $_width_half = 34;
+
+	public $head_text = '';
+	public $foot_text = '';
+	public $tail_text = '';
+	public $link_text = '';
 
 	/**
 	 * Defaults
@@ -65,34 +74,55 @@ class Receipt extends \OpenTHC\POS\PDF\Base
 	 */
 	function drawHead()
 	{
+		// Black Banner
 		$this->setFont('freesans', 'B', 18);
 		$this->setFillColor(0x10, 0x10, 0x10);
 		$this->setTextColor(0xff, 0xff, 0xff);
-		$this->setXY(0, 4);
-		$this->cell($this->_receipt_width, 4, $_SESSION['Company']['name'], null, null, 'C', true);
+		$this->setXY($this->_init_x, 4);
+		$this->cell($this->_width_view, 4, $this->License['name'], null, null, 'C', true);
 
-		// Receipt ID
+		// Reset Font
 		$this->setFont('freesans', '', 12);
 		$this->setFillColor(0xff, 0xff, 0xff);
 		$this->setTextColor(0x00, 0x00, 0x00);
 
 		$y = 12;
-		$this->setXY(0, $y);
-		$this->cell($this->_receipt_width, 5, sprintf('B2C/%s', substr($this->_b2c_sale['id'], 0, 16)), null, null, 'C');
+		$this->setXY($this->_init_x, $y);
+		$this->cell($this->_width_view, 4, sprintf('B2C/%s', substr($this->_b2c_sale['id'], 0, 16)), null, null, 'C');
 
 		// Date/Time
 		$dtC = new \DateTime($this->_b2c_sale['created_at']);
-		if ( ! empty($_SESSION['tz'])) {
-			$dtC->setTimezone(new \DateTimezone($_SESSION['tz']));
+		if ( ! empty($this->Company['tz'])) {
+			$dtC->setTimezone(new \DateTimezone($this->Company['tz']));
 		}
 
 		$y += 6;
-		$this->setXY(0, $y);
-		$this->cell($this->_receipt_width, 5, $dtC->format('Y-m-d H:i'), 0, null, 'C');
+		$this->setXY($this->_init_x, $y);
+		$this->cell($this->_width_view, 4, $dtC->format('Y-m-d H:i'), 0, null, 'C');
 
-		$y += 8;
-		$this->line(0, $y, $this->_receipt_width, $y);
-		$this->setY($y);
+		if ( ! empty($this->head_text)) {
+
+			$y = $this->getY();
+			$y += 8;
+
+			// Line
+			$this->line(0, $y, $this->_width_full, $y);
+			$y += 2;
+
+			$this->setXY($this->_init_x, $y);
+			$this->setFont('freesans', '', 10);
+			$this->multicell($this->_width_view, 5, $this->head_text, null, 'C', null, 1);
+
+			$y = $this->getY();
+			$y += 2;
+
+			$this->line(0, $y, $this->_width_full, $y);
+
+			$this->setY($y);
+
+		}
+
+		// $this->lineExperiment();
 
 	}
 
@@ -104,94 +134,89 @@ class Receipt extends \OpenTHC\POS\PDF\Base
 		$y = $this->getY();
 
 		$y += 4;
-		$this->line(0, $y, $this->_receipt_width, $y);
+		$this->line(0, $y, $this->_width_full, $y);
 
 		$y += 2;
-		$this->setXY(0, $y);
-		$this->cell(36, 4, 'Subtotal:');
-		$this->setXY(36, $y);
-		$this->cell(36, 4, number_format($this->b2c_item_total, 2), 0, 0, 'R');
+		$this->colLeft($y, 'Subtotal:');
+		$this->colRight($y, number_format($this->b2c_item_total, 2));
 
 		// if ($this->getAttribute('adj-total')) {
 		// 	$y+= 5;
 		// 	$this->setXY(0, $y);
-		// 	$this->cell(36, 4, 'Discount:');
-		// 	$this->setXY(36, $y);
-		// 	$this->cell(36, 4, '$-.--', 0, 0, 'R');
+		// 	$this->cell($this->_width_half, 4, 'Discount:');
+		// 	$this->setXY($this->_width_half, $y);
+		// 	$this->cell($this->_width_half, 4, '$-.--', 0, 0, 'R');
 		// }
 
 		// Tax A
 		$y+= 6;
-		$this->setXY(0, $y);
-		$this->cell(36, 5, 'Cannabis Tax (Included):');
-		$this->setXY(36, $y);
-		$this->cell(36, 5, number_format($this->b2c_tax0_total, 2), 0, 0, 'R');
+		$this->colLeft($y, 'Cannabis Tax (Included):');
+		$this->colRight($y, number_format($this->b2c_tax0_total, 2));
 
 		// Tax B
 		// $y+= 5;
 		// $this->setXY(1, $y);
-		// $this->cell($this->_receipt_width, 5, 'Excise Tax:');
+		// $this->cell($this->_width_view, 5, 'Excise Tax:');
 
 		// Tax C
 		$y+= 6;
-		$this->setXY(0, $y);
-		$this->cell(36, 5, 'Sales Tax (Included):');
-		$this->setXY(36, $y);
-		$this->cell(36, 5, number_format($this->b2c_tax1_total, 2), 0, 0, 'R');
+		$this->colLeft($y, 'Sales Tax (Included):');
+		$this->colRight($y, number_format($this->b2c_tax1_total, 2));
 
-		$y += 8;
-		$this->line(0, $y, $this->_receipt_width, $y);
+		$y += 7;
+		$this->line(0, $y, $this->_width_full, $y);
 
 		$full_price = $this->b2c_item_total + $this->b2c_tax0_total + $this->b2c_tax1_total;
 
 		$y += 2;
 		$this->setFont('', 'B');
-		$this->setXY(0, $y);
-		$this->cell($this->_receipt_width, 5, 'Total:');
-		$this->setXY(36, $y);
-		$this->cell(36, 5, number_format($full_price, 2), 0, 0, 'R');
+		$this->colLeft($y, 'Total:');
+		$this->colRight($y, number_format($full_price, 2));
 		$this->setFont('', '');
 
 		$y += 7;
-		$this->line(0, $y, $this->_receipt_width, $y);
+		$this->setY($y);
 
 		// Cash Paid
-		$y += 2;
-		$this->setXY(0, $y);
-		$this->cell($this->_receipt_width, 5, 'Cash Paid:');
+		// $y += 2;
+		// $this->colLeft($y, 'Cash Paid:');
+		// $this->colRight($y, number_format(123.45, 2));
 
 		// Change
-		$y += 5;
-		$this->setXY(0, $y);
-		$this->cell($this->_receipt_width, 5, 'Change:');
+		// $y += 5;
+		// $this->colLeft($y, 'Change:');
+		// $this->colRight($y, number_format(99.99, 2));
 
 		// // Register / Till Info
 		// $y += 5;
-		// $this->setXY(0, $y);
-		// $this->cell($this->_receipt_width, 5, 'REG:');
-		// $this->setXY(36, $y);
-		// $this->cell(36, 5, $this->_b2c_sale['terminal_id'], 0, 0, 'R');
+		// $this->setXY($this->_init_x, $y);
+		// $this->cell($this->_width_half, 5, 'REG:');
+		// $this->setXY($this->_width_half, $y);
+		// $this->cell($this->_width_half, 5, $this->_b2c_sale['terminal_id'], 0, 0, 'R');
 
 	}
 
 	/**
 	 *
 	 */
-	function drawTail()
+	function drawTail() : void
 	{
+		if (empty($this->tail_text)) {
+			return;
+		}
+
 		$y = $this->getY();
-		$y += 8;
+		$this->line(0, $y, $this->_width_full, $y);
+		$y += 2;
+
+		$this->setXY($this->_init_x, $y);
+		$this->setFont('freesans', '', 10);
+		$this->multicell($this->_width_view, 5, $this->tail_text, null, 'C', null, 1);
 
 		// Line
-		$this->line(0, $y, $this->_receipt_width, $y);
-		$y += 1;
-
-		$tail = $this->loadTailText();
-
-		$y += 6;
-		$this->setXY(0, $y);
-		$this->setFont('freesans', '', 10);
-		$this->multicell($this->_receipt_width, 5, $tail, null, 'C', null, 1);
+		$y = $this->getY();
+		$y += 2;
+		$this->setY($y);
 
 	}
 
@@ -201,19 +226,22 @@ class Receipt extends \OpenTHC\POS\PDF\Base
 	function drawFoot()
 	{
 		// FOOT
-		$foot = $this->loadFootText();
+		if ( ! empty($this->foot_text)) {
 
-		$y = $this->getY();
-		$y += 1;
-		$this->line(0, $y, $this->_receipt_width, $y);
-		$y += 1;
+			$y = $this->getY();
+			// $y += 2;
+			$this->line(0, $y, $this->_width_full, $y);
+			$y += 2;
 
-		$this->setXY(0, $y);
-		$this->setFont('freesans', '', 10);
-		$this->multicell($this->_receipt_width, 5, $foot, null, 'L', null, 1);
+			$this->setXY($this->_init_x, $y);
+			$this->setFont('freesans', '', 10);
+			$this->multicell($this->_width_view, 5, $this->foot_text, null, 'L', null, 1);
+
+		}
 
 		// If FeedBack Link
-		if (true) {
+		// if (true) {
+		if ( ! empty($this->foot_link)) {
 
 			$y = $this->getY();
 
@@ -246,7 +274,7 @@ class Receipt extends \OpenTHC\POS\PDF\Base
 	 */
 	function render()
 	{
-		$this->addPage('P', [ $this->_receipt_width, 5000 ]);
+		$this->addPage('P', [ $this->_width_full, 5000 ]);
 
 		// First render to discover height
 		$this->_renderPrintable();
@@ -255,7 +283,7 @@ class Receipt extends \OpenTHC\POS\PDF\Base
 
 		// Clear and render correct height
 		$this->deletePage(1);
-		$this->addPage('P', [ $this->_receipt_width, $y ]);
+		$this->addPage('P', [ $this->_width_full, $y ]);
 		$this->_renderPrintable();
 	}
 
@@ -271,18 +299,23 @@ class Receipt extends \OpenTHC\POS\PDF\Base
 		$this->setTextColor(0x00, 0x00, 0x00);
 
 		$y = $this->getY();
-		$y += 4;
+		$y += 2;
 
 		foreach ($this->_item_list as $SI) {
 
-			$this->setXY(0, $y);
-			$this->cell($this->_receipt_width, 5, $SI['Product']['name'] . ' ' . $SI['Variety']['name']);
+			$txt = trim(sprintf('%s %s', $SI['Product']['name'], $SI['Variety']['name']));
+			$this->colLeft($y, $txt);
 
 			$y += 6;
-			$this->setXY(0, $y);
-			$this->cell($this->_receipt_width, 5, rtrim($SI['unit_count'], '0.')  . ' x $' . number_format($SI['unit_price'], 2), 0, null, 'R');
+			$txt = rtrim($SI['unit_count'], '0.')  . ' @ $' . number_format($SI['unit_price'], 2);
+			$this->colLeft($y, $txt);
+			$this->colRight($y, number_format($SI['unit_count'] * $SI['unit_price'], 2));
+			// $this->setXY($this->_init_x, $y);
+			// $this->cell($this->_width_view, 4, $txt, 0, 0, 'R');
 
 			$y += 6;
+
+			// Item Taxes
 		}
 		$this->setY($y);
 
@@ -290,54 +323,62 @@ class Receipt extends \OpenTHC\POS\PDF\Base
 		$this->drawTail();
 		$this->drawFoot();
 
+		// $y = $this->getY();
+		// $y += 4;
+
+		// $this->line(0, $y, $this->_width_full, $y);
+
+
+	}
+
+	function colLeft($y, $txt, $alignment='L')
+	{
+		$this->setXY($this->_init_x, $y);
+		$this->cell($this->_width_half, 4, $txt, 0, 0, $alignment);
+	}
+
+	function colRight($y, $txt, $alignment='R')
+	{
+		$this->setXY($this->_width_half, $y);
+		$this->cell($this->_width_half + 2, 4, $txt, 0, 0, $alignment);
+	}
+
+	function lineExperiment()
+	{
+		// Line Experiment
 		$y = $this->getY();
-		$y += 4;
 
-		$this->line(0, $y, $this->_receipt_width, $y);
+		// $y += 2;
+		// $this->line(0, $y, $this->_width_full, $y);
 
+		// $y+= 2;
+		// $this->line(0, $y, 80, $y);
+		// $y+= 2;
+		// $this->line(0, $y, 72, $y);
+		// $y+= 2;
+		// $this->line(0, $y, 68, $y);
+		// $y+= 2;
+		// $this->line(0, $y, 36, $y);
 
-	}
+		// $y+= 2;
+		// $this->line(1, $y, 80, $y);
+		// $y+= 2;
+		// $this->line(1, $y, 72, $y);
+		// $y+= 2;
+		// $this->line(1, $y, 68, $y);
+		// $y+= 2;
+		// $this->line(1, $y, 36, $y);
 
-	/**
-	 *
-	 */
-	function loadHeadText()
-	{
-		return $this->_load_text_from('pos-receipt-head', 'receipt-head.txt');
-	}
+		// $y+= 2;
+		// $this->line(2, $y, 80, $y);
+		// $y+= 2;
+		// $this->line(2, $y, 72, $y);
+		$y+= 2;
+		$this->line(2, $y, 70, $y);
+		// $y+= 2;
+		// $this->line(2, $y, 36, $y);
 
-	/**
-	 *
-	 */
-	function loadFootText()
-	{
-		return $this->_load_text_from('pos-receipt-foot', 'receipt-foot.txt');
-	}
-
-	/**
-	 *
-	 */
-	function loadTailText()
-	{
-		return $this->_load_text_from('pos-receipt-tail', 'receipt-tail.txt');
-	}
-
-	/**
-	 * @param $d Database Key
-	 * @param $f File Name
-	 */
-	private function _load_text_from($d, $f)
-	{
-		$text = $this->Company->opt($d);
-
-		if (empty($text)) {
-			$file = sprintf('%s/etc/%s', APP_ROOT, $f);
-			if (is_file($file)) {
-				$text = file_get_contents($file);
-			}
-		}
-
-		return $text;
+		$this->setY($y);
 
 	}
 
