@@ -30,7 +30,6 @@ $foot = <<<HTML
 </button>
 HTML;
 
-
 echo $this->block('modal.php', [
 	'modal_id' => 'pos-modal-cart-option',
 	'modal_title' => 'Cart :: Options',
