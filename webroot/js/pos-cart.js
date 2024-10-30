@@ -133,7 +133,7 @@ OpenTHC.POS.Cart = {
 	/**
 	 * Send to Server and Update UI
 	 */
-	update: function(inv_id {
+	update: function(inv_id) {
 
 		var Cart0 = this;
 
