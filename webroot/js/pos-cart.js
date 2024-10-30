@@ -38,10 +38,10 @@ OpenTHC.POS.Cart = {
 	},
 	dawItemUpdate: function(row, obj)
 	{
-		row.querySelector('div.cart-item').setAttribute('data-id', obj.id);
-		row.querySelector('div.cart-item').setAttribute('data-inventory-id', obj.id);
-		row.querySelector('div.cart-item').setAttribute('data-weight', obj.weight);
-		row.querySelector('div.cart-item').setAttribute('id', `psi-item-${obj.id}`);
+		row.setAttribute('data-id', obj.id);
+		row.setAttribute('data-inventory-id', obj.id);
+		row.setAttribute('data-weight', obj.weight);
+		row.setAttribute('id', `psi-item-${obj.id}`);
 		row.querySelector('h4').innerHTML = obj.name;
 
 		var tmp = row.querySelector('input.b2c-item-unit-count');
@@ -71,7 +71,7 @@ OpenTHC.POS.Cart = {
 
 		var x = document.querySelector(`#psi-item-${obj.id}`);
 		if (x) {
-				x.style.opacity = 0.50;
+			x.style.opacity = 0.50;
 		}
 
 		// Add Existing
@@ -244,7 +244,7 @@ $(function() {
 		var $item = $(this).closest('.cart-item');
 		$item.css('opacity', 0.50);
 
-		var inv_id = $item.data('id'); // this.getAttribute('data-id');
+		var inv_id = $item.data('id');
 		var unit_count = parseFloat( $(`#psi-item-${inv_id}-unit-count`).val() );
 		var unit_price = parseFloat( $(`#psi-item-${inv_id}-unit-price`).val() );
 		var item_price = unit_count * unit_price;
