@@ -135,29 +135,6 @@ $(function() {
 		});
 	});
 
-
-	/**
-		An Item Size has Changed
-	*/
-	$(document).on('change', '.cart-item input', function(e) {
-
-		console.log('.cart-item input!change');
-
-		var inv_id = this.getAttribute('data-id');
-		var unit_count = parseFloat( $(`#psi-item-${inv_id}-unit-count`).val() );
-		var unit_price = parseFloat( $(`#psi-item-${inv_id}-unit-price`).val() );
-		var item_price = unit_count * unit_price;
-
-		$(`#psi-item-${inv_id}-full-price`).html(item_price.toFixed(2));
-
-		if (unit_count <= 0) {
-			$('#psi-item-' + inv_id).remove();
-		}
-
-		OpenTHC.POS.Cart.update();
-
-	});
-
 	// Open A Link in a Modal Thing
 	$('.qrcode-link').on('click', function(e) {
 

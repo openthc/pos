@@ -38,6 +38,7 @@ $this->layout_file = sprintf('%s/view/_layout/html-pos.php', APP_ROOT);
 		<div id="cart-list-wrap" style="overflow-x:auto;">
 			<div id="cart-list-empty" style="margin: 10%; text-align:center;">
 				<h4 class="alert alert-dark">Purchase Ticket Data Appears Here</h4>
+				<!-- <pre><?= __h(json_encode($data['cart'], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)) ?></pre> -->
 			</div>
 		</div>
 		</form>
@@ -123,10 +124,9 @@ echo $this->block('modal/pos/payment-card.php');
 	<div class="row">
 		<div class="col-md-10" style="vertical-align:baseline;"><h4>{$obj->name}</h4></div>
 		<div class="col-md-2" style="text-align:right;">
-			<i class="fas fa-times b2c-item-remove"
-				data-id="{$obj->id}"
-				id="btn-{$obj->id}-delete"
-				style="color:#f00; cursor:grab; font-size: 24px; margin:8px;"></i>
+			<button class="btn b2c-item-remove" type="button">
+				<i class="fas fa-times text-danger"></i>
+			</button>
 		</div>
 	</div>
 	<div class="row">
@@ -136,7 +136,7 @@ echo $this->block('modal/pos/payment-card.php');
 				<input class="form-control b2c-item-unit-count"
 					data-id="{$obj->id}"
 					id="psi-item-{$obj->id}-unit-count"
-					name="item-{$obj->id}-unit-count" type="number" value="{$obj->qty}">
+					name="item-{$obj->id}-unit-count" type="number" value="{$obj->unit_count}">
 			</div>
 		</div>
 		<div class="col-md-4">
@@ -160,7 +160,6 @@ echo $this->block('modal/pos/payment-card.php');
 <script>
 OpenTHC.POS.Cart.id = '<?= $data['cart']['id'] ?>';
 </script>
-
 
 <script>
 /**
@@ -213,14 +212,13 @@ $(function() {
 	});
 
 	$('#pos-item-list').on('click', '.inv-item', function(e) {
+
 		OpenTHC.POS.Cart.insert({
 			id: $(this).data('id'),
 			name: $(this).data('name'),
 			weight: $(this).data('weight'),
-			price: $(this).data('price'), // v0
-			unit_price: $(this).data('price'), // v1
-			qty: 1,
-			unit_count: 1, // v1
+			unit_price: $(this).data('price'),
+			unit_count: 1,
 			unit_price_total: '?.??',
 		});
 

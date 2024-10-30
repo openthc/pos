@@ -26,9 +26,6 @@ class Ajax extends \OpenTHC\Controller\Base
 		$this->initTaxData();
 
 		switch ($_POST['a']) {
-		case 'cart-add':
-		case 'cart-insert':
-			return $this->insert($REQ, $RES);
 		case 'cart-reload':
 			return $this->show_current_state($REQ, $RES);
 		case 'cart-update':
@@ -115,86 +112,6 @@ class Ajax extends \OpenTHC\Controller\Base
 
 	}
 
-	/**
-	 *
-	 */
-	function insert($REQ, $RES)
-	{
-		$rdb = $this->_container->Redis;
-
-		$b2c_cart = $_POST['cart'];
-		$b2c_cart = json_decode($b2c_cart, true);
-		$b2c_item = $_POST['item'];
-		$b2c_item = json_decode($b2c_item, true);
-		$b2c_item['unit_price'] = $b2c_item['price'];
-		$b2c_item['unit_price_total'] = $b2c_item['unit_price'] * $b2c_item['qty'];
-
-		$key = sprintf('/%s/cart/%s', $_SESSION['License']['id'], $b2c_cart['id']);
-
-		$Cart = $rdb->get($key);
-		if ( ! empty($Cart)) {
-			$Cart = json_decode($Cart, true);
-		} else {
-			$Cart = [];
-			$Cart['id'] = $b2c_cart['id'];
-			$Cart['key'] = sprintf('/%s/cart/%s', $_SESSION['License']['id'], $Cart['id']);
-			$Cart['item_list'] = [];
-		};
-
-		// Add Taxes
-		$b2c_item['tax_list'] = [];
-		$b2c_item['tax_total'] = 0;
-		foreach ($this->tax_info->tax_list as $tax_ulid => $tax_rate) {
-			if ( ! empty($tax_rate)) {
-				if ($tax_rate > 0) {
-					$tax_rate = $tax_rate / 100;
-				}
-				$tax_cost = $b2c_item['unit_price_total'] * $tax_rate;
-				$b2c_item['tax_list'][$tax_ulid] = $tax_cost;
-				$b2c_item['tax_total'] += $tax_cost;
-			}
-		}
-		$b2c_item['full_price'] = $b2c_item['unit_price_total'] + $b2c_item['tax_total'];
-		// Format
-		$b2c_item['unit_price'] = sprintf('%0.2f', $b2c_item['unit_price']);
-		$b2c_item['unit_price_total'] = sprintf('%0.2f', $b2c_item['unit_price_total']);
-		$b2c_item['full_price'] = sprintf('%0.2f', $b2c_item['full_price']);
-
-		$Cart['item_list'][ $b2c_item['id'] ] = $b2c_item;
-
-		$Cart['item_count']       = 0;
-		$Cart['unit_count']       = 0;
-		$Cart['unit_price_total'] = 0;
-		// $Cart['unit_price'] = 0;
-		$Cart['tax_total']        = 0;
-		$Cart['full_price']       = 0;
-
-		foreach ($Cart['item_list'] as $b2c_item) {
-			$Cart['item_count'] += 1;
-			$Cart['unit_count'] += $b2c_item['qty'];
-			$Cart['unit_price_total'] += $b2c_item['unit_price_total'];
-			// $Cart['unit_price']
-			$Cart['tax_total']  += array_sum($b2c_item['tax_list']);
-			$Cart['full_price'] += $b2c_item['full_price'];
-		}
-
-		$Cart['unit_price_total'] = sprintf('%0.2f', $Cart['unit_price_total']);
-		$Cart['tax_total']  = sprintf('%0.2f', $Cart['tax_total']);
-		$Cart['full_price'] = sprintf('%0.2f', $Cart['full_price']);
-
-		$rdb->set($Cart['key'], json_encode($Cart), [ 'ex' => '43200' ]);
-
-		$ret = [
-			'data' => [
-				'Cart' => $Cart,
-			],
-			'meta' => [],
-		];
-
-		return $RES->withJSON($ret);
-
-	}
-
 	function show_current_state($REQ, $RES)
 	{
 		$b2c_cart = $_POST['cart'];
@@ -234,7 +151,87 @@ class Ajax extends \OpenTHC\Controller\Base
 
 		$b2c_cart = $_POST['cart'];
 		$b2c_cart = json_decode($b2c_cart, true);
+
+		// $b2c_item_list = $_POST['item_list'];
+		// $b2c_item_list = json_decode($b2c_item_list, true);
+
+		$key = sprintf('/%s/cart/%s', $_SESSION['License']['id'], $b2c_cart['id']);
+		$Cart = $rdb->get($key);
+		if ( ! empty($Cart)) {
+			$Cart = json_decode($Cart, true);
+		} else {
+			$Cart = [];
+			$Cart['id'] = $b2c_cart['id'];
+			$Cart['key'] = sprintf('/%s/cart/%s', $_SESSION['License']['id'], $Cart['id']);
+			$Cart['item_list'] = [];
+		};
+
+		// Reset Totals
+		$Cart['item_list'] = [];
+		$Cart['item_count']       = 0;
+		$Cart['unit_count']       = 0;
+		$Cart['unit_price_total'] = 0;
+		// $Cart['unit_price'] = 0;
+		$Cart['tax_total']        = 0;
+		$Cart['full_price']       = 0;
+
+		foreach ($b2c_cart['item_list'] as $b2c_item) {
+
+			if ($b2c_item['unit_count'] <= 0) {
+				continue;
+			}
+
+			$b2c_item['unit_price_total'] = $b2c_item['unit_price'] * $b2c_item['unit_count'];
+
+			// Add Taxes
+			$b2c_item['tax_list'] = [];
+			$b2c_item['tax_total'] = 0;
+			foreach ($this->tax_info->tax_list as $tax_ulid => $tax_rate) {
+				if ( ! empty($tax_rate)) {
+					if ($tax_rate > 0) {
+						$tax_rate = $tax_rate / 100;
+					}
+					$tax_cost = $b2c_item['unit_price_total'] * $tax_rate;
+					$b2c_item['tax_list'][$tax_ulid] = $tax_cost;
+					$b2c_item['tax_total'] += $tax_cost;
+				}
+			}
+			$b2c_item['full_price'] = $b2c_item['unit_price_total'] + $b2c_item['tax_total'];
+
+			// Format
+			$b2c_item['unit_price'] = sprintf('%0.2f', $b2c_item['unit_price']);
+			$b2c_item['unit_price_total'] = sprintf('%0.2f', $b2c_item['unit_price_total']);
+			$b2c_item['full_price'] = sprintf('%0.2f', $b2c_item['full_price']);
+
+			// Set in Cart
+			$Cart['item_list'][ $b2c_item['id'] ] = $b2c_item;
+
+			// Update Cart Totals
+			$Cart['item_count'] += 1;
+			$Cart['unit_count'] += $b2c_item['unit_count'];
+			$Cart['unit_price_total'] += $b2c_item['unit_price_total'];
+			// $Cart['unit_price']
+			$Cart['tax_total']  += array_sum($b2c_item['tax_list']);
+			$Cart['full_price'] += $b2c_item['full_price'];
+
+		}
+
+		$Cart['unit_price_total'] = sprintf('%0.2f', $Cart['unit_price_total']);
+		$Cart['tax_total']  = sprintf('%0.2f', $Cart['tax_total']);
+		$Cart['full_price'] = sprintf('%0.2f', $Cart['full_price']);
+
+		$rdb->set($Cart['key'], json_encode($Cart), [ 'ex' => '43200' ]);
+
+		$ret = [
+			'data' => [
+				'Cart' => $Cart,
+			],
+			'meta' => [],
+		];
+
 		// $b2c_item = $_POST['item'];
+		// $b2c_item['unit_price'] = $b2c_item['price'];
+		// $b2c_item['unit_price_total'] = $b2c_item['unit_price'] * $b2c_item['qty'];
 
 		// Now Create the HTML for the Whole Cart
 
@@ -243,10 +240,7 @@ class Ajax extends \OpenTHC\Controller\Base
 		// $this->_container->Redis->del($k);
 		// $x = $this->_container->Redis->set($k, json_encode($_POST));
 
-		return $RES->withJSON(array(
-			'data' => $_POST,
-			'meta' => [ ],
-		));
+		return $RES->withJSON($ret);
 
 	}
 

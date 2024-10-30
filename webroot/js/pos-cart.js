@@ -34,13 +34,11 @@ OpenTHC.POS.Cart = {
 		b2b_item_row_output.querySelector('div.cart-item').setAttribute('data-weight', obj.weight);
 		b2b_item_row_output.querySelector('div.cart-item').setAttribute('id', `psi-item-${obj.id}`);
 		b2b_item_row_output.querySelector('h4').innerHTML = obj.name;
-		b2b_item_row_output.querySelector('i.b2c-item-remove').setAttribute('id', `btn-${obj.id}-delete`);
-		b2b_item_row_output.querySelector('i.b2c-item-remove').setAttribute('data-id', obj.id);
 
 		var tmp = b2b_item_row_output.querySelector('input.b2c-item-unit-count');
 		tmp.setAttribute('id', `psi-item-${obj.id}-unit-count`);
 		tmp.setAttribute('name', `item-${obj.id}-unit-count`);
-		tmp.setAttribute('value', obj.qty);
+		tmp.setAttribute('value', obj.unit_count);
 		tmp.setAttribute('data-id', obj.id);
 
 		var tmp = b2b_item_row_output.querySelector('input.b2c-item-unit-price');
@@ -71,52 +69,29 @@ OpenTHC.POS.Cart = {
 
 		// Add Existing
 		if (Cart0.item_list[obj.id]) {
-			obj.qty = Cart0.item_list[obj.id].qty + 1;
+			obj.unit_count = Cart0.item_list[obj.id].unit_count + 1;
 		}
 		Cart0.item_list[obj.id] = obj;
 
 		Cart0.drawItem(obj);
-
-		// Update Server
-		var fd0 = new FormData();
-		fd0.set('a', 'cart-insert');
-		fd0.set('cart', JSON.stringify({ id: Cart0.id }));
-		fd0.set('item', JSON.stringify(obj));
-
-		fetch('/pos/cart/ajax', {
-			method: 'POST',
-			body: fd0
-			// headers: {
-			// 	'content-type': 'application/json'
-			// }
-		}).then(res => {
-			return res.json();
-		}).then(res => {
-
-			// console.log(res.data.Cart);
-			// console.log('Update Landed Item (or drawItem again?)');
-			var obj1 = res.data.Cart.item_list[ obj.id ];
-			Cart0.drawItem(obj1);
-
-			// Draw Item Again?
-			var x = document.querySelector(`#psi-item-${obj.id}`);
-			x.style.opacity = 1;
-
-			// Update HTML Somehwere?
-
-			Cart0.updateSummary(res.data);
-			// Draw from Server (call another repaint / template routine?)
-
-			Cart_addItem_flash(obj.id);
-
-		});
+		Cart0.update(obj.id);
 
 	},
 	/**
 	 * Delete Item
 	 */
 	delete: function(oid) {
-		// this.update();
+
+		var x = document.querySelector(`#psi-item-${oid}`);
+		x.style.opacity = 0.50;
+
+		var Cart0 = this;
+		if (Cart0.item_list[oid]) {
+			Cart0.item_list[oid].unit_count = 0;
+		}
+
+		Cart0.update(oid);
+
 	},
 
 	reload: function()
@@ -141,9 +116,6 @@ OpenTHC.POS.Cart = {
 				// Mark Solid
 				var obj = Cart0.item_list[key];
 				Cart0.drawItem( obj );
-				var x = document.querySelector(`#psi-item-${obj.id}`);
-				x.style.opacity = 1;
-
 				Cart_addItem_flash(obj.id);
 			});
 
@@ -155,39 +127,14 @@ OpenTHC.POS.Cart = {
 	/**
 	 * Send to Server and Update UI
 	 */
-	update: function() {
+	update: function(oid) {
 
 		var Cart0 = this;
-
-		// Find All Line Items
-		var item_list = [];
-		$('.cart-item').each(function(x, n) {
-
-			var b2c_item = {};
-
-			b2c_item.inventory_id = $(n).data('id');
-			b2c_item.unit_count = $(`#psi-item-${b2c_item.inventory_id}-unit-count`).val();
-			b2c_item.unit_count = parseFloat(b2c_item.unit_count);
-			b2c_item.unit_price = $(`#psi-item-${b2c_item.inventory_id}-unit-price`).val();
-			b2c_item.unit_price = parseFloat(b2c_item.unit_price);
-
-			if (isNaN(b2c_item.unit_count)) {
-				// console.log('Cart.update() ! invalid unit_count');
-				return;
-			}
-			if (b2c_item.unit_count <= 0) {
-				return;
-			}
-
-			item_list.push(b2c_item);
-
-		});
 
 		// Update Server
 		var fd0 = new FormData();
 		fd0.set('a', 'cart-update');
-		fd0.set('cart', JSON.stringify({ id: Cart0.id }));
-		fd0.set('item_list', JSON.stringify(item_list));
+		fd0.set('cart', JSON.stringify(Cart0));
 
 		fetch('/pos/cart/ajax', {
 			method: 'POST',
@@ -198,10 +145,17 @@ OpenTHC.POS.Cart = {
 
 			console.log(res);
 
-			// Update HTML Somehwere?
-			Cart0.updateSummary(res.data);
+			if (oid) {
+				var obj1 = res.data.Cart.item_list[ oid ];
+				if (obj1) {
+					Cart0.drawItem(obj1);
+					Cart_addItem_flash(oid);
+				} else {
+					$(`#psi-item-${oid}`).remove();
+				}
+			}
 
-			// Cart_addItem_flash(obj.id);
+			Cart0.updateSummary(res.data);
 
 		});
 
@@ -242,8 +196,12 @@ OpenTHC.POS.Cart = {
 function Cart_addItem_flash(inv_id)
 {
 	// $(`#psi-item-${inv_id}-unit-count`).focus();
+	var x = document.querySelector(`#psi-item-${inv_id}`);
+	x.style.opacity = 1;
+
 	$(`#psi-item-${inv_id}-unit-count`).addClass('text-danger');
 	$(`#psi-item-${inv_id}-full-price`).addClass('text-danger');
+
 	setTimeout(function() {
 		$(`#psi-item-${inv_id}-unit-count`).removeClass('text-danger');
 		$(`#psi-item-${inv_id}-full-price`).removeClass('text-danger');
@@ -252,14 +210,11 @@ function Cart_addItem_flash(inv_id)
 
 $(function() {
 
-	// The Remove Button
-	$('#cart-list-wrap').on('click', '.fa-times', function() {
-
-		// Remove Parent
-		$(this).closest('.cart-item').remove();
-
+	// Remove Item and Update
+	$('#cart-list-wrap').on('click', '.b2c-item-remove', function() {
+		var oid = $(this).closest('.cart-item').data('id');
+		OpenTHC.POS.Cart.delete(oid);
 		OpenTHC.POS.Cart.update();
-
 	});
 
 	// If on-screen keyboard is muted, use this popup modal
@@ -271,5 +226,27 @@ $(function() {
 	//		$('#pos-modal-number-input-live').attr('data-first', 'true');
 	//		$('#pos-modal-number-input-live').attr('data-update', $(e.target).attr('id'));
 	//	});
+
+	/**
+		An Item Size has Changed
+	*/
+	$('#cart-list-wrap').on('change', '.cart-item input', function(e) {
+
+		console.log('.cart-item input!change');
+
+		var inv_id = $(this).closest('.cart-item').data('id'); // this.getAttribute('data-id');
+		var unit_count = parseFloat( $(`#psi-item-${inv_id}-unit-count`).val() );
+		var unit_price = parseFloat( $(`#psi-item-${inv_id}-unit-price`).val() );
+		var item_price = unit_count * unit_price;
+
+		$(`#psi-item-${inv_id}-full-price`).html(item_price.toFixed(2));
+
+		if (unit_count <= 0) {
+			OpenTHC.POS.Cart.delete(inv_id);
+		}
+
+		OpenTHC.POS.Cart.update(inv_id);
+
+	});
 
 });
