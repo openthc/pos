@@ -36,7 +36,7 @@ OpenTHC.POS.Cart = {
 			$('#cart-list-wrap').prepend(b2b_item_row_output);
 		}
 	},
-	dawItemUpdate: function(row, obj)
+	drawItemUpdate: function(row, obj)
 	{
 		row.setAttribute('data-id', obj.id);
 		row.setAttribute('data-inventory-id', obj.id);
