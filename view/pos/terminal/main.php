@@ -38,7 +38,6 @@ $this->layout_file = sprintf('%s/view/_layout/html-pos.php', APP_ROOT);
 		<div id="cart-list-wrap" style="overflow-x:auto;">
 			<div id="cart-list-empty" style="margin: 10%; text-align:center;">
 				<h4 class="alert alert-dark">Purchase Ticket Data Appears Here</h4>
-				<!-- <pre><?= __h(json_encode($data['cart'], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)) ?></pre> -->
 			</div>
 		</div>
 		</form>
@@ -134,7 +133,6 @@ echo $this->block('modal/pos/payment-card.php');
 			<div class="input-group">
 				<label class="input-group-text">Qty:</label>
 				<input class="form-control b2c-item-unit-count"
-					data-id="{$obj->id}"
 					id="psi-item-{$obj->id}-unit-count"
 					name="item-{$obj->id}-unit-count" type="number" value="{$obj->unit_count}">
 			</div>
@@ -142,7 +140,6 @@ echo $this->block('modal/pos/payment-card.php');
 		<div class="col-md-4">
 			<div class="input-group">
 				<input class="form-control b2c-item-unit-price"
-					data-id="{$obj->id}"
 					id="psi-item-{$obj->id}-unit-price"
 					name="item-{$obj->id}-unit-price"
 					type="number" value="{$obj->unit_price}">

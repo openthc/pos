@@ -57,8 +57,10 @@ class Commit extends \OpenTHC\Controller\Base
 			// $Sale['source_contact_id'] =
 			// $Sale['target_contact_id'] =
 			$Sale['meta'] = json_encode([
-				'_POST' => $_POST,
+				'cash_incoming' => $_POST['cash_incoming'],
+				'cash_outgoing' => $_POST['cash_outgoing'],
 				'Cart' => $Cart0,
+				'_POST' => $_POST,
 			]);
 			// __exit_text($Sale);
 			$Sale->save('B2C/Sale/Create');
@@ -118,7 +120,6 @@ class Commit extends \OpenTHC\Controller\Base
 						'name' => 'Tax',
 						'amount' => $tax_line,
 					]);
-
 				}
 
 			}
@@ -286,19 +287,25 @@ class Commit extends \OpenTHC\Controller\Base
 				]
 			];
 		}
-		__exit_text($req);
 
 		// Authenticate and then Checkout
 
 		// Needs a good CRE-Adapter or BONG to work
 		$ghc = new \GuzzleHttp\Client([
-			'base_uri' => 'https://v3.api.nm.trace.biotrackthc.net/',
+			// 'base_uri' => 'https://v3.api.nm.trace.biotrackthc.net/',
+			'base_uri' => 'https://pipe.openthc.dev/biotrack/v3.api.nm.trace.biotrackthc.net/',
 			// 'base_uri' => 'https://bunk.openthc.dev/biotrack/v2022/',
 			'http_errors' => false,
 			// 'cookie'
+			'headers' => [
+				'openthc-contact-id' => $_SESSION['Contact']['id'],
+				'openthc-company-id' => $_SESSION['Company']['id'],
+				'openthc-license-id' => $_SESSION['License']['id'],
+			]
 		]);
 
-		$sid = $rdb->get('/cre/biotrack2023/sid');
+		$key = sprintf('/license/%s/cre/biotrack2023/sid', $_SESSION['License']['id']);
+		$sid = $rdb->get($key);
 		if (empty($sid)) {
 
 			$res = $ghc->post('v1/login', [ 'json' => [
@@ -307,11 +314,16 @@ class Commit extends \OpenTHC\Controller\Base
 				'Password' => $_SESSION['Company']['cre_meta']['password'],
 			]]);
 
-			$res = json_decode($res->getBody()->getContents());
+			$res = $res->getBody()->getContents();
+			$res = json_decode($res);
 			$sid = $res->Session;
 
-			$rdb->set('/cre/biotrack2023/sid', $sid, [ 'ttl' => 1800 ]);
+			$rdb->set($key, $sid, [ 'ttl' => 1800 ]);
 		}
+		__exit_text([
+			'sid' => $sid,
+			'req' => $req
+		]);
 
 		$res = $ghc->post('v1/dispense', [
 			'json' => $req,
@@ -343,6 +355,7 @@ class Commit extends \OpenTHC\Controller\Base
 
 		$obj = [];
 		$obj['SalesDateTime'] = date(\DateTime::RFC3339);
+		$obj['SalesCustomerType'] = 'Patient'; // 'Consumer',  'Caregiver'; 'ExternalPatient';
 
 		// 'Consumer', 'Caregiver'; 'ExternalPatient', 'Patient'
 		switch ($_SESSION['Cart']['Contact']['id']) {

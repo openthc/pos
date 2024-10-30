@@ -2,6 +2,8 @@
  * Stuff for the POS.Cart()
  */
 
+'use strict';
+
 OpenTHC.POS.Cart = {
 
 	date: '',
@@ -20,41 +22,43 @@ OpenTHC.POS.Cart = {
 		$('#cart-list-empty').hide();
 
 		// Prepare UI
-		var chk = `#psi-item-${obj.id}`;
-		if ($(chk).length > 0) {
-			$(chk).remove();
+		var sel = `#psi-item-${obj.id}`;
+		var b2b_item_row_output = document.querySelector(sel);
+		if (b2b_item_row_output) {
+			this.drawItemUpdate(b2b_item_row_output, obj);
+		} else {
+			// Add Placeholder
+			var b2b_item_row_src = document.querySelector('#b2c-item-row-template');
+			b2b_item_row_output = b2b_item_row_src.content.cloneNode(true);
+
+			this.drawItemUpdate(b2b_item_row_output.querySelector('div'), obj);
+
+			$('#cart-list-wrap').prepend(b2b_item_row_output);
 		}
+	},
+	dawItemUpdate: function(row, obj)
+	{
+		row.querySelector('div.cart-item').setAttribute('data-id', obj.id);
+		row.querySelector('div.cart-item').setAttribute('data-inventory-id', obj.id);
+		row.querySelector('div.cart-item').setAttribute('data-weight', obj.weight);
+		row.querySelector('div.cart-item').setAttribute('id', `psi-item-${obj.id}`);
+		row.querySelector('h4').innerHTML = obj.name;
 
-		// Add Placeholder
-		var b2b_item_row_src = document.querySelector('#b2c-item-row-template');
-		var b2b_item_row_output = b2b_item_row_src.content.cloneNode(true);
-
-		b2b_item_row_output.querySelector('div.cart-item').setAttribute('data-id', obj.id);
-		b2b_item_row_output.querySelector('div.cart-item').setAttribute('data-inventory-id', obj.id);
-		b2b_item_row_output.querySelector('div.cart-item').setAttribute('data-weight', obj.weight);
-		b2b_item_row_output.querySelector('div.cart-item').setAttribute('id', `psi-item-${obj.id}`);
-		b2b_item_row_output.querySelector('h4').innerHTML = obj.name;
-
-		var tmp = b2b_item_row_output.querySelector('input.b2c-item-unit-count');
+		var tmp = row.querySelector('input.b2c-item-unit-count');
 		tmp.setAttribute('id', `psi-item-${obj.id}-unit-count`);
 		tmp.setAttribute('name', `item-${obj.id}-unit-count`);
 		tmp.setAttribute('value', obj.unit_count);
-		tmp.setAttribute('data-id', obj.id);
 
-		var tmp = b2b_item_row_output.querySelector('input.b2c-item-unit-price');
+		var tmp = row.querySelector('input.b2c-item-unit-price');
 		tmp.setAttribute('id', `psi-item-${obj.id}-unit-price`);
 		tmp.setAttribute('name', `item-${obj.id}-unit-price`);
 		tmp.setAttribute('value', obj.unit_price);
-		tmp.setAttribute('data-id', obj.id);
 
-		var tmp = b2b_item_row_output.querySelector('span.b2c-item-unit-price-total');
+		var tmp = row.querySelector('span.b2c-item-unit-price-total');
 		tmp.setAttribute('id', `psi-item-${obj.id}-full-price`);
 		tmp.innerHTML = '<X>' + obj.unit_price_total || '0.00';
 		// tmp.setAttribute('name', `item-${obj.id}-unit-price`);
 		// tmp.setAttribute('value', obj.unit_price);
-		// tmp.setAttribute('data-id', obj.id);
-
-		$('#cart-list-wrap').prepend(b2b_item_row_output);
 
 	},
 
@@ -63,14 +67,18 @@ OpenTHC.POS.Cart = {
 	 */
 	insert: function(obj) {
 
-		$('#cart-list-empty').hide();
-
 		var Cart0 = this;
+
+		var x = document.querySelector(`#psi-item-${obj.id}`);
+		if (x) {
+				x.style.opacity = 0.50;
+		}
 
 		// Add Existing
 		if (Cart0.item_list[obj.id]) {
 			obj.unit_count = Cart0.item_list[obj.id].unit_count + 1;
 		}
+
 		Cart0.item_list[obj.id] = obj;
 
 		Cart0.drawItem(obj);
@@ -80,17 +88,17 @@ OpenTHC.POS.Cart = {
 	/**
 	 * Delete Item
 	 */
-	delete: function(oid) {
+	delete: function(inv_id) {
 
-		var x = document.querySelector(`#psi-item-${oid}`);
+		var x = document.querySelector(`#psi-item-${inv_id}`);
 		x.style.opacity = 0.50;
 
 		var Cart0 = this;
-		if (Cart0.item_list[oid]) {
-			Cart0.item_list[oid].unit_count = 0;
+		if (Cart0.item_list[inv_id]) {
+			Cart0.item_list[inv_id].unit_count = 0;
 		}
 
-		Cart0.update(oid);
+		Cart0.update(inv_id);
 
 	},
 
@@ -112,8 +120,6 @@ OpenTHC.POS.Cart = {
 			Cart0.item_list = res.data.Cart.item_list;
 
 			Object.keys(Cart0.item_list).forEach(key => {
-
-				// Mark Solid
 				var obj = Cart0.item_list[key];
 				Cart0.drawItem( obj );
 				Cart_addItem_flash(obj.id);
@@ -127,7 +133,7 @@ OpenTHC.POS.Cart = {
 	/**
 	 * Send to Server and Update UI
 	 */
-	update: function(oid) {
+	update: function(inv_id {
 
 		var Cart0 = this;
 
@@ -145,13 +151,13 @@ OpenTHC.POS.Cart = {
 
 			console.log(res);
 
-			if (oid) {
-				var obj1 = res.data.Cart.item_list[ oid ];
+			if (inv_id) {
+				var obj1 = res.data.Cart.item_list[ inv_id ];
 				if (obj1) {
 					Cart0.drawItem(obj1);
-					Cart_addItem_flash(oid);
+					Cart_addItem_flash(inv_id);
 				} else {
-					$(`#psi-item-${oid}`).remove();
+					$(`#psi-item-${inv_id}`).remove();
 				}
 			}
 
@@ -172,6 +178,7 @@ OpenTHC.POS.Cart = {
 		Cart0.unit_count =       res_data.Cart.unit_count || 0;
 		Cart0.tax_total  =       res_data.Cart.tax_total  || 0;
 		Cart0.full_price =       res_data.Cart.full_price || 0;
+		Cart0.unit_price_total = res_data.Cart.unit_price_total || 0;
 
 		$('.pos-checkout-item-count').html( Cart0.unit_count );
 		$('.pos-checkout-sub').html(Cart0.unit_price_total);
@@ -234,18 +241,30 @@ $(function() {
 
 		console.log('.cart-item input!change');
 
-		var inv_id = $(this).closest('.cart-item').data('id'); // this.getAttribute('data-id');
+		var $item = $(this).closest('.cart-item');
+		$item.css('opacity', 0.50);
+
+		var inv_id = $item.data('id'); // this.getAttribute('data-id');
 		var unit_count = parseFloat( $(`#psi-item-${inv_id}-unit-count`).val() );
 		var unit_price = parseFloat( $(`#psi-item-${inv_id}-unit-price`).val() );
 		var item_price = unit_count * unit_price;
 
 		$(`#psi-item-${inv_id}-full-price`).html(item_price.toFixed(2));
 
-		if (unit_count <= 0) {
-			OpenTHC.POS.Cart.delete(inv_id);
+		var Cart0 = OpenTHC.POS.Cart;
+
+		// Update Local Object
+		if (Cart0.item_list[inv_id]) {
+			Cart0.item_list[inv_id].unit_count = unit_count;
+			Cart0.item_list[inv_id].unit_price = unit_price;
 		}
 
-		OpenTHC.POS.Cart.update(inv_id);
+		// Delete or Update
+		if (unit_count <= 0) {
+			Cart0.delete(inv_id);
+		} else {
+			Cart0.update(inv_id);
+		}
 
 	});
 
