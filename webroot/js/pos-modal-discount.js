@@ -6,12 +6,14 @@ $(function() {
 
 	var adj = 0;
 	var adj_note = 'Applied Discount';
-	var due = 0;
+	var base_price = 0;
+	var full_price = 0;
+	var item_taxes_total = 0;
 
 	function _update_adj_new(adj)
 	{
 		$('.pos-checkout-sum-adj').html( (adj).toFixed(2) );
-		$('.pos-checkout-sum-new').html( (due + adj).toFixed(2) );
+		$('.pos-checkout-sum-new').html( (base_price + adj).toFixed(2) );
 	}
 
 	// Do stuff on Modal Open
@@ -19,7 +21,7 @@ $(function() {
 
 		console.log('pos-modal-discount!show');
 
-		due = parseFloat($('.pos-checkout-sum').first().html()) || 0;
+		base_price = parseFloat($('.pos-checkout-sum').first().html()) || 0;
 
 		//	$('#pos-modal-discount-list').load('/pos/ajax', { a: 'discount-list' });
 
@@ -48,7 +50,7 @@ $(function() {
 		if (pct <= 1) {
 			pct = pct * 100;
 		}
-		adj = (due * pct / 100) * -1;
+		adj = (base_price * pct / 100) * -1;
 		adj_note = `Applied Discount ${pct.toFixed(0)}%`;
 
 		_update_adj_new(adj);

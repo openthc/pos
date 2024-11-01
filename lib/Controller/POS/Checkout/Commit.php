@@ -20,7 +20,7 @@ class Commit extends \OpenTHC\Controller\Base
 		$_POST['cash_incoming'] = floatval($_POST['cash_incoming']);
 		$_POST['cash_outgoing'] = floatval($_POST['cash_outgoing']);
 
-		$key = sprintf('/%s/cart/%s', $_SESSION['License']['id'], $_POST['cart_id']);
+		$key = sprintf('/%s/cart/%s', $_SESSION['License']['id'], $_POST['cart-id']);
 		$Cart0 = $this->_container->Redis->get($key);
 		$Cart0 = json_decode($Cart0);
 		if (empty($Cart0)) {
@@ -66,6 +66,11 @@ class Commit extends \OpenTHC\Controller\Base
 			// __exit_text($Sale);
 			$Sale->save('B2C/Sale/Create');
 
+			$b2c_base_price = 0;
+			$b2c_full_price = 0;
+			$b2c_item_count = 0;
+			$b2c_item_adjust_total = 0;
+
 			foreach ($Cart0->item_list as $b2c_id => $b2c_item) {
 				// @todo Need to Handle "Special" line items
 				// Like, Loyalty or Tax or ??? -- Could those be "system" class Inventory to add to a ticket?
@@ -79,6 +84,7 @@ class Commit extends \OpenTHC\Controller\Base
 				if (empty($Inv['id'])) {
 					throw new \Exception('Inventory Lost on Sale [PCC-055]');
 				}
+				$Inv->decrement($b2c_item->unit_count);
 
 				$P = new \OpenTHC\POS\Product($dbc, $Inv['product_id']);
 				switch ($P['package_type']) {
@@ -102,14 +108,17 @@ class Commit extends \OpenTHC\Controller\Base
 				if (isset($b2c_item->unit_price)) {
 					$SI['unit_price'] = $b2c_item->unit_price;
 				}
+				$SI['base_price'] = ($SI['unit_price'] * $SI['unit_count']);
 				// +Fees
 				// -Discount
 				// +/- Adjustment
 				// +Tax
-				// $SI['full_price'] = (full + taxes)
+				$b2c_item_adjust_total = 0;
+				foreach ($b2c_item->tax_list as $tax_ulid => $tax_line) {
+						$b2c_item_adjust_total += $tax_line;
+				}
+				$SI['full_price'] = $SI['base_price'] + $b2c_item_adjust_total;
 				$SI->save('B2C/Sale/Item/Create');
-
-				$Inv->decrement($b2c_item->unit_count);
 
 				// Add the Sale Item taxes Here
 				foreach ($b2c_item->tax_list as $tax_ulid => $tax_line) {
@@ -123,10 +132,16 @@ class Commit extends \OpenTHC\Controller\Base
 					]);
 				}
 
+				$b2c_item_count += $SI['unit_count'];
+				$b2c_base_price += $SI['base_price'];
+				$b2c_full_price += $SI['full_price'];
+				$b2c_item_adjust_total += $b2c_item_adjust_total;
+
 			}
 
-			$Sale['item_count'] = $Cart0->item_count;
-			$Sale['full_price'] = $Cart0->full_price;
+			$Sale['item_count'] = $b2c_item_count;
+			$Sale['base_price'] = $b2c_base_price;
+			$Sale['full_price'] = $b2c_full_price; // $Sale['base_price'] + $b2c_item_adjust_total;
 			$Sale->save('B2C/Sale/Commit');
 
 		} catch (\Exception $e) {

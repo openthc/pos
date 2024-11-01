@@ -28,7 +28,6 @@ function ppFormUpdate()
 
 	} else if (cash === full) {
 
-		// $('#pos-back-due').html('0.00');
 		$('#amount-paid-wrap').removeClass('alert-secondary alert-success');
 		$('#amount-paid-wrap').addClass('alert-success');
 
@@ -37,7 +36,6 @@ function ppFormUpdate()
 		$('#amount-need-hint').text('Perfect!');
 		$('#payment-cash-outgoing').text('0.00');
 
-		// $('.pos-cost-due').addClass('text-success').removeClass('text-warning');
 		// $('#payment-cash-incoming').addClass('text-success').removeClass('text-danger').removeClass('text-warning');
 
 		$('#pos-payment-commit').removeAttr('disabled');
@@ -52,13 +50,10 @@ function ppFormUpdate()
 		$('#amount-need-wrap').addClass('alert-danger');
 		$('#amount-need-hint').text('Change:');
 		$('#payment-cash-outgoing').text( back.toFixed(2) );
-		// $('#pos-back-due').html( back.toFixed(2) )
 
-		// $('.pos-cost-due').addClass('text-warning').removeClass('text-success');
 		// $('#payment-cash-incoming').addClass('text-warning').removeClass('text-danger').removeClass('text-success');
 		// $('#pp-card-pay').removeClass('text-danger').removeClass('text-success').removeClass('text-warning');
 
-		//$('#pos-back-due').addClass('text-warning').removeClass('text-danger').removeClass('text-success');
 		$('#pos-payment-commit').removeAttr('disabled');
 
 	}
@@ -176,12 +171,9 @@ $(function() {
 		// Append to existing form to capture all the other existing inputs
 		$('#psi-form').attr('action', '/pos/checkout/commit');
 		$('#psi-form').append('<input name="a" type="hidden" value="pos-done">');
-		$('#psi-form').append(`<input name="cart_id" type="hidden" value="${OpenTHC.POS.Cart.id}">`);
+		$('#psi-form').append(`<input name="cart-id" type="hidden" value="${OpenTHC.POS.Cart.id}">`);
 		$('#psi-form').append(`<input name="cart-date" type="hidden" value="${OpenTHC.POS.Cart.date}">`);
 		$('#psi-form').append(`<input name="cart-time" type="hidden" value="${OpenTHC.POS.Cart.time}">`);
-		$('#psi-form').append('<input name="due" type="hidden" value="' + OpenTHC.POS.Cart.full_price + '">');
-		$('#psi-form').append('<input name="sub" type="hidden" value="' + OpenTHC.POS.Cart.unit_price_total + '">');
-		$('#psi-form').append('<input name="tax_sale" type="hidden" value="' + OpenTHC.POS.Cart.tax_total + '">');
 		$('#psi-form').append('<input name="name" type="hidden" value="' + $('#customer-name').val() + '">');
 		$('#psi-form').append(`<input name="cash_incoming" type="hidden" value="${cash_incoming}">`);
 		$('#psi-form').append(`<input name="cash_outgoing" type="hidden" value="${cash_outgoing}">`);

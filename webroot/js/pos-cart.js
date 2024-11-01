@@ -47,19 +47,16 @@ OpenTHC.POS.Cart = {
 		var tmp = row.querySelector('input.b2c-item-unit-count');
 		tmp.setAttribute('id', `psi-item-${obj.id}-unit-count`);
 		tmp.setAttribute('name', `item-${obj.id}-unit-count`);
-		tmp.setAttribute('value', obj.unit_count);
+		tmp.value = obj.unit_count;
 
 		var tmp = row.querySelector('input.b2c-item-unit-price');
 		tmp.setAttribute('id', `psi-item-${obj.id}-unit-price`);
 		tmp.setAttribute('name', `item-${obj.id}-unit-price`);
-		tmp.setAttribute('value', obj.unit_price);
+		tmp.value = obj.unit_price;
 
 		var tmp = row.querySelector('span.b2c-item-unit-price-total');
 		tmp.setAttribute('id', `psi-item-${obj.id}-full-price`);
 		tmp.innerHTML = '<X>' + obj.unit_price_total || '0.00';
-		// tmp.setAttribute('name', `item-${obj.id}-unit-price`);
-		// tmp.setAttribute('value', obj.unit_price);
-
 	},
 
 	/**

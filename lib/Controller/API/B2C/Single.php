@@ -88,31 +88,11 @@ class Single extends \OpenTHC\POS\Controller\API\Base
 				// Ignore
 			}
 			$sum_item_price += ($b2c_item['unit_count'] * $b2c_item['unit_price']);
+
+			// Load Taxes And Add b2c_item_adjust
+
 		}
-		$b2c['full_price'] = $sum_item_price;
-
-		// Add Tax Line Items?
-		$pr0 = new \OpenTHC\POS\Product($dbc);
-		$pr0->loadBy('product_type_id', '018NY6XC00PT000000TAXSALES'); // Well Known Tax Product ID
-
-		$b2c_item = new \OpenTHC\POS\B2C\Sale\Item($dbc);
-		$b2c_item['b2c_sale_id'] = $b2c['id'];
-		$b2c_item['inventory_id'] = '01FH12BJ7P47WKE8Q1SQMC5VF6'; // Well known Inventory ID to represent a Tax
-		$b2c_item['unit_count'] = 1;
-		$b2c_item['unit_price'] = $b2c['full_price'] * 0.1010;
-		// $b2c_item->save();
-
-		// Add 502 Tax Line Items
-		$pr1 = new \OpenTHC\POS\Product($dbc);
-		$pr1->loadBy('product_type_id', '018NY6XC00PT000000TAXOTHER'); // Well Known Tax Product ID
-
-		$b2c_item = new \OpenTHC\POS\B2C\Sale\Item($dbc);
-		$b2c_item['b2c_sale_id'] = $b2c['id'];
-		$b2c_item['inventory_id'] = '01FH12CJVQ0BJZD3CDQNHTG6DZ'; // Well known Inventory ID to represent a Tax
-		$b2c_item['unit_count'] = 1;
-		$b2c_item['unit_price'] = $b2c['full_price'] * 0.3300;
-		// $b2c_item->save();
-
+		$b2c['base_price'] = $sum_item_price;
 		$b2c['stat'] = 200;
 		$b2c->save('B2C/Sale/Commit via API');
 

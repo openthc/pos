@@ -38,10 +38,24 @@ class Receipt extends \OpenTHC\POS\Controller\API\Base
 		$b2c = [
 			'id' => 'PREVIEW',
 			'created_at' => '1969-04-20T16:20:00 America/Los_Angeles',
+			'base_price' => 0,
+			'full_price' => 0,
+			'item_count' => 0,
+			'meta' => [
+				'cash_incoming' => 0,
+				'cash_outgoing' => 0,
+			]
 		];
 
+		$max = rand(1, 10);
 		$b2c_item_list = [];
-		for ($idx=0; $idx<10; $idx++) {
+		for ($idx=0; $idx<$max; $idx++) {
+
+			$c = rand(1, 10);
+			$p = rand(200, 10000) / 100;
+
+			$b2c['base_price'] += ($c * $p);
+
 			$b2c_item_list[] = [
 				'Inventory' => [
 					'guid' => ULID::create()
@@ -53,9 +67,10 @@ class Receipt extends \OpenTHC\POS\Controller\API\Base
 				'Variety' => [
 					'name' => 'Text/Variety',
 				],
-				'unit_count' => rand(1, 50),
-				'unit_price' => rand(200, 20000) / 100,
-				'price_detail' => [],
+				'unit_count' => $c,
+				'unit_price' => $p,
+				'base_price' => ($c * $p),
+				'full_price' => ($c * $p),
 			];
 		}
 

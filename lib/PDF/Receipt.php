@@ -116,11 +116,11 @@ class Receipt extends \OpenTHC\POS\PDF\Base
 			$y = $this->getY();
 			$y += 2;
 
-			$this->line(0, $y, $this->_width_full, $y);
-
-			$this->setY($y);
-
 		}
+
+		$y += 6;
+		$this->line(0, $y, $this->_width_full, $y);
+		$this->setY($y);
 
 		// $this->lineExperiment();
 
@@ -138,7 +138,7 @@ class Receipt extends \OpenTHC\POS\PDF\Base
 
 		$y += 2;
 		$this->colLeft($y, 'Subtotal:');
-		$this->colRight($y, number_format($this->b2c_item_total, 2));
+		$this->colRight($y, number_format($this->_b2c_sale['base_price'], 2));
 
 		// if ($this->getAttribute('adj-total')) {
 		// 	$y+= 5;
@@ -150,8 +150,8 @@ class Receipt extends \OpenTHC\POS\PDF\Base
 
 		// Tax A
 		$y+= 6;
-		$this->colLeft($y, 'Cannabis Tax (Included):');
-		$this->colRight($y, number_format($this->b2c_tax0_total, 2));
+		$this->colLeft($y, 'Taxes & Adjustments:');
+		$this->colRight($y, number_format($this->_b2c_sale['full_price'] - $this->_b2c_sale['base_price'], 2));
 
 		// Tax B
 		// $y+= 5;
@@ -159,19 +159,17 @@ class Receipt extends \OpenTHC\POS\PDF\Base
 		// $this->cell($this->_width_view, 5, 'Excise Tax:');
 
 		// Tax C
-		$y+= 6;
-		$this->colLeft($y, 'Sales Tax (Included):');
-		$this->colRight($y, number_format($this->b2c_tax1_total, 2));
+		// $y+= 6;
+		// $this->colLeft($y, 'Sales Tax (Included):');
+		// $this->colRight($y, number_format($this->b2c_tax1_total, 2));
 
 		$y += 7;
 		$this->line(0, $y, $this->_width_full, $y);
 
-		$full_price = $this->b2c_item_total + $this->b2c_tax0_total + $this->b2c_tax1_total;
-
 		$y += 2;
 		$this->setFont('', 'B');
 		$this->colLeft($y, 'Total:');
-		$this->colRight($y, number_format($full_price, 2));
+		$this->colRight($y, number_format($this->_b2c_sale['full_price'], 2));
 		$this->setFont('', '');
 
 		$y += 7;
@@ -245,7 +243,7 @@ class Receipt extends \OpenTHC\POS\PDF\Base
 
 			$y = $this->getY();
 
-			$link = sprintf('https://%s/feedback/%s', $_SERVER['SERVER_NAME'], $this->_b2c_sale['id']);
+			$link = sprintf('%s/feedback/%s', OPENTHC_SERVICE_ORIGIN, $this->_b2c_sale['id']);
 
 			$style = array(
 				'border' => false,
@@ -299,24 +297,33 @@ class Receipt extends \OpenTHC\POS\PDF\Base
 		$this->setTextColor(0x00, 0x00, 0x00);
 
 		$y = $this->getY();
-		$y += 2;
 
 		foreach ($this->_item_list as $SI) {
+
+			$y += 8;
 
 			$txt = trim(sprintf('%s %s', $SI['Product']['name'], $SI['Variety']['name']));
 			$this->colLeft($y, $txt);
 
 			$y += 6;
-			$txt = rtrim($SI['unit_count'], '0.')  . ' @ $' . number_format($SI['unit_price'], 2);
+			$txt = sprintf('%d @ $%s', $SI['unit_count'], number_format($SI['unit_price'], 2));
 			$this->colLeft($y, $txt);
-			$this->colRight($y, number_format($SI['unit_count'] * $SI['unit_price'], 2));
+			$this->colRight($y, number_format($SI['base_price'], 2));
 			// $this->setXY($this->_init_x, $y);
 			// $this->cell($this->_width_view, 4, $txt, 0, 0, 'R');
 
-			$y += 6;
-
 			// Item Taxes
+			// Do we have These available?
+			if ($SI['base_price'] != $SI['full_price']) {
+				$y += 6;
+				$this->colLeft($y, '+ Taxes & Adjustments');
+				$this->colRight($y, number_format($SI['full_price'] - $SI['base_price'], 2));
+			}
+
 		}
+
+		$y += 8;
+
 		$this->setY($y);
 
 		$this->drawSummary();

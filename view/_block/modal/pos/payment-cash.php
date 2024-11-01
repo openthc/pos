@@ -15,7 +15,6 @@ $body = <<<HTML
 	</div>
 	<div class="col-md-4">
 		<h4 style="color:#f00000;">Total Due: $<span class="pos-checkout-sum"></span></h4>
-		<!-- <input name="bill-due" type="hidden" value="<?=$due; ?>"> -->
 	</div>
 </div>
 
