@@ -11,9 +11,10 @@ namespace OpenTHC\POS\Controller\API;
 class Base extends \OpenTHC\Controller\Base
 {
 	use \OpenTHC\POS\Traits\OpenAuthBox;
+	use \OpenTHC\POS\Traits\FindService;
 	use \OpenTHC\POS\Traits\FindContact;
 	use \OpenTHC\POS\Traits\FindCompany;
-	use \OpenTHC\POS\Traits\FindService;
+	use \OpenTHC\POS\Traits\FindLicense;
 
 	function __construct($c)
 	{
@@ -83,11 +84,13 @@ class Base extends \OpenTHC\Controller\Base
 		$Contact = $this->findContact($act->contact);
 		$Company = $this->findCompany($act->company);
 
+		$dbc_user = _dbc($Company['dsn']);
+		$License = $this->findLicense($dbc_user, $act->license);
+
 		$this->Service = $Service;
 		$this->Contact = $Contact;
 		$this->Company = $Company;
-
-		// License?
+		$this->License = $License;
 
 	}
 

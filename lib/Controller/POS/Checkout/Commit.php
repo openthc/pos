@@ -26,10 +26,11 @@ class Commit extends \OpenTHC\Controller\Base
 		if (empty($Cart0)) {
 			throw new \Exception('Invalid Cart [PCC-027]');
 		}
-		$dt0 = new \DateTime();
+		$tz0 = new \DateTimezone($_SESSION['Company']['tz']);
+		$dt0 = new \DateTime('now', $tz0);
 		if (( ! empty($_POST['cart-date'])) && ( ! empty($_POST['cart-time'])) ) {
 			$dtX = sprintf('%sT%s', $_POST['cart-date'], $_POST['cart-time']);
-			$dt0 = new \DateTime($dtX, new \DateTimezone($_SESSION['Company']['tz']));
+			$dt0 = new \DateTime($dtX, $tz0);
 		}
 		// __exit_text([
 		// 	'_POST' => $_POST,
@@ -248,7 +249,9 @@ class Commit extends \OpenTHC\Controller\Base
 		$dbc = $this->_container->DB;
 		$rdb = $this->_container->Redis;
 
-		$b2c_time = new \DateTime($b2c_sale['created_at'], new \DateTimezone('America/Denver'));
+		$tz0 = new \DateTimezone($_SESSION['Company']['tz']);
+		$b2c_time = new \DateTime($b2c_sale['created_at'], $tz0);
+		$b2c_time->setTimezone($tz0);
 
 		$b2c_item_list = $b2c_sale->getItems();
 
@@ -293,7 +296,7 @@ class Commit extends \OpenTHC\Controller\Base
 		// Needs a good CRE-Adapter or BONG to work
 		$ghc = new \GuzzleHttp\Client([
 			// 'base_uri' => 'https://v3.api.nm.trace.biotrackthc.net/',
-			'base_uri' => 'https://pipe.openthc.dev/biotrack/v3.api.nm.trace.biotrackthc.net/',
+			'base_uri' => 'https://pipe.openthc.com/biotrack/v3.api.nm.trace.biotrackthc.net/',
 			// 'base_uri' => 'https://bunk.openthc.dev/biotrack/v2022/',
 			'http_errors' => false,
 			// 'cookie'
@@ -308,6 +311,8 @@ class Commit extends \OpenTHC\Controller\Base
 		$sid = $rdb->get($key);
 		if (empty($sid)) {
 
+			// This provides a JWT in the Session
+			// It's valid for like 7 days
 			$res = $ghc->post('v1/login', [ 'json' => [
 				'UBI' => $_SESSION['Company']['cre_meta']['company'],
 				'Username' => $_SESSION['Company']['cre_meta']['username'],
@@ -318,7 +323,7 @@ class Commit extends \OpenTHC\Controller\Base
 			$res = json_decode($res);
 			$sid = $res->Session;
 
-			$rdb->set($key, $sid, [ 'ttl' => 1800 ]);
+			$rdb->set($key, $sid, [ 'ttl' => 86400 ]);
 		}
 		__exit_text([
 			'sid' => $sid,
