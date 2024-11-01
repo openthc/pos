@@ -251,8 +251,8 @@ class Ajax extends \OpenTHC\Controller\Base
 	{
 		// Load Tax Data
 		$rdb = $this->_container->Redis;
-		$key = sprintf('/%s/tax-info', $_SESSION['License']['id']);
-		// $tax_info = $rdb->get($key);
+		$key = sprintf('/%s/pos/b2c/item/adjust-list', $_SESSION['License']['id']);
+		$tax_info = $rdb->get($key);
 		if ( ! empty($tax_info)) {
 			$this->tax_info = json_decode($tax_info);
 			return;
@@ -269,8 +269,8 @@ class Ajax extends \OpenTHC\Controller\Base
 
 		$this->tax_info->tax_list->{'010PENTHC00BIPA0SST03Q484J'} = floatval($Company->getOption(sprintf('/%s/b2c-item-price-adjust/010PENTHC00BIPA0SST03Q484J', $License['id']))); // State
 		$this->tax_info->tax_list->{'010PENTHC00BIPA0C0T620S2M2'} = floatval($Company->getOption(sprintf('/%s/b2c-item-price-adjust/010PENTHC00BIPA0C0T620S2M2', $License['id']))); // County
-		$this->tax_info->tax_list->{'010PENTHC0PDTNJ1WNK5H9S6T3'} = floatval($Company->getOption(sprintf('/%s/b2c-item-price-adjust/010PENTHC0PDTNJ1WNK5H9S6T3', $License['id']))); // City
-		$this->tax_info->tax_list->{'010PENTHC0PDTSV845B6FEEGCF'} = floatval($Company->getOption(sprintf('/%s/b2c-item-price-adjust/010PENTHC0PDTSV845B6FEEGCF', $License['id']))); // Regional
+		$this->tax_info->tax_list->{'010PENTHC00BIPA0CIT5H9S6T3'} = floatval($Company->getOption(sprintf('/%s/b2c-item-price-adjust/010PENTHC00BIPA0CIT5H9S6T3', $License['id']))); // City
+		$this->tax_info->tax_list->{'010PENTHC00BIPA0MUT0FEEGCF'} = floatval($Company->getOption(sprintf('/%s/b2c-item-price-adjust/010PENTHC00BIPA0MUT0FEEGCF', $License['id']))); // Regional
 		$this->tax_info->tax_list->{'010PENTHC00BIPA0ET0FNBCKMH'} = floatval($Company->getOption(sprintf('/%s/b2c-item-price-adjust/010PENTHC00BIPA0ET0FNBCKMH', $License['id']))); // Excise
 
 		$rdb->set($key, json_encode($this->tax_info), [ 'ex' => '1800' ]);
