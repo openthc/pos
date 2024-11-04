@@ -13,8 +13,6 @@
 		}
 	},
 	"require": {
-		"edoceo/lowline": "2022.0.280",
-		"edoceo/radix": "2021.0.0",
 		"league/oauth2-client": "2.7.0",
 		"openthc/common": "dev-main",
 		"openthc/cre-adapter": "dev-main",

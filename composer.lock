@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c0d9264253ba78ad9fec772cc47376d1",
+    "content-hash": "305745f07b6b136829ce71abf5b04daf",
     "packages": [
         {
             "name": "chrome-php/chrome",
@@ -144,16 +144,16 @@
         },
         {
             "name": "composer/ca-bundle",
-            "version": "1.5.2",
+            "version": "1.5.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/ca-bundle.git",
-                "reference": "48a792895a2b7a6ee65dd5442c299d7b835b6137"
+                "reference": "3b1fc3f0be055baa7c6258b1467849c3e8204eb2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/ca-bundle/zipball/48a792895a2b7a6ee65dd5442c299d7b835b6137",
-                "reference": "48a792895a2b7a6ee65dd5442c299d7b835b6137",
+                "url": "https://api.github.com/repos/composer/ca-bundle/zipball/3b1fc3f0be055baa7c6258b1467849c3e8204eb2",
+                "reference": "3b1fc3f0be055baa7c6258b1467849c3e8204eb2",
                 "shasum": ""
             },
             "require": {
@@ -200,7 +200,7 @@
             "support": {
                 "irc": "irc://irc.freenode.org/composer",
                 "issues": "https://github.com/composer/ca-bundle/issues",
-                "source": "https://github.com/composer/ca-bundle/tree/1.5.2"
+                "source": "https://github.com/composer/ca-bundle/tree/1.5.3"
             },
             "funding": [
                 {
@@ -216,7 +216,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-09-25T07:49:53+00:00"
+            "time": "2024-11-04T10:15:26+00:00"
         },
         {
             "name": "docopt/docopt",
@@ -267,16 +267,16 @@
         },
         {
             "name": "edoceo/lowline",
-            "version": "v2022.0.280",
+            "version": "v2024.0.309",
             "source": {
                 "type": "git",
                 "url": "https://github.com/edoceo/lowline.git",
-                "reference": "915bbbc369717f6b78eff21c3e1b570e97aef9ee"
+                "reference": "6c0df25e5412e194edcc3e94aa6e583d960890e0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/edoceo/lowline/zipball/915bbbc369717f6b78eff21c3e1b570e97aef9ee",
-                "reference": "915bbbc369717f6b78eff21c3e1b570e97aef9ee",
+                "url": "https://api.github.com/repos/edoceo/lowline/zipball/6c0df25e5412e194edcc3e94aa6e583d960890e0",
+                "reference": "6c0df25e5412e194edcc3e94aa6e583d960890e0",
                 "shasum": ""
             },
             "require": {
@@ -297,9 +297,9 @@
             "description": "Magic Global Functions",
             "support": {
                 "issues": "https://github.com/edoceo/lowline/issues",
-                "source": "https://github.com/edoceo/lowline/tree/v2022.0.280"
+                "source": "https://github.com/edoceo/lowline/tree/v2024.0.309"
             },
-            "time": "2022-10-07T16:41:06+00:00"
+            "time": "2024-11-04T13:43:43+00:00"
         },
         {
             "name": "edoceo/radix",
@@ -706,23 +706,24 @@
         },
         {
             "name": "giggsey/locale",
-            "version": "2.6",
+            "version": "2.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/giggsey/Locale.git",
-                "reference": "37874fa473131247c348059fb7b8985efc18b5ea"
+                "reference": "a5c65ea3c2630f27ccb78977990eefbee6dd8f97"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/giggsey/Locale/zipball/37874fa473131247c348059fb7b8985efc18b5ea",
-                "reference": "37874fa473131247c348059fb7b8985efc18b5ea",
+                "url": "https://api.github.com/repos/giggsey/Locale/zipball/a5c65ea3c2630f27ccb78977990eefbee6dd8f97",
+                "reference": "a5c65ea3c2630f27ccb78977990eefbee6dd8f97",
                 "shasum": ""
             },
             "require": {
-                "php": ">=7.2"
+                "php": "^7.4|^8.0"
             },
             "require-dev": {
                 "ext-json": "*",
+                "friendsofphp/php-cs-fixer": "^3.64",
                 "pear/pear-core-minimal": "^1.9",
                 "pear/pear_exception": "^1.0",
                 "pear/versioncontrol_git": "^0.5",
@@ -732,7 +733,8 @@
                 "symfony/console": "^5.0|^6.0",
                 "symfony/filesystem": "^5.0|^6.0",
                 "symfony/finder": "^5.0|^6.0",
-                "symfony/process": "^5.0|^6.0"
+                "symfony/process": "^5.0|^6.0",
+                "symfony/var-exporter": "^5.2|^6.0"
             },
             "type": "library",
             "autoload": {
@@ -754,9 +756,9 @@
             "description": "Locale functions required by libphonenumber-for-php",
             "support": {
                 "issues": "https://github.com/giggsey/Locale/issues",
-                "source": "https://github.com/giggsey/Locale/tree/2.6"
+                "source": "https://github.com/giggsey/Locale/tree/2.7.0"
             },
-            "time": "2024-04-18T19:31:19+00:00"
+            "time": "2024-11-04T11:18:07+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -1401,16 +1403,17 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/openthc/common.git",
-                "reference": "684f29d6ccefb3c07afbdb10aaa4e72e4653870f"
+                "reference": "522e6596c3a0dc50607691eaaf3cc5c5633eaea1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/openthc/common/zipball/684f29d6ccefb3c07afbdb10aaa4e72e4653870f",
-                "reference": "684f29d6ccefb3c07afbdb10aaa4e72e4653870f",
+                "url": "https://api.github.com/repos/openthc/common/zipball/522e6596c3a0dc50607691eaaf3cc5c5633eaea1",
+                "reference": "522e6596c3a0dc50607691eaaf3cc5c5633eaea1",
                 "shasum": ""
             },
             "require": {
                 "docopt/docopt": "1.0.5",
+                "edoceo/lowline": "v2024.0.309",
                 "edoceo/radix": "2021.0.0",
                 "erusev/parsedown-extra": "0.8.1",
                 "ext-curl": "*",
@@ -1458,7 +1461,7 @@
                 "issues": "https://github.com/openthc/common/issues",
                 "source": "https://github.com/openthc/common/tree/main"
             },
-            "time": "2024-10-17T23:21:46+00:00"
+            "time": "2024-11-04T14:28:47+00:00"
         },
         {
             "name": "openthc/cre-adapter",
