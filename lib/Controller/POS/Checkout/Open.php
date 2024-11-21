@@ -42,7 +42,7 @@ class Open extends \OpenTHC\Controller\Base
 					'stat' => 200,
 					'name' => 'Walk In',
 				];
-				return $RES->withRedirect('/pos');
+				return $RES->withRedirect(sprintf('/pos?cart=%s', $_SESSION['Cart']['id']));
 			case 'client-contact-update':
 				return $this->contact_open($RES);
 			case 'client-contact-update-force':
@@ -57,7 +57,7 @@ class Open extends \OpenTHC\Controller\Base
 					Session::flash('info', 'New Contact! Please add necessary details');
 				};
 				$_SESSION['Cart']['Contact'] = $Contact1->toArray();
-				return $RES->withRedirect('/pos');
+				return $RES->withRedirect(sprintf('/pos?cart=%s', $_SESSION['Cart']['id']));
 				break;
 			default:
 				Session::flash('fail', 'Invalid Requset [PCO-045]');
@@ -84,31 +84,8 @@ class Open extends \OpenTHC\Controller\Base
 
 		$_SESSION['Cart']['Contact'] = $Contact->toArray();
 
-		return $RES->withRedirect('/pos');
+		return $RES->withRedirect(sprintf('/pos?cart=%s', $_SESSION['Cart']['id']));
 
-		// $obj = [
-		// 	'LicenseNumber' => '000001',
-		// 	'LicenseEffectiveStartDate' => date('Y-m-d'), // '2015-06-21',
-		// 	'LicenseEffectiveEndDate' => date('Y-m-d', time() + (86400 * 356)),
-		// 	'RecommendedPlants' => '6',
-		// 	'RecommendedSmokableQuantity' => '2.0',
-		// 	'FlowerOuncesAllowed' => null,
-		// 	'ThcOuncesAllowed' => null,
-		// 	'ConcentrateOuncesAllowed' => null,
-		// 	'InfusedOuncesAllowed' => null,
-		// 	'MaxFlowerThcPercentAllowed' => null,
-		// 	'MaxConcentrateThcPercentAllowed' => null,
-		// 	'HasSalesLimitExemption' => false,
-		// 	'ActualDate' => date('Y-m-d'),
-		// ];
-
-		// $cre = \OpenTHC\CRE::factory($_SESSION['cre']);
-		// $cre->setLicense($_SESSION['License']);
-		// $res = $cre->contact()->create($obj);
-
-		// var_dump($res);
-
-		// exit;
 	}
 
 	/**
@@ -116,16 +93,21 @@ class Open extends \OpenTHC\Controller\Base
 	 */
 	function contact_open($RES)
 	{
-		$dbc = $this->_container->DB;
-
 		switch ($_SESSION['cre']['id']) {
-			case 'usa/ok':
-				// Has to Lookup on External Site
-				return $this->_contact_search_usa_ok($RES);
-			case 'usa/mt':
-				// Has to Lookup on External Site
-				return $this->_contact_search_usa_ok($RES);
+		case 'usa/ok':
+			// Has to Lookup on External Site
+			return $this->_contact_search_usa_ok($RES);
+		case 'usa/mt':
+			// Has to Lookup on External Site
+			return $this->_contact_search_usa_mt($RES);
+		case 'usa/nm':
+			switch ($_POST['pos-cart-type']) {
+			case 'MED':
+				return $this->_contact_search_usa_nm_med($RES);
+			}
 		}
+
+		$dbc = $this->_container->DB;
 
 		// $code0 = $_POST['client-contact-pid'];
 
@@ -133,8 +115,11 @@ class Open extends \OpenTHC\Controller\Base
 		$gov_id_type = null;
 		$guid0 = $_POST['client-contact-govt-id'];
 		if (preg_match('/^([\w\- ]{4,32})$/', $guid0)) {
+			// Manual Entry
+			$guid0 = trim($guid0);
 			$gov_id_type = 'CONTACT_ID';
 		} elseif (preg_match('/.*ANSI.*/', $guid0)) {
+			// Scanned
 			$gov_id_type = 'STATE_ID';
 		}
 
@@ -169,7 +154,7 @@ class Open extends \OpenTHC\Controller\Base
 
 					if ( ! empty($Contact['id'])) {
 						$_SESSION['Cart']['Contact'] = $Contact->toArray();
-						return $RES->withRedirect('/pos');
+						return $RES->withRedirect(sprintf('/pos?cart=%s', $_SESSION['Cart']['id']));
 					}
 
 					break;
@@ -180,7 +165,7 @@ class Open extends \OpenTHC\Controller\Base
 						'stat' => 100,
 						'type' => 'b2c-client',
 					];
-					return $RES->withRedirect('/pos');
+					return $RES->withRedirect(sprintf('/pos?cart=%s', $_SESSION['Cart']['id']));
 				default:
 					// Session::flash('fail', $cre->formatError($res));
 					// return $RES->withRedirect('/pos');
@@ -212,12 +197,13 @@ class Open extends \OpenTHC\Controller\Base
 
 		if (empty($Contact['id'])) {
 			Session::flash('fail', 'Cannot find Client Contact');
-			return $RES->withRedirect('/pos');
+			return $RES->withRedirect(sprintf('/pos?cart=%s', $_SESSION['Cart']['id']));
 		}
 
+		$_SESSION['Cart']['type'] = 'REC';
 		$_SESSION['Cart']['Contact'] = $Contact->toArray();
 
-		return $RES->withRedirect('/pos');
+		return $RES->withRedirect(sprintf('/pos?cart=%s', $_SESSION['Cart']['id']));
 
 	}
 
@@ -281,6 +267,128 @@ class Open extends \OpenTHC\Controller\Base
 			'code' => 200,
 			'data' => $Contact,
 		];
+
+	}
+
+	function _contact_search_usa_mt($RES)
+	{
+		// $obj = [
+		// 	'LicenseNumber' => '000001',
+		// 	'LicenseEffectiveStartDate' => date('Y-m-d'), // '2015-06-21',
+		// 	'LicenseEffectiveEndDate' => date('Y-m-d', time() + (86400 * 356)),
+		// 	'RecommendedPlants' => '6',
+		// 	'RecommendedSmokableQuantity' => '2.0',
+		// 	'FlowerOuncesAllowed' => null,
+		// 	'ThcOuncesAllowed' => null,
+		// 	'ConcentrateOuncesAllowed' => null,
+		// 	'InfusedOuncesAllowed' => null,
+		// 	'MaxFlowerThcPercentAllowed' => null,
+		// 	'MaxConcentrateThcPercentAllowed' => null,
+		// 	'HasSalesLimitExemption' => false,
+		// 	'ActualDate' => date('Y-m-d'),
+		// ];
+
+		// $cre = \OpenTHC\CRE::factory($_SESSION['cre']);
+		// $cre->setLicense($_SESSION['License']);
+		// $res = $cre->contact()->create($obj);
+
+		// var_dump($res);
+
+		// exit;
+
+	}
+
+	function _contact_search_usa_nm_med($RES)
+	{
+		$dbc = $this->_container->DB;
+		$rdb = $this->_container->Redis;
+
+		// $cre = \OpenTHC\CRE::factory($_SESSION['cre']);
+		// $cre->setLicense($_SESSION['License']);
+		// // $req0 = $cre->_curl_init('');
+		// $res = $cre->_curl_exec([
+		// 	'action' => 'card_lookup',
+		// 	'card_id' => $_POST['client-contact-govt-id'],
+		// ]);
+		// var_dump($res);
+
+		$ghc = new \GuzzleHttp\Client([
+			// 'base_uri' => 'https://v3.api.nm.trace.biotrackthc.net/',
+			'base_uri' => 'https://pipe.openthc.com/biotrack/v3.api.nm.trace.biotrackthc.net/',
+			// 'base_uri' => 'https://bunk.openthc.dev/biotrack/v2022/',
+			'http_errors' => false,
+			// 'cookie'
+			'headers' => [
+				'openthc-contact-id' => $_SESSION['Contact']['id'],
+				'openthc-company-id' => $_SESSION['Company']['id'],
+				'openthc-license-id' => $_SESSION['License']['id'],
+			]
+		]);
+
+		$key = sprintf('/license/%s/cre/biotrack2023/sid', $_SESSION['License']['id']);
+		$sid = $rdb->get($key);
+		if (empty($sid)) {
+
+			// This provides a JWT in the Session
+			// It inidicates it's valid for like 7 days
+			//
+			$res = $ghc->post('v1/login', [ 'json' => [
+				'UBI' => $_SESSION['Company']['cre_meta']['company'],
+				'Username' => $_SESSION['Company']['cre_meta']['username'],
+				'Password' => $_SESSION['Company']['cre_meta']['password'],
+			]]);
+
+			$res = $res->getBody()->getContents();
+			$res = json_decode($res);
+			$sid = $res->Session;
+
+			$rdb->set($key, $sid, [ 'ttl' => 3600 ]);
+		}
+
+		$res = $ghc->post('v1/patient/lookup', [
+			'headers' => [
+				'Authorization' => sprintf('Bearer %s', $sid)
+			],
+			'json' => [
+				'LocationLicense' => $_SESSION['License']['code'],
+				'CardID' => $_POST['client-contact-govt-id'],
+			]
+		]);
+
+		$res = $res->getBody()->getContents();
+		$res = json_decode($res);
+		if (empty($res->CardID)) {
+		// 	throw new \Exception('Cannot Find Contact', 500);
+			Session::flash('fail', 'Cannot find Contact');
+			return $RES->withRedirect('/pos');
+		}
+		// var_dump($res);
+
+		$Contact = new Contact($dbc); // , [ 'guid' => $res['data']['PatientId'] ]);
+		if ( ! $Contact->loadBy('guid', $res->CardID)) {
+			$Contact['id'] = ULID::create();
+			$Contact['stat'] = 100;
+			$Contact['guid'] = $res->CardID;
+			$Contact['hash'] = '-';
+			$Contact['type'] = 'B2C/CLIENT/MED'; // MED/QP or MED/CG == QUalified Patient or Caregiver
+			$Contact['fullname'] = '';
+			$Contact['meta'] = json_encode($res);
+			$Contact->save('Contact/Create in POS by User');
+		}
+
+		$_SESSION['Cart']['type'] = 'MED';
+		$_SESSION['Cart']['Contact'] = $Contact->toArray();
+
+		// $Cart = [];
+		// $Cart['id'] = _ulid();
+		// $Cart['key'] = sprintf('/%s/cart/%s', $_SESSION['License']['id'], $Cart['id']);
+		// $Cart['Contact'] = $Contact->toArray();
+		// $rdb->set($Cart['key'], json_encode($Cart));
+
+		// $Cart = new \OpenTHC\POS\Cart();
+		// $Cart->save();
+
+		return $RES->withRedirect(sprintf('/pos?cart=%s', $_SESSION['Cart']['id']));
 
 	}
 

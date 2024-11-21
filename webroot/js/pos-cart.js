@@ -6,16 +6,19 @@
 
 OpenTHC.POS.Cart = {
 
+	id: '',
+	type: 'REC',
+
 	date: '',
 	time: '',
-
-	item_list: {},
 
 	item_count: 0,  // Count of Line Items
 	unit_count: 0,  // Total Count of Units
 	unit_price_total: 0,  // Total of Line Items (line_price?)
 	tax_total: 0,
 	full_price: 0,
+
+	item_list: {},
 
 	drawItem: function(obj)
 	{

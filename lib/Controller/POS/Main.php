@@ -43,12 +43,18 @@ class Main extends \OpenTHC\Controller\Base
 			$_SESSION['pos-terminal-id'] = ULID::create();
 		}
 
-		// if ('auth' == $_GET['v']) {
 		if (empty($_SESSION['pos-terminal-contact'])) {
 			$data = [];
 			$data['Page'] = [ 'title' => 'Terminal Authentication'];
 			return $RES->write( $this->render('pos/open.php', $data) );
 		}
+
+		if (empty($_GET['cart'])) {
+			$_SESSION['Cart'] = [];
+			$_SESSION['Cart']['id'] = \Edoceo\Radix\ULID::create();
+			return $RES->withRedirect(sprintf('/pos?cart=%s', $_SESSION['Cart']['id']));
+		}
+
 
 		$data = array(
 			'Page' => array('title' => sprintf('POS :: %s <code>%s</code>', $_SESSION['License']['name'], $_SESSION['License']['code']))
@@ -67,16 +73,7 @@ class Main extends \OpenTHC\Controller\Base
 			return $RES->withRedirect(sprintf('/pos?cart=%s', \Edoceo\Radix\ULID::create()));
 		}
 
-		$data['cart'] = [];
-		$data['cart']['id'] = $_GET['cart'];
-
-		$key = sprintf('/%s/cart/%s', $_SESSION['License']['id'], $data['cart']['id']);
-
-		$rdb = $this->_container->Redis;
-		$chk = $rdb->get($key);
-		if ( ! empty($chk)) {
-			$data['cart'] = json_decode($chk, true);
-		}
+		$data['cart'] = $_SESSION['cart'];
 
 		return $RES->write( $this->render('pos/terminal/main.php', $data) );
 

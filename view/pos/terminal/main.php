@@ -33,6 +33,28 @@ $this->layout_file = sprintf('%s/view/_layout/html-pos.php', APP_ROOT);
 		</div>
 	</div>
 	<div class="pos-sale-wrap">
+		<!-- Cart Contact Information -->
+		<?php
+		// var_dump($data['cart']['Contact']);
+		if ( ! empty($data['cart']['Contact'])) {
+			$c = $data['cart']['Contact'];
+			$out = [];
+			if ( ! empty($c['fullname'])) {
+				$out[] = $c['fullname'];
+			}
+			if ( ! empty($c['guid'])) {
+				$out[] = $c['guid'];
+			}
+			if ( ! empty($c['meta']['Privileges'])) {
+				$out[] = $c['meta']['Privileges'];
+			}
+			if ( ! empty($out)) {
+				echo '<div class="fs-3 text-bg-primary text-center">';
+				echo implode(' / ', $out);
+				echo '</div>';
+			}
+		}
+		?>
 		<!-- Items on the Ticket -->
 		<form action="" autocomplete="off" id="psi-form" method="post">
 		<div id="cart-list-wrap" style="overflow-x:auto;">
@@ -156,6 +178,7 @@ echo $this->block('modal/pos/payment-card.php');
 
 <script>
 OpenTHC.POS.Cart.id = '<?= $data['cart']['id'] ?>';
+OpenTHC.POS.Cart.type = '<?= $data['cart']['type'] ?>';
 </script>
 
 <script>

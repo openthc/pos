@@ -186,14 +186,16 @@ class Ajax extends \OpenTHC\Controller\Base
 			// Add Taxes
 			$b2c_item['tax_list'] = [];
 			$b2c_item['tax_total'] = 0;
-			foreach ($this->tax_info->tax_list as $tax_ulid => $tax_rate) {
-				if ( ! empty($tax_rate)) {
-					if ($tax_rate > 0) {
-						$tax_rate = $tax_rate / 100;
+			if ($b2c_cart['type'] == 'REC') {
+				foreach ($this->tax_info->tax_list as $tax_ulid => $tax_rate) {
+					if ( ! empty($tax_rate)) {
+						if ($tax_rate > 0) {
+							$tax_rate = $tax_rate / 100;
+						}
+						$tax_cost = $b2c_item['unit_price_total'] * $tax_rate;
+						$b2c_item['tax_list'][$tax_ulid] = $tax_cost;
+						$b2c_item['tax_total'] += $tax_cost;
 					}
-					$tax_cost = $b2c_item['unit_price_total'] * $tax_rate;
-					$b2c_item['tax_list'][$tax_ulid] = $tax_cost;
-					$b2c_item['tax_total'] += $tax_cost;
 				}
 			}
 			$b2c_item['full_price'] = $b2c_item['unit_price_total'] + $b2c_item['tax_total'];
@@ -220,7 +222,7 @@ class Ajax extends \OpenTHC\Controller\Base
 		$Cart['tax_total']  = sprintf('%0.2f', $Cart['tax_total']);
 		$Cart['full_price'] = sprintf('%0.2f', $Cart['full_price']);
 
-		$rdb->set($Cart['key'], json_encode($Cart), [ 'ex' => '43200' ]);
+		$rdb->set($Cart['key'], json_encode($Cart), [ 'ex' => 86400 ]);
 
 		$ret = [
 			'data' => [

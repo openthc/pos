@@ -10,6 +10,8 @@ namespace OpenTHC\POS\Controller\POS\Checkout;
 use Edoceo\Radix\Session;
 use Edoceo\Radix\ULID;
 
+use OpenTHC\Contact;
+
 class Commit extends \OpenTHC\Controller\Base
 {
 	/**
@@ -115,7 +117,7 @@ class Commit extends \OpenTHC\Controller\Base
 				// +Tax
 				$b2c_item_adjust_total = 0;
 				foreach ($b2c_item->tax_list as $tax_ulid => $tax_line) {
-						$b2c_item_adjust_total += $tax_line;
+					$b2c_item_adjust_total += $tax_line;
 				}
 				$SI['full_price'] = $SI['base_price'] + $b2c_item_adjust_total;
 				$SI->save('B2C/Sale/Item/Create');
@@ -289,21 +291,47 @@ class Commit extends \OpenTHC\Controller\Base
 		$req['Datetime'] = $b2c_time->format(\DateTimeInterface::ATOM);
 		$req['RequestID'] = $b2c_sale['id'];
 		$req['ExternalID'] = $b2c_sale['id'];
-		// PatientCardKey
-		// 'TerminalID' => $b2c_term
+		// $req['PatientCardKey'] = '';
+		// $req['TerminalID'] => $b2c_term;
+
+		$Contact = new Contact($dbc); // , [ 'guid' => $res['data']['PatientId'] ]);
+		if ( ! $Contact->loadBy('id', $b2c_sale['contact_id_client'])) {
+			throw new \Exception('Invalid Contact', 500);
+		}
+		$m = $Contact->getMeta();
+		if ( ! empty($m['CardID'])) {
+			$req['Type'] = 'MEDICAL';
+			$req['PatientCardKey'] = $m['CardKey'];
+		}
+
 		$req['Items'] = [];
 		foreach ($b2c_item_list as $b2c_item) {
 			// $I = new Inventory($b2c_item['inventory_id']);
 			$Inv = new \OpenTHC\POS\Inventory($dbc, $b2c_item['inventory_id']);
-			$req['Items'][] = [
+			$tmp_item = [
 				'Barcode' => $Inv['guid'],
 				'Quantity' => floatval($b2c_item['unit_count']),
 				'Price' => floatval(sprintf('%0.2f', $b2c_item['unit_price'])),
 				'Tax' => [
 					'Excise' => 0,
-					'Other' => floatval($b2c_item['unit_price'] * $b2c_item['unit_count'] * 0.12),
+					'Other' => 0,
 				]
 			];
+
+			// Add Adjustments/Taxes/etc
+			$res_adjust = $dbc->fetchAll('SELECT * FROM b2c_sale_item_adjust WHERE b2c_sale_item_id = :bi0', [
+				':bi0' => $b2c_item['id'],
+			]);
+
+			foreach ($res_adjust as $adj) {
+				switch ($adj['adjust_id']) {
+				case '010PENTHC00BIPA0SST03Q484J':
+					$tmp_item['Tax']['Other'] = floatval($adj['amount']);
+				}
+			}
+
+			$req['Items'][] = $tmp_item;
+
 		}
 
 		// Authenticate and then Checkout
