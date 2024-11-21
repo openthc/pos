@@ -78,7 +78,7 @@ $foot = implode(' ', $foot);
 
 ?>
 
-<form action="/pos/checkout/open" autocomplete="off" method="post">
+<form action="/pos/checkout/open?cart=<?= $_GET['cart'] ?>" autocomplete="off" method="post">
 <div class="container mt-4">
 <?= _draw_html_card($head, $body, $foot) ?>
 </div>

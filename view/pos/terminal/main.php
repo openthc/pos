@@ -35,18 +35,17 @@ $this->layout_file = sprintf('%s/view/_layout/html-pos.php', APP_ROOT);
 	<div class="pos-sale-wrap">
 		<!-- Cart Contact Information -->
 		<?php
-		// var_dump($data['cart']['Contact']);
-		if ( ! empty($data['cart']['Contact'])) {
-			$c = $data['cart']['Contact'];
+		if ( ! empty($data['cart']->Contact)) {
+			$c = $data['cart']->Contact;
 			$out = [];
-			if ( ! empty($c['fullname'])) {
-				$out[] = $c['fullname'];
+			if ( ! empty($c->fullname)) {
+				$out[] = $c->fullname;
 			}
-			if ( ! empty($c['guid'])) {
-				$out[] = $c['guid'];
+			if ( ! empty($c->guid)) {
+				$out[] = $c->guid;
 			}
-			if ( ! empty($c['meta']['Privileges'])) {
-				$out[] = $c['meta']['Privileges'];
+			if ( ! empty($c->meta->Privileges)) {
+				$out[] = $c->meta->Privileges;
 			}
 			if ( ! empty($out)) {
 				echo '<div class="fs-3 text-bg-primary text-center">';
@@ -177,8 +176,8 @@ echo $this->block('modal/pos/payment-card.php');
 
 
 <script>
-OpenTHC.POS.Cart.id = '<?= $data['cart']['id'] ?>';
-OpenTHC.POS.Cart.type = '<?= $data['cart']['type'] ?>';
+OpenTHC.POS.Cart.id = '<?= $data['cart']->id ?>';
+OpenTHC.POS.Cart.type = '<?= $data['cart']->type ?>';
 </script>
 
 <script>
@@ -347,7 +346,7 @@ $(function() {
 	});
 
 	<?php
-	if ( ! empty($data['cart']['item_count'])) {
+	if ( ! empty($data['cart']->item_count)) {
 		echo "$('#cart-list-empty').html('<div class=\"alert alert-warning\">Loading...</div>');\n";
 		echo "\tOpenTHC.POS.Cart.reload();\n";
 	}

@@ -22,10 +22,8 @@ class Commit extends \OpenTHC\Controller\Base
 		$_POST['cash_incoming'] = floatval($_POST['cash_incoming']);
 		$_POST['cash_outgoing'] = floatval($_POST['cash_outgoing']);
 
-		$key = sprintf('/%s/cart/%s', $_SESSION['License']['id'], $_POST['cart-id']);
-		$Cart0 = $this->_container->Redis->get($key);
-		$Cart0 = json_decode($Cart0);
-		if (empty($Cart0)) {
+		$Cart = new \OpenTHC\POS\Cart($this->_container->Redis, $_POST['cart-id']);
+		if (empty($Cart)) {
 			throw new \Exception('Invalid Cart [PCC-027]');
 		}
 		$tz0 = new \DateTimezone($_SESSION['Company']['tz']);
@@ -34,10 +32,6 @@ class Commit extends \OpenTHC\Controller\Base
 			$dtX = sprintf('%sT%s', $_POST['cart-date'], $_POST['cart-time']);
 			$dt0 = new \DateTime($dtX, $tz0);
 		}
-		// __exit_text([
-		// 	'_POST' => $_POST,
-		// 	'Cart0' => $Cart0
-		// ]);
 
 		$dbc = $this->_container->DB;
 
@@ -54,7 +48,7 @@ class Commit extends \OpenTHC\Controller\Base
 			$Sale['created_at'] = $dt0->format(\DateTime::RFC3339);
 			$Sale['license_id'] = $License['id'];
 			$Sale['contact_id'] = $_SESSION['Contact']['id'];
-			$Sale['contact_id_client'] = $_SESSION['Cart']['Contact']['id'];
+			$Sale['contact_id_client'] = $Cart->Contact->id;
 			// $Sale['agent_contact_id'] = $_SESSION['Contact']['id'];//
 			// $Sale['buyer_contact_id'] = //
 			// $Sale['source_contact_id'] =
@@ -366,7 +360,7 @@ class Commit extends \OpenTHC\Controller\Base
 			$res = json_decode($res);
 			$sid = $res->Session;
 
-			$rdb->set($key, $sid, [ 'ttl' => 86400 ]);
+			$rdb->set($key, $sid, [ 'ex' => 86400 ]);
 		}
 		__exit_text([
 			'sid' => $sid,
@@ -401,27 +395,29 @@ class Commit extends \OpenTHC\Controller\Base
 		$cre = \OpenTHC\CRE::factory($_SESSION['cre']);
 		$cre->setLicense($_SESSION['License']);
 
+		$Cart = new \OpenTHC\POS\Cart($this->_container->Redis, $_POST['cart-id']);
+
 		$obj = [];
 		$obj['SalesDateTime'] = date(\DateTime::RFC3339);
-		$obj['SalesCustomerType'] = 'Patient'; // 'Consumer',  'Caregiver'; 'ExternalPatient';
+		$obj['SalesCustomerType'] = 'Patient'; // 'Consumer', 'Caregiver', 'ExternalPatient';
 
 		// 'Consumer', 'Caregiver'; 'ExternalPatient', 'Patient'
-		switch ($_SESSION['Cart']['Contact']['id']) {
+		switch ($Cart->Contact->id) {
 			case '018NY6XC00C0NTACT000WALK1N':
 				$obj['SalesCustomerType'] = 'Consumer';
 				break;
 			default:
 				$obj['SalesCustomerType'] = 'Patient';
-				$obj['PatientLicenseNumber'] = $_SESSION['Cart']['Contact']['guid'];
+				$obj['PatientLicenseNumber'] = $Cart->Contact->guid;
 				break;
 		}
-		switch ($_SESSION['Cart']['Contact']['type']) {
+		switch ($Cart->Contact->type) {
 			case '018NY6XC00C0NTACTTYPE000AC':
 				$obj['SalesCustomerType'] = 'Consumer';
 				break;
 			case '018NY6XC00C0NTACTTYPE000PA': // Well Known ULID
 				$obj['SalesCustomerType'] = 'Patient';
-				$obj['PatientLicenseNumber'] = $_SESSION['Cart']['Contact']['guid'];
+				$obj['PatientLicenseNumber'] = $Cart->Contact->guid;
 				break;
 		}
 
@@ -497,8 +493,13 @@ class Commit extends \OpenTHC\Controller\Base
 	{
 		throw new \Exception('Not Implemented');
 
-		$cre = \OpenTHC\CRE::factory($_SESSION['cre']);
+		$cfg = $_SESSION['cre'];
+		$cfg['contact'] = $_SESSION['Contact']['id'];
+		$cfg['company'] = $_SESSION['Company']['id'];
+		$cfg['license'] = $_SESSION['License']['id'];
+		$cre = \OpenTHC\CRE::factory($cfg);
 		$cre->setLicense($_SESSION['License']);
+		$res = $cre->auth([]);
 
 		// $res = $cre->b2c()->create($Sale);
 

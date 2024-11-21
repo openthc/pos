@@ -37,15 +37,18 @@ class Open extends \OpenTHC\Controller\Base
 			case 'client-contact-search':
 				return $this->contact_search($RES);
 			case 'client-contact-skip':
-				$_SESSION['Cart']['Contact'] = [
+				$Cart = new \OpenTHC\POS\Cart($this->_container->Redis, $_GET['cart']);
+				$Cart->Contact = [
 					'id' => '018NY6XC00C0NTACT000WALK1N',
 					'stat' => 200,
 					'name' => 'Walk In',
 				];
-				return $RES->withRedirect(sprintf('/pos?cart=%s', $_SESSION['Cart']['id']));
+				$Cart->save();
+				return $RES->withRedirect(sprintf('/pos?cart=%s', $Cart->id));
 			case 'client-contact-update':
 				return $this->contact_open($RES);
 			case 'client-contact-update-force':
+				$Cart = new \OpenTHC\POS\Cart($this->_container->Redis, $_GET['cart']);
 				$Contact1 = new Contact($this->_container->DB);
 				if ( ! $Contact1->loadBy('guid', $_POST['client-contact-govt-id'])) {
 					$Contact1['id'] = ULID::create();
@@ -56,8 +59,9 @@ class Open extends \OpenTHC\Controller\Base
 					$Contact1->save('Contact/Create in POS by User');
 					Session::flash('info', 'New Contact! Please add necessary details');
 				};
-				$_SESSION['Cart']['Contact'] = $Contact1->toArray();
-				return $RES->withRedirect(sprintf('/pos?cart=%s', $_SESSION['Cart']['id']));
+				$Cart->Contact = $Contact1->toArray();
+				$Cart->save();
+				return $RES->withRedirect(sprintf('/pos?cart=%s', $Cart->id));
 				break;
 			default:
 				Session::flash('fail', 'Invalid Requset [PCO-045]');
@@ -70,7 +74,8 @@ class Open extends \OpenTHC\Controller\Base
 	 */
 	function contact_commit($RES)
 	{
-		$Contact = new Contact($this->_container->DB, $_SESSION['Cart']['Contact']);
+		$Cart = new \OpenTHC\POS\Cart($this->_container->Redis, $_GET['cart']);
+		$Contact = new Contact($this->_container->DB, $Cart->Contact->id);
 
 		$Contact['stat'] = Contact::STAT_LIVE;
 		$Contact['fullname'] = $_POST['client-contact-name'];
@@ -82,9 +87,10 @@ class Open extends \OpenTHC\Controller\Base
 
 		$Contact->save('Contact/Update by User');
 
-		$_SESSION['Cart']['Contact'] = $Contact->toArray();
+		$Cart->Contact = $Contact->toArray();
+		$Cart->save();
 
-		return $RES->withRedirect(sprintf('/pos?cart=%s', $_SESSION['Cart']['id']));
+		return $RES->withRedirect(sprintf('/pos?cart=%s', $Cart->id));
 
 	}
 
@@ -106,6 +112,8 @@ class Open extends \OpenTHC\Controller\Base
 				return $this->_contact_search_usa_nm_med($RES);
 			}
 		}
+
+		$Cart = new \OpenTHC\POS\Cart($this->_container->Redis, $_GET['cart']);
 
 		$dbc = $this->_container->DB;
 
@@ -153,19 +161,21 @@ class Open extends \OpenTHC\Controller\Base
 					};
 
 					if ( ! empty($Contact['id'])) {
-						$_SESSION['Cart']['Contact'] = $Contact->toArray();
-						return $RES->withRedirect(sprintf('/pos?cart=%s', $_SESSION['Cart']['id']));
+						$Cart->Contact = $Contact->toArray();
+						$Cart->save();
+						return $RES->withRedirect(sprintf('/pos?cart=%s', $Cart->id));
 					}
 
 					break;
 				case 404:
-					$_SESSION['Cart']['Contact'] = [
+					$Cart->Contact = [
 						'id' => '',
 						'guid' => $guid1,
 						'stat' => 100,
 						'type' => 'b2c-client',
 					];
-					return $RES->withRedirect(sprintf('/pos?cart=%s', $_SESSION['Cart']['id']));
+					$Cart->save();
+					return $RES->withRedirect(sprintf('/pos?cart=%s', $Cart->id));
 				default:
 					// Session::flash('fail', $cre->formatError($res));
 					// return $RES->withRedirect('/pos');
@@ -197,13 +207,14 @@ class Open extends \OpenTHC\Controller\Base
 
 		if (empty($Contact['id'])) {
 			Session::flash('fail', 'Cannot find Client Contact');
-			return $RES->withRedirect(sprintf('/pos?cart=%s', $_SESSION['Cart']['id']));
+			return $RES->withRedirect(sprintf('/pos?cart=%s', $Cart->id));
 		}
 
-		$_SESSION['Cart']['type'] = 'REC';
-		$_SESSION['Cart']['Contact'] = $Contact->toArray();
+		$Cart->type = 'REC';
+		$Cart->Contact = $Contact->toArray();
+		$Cart->save();
 
-		return $RES->withRedirect(sprintf('/pos?cart=%s', $_SESSION['Cart']['id']));
+		return $RES->withRedirect(sprintf('/pos?cart=%s', $Cart->id));
 
 	}
 
@@ -257,7 +268,7 @@ class Open extends \OpenTHC\Controller\Base
 				break;
 			default:
 				return [
-					'code' => '302',
+					'code' => 302,
 					'data' => $res_contact,
 				];
 				break;
@@ -347,7 +358,7 @@ class Open extends \OpenTHC\Controller\Base
 			$res = json_decode($res);
 			$sid = $res->Session;
 
-			$rdb->set($key, $sid, [ 'ttl' => 3600 ]);
+			$rdb->set($key, $sid, [ 'ex' => 3600 ]);
 		}
 
 		$res = $ghc->post('v1/patient/lookup', [
@@ -381,19 +392,12 @@ class Open extends \OpenTHC\Controller\Base
 			$Contact->save('Contact/Create in POS by User');
 		}
 
-		$_SESSION['Cart']['type'] = 'MED';
-		$_SESSION['Cart']['Contact'] = $Contact->toArray();
+		$Cart = new \OpenTHC\POS\Cart($this->_container->Redis, $_GET['cart']);
+		$Cart->type = 'MED';
+		$Cart->Contact = $Contact->toArray();
+		$Cart->save();
 
-		// $Cart = [];
-		// $Cart['id'] = _ulid();
-		// $Cart['key'] = sprintf('/%s/cart/%s', $_SESSION['License']['id'], $Cart['id']);
-		// $Cart['Contact'] = $Contact->toArray();
-		// $rdb->set($Cart['key'], json_encode($Cart));
-
-		// $Cart = new \OpenTHC\POS\Cart();
-		// $Cart->save();
-
-		return $RES->withRedirect(sprintf('/pos?cart=%s', $_SESSION['Cart']['id']));
+		return $RES->withRedirect(sprintf('/pos?cart=%s', $Cart->id));
 
 	}
 
@@ -459,11 +463,10 @@ class Open extends \OpenTHC\Controller\Base
 			Session::flash('info', 'New Contact! Please add necessary details');
 		};
 
-		$Contact2 = $Contact1->toArray();
+		$Cart->Contact = $Contact1->toArray();
+		$Cart->save();
 
-		$_SESSION['Cart']['Contact'] = $Contact2;
-
-		return $RES->withRedirect('/pos');
+		return $RES->withRedirect(sprintf('/pos?cart=%s', $Cart->id));
 
 	}
 

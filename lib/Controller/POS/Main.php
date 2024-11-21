@@ -48,26 +48,22 @@ class Main extends \OpenTHC\Controller\Base
 			return $RES->write( $this->render('pos/open.php', $data) );
 		}
 
-		if (empty($_GET['cart'])) {
-			$_SESSION['Cart'] = [];
-			$_SESSION['Cart']['id'] = \Edoceo\Radix\ULID::create();
-			return $RES->withRedirect(sprintf('/pos?cart=%s', $_SESSION['Cart']['id']));
-		}
-
 		// Page Data
 		$data = array(
 			'Page' => array('title' => sprintf('POS :: %s <code>%s</code>', $_SESSION['License']['name'], $_SESSION['License']['code']))
 		);
 
-		if (empty($_SESSION['Cart']['Contact'])) {
+		$Cart = new \OpenTHC\POS\Cart($this->_container->Redis, $_GET['cart']);
+
+		if (empty($Cart->Contact)) {
 			return $RES->write( $this->render('pos/contact-select.php', $data) );
 		}
 
-		if ($_SESSION['Cart']['Contact']['stat'] != Contact::STAT_LIVE) {
+		if ($Cart->Contact->stat != Contact::STAT_LIVE) {
 			return $RES->write( $this->render('pos/contact-verify.php', $data) );
 		}
 
-		$data['cart'] = $_SESSION['Cart'];
+		$data['cart'] = $Cart;
 
 		return $RES->write( $this->render('pos/terminal/main.php', $data) );
 
@@ -101,8 +97,6 @@ class Main extends \OpenTHC\Controller\Base
 			$R->set($k, $v, [ 'ttl' => 600 ]);
 
 			$_SESSION['pos-terminal-contact'] = $_SESSION['Contact']['id'];
-
-			$_SESSION['Cart'] = [];
 
 			return $RES->withRedirect('/pos');
 
