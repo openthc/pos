@@ -38,7 +38,6 @@ class Main extends \OpenTHC\Controller\Base
 			_exit_html_fail('<h1>Inventory Lots need to be present and priced for the POS to operate [CPH-020]</h1>', 501);
 		}
 
-
 		if (empty($_SESSION['pos-terminal-id'])) {
 			$_SESSION['pos-terminal-id'] = ULID::create();
 		}
@@ -55,7 +54,7 @@ class Main extends \OpenTHC\Controller\Base
 			return $RES->withRedirect(sprintf('/pos?cart=%s', $_SESSION['Cart']['id']));
 		}
 
-
+		// Page Data
 		$data = array(
 			'Page' => array('title' => sprintf('POS :: %s <code>%s</code>', $_SESSION['License']['name'], $_SESSION['License']['code']))
 		);
@@ -68,12 +67,7 @@ class Main extends \OpenTHC\Controller\Base
 			return $RES->write( $this->render('pos/contact-verify.php', $data) );
 		}
 
-		// Get a Cart ID
-		if (empty($_GET['cart'])) {
-			return $RES->withRedirect(sprintf('/pos?cart=%s', \Edoceo\Radix\ULID::create()));
-		}
-
-		$data['cart'] = $_SESSION['cart'];
+		$data['cart'] = $_SESSION['Cart'];
 
 		return $RES->write( $this->render('pos/terminal/main.php', $data) );
 

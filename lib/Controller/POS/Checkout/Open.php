@@ -270,8 +270,13 @@ class Open extends \OpenTHC\Controller\Base
 
 	}
 
+	/**
+	 * Search Metrc
+	 */
 	function _contact_search_usa_mt($RES)
 	{
+		throw new \Exception('Not Implemented', 501);
+
 		// $obj = [
 		// 	'LicenseNumber' => '000001',
 		// 	'LicenseEffectiveStartDate' => date('Y-m-d'), // '2015-06-21',
