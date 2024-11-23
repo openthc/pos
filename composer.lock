@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f7728599efe01b566532855e4076a4ed",
+    "content-hash": "6abdfbcd9099a058a023218353583892",
     "packages": [
         {
             "name": "chrome-php/chrome",
@@ -1401,12 +1401,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/openthc/common.git",
-                "reference": "bfbbee860ee9a36622cd9ad82e091e7caa3d705f"
+                "reference": "1c8750e1ddaa523a466f03c74aa61da689e2ca61"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/openthc/common/zipball/bfbbee860ee9a36622cd9ad82e091e7caa3d705f",
-                "reference": "bfbbee860ee9a36622cd9ad82e091e7caa3d705f",
+                "url": "https://api.github.com/repos/openthc/common/zipball/1c8750e1ddaa523a466f03c74aa61da689e2ca61",
+                "reference": "1c8750e1ddaa523a466f03c74aa61da689e2ca61",
                 "shasum": ""
             },
             "require": {
@@ -1460,7 +1460,7 @@
                 "issues": "https://github.com/openthc/common/issues",
                 "source": "https://github.com/openthc/common/tree/main"
             },
-            "time": "2024-11-19T15:35:31+00:00"
+            "time": "2024-11-23T19:03:13+00:00"
         },
         {
             "name": "openthc/cre-adapter",
