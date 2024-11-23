@@ -9,21 +9,19 @@
 	backupStaticAttributes="false"
 	bootstrap="../boot.php"
 	cacheResult="false"
-	colors="true"
+	colors="false"
 	convertErrorsToExceptions="true"
 	convertNoticesToExceptions="true"
 	convertWarningsToExceptions="true"
 	processIsolation="false"
-	stopOnError="false"
-	stopOnFailure="false"
-	stopOnRisky="false"
-	timeoutForSmallTests="1"
-	timeoutForMediumTests="10"
-	timeoutForLargeTests="60"
+	stopOnError="true"
+	stopOnFailure="true"
+	stopOnRisky="true"
+	timeoutForSmallTests="2"
+	timeoutForMediumTests="8"
+	timeoutForLargeTests="32"
 	verbose="false"
 	>
-
-	<coverage />
 
 	<php>
 
@@ -32,7 +30,6 @@
 		<!-- If defined, it will spew debug -->
 		<!-- <const name="OPENTHC_TEST_HTTP_DEBUG" value="0" /> -->
 
-		<!-- Do you WebDriver (Selenium, BrowserStack, etc) -->
 		<const name="OPENTHC_TEST_WEBDRIVER_URL" value="" />
 
 	</php>
@@ -42,5 +39,7 @@
 			<directory>.</directory>
 		</testsuite>
 	</testsuites>
+
+	<coverage />
 
 </phpunit>
