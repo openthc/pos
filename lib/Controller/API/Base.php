@@ -11,10 +11,10 @@ namespace OpenTHC\POS\Controller\API;
 class Base extends \OpenTHC\Controller\Base
 {
 	use \OpenTHC\POS\Traits\OpenAuthBox;
-	use \OpenTHC\POS\Traits\FindService;
-	use \OpenTHC\POS\Traits\FindContact;
-	use \OpenTHC\POS\Traits\FindCompany;
-	use \OpenTHC\POS\Traits\FindLicense;
+	use \OpenTHC\Traits\FindService;
+	use \OpenTHC\Traits\FindContact;
+	use \OpenTHC\Traits\FindCompany;
+	use \OpenTHC\Traits\FindLicense;
 
 	function __construct($c)
 	{
@@ -77,12 +77,12 @@ class Base extends \OpenTHC\Controller\Base
 
 		$act = $this->open_auth_box($m[1], $m[2]);
 
-		$this->dbc = $dbc_auth = _dbc('auth');
+		$dbc_auth = _dbc('auth');
 
 		// Find Service Lookup CPK and See if we Trust Them
-		$Service = $this->findService($act->pk);
-		$Contact = $this->findContact($act->contact);
-		$Company = $this->findCompany($act->company);
+		$Service = $this->findService($dbc_auth, $act->pk);
+		$Contact = $this->findContact($dbc_auth, $act->contact);
+		$Company = $this->findCompany($dbc_auth, $act->company);
 
 		$dbc_user = _dbc($Company['dsn']);
 		$License = $this->findLicense($dbc_user, $act->license);
