@@ -30,18 +30,19 @@ class Base extends \OpenTHC\Controller\Base
 		$c['errorHandler'] = function($c) {
 			return function($REQ, $RES, $ERR) {
 
-				// $ERR is an Exception
-
 				$ret_code = 500;
 				$err_code = $ERR->getCode();
+				if (($err_code >= 200) && ($err_code <= 599)) {
+					$ret_code = $err_code;
+				}
 
 				__exit_json([
-					'data' => null,
+					'data' => $ERR,
 					'meta' => [
 						'note' => 'Fatal Error [ERR-002]',
 						'error' => $ERR->getMessage(),
 					]
-				], $err_code ?: $ret_code);
+				], $ret_code);
 			};
 		};
 
