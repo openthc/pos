@@ -117,13 +117,10 @@ class Ajax extends \OpenTHC\Controller\Base
 		$b2c_cart = $_POST['cart'];
 		$b2c_cart = json_decode($b2c_cart, true);
 
-		// @todo fix property name here to ->id ?
-		$Cart = new \OpenTHC\POS\Cart($this->_container->Redis, $b2c_cart['cart-id']);
+		$Cart = new \OpenTHC\POS\Cart($this->_container->Redis, $b2c_cart['id']);
 
 		$ret = [
-			'data' => [
-				'Cart' => $Cart,
-			],
+			'data' =>$Cart,
 			'meta' => [],
 		];
 
