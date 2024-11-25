@@ -8,7 +8,7 @@ var ppCashPaid_List = new Array();
 
 function ppFormUpdate()
 {
-	var full = OpenTHC.POS.Cart.full_price;
+	var full = parseFloat(OpenTHC.POS.Cart.full_price);
 	var cash = parseFloat($('#payment-cash-incoming').text());
 	var need = (full - cash);
 	var back = (cash - full);

@@ -12,9 +12,9 @@ use OpenTHC\JWT;
 class Open extends \OpenTHC\Controller\Auth\oAuth2
 {
 	use \OpenTHC\POS\Traits\OpenAuthBox;
-	use \OpenTHC\POS\Traits\FindContact;
-	use \OpenTHC\POS\Traits\FindCompany;
-	use \OpenTHC\POS\Traits\FindService;
+	use \OpenTHC\Traits\FindContact;
+	use \OpenTHC\Traits\FindCompany;
+	use \OpenTHC\Traits\FindService;
 
 	/**
 	 *
@@ -37,9 +37,9 @@ class Open extends \OpenTHC\Controller\Auth\oAuth2
 
 				$this->dbc = _dbc('auth');
 				$act = $this->open_auth_box($m[1], $m[2]);
-				$Service = $this->findService($act->pk);
-				$Contact = $this->findContact($act->contact);
-				$Company = $this->findCompany($act->company);
+				$Service = $this->findService($this->dbc, $act->pk);
+				$Contact = $this->findContact($this->dbc, $act->contact);
+				$Company = $this->findCompany($this->dbc, $act->company);
 
 				$_SESSION['Contact'] = $Contact;
 				$_SESSION['Company'] = $Company;

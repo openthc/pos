@@ -116,8 +116,9 @@ OpenTHC.POS.Cart = {
 		}).then(res => {
 			return res.json();
 		}).then(res => {
-			// Update HTML Somehwere?
-			Cart0.item_list = res.data.Cart.item_list;
+
+			const Cart1 = res.data;
+			Cart0.item_list = Cart1.item_list;
 
 			Object.keys(Cart0.item_list).forEach(key => {
 				var obj = Cart0.item_list[key];
@@ -125,7 +126,7 @@ OpenTHC.POS.Cart = {
 				Cart_addItem_flash(obj.id);
 			});
 
-			Cart0.updateSummary(res.data);
+			Cart0.updateSummary(Cart1);
 		});
 
 	},
@@ -170,15 +171,15 @@ OpenTHC.POS.Cart = {
 	/**
 	 * Update the Summary Footer
 	 */
-	updateSummary: function(res_data)
+	updateSummary: function(Cart1)
 	{
 		var Cart0 = this;
 
-		Cart0.item_count =       res_data.Cart.item_count || 0;
-		Cart0.unit_count =       res_data.Cart.unit_count || 0;
-		Cart0.tax_total  =       res_data.Cart.tax_total  || 0;
-		Cart0.full_price =       res_data.Cart.full_price || 0;
-		Cart0.unit_price_total = res_data.Cart.unit_price_total || 0;
+		Cart0.item_count =       Cart1.item_count || 0;
+		Cart0.unit_count =       Cart1.unit_count || 0;
+		Cart0.tax_total  =       Cart1.tax_total  || 0;
+		Cart0.full_price =       Cart1.full_price || 0;
+		Cart0.unit_price_total = Cart1.unit_price_total || 0;
 
 		$('.pos-checkout-item-count').html( Cart0.unit_count );
 		$('.pos-checkout-sub').html(Cart0.unit_price_total);

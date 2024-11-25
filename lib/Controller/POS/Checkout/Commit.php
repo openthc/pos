@@ -56,7 +56,7 @@ class Commit extends \OpenTHC\Controller\Base
 			$Sale['meta'] = json_encode([
 				'cash_incoming' => $_POST['cash_incoming'],
 				'cash_outgoing' => $_POST['cash_outgoing'],
-				'Cart' => $Cart0,
+				'Cart' => $Cart,
 				'_POST' => $_POST,
 			]);
 			// __exit_text($Sale);
@@ -67,7 +67,7 @@ class Commit extends \OpenTHC\Controller\Base
 			$b2c_item_count = 0;
 			$b2c_item_adjust_total = 0;
 
-			foreach ($Cart0->item_list as $b2c_id => $b2c_item) {
+			foreach ($Cart->item_list as $b2c_id => $b2c_item) {
 				// @todo Need to Handle "Special" line items
 				// Like, Loyalty or Tax or ??? -- Could those be "system" class Inventory to add to a ticket?
 				// And Don't Decrement Them?
@@ -360,12 +360,12 @@ class Commit extends \OpenTHC\Controller\Base
 			$res = json_decode($res);
 			$sid = $res->Session;
 
-			$rdb->set($key, $sid, [ 'ex' => 86400 ]);
+			$rdb->set($key, $sid, [ 'ex' => 3600 ]);
 		}
-		__exit_text([
-			'sid' => $sid,
-			'req' => $req
-		]);
+		// __exit_text([
+		// 	'sid' => $sid,
+		// 	'req' => $req
+		// ]);
 
 		$res = $ghc->post('v1/dispense', [
 			'json' => $req,
