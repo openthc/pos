@@ -59,7 +59,6 @@ class Commit extends \OpenTHC\Controller\Base
 				'Cart' => $Cart,
 				'_POST' => $_POST,
 			]);
-			// __exit_text($Sale);
 			$Sale->save('B2C/Sale/Create');
 
 			$b2c_base_price = 0;
@@ -373,10 +372,12 @@ class Commit extends \OpenTHC\Controller\Base
 				'Authorization' => sprintf('Bearer %s', $sid)
 			]
 		]);
-		$res = $res->getBody()->getContents();
-		$res = json_decode($res);
+		$raw = $res->getBody()->getContents();
+		$res = json_decode($raw);
 		if (empty($res->TransactionID)) {
-			throw new \Exception('Failed to Execute Transaction in CRE [PCC-354]');
+			var_dump($raw);
+			var_dump($res);
+			throw new \Exception('Failed to Execute Transaction in CRE [PCC-354]', 500);
 		}
 
 		$b2c_sale['guid'] = sprintf('tid:%s', $res->TransactionID);

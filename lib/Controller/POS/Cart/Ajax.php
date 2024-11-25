@@ -120,7 +120,7 @@ class Ajax extends \OpenTHC\Controller\Base
 		$Cart = new \OpenTHC\POS\Cart($this->_container->Redis, $b2c_cart['id']);
 
 		$ret = [
-			'data' =>$Cart,
+			'data' => $Cart,
 			'meta' => [],
 		];
 

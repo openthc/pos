@@ -94,7 +94,7 @@ class Main extends \OpenTHC\Controller\Base
 			$R = $this->_container->Redis;
 			$k = sprintf('/%s/pos-terminal', $_SESSION['Contact']['id']);
 			$v = $_SESSION['Contact']['id'];
-			$R->set($k, $v, [ 'ttl' => 600 ]);
+			$R->set($k, $v, [ 'ex' => 600 ]);
 
 			$_SESSION['pos-terminal-contact'] = $_SESSION['Contact']['id'];
 

@@ -24,6 +24,7 @@ if ( ! \OpenTHC\Config::init(APP_ROOT) ) {
 define('OPENTHC_SERVICE_ID', \OpenTHC\Config::get('openthc/pos/id'));
 define('OPENTHC_SERVICE_ORIGIN', \OpenTHC\Config::get('openthc/pos/origin'));
 
+_error_handler_init();
 
 /**
  * Database Connection
