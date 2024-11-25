@@ -200,9 +200,7 @@ class Ajax extends \OpenTHC\Controller\Base
 		$Cart->save();
 
 		$ret = [
-			'data' => [
-				'Cart' => $Cart,
-			],
+			'data' => $Cart,
 			'meta' => [],
 		];
 
