@@ -153,7 +153,7 @@ OpenTHC.POS.Cart = {
 			console.log(res);
 
 			if (inv_id) {
-				var obj1 = res.data.Cart.item_list[ inv_id ];
+				var obj1 = res.data.item_list[ inv_id ];
 				if (obj1) {
 					Cart0.drawItem(obj1);
 					Cart_addItem_flash(inv_id);
