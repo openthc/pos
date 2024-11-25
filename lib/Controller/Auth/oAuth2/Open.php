@@ -12,9 +12,9 @@ use OpenTHC\JWT;
 class Open extends \OpenTHC\Controller\Auth\oAuth2
 {
 	use \OpenTHC\POS\Traits\OpenAuthBox;
+	use \OpenTHC\Traits\FindService;
 	use \OpenTHC\Traits\FindContact;
 	use \OpenTHC\Traits\FindCompany;
-	use \OpenTHC\Traits\FindService;
 
 	/**
 	 *
@@ -22,10 +22,8 @@ class Open extends \OpenTHC\Controller\Auth\oAuth2
 	function __invoke($REQ, $RES, $ARG)
 	{
 		// Clear Session
-		$key_list = array_keys($_SESSION);
-		foreach ($key_list as $k) {
-			unset($_SESSION[$k]);
-		}
+		session_regenerate_id(true);
+		$_SESSION = [];
 
 		$ret_path = $this->_get_return_path();
 
@@ -43,6 +41,9 @@ class Open extends \OpenTHC\Controller\Auth\oAuth2
 
 				$_SESSION['Contact'] = $Contact;
 				$_SESSION['Company'] = $Company;
+				$_SESSION['License'] = [
+					'id' => $act->license
+				];
 
 				return $RES->withRedirect('/auth/init');
 
@@ -53,8 +54,8 @@ class Open extends \OpenTHC\Controller\Auth\oAuth2
 		if ( ! empty($_GET['jwt'])) {
 
 			// $p = $this->getProvider();
-			// $sso = new \OpenTHC\Service('sso');
-			// $res = $sso->get('/api/jwt/verify?jwt=' . $_GET['jwt']);
+			$sso = new \OpenTHC\Service('sso');
+			$res = $sso->post('/api/jwt/verify', [ 'form_params' => [ 'token' => $_GET['jwt'] ] ]);
 			// switch ($res['code']) {
 			// 	case 200:
 			// 		// OK

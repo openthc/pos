@@ -9,6 +9,8 @@ namespace OpenTHC\POS\Controller\Auth;
 
 class Init extends \OpenTHC\Controller\Base
 {
+	use \OpenTHC\Traits\FindLicense;
+
 	/**
 	 *
 	 */
@@ -23,11 +25,11 @@ class Init extends \OpenTHC\Controller\Base
 		$dbc_auth = _dbc('auth');
 		$Company0 = $dbc_auth->fetchRow('SELECT * FROM auth_company WHERE id = :c0', [ ':c0' => $_SESSION['Company']['id'] ]);
 		if (empty($Company0['dsn'])) {
-			_exit_html_fail('<h1>Fatal Database Error [CAC-043]</h1>', 500);
+			throw new \Exception('Fatal Database Error [CAC-043]', 500);
 		}
 
 		if (empty($Company0['cre'])) {
-			_exit_html_fail('<h1>Company Configuration requires CRE [CAC-030]</h1>', 500);
+			throw new \Exception('Company Configuration requires CRE [CAC-030]', 500);
 		}
 
 		$dbc_user = _dbc($Company0['dsn']);
@@ -38,8 +40,14 @@ class Init extends \OpenTHC\Controller\Base
 		$_SESSION['Company'] = array_merge($Company0, $Company1);
 		$_SESSION['Company']['cre_meta'] = json_decode($_SESSION['Company']['cre_meta'], true);
 
-		// Find the Default License?
-		if (empty($_SESSION['License'])) {
+		// Load License
+		// Maybe offer a License Picker?
+		// return $RES->withRedirect('/auth/license/select');
+		if ( ! empty($_SESSION['License']['id'])) {
+			// Reload License
+			$_SESSION['License'] = $this->findLicense($dbc_user, $_SESSION['License']['id']);
+		} else {
+			// Find Default
 			$sql = <<<SQL
 			SELECT *
 			FROM license
@@ -51,16 +59,12 @@ class Init extends \OpenTHC\Controller\Base
 				':f1' => 0x01000000
 			]);
 			$_SESSION['License'] = $License;
-		} else {
-			// Reload License
-			$License = $dbc_user->fetchRow('SELECT * FROM license WHERE id = :l0', [ ':l0' => $_SESSION['License']['id'] ]);
-			$_SESSION['License'] = $License;
 		}
 
 		// Save the CRE Stuff?
 		$_SESSION['cre'] = \OpenTHC\CRE::getEngine($_SESSION['Company']['cre']);
 
-		// Cleanup some CRE Data
+		// Cleanup some legacy CRE data
 		if (empty($_SESSION['cre']['license']) && !empty($_SESSION['cre']['auth']['license'])) {
 			$_SESSION['cre']['license'] = $_SESSION['cre']['auth']['license'];
 			unset($_SESSION['cre']['auth']['license']);
