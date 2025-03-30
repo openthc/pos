@@ -1427,12 +1427,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/openthc/common.git",
-                "reference": "90e2aeb9f037f6f4e6bef23eab6e2aa900bc7579"
+                "reference": "1a9f59b5aa0be586da0463540fa8761c207faf5b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/openthc/common/zipball/90e2aeb9f037f6f4e6bef23eab6e2aa900bc7579",
-                "reference": "90e2aeb9f037f6f4e6bef23eab6e2aa900bc7579",
+                "url": "https://api.github.com/repos/openthc/common/zipball/1a9f59b5aa0be586da0463540fa8761c207faf5b",
+                "reference": "1a9f59b5aa0be586da0463540fa8761c207faf5b",
                 "shasum": ""
             },
             "require": {
@@ -1456,9 +1456,9 @@
                 "swaggest/json-schema": "0.12.42"
             },
             "require-dev": {
-                "php-webdriver/webdriver": "1.15.1",
+                "php-webdriver/webdriver": "1.15.2",
                 "phpmd/phpmd": "2.15.0",
-                "phpstan/phpstan": "1.11.8",
+                "phpstan/phpstan": "2.1.8",
                 "phpunit/phpunit": "9.6.20"
             },
             "default-branch": true,
@@ -1486,7 +1486,7 @@
                 "issues": "https://github.com/openthc/common/issues",
                 "source": "https://github.com/openthc/common/tree/main"
             },
-            "time": "2025-03-26T00:14:04+00:00"
+            "time": "2025-03-30T17:30:17+00:00"
         },
         {
             "name": "openthc/cre-adapter",
