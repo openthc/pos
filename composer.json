@@ -17,12 +17,12 @@
 		"openthc/cre-adapter": "dev-main",
 		"pear/net_smtp": "1.10.0",
 		"tuupola/base32": "2.0.0",
-		"tecnickcom/tcpdf": "6.7.5"
+		"tecnickcom/tcpdf": "6.9.0"
 	},
 	"require-dev": {
 		"php-webdriver/webdriver": "1.15.2",
 		"phpmd/phpmd": "2.15.0",
-		"phpstan/phpstan": "2.1.8",
-		"phpunit/phpunit": "9.6.20"
+		"phpstan/phpstan": "2.1.11",
+		"phpunit/phpunit": "9.6.22"
 	}
 }
