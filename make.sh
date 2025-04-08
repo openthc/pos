@@ -16,7 +16,7 @@ cd "$APP_ROOT"
 
 composer install --no-ansi --no-progress --classmap-authoritative
 
-npm install --no-audit --no-fund --package-lock-only
+npm install --no-audit --no-fund
 
 php <<PHP
 <?php
