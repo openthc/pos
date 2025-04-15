@@ -1427,12 +1427,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/openthc/common.git",
-                "reference": "1a9f59b5aa0be586da0463540fa8761c207faf5b"
+                "reference": "49dfacd3b26a3c6c0322a0111ce7b19335e1de08"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/openthc/common/zipball/1a9f59b5aa0be586da0463540fa8761c207faf5b",
-                "reference": "1a9f59b5aa0be586da0463540fa8761c207faf5b",
+                "url": "https://api.github.com/repos/openthc/common/zipball/49dfacd3b26a3c6c0322a0111ce7b19335e1de08",
+                "reference": "49dfacd3b26a3c6c0322a0111ce7b19335e1de08",
                 "shasum": ""
             },
             "require": {
@@ -1486,7 +1486,7 @@
                 "issues": "https://github.com/openthc/common/issues",
                 "source": "https://github.com/openthc/common/tree/main"
             },
-            "time": "2025-03-30T17:30:17+00:00"
+            "time": "2025-04-15T22:27:16+00:00"
         },
         {
             "name": "openthc/cre-adapter",
@@ -1494,12 +1494,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/openthc/cre-adapter.git",
-                "reference": "aa8a3e6d566c63f01cb942bf7125f09dca63771b"
+                "reference": "ee31208c93be7a2526056507d0853174808f6f76"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/openthc/cre-adapter/zipball/aa8a3e6d566c63f01cb942bf7125f09dca63771b",
-                "reference": "aa8a3e6d566c63f01cb942bf7125f09dca63771b",
+                "url": "https://api.github.com/repos/openthc/cre-adapter/zipball/ee31208c93be7a2526056507d0853174808f6f76",
+                "reference": "ee31208c93be7a2526056507d0853174808f6f76",
                 "shasum": ""
             },
             "require": {
@@ -1533,7 +1533,7 @@
                 "issues": "https://github.com/openthc/cre-adapter/issues",
                 "source": "https://github.com/openthc/cre-adapter/tree/main"
             },
-            "time": "2025-03-08T19:42:47+00:00"
+            "time": "2025-04-14T19:53:15+00:00"
         },
         {
             "name": "paragonie/random_compat",
