@@ -1,15 +1,22 @@
-#!/usr/bin/php
+#!/usr/bin/env php
 <?php
 /**
- * OpenTHC App Test
+ * OpenTHC POS Test Runner
+ *
+ * SPDX-License-Identifier: GPL-3.0-only
  */
 
 require_once(dirname(__DIR__) . '/boot.php');
 
-// $arg = \OpenTHC\Docopt::parse($doc, ?$argv=[]);
-// Parse CLI
+// Default Option
+if (empty($_SERVER['argv'][1])) {
+	$_SERVER['argv'][1] = 'phpunit';
+	$_SERVER['argc'] = count($_SERVER['argv']);
+}
+
+// Command Line
 $doc = <<<DOC
-OpenTHC App Test
+OpenTHC POS Test Runner
 
 Usage:
 	test <command> [options]
@@ -22,9 +29,8 @@ Options:
 	--phpunit-filter=<FILTER>   Some Filter for PHPUnit
 DOC;
 
-$res = Docopt::handle($doc, [
+$res = \Docopt::handle($doc, [
 	'exit' => false,
-	'help' => true,
 	'optionsFirst' => false,
 ]);
 $cli_args = $res->args;
@@ -35,110 +41,54 @@ $cli_args = $res->args;
 // }
 // var_dump($cli_args);
 
-define('OPENTHC_TEST_OUTPUT_BASE', \OpenTHC\Test\Helper::output_path_init());
+
+// Test Config
+$cfg = [];
+$cfg['base'] = APP_ROOT;
+$cfg['site'] = 'pos';
+
+$test_helper = new \OpenTHC\Test\Helper($cfg);
+$cfg['output'] = $test_helper->output_path;
 
 
-// Call Linter?
-$tc = new \OpenTHC\Test\Facade\PHPLint([
-	'output' => OPENTHC_TEST_OUTPUT_BASE
-]);
-// $res = $tc->execute();
-// var_dump($res);
-
-#
-# PHP-CPD
-# vendor/openthc/common/test/phpcpd.sh
-// vendor/bin/phpmd boot.php,webroot/main.php,lib/,test/ \
-// 	html \
-// 	cleancode \
-// 	--report-file "${OUTPUT_BASE}/phpmd.html" \
-// 	|| true
-
-// Call PHPCS?
-// $tc = \OpenTHC\Test\PHPStyle::execute();
+// PHPLint
+if ($cli_args['phplint']) {
+	$tc = new \OpenTHC\Test\Facade\PHPLint($cfg);
+	$res = $tc->execute();
+	var_dump($res);
+}
 
 
 // PHPStan
-$tc = new OpenTHC\Test\Facade\PHPStan([
-	'output' => OPENTHC_TEST_OUTPUT_BASE
-]);
-// $res = $tc->execute();
-// var_dump($res);
+if ($cli_args['phpstan']) {
+	$tc = new \OpenTHC\Test\Facade\PHPStan($cfg);
+	$res = $tc->execute();
+	var_dump($res);
+}
 
 
 // Psalm/Psalter?
 
 
 // PHPUnit
-// $cfg = [];
-// $tc = new OpenTHC\Test\Facade\PHPUnit($cfg);
-// $res = $tc->execute();
-// var_dump($res);
-
-chdir(sprintf('%s/test', APP_ROOT));
-
-$arg = [];
-$arg[] = 'phpunit';
-$arg[] = '--configuration';
-if (is_file(sprintf('%s/test/phpunit.xml', APP_ROOT))) {
-	$arg[] = sprintf('%s/test/phpunit.xml', APP_ROOT);
-} else {
-	echo "!! Using phpunit.xml.dist\n";
-	$arg[] = sprintf('%s/test/phpunit.xml.dist', APP_ROOT);
+$cfg_file_list = [];
+$cfg_file_list[] = sprintf('%s/phpunit.xml', __DIR__);
+$cfg_file_list[] = sprintf('%s/phpunit.xml.dist', __DIR__);
+foreach ($cfg_file_list as $f) {
+	if (is_file($f)) {
+		$cfg['--configuration'] = $f;
+		break;
+	}
 }
-// $arg[] = '--coverage-xml';
-// $arg[] = sprintf('%s/coverage', OPENTHC_TEST_OUTPUT_BASE);
-$arg[] = '--log-junit';
-$arg[] = sprintf('%s/phpunit.xml', OPENTHC_TEST_OUTPUT_BASE);
-$arg[] = '--testdox-html';
-$arg[] = sprintf('%s/testdox.html', OPENTHC_TEST_OUTPUT_BASE);
-$arg[] = '--testdox-text';
-$arg[] = sprintf('%s/testdox.txt', OPENTHC_TEST_OUTPUT_BASE);
-$arg[] = '--testdox-xml';
-$arg[] = sprintf('%s/testdox.xml', OPENTHC_TEST_OUTPUT_BASE);
-// // Filter?
+// Filter?
 if ( ! empty($cli_args['--filter'])) {
-	$arg[] = '--filter';
-	$arg[] = $cli_args['--filter'];
+	$cfg['--filter'] = $cli_args['--filter'];
 }
-
-ob_start();
-$cmd = new \PHPUnit\TextUI\Command();
-$res = $cmd->run($arg, false);
-// var_dump($res);
-// 0 == success
-// 1 == ?
-// 2 == Errors
-$data = ob_get_clean();
-switch ($res) {
-case 0:
-	$data.= "\nTEST SUCCESS\n";
-	break;
-case 1:
-	$data.= "\nTEST FAILURE\n";
-	break;
-case 2:
-	$data.= "\nTEST FAILURE (ERRORS)\n";
-	break;
-default:
-	$data.= "\nTEST UNKNOWN ($res)\n";
-	break;
-}
-$file = sprintf('%s/phpunit.txt', OPENTHC_TEST_OUTPUT_BASE);
-file_put_contents($file, $data);
-
-// PHPUnit Transform
-$source = sprintf('%s/phpunit.xml', OPENTHC_TEST_OUTPUT_BASE);
-$output = sprintf('%s/phpunit.html', OPENTHC_TEST_OUTPUT_BASE);
-\OpenTHC\Test\Helper::xsl_transform($source, $output);
+$tc = new \OpenTHC\Test\Facade\PHPUnit($cfg);
+$res = $tc->execute();
+var_dump($res);
 
 
-// Done
-\OpenTHC\Test\Helper::index_create($html);
-
-
-// Output Information
-$origin = \OpenTHC\Config::get('openthc/app/origin');
-$output = str_replace(sprintf('%s/webroot/', APP_ROOT), '', OPENTHC_TEST_OUTPUT_BASE);
-
-echo "TEST COMPLETE\n  $origin/$output\n";
+// Output
+$res = $test_helper->index_create($res['data']);
+echo "TEST COMPLETE\n  $res\n";
