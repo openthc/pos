@@ -55,6 +55,8 @@ class Main extends \OpenTHC\Controller\Base
 
 		$Cart = new \OpenTHC\POS\Cart($this->_container->Redis, $_GET['cart']);
 
+		$data['cart'] = $Cart;
+
 		if (empty($Cart->Contact)) {
 			return $RES->write( $this->render('pos/contact-select.php', $data) );
 		}
@@ -62,8 +64,6 @@ class Main extends \OpenTHC\Controller\Base
 		if ($Cart->Contact->stat != Contact::STAT_LIVE) {
 			return $RES->write( $this->render('pos/contact-verify.php', $data) );
 		}
-
-		$data['cart'] = $Cart;
 
 		return $RES->write( $this->render('pos/terminal/main.php', $data) );
 

@@ -60,18 +60,18 @@ $foot = [];
 $foot[] = '<div class="d-flex justify-content-between">';
 $foot[] = '<div>';
 
-$foot[] = '<button class="btn btn-lg btn-primary" name="a" type="submit" value="client-contact-update">Next <i class="fas fa-arrow-right"></i></button>';
+$foot[] = '<button class="btn btn-lg btn-primary" name="a" type="submit" value="client-contact-update"><i class="fa-regular fa-circle-check"></i> Next</button>';
 
 if ($_SESSION['Cart']['contact-push']) {
 	unset($_SESSION['Cart']['contact-push']);
 	$foot[] = '<button class="btn btn-lg btn-outline-primary" name="a" type="submit" value="client-contact-update-force">Use Anyway <i class="fas fa-arrow-right"></i></button>';
 }
 
-$foot[] = '<button class="btn btn-lg btn-secondary" name="a" type="submit" value="client-contact-skip">Skip </button>';
+$foot[] = '<button class="btn btn-lg btn-secondary" name="a" type="submit" value="client-contact-skip"><i class="fa-regular fa-circle-xmark"></i> Skip</button>';
 
 $foot[] = '</div>';
 $foot[] = '<div>';
-$foot[] ='<button class="btn btn-lg btn-warning" id="btn-form-reset" type="reset" value="client-contact-reopen">Reset <i class="fas fa-ban"></i></button>';
+$foot[] ='<button class="btn btn-lg btn-warning" id="btn-form-reset" type="reset" value="client-contact-reopen"><i class="fas fa-ban"></i> Reset</button>';
 $foot[] = '</div>';
 $foot[] = '</div>';
 $foot = implode(' ', $foot);
