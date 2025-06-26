@@ -25,12 +25,12 @@
 
 	<php>
 
-		<const name="OPENTHC_TEST_ORIGIN" value="https://pos.openthc.example.com" />
+		<env name="OPENTHC_TEST_ORIGIN" value="https://pos.openthc.example.com" />
 
 		<!-- If defined, it will spew debug -->
 		<!-- <const name="OPENTHC_TEST_HTTP_DEBUG" value="0" /> -->
 
-		<const name="OPENTHC_TEST_WEBDRIVER_URL" value="" />
+		<env name="OPENTHC_TEST_WEBDRIVER_URL" value="" />
 
 	</php>
 

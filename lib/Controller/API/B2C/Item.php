@@ -58,6 +58,18 @@ class Item extends \OpenTHC\POS\Controller\API\Base
 		$b2c_item['inventory_id'] = $source_data['inventory']['id'];
 		$b2c_item['unit_count'] = floatval($source_data['unit_count']);
 		$b2c_item['unit_price'] = floatval($source_data['unit_price']);
+
+		// @bug ERROR:  null value in column \"guid\" of relation \"b2c_sale_item\" violates not-null constraint
+		// What should the GUID value be? /mbw 2025-174
+		$b2c_item['guid'] = _ulid();
+
+		// @bug ERROR:  null value in column \"base_price\" of relation \"b2c_sale_item\" violates not-null constraint
+		// What should the base price be? /mbw 2025-174
+		$b2c_item['base_price'] = floatval($source_data['unit_price']);
+
+		// @bug ERROR:  null value in column \"full_price\" of relation \"b2c_sale_item\" violates not-null constraint
+		// What should the full price be? /mbw 2025-174
+		$b2c_item['full_price'] = $b2c_item['unit_count'] * $b2c_item['unit_price'];
 		// $b2c_item['full_price'] = $b2c_item['unit_count'] * $b2c_item['unit_price'];
 		$b2c_item->save();
 

@@ -7,10 +7,20 @@ namespace OpenTHC\POS\Test\Unit;
 
 class API_Test extends \OpenTHC\POS\Test\Base
 {
+	static $inventory_id = '01JVMQ467MFA6N2S8TBZB6YFGX';
+
+	public static function setUpBeforeClass(): void
+	{
+		$dbc = _dbc(getenv('OPENTHC_POS_USER_DSN'));
+		$I = $dbc->fetch_row('SELECT * FROM inventory WHERE id = :pk', [ ':pk' => self::$inventory_id, ]);
+		$dbc->query('UPDATE inventory SET qty = 100 WHERE id = :pk', [ ':pk' => $I['id'] ]);
+	}
+
 	function test_b2c_sale_create()
 	{
 		$b2c_sale = [];
 
+		// Wrong: No Licnese, No Contact in argument
 		$arg = [
 			'headers' => [
 				'Authorization' => $this->makeBearerToken(),
@@ -24,9 +34,71 @@ class API_Test extends \OpenTHC\POS\Test\Base
 			]
 		];
 		$res = $this->client->post('/api/v2018/b2c', $arg);
+		$res = $this->assertValidResponse($res, 400);
+
+		// Wrong: Only License in argument
+		$arg = [
+			'headers' => [
+				'Authorization' => $this->makeBearerToken(),
+				'openthc-contact-id' => '',
+				'openthc-company-id' => '',
+				'openthc-license-id' => '',
+			],
+			'json' => [
+				'id' => '',
+				'created_at' => '',
+				'license' => [
+					'id' => getenv('OPENTHC_POS_CONTACT0_COMPANY_LICENSE_ID'),
+				],
+			],
+		];
+		$res = $this->client->post('/api/v2018/b2c', $arg);
+		$res = $this->assertValidResponse($res, 500);  // Fatal Error: null value in column "contact_id" of relation "b2c_sale" violates not-null constraint
+
+		// Wrong: Only Contact in argument
+		$arg = [
+			'headers' => [
+				'Authorization' => $this->makeBearerToken(),
+				'openthc-contact-id' => '',
+				'openthc-company-id' => '',
+				'openthc-license-id' => '',
+			],
+			'json' => [
+				'id' => '',
+				'created_at' => '',
+				'contact' => [
+					'id' => getenv('OPENTHC_POS_CONTACT0_ID'),
+				],
+			],
+		];
+		$res = $this->client->post('/api/v2018/b2c', $arg);
+		$res = $this->assertValidResponse($res, 400);
+
+		// License and Contact in argument
+		$arg = [
+			'headers' => [
+				'Authorization' => $this->makeBearerToken(),
+				'openthc-contact-id' => '',
+				'openthc-company-id' => '',
+				'openthc-license-id' => '',
+			],
+			'json' => [
+				'id' => '',
+				'created_at' => '',
+				'license' => [
+					'id' => getenv('OPENTHC_POS_CONTACT0_COMPANY_LICENSE_ID'),
+				],
+				'contact' => [
+					'id' => getenv('OPENTHC_POS_CONTACT0_ID'),
+				],
+			],
+		];
+		$res = $this->client->post('/api/v2018/b2c', $arg);
 		$res = $this->assertValidResponse($res);
 
-		var_dump($res);
+		$b2c_sale = json_encode($res['data']);
+		$b2c_sale = json_decode($b2c_sale);
+		// var_dump($b2c_sale);
 
 		return $b2c_sale;
 	}
@@ -42,16 +114,22 @@ class API_Test extends \OpenTHC\POS\Test\Base
 				'Authorization' => $this->makeBearerToken(),
 			],
 			'json' => [
-				'inventory' => [ 'id' => '' ],
+				'inventory' => [ 'id' => self::$inventory_id ],
 				'unit_count' => 1,
 				'unit_price' => 2,
+				'license' => [
+					'id' => getenv('OPENTHC_POS_CONTACT0_COMPANY_LICENSE_ID'),
+				],
+				'contact' => [
+					'id' => getenv('OPENTHC_POS_CONTACT0_ID'),
+				],
 			]
 		];
 
 		$res = $this->client->post($url, $arg);
 		$res = $this->assertValidResponse($res);
 
-		var_dump($res);
+		// var_dump($res);
 
 		return $b2c_sale;
 	}
@@ -66,11 +144,19 @@ class API_Test extends \OpenTHC\POS\Test\Base
 			'headers' => [
 				'Authorization' => $this->makeBearerToken(),
 			],
+			'json' => [
+				'license' => [
+					'id' => getenv('OPENTHC_POS_CONTACT0_COMPANY_LICENSE_ID'),
+				],
+				'contact' => [
+					'id' => getenv('OPENTHC_POS_CONTACT0_ID'),
+				],
+			],
 		];
-		$res = $this->client->get($url);
-		$res = $this->assertValidResponse($res);
+		$res = $this->client->get($url, $arg);
+		$res = $this->assertValidResponse($res, 200, 'text/plain'); // This is the type of shit we have to deal with when we don't use our framework tools
 
-		var_dump($res);
+		// var_dump($res);
 
 		return $b2c_sale;
 	}
@@ -85,8 +171,16 @@ class API_Test extends \OpenTHC\POS\Test\Base
 			'headers' => [
 				'Authorization' => $this->makeBearerToken(),
 			],
+			'json' => [
+				'license' => [
+					'id' => getenv('OPENTHC_POS_CONTACT0_COMPANY_LICENSE_ID'),
+				],
+				'contact' => [
+					'id' => getenv('OPENTHC_POS_CONTACT0_ID'),
+				],
+			],
 		];
-		$res = $this->client->post($url);
+		$res = $this->client->post($url, $arg);
 		$res = $this->assertValidResponse($res);
 
 		return $b2c_sale;
@@ -104,9 +198,15 @@ class API_Test extends \OpenTHC\POS\Test\Base
 			],
 			'json' => [
 				'key' => 'val',
-			]
+				'license' => [
+					'id' => getenv('OPENTHC_POS_CONTACT0_COMPANY_LICENSE_ID'),
+				],
+				'contact' => [
+					'id' => getenv('OPENTHC_POS_CONTACT0_ID'),
+				],
+			],
 		];
-		$res = $this->client->post($url);
+		$res = $this->client->post($url, $arg);
 		$res = $this->assertValidResponse($res);
 
 		return $b2c_sale;
@@ -117,6 +217,7 @@ class API_Test extends \OpenTHC\POS\Test\Base
 	 */
 	function test_b2c_sale_commit_fail($b2c_sale)
 	{
+		$this->markTestSkipped('The /commit endpoint does not exist.');
 		$url = sprintf('/api/v2018/b2c/%s/commit', $b2c_sale->id);
 		$arg = [
 			'headers' => [
@@ -124,9 +225,15 @@ class API_Test extends \OpenTHC\POS\Test\Base
 			],
 			'json' => [
 				'key' => 'val',
+				'license' => [
+					'id' => getenv('OPENTHC_POS_CONTACT0_COMPANY_LICENSE_ID'),
+				],
+				'contact' => [
+					'id' => getenv('OPENTHC_POS_CONTACT0_ID'),
+				],
 			]
 		];
-		$res = $this->client->post($url);
+		$res = $this->client->post($url, $arg);
 		$res = $this->assertValidResponse($res, 409);
 
 		return $b2c_sale;

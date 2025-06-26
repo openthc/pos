@@ -23,6 +23,8 @@ class B2C extends \OpenTHC\POS\Controller\API\Base
 
 		$b2c = new \OpenTHC\POS\B2C\Sale($dbc);
 		$b2c['license_id'] = $source_data['license']['id'];
+		$b2c['contact_id'] = $source_data['contact']['id'];
+		$b2c['guid'] = _ulid();
 		$b2c->save();
 
 		// Format Output

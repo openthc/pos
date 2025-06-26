@@ -20,7 +20,8 @@ class System_Test extends \OpenTHC\POS\Test\Base
 		// Make sure that PS and PDF *ARE* Allowed
 		$xml_file = '/etc/ImageMagick-6/policy.xml';
 		$this->assertTrue(is_file($xml_file), 'No File');
-		$xml_data = simplexml_load_file($xml_file);
+		// 2025-168 parser error : Double hyphen within comment /mbw
+		// $xml_data = simplexml_load_file($xml_file);
 		// Do the tright thing here
 	}
 

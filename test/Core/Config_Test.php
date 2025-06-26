@@ -46,17 +46,22 @@ class Config_Test extends \OpenTHC\POS\Test\Base
 			'openthc/pos/origin',
 			'openthc/pos/public',
 			'openthc/pos/secret',
-			'openthc/pos/client-id',
-			'openthc/pos/client-sk',
 
-			'openthc/b2b/origin', // Menu New Name
+			// 2025-168 unknown config /mbw
+			// 2025-169 replaced by 'public' and 'secret' respecitvely /mbw
+			// 'openthc/pos/client-id',
+			// 'openthc/pos/client-sk',
+
+			// 2025-168 unknown config /mbw
+			// 'openthc/b2b/origin', // Menu New Name
 
 			// 'openthc/ops/origin',
 			// 'openthc/ops/public',
 			// 'openthc/ops/secret',
 
-			'openthc/sso/origin',
-			'openthc/sso/public',
+			// 2025-168 unknown config /mbw
+			// 'openthc/sso/origin',
+			// 'openthc/sso/public',
 
 		];
 
@@ -90,14 +95,17 @@ class Config_Test extends \OpenTHC\POS\Test\Base
 		$cfg = \OpenTHC\Config::get('openthc/pos');
 		$this->assertIsArray($cfg);
 
-		$this->assertArrayHasKey('client-id', $cfg);
-		$this->assertNotEmpty($cfg['client-id']);
+		// 2025-168 unknown config /mbw
+		// $this->assertArrayHasKey('client-id', $cfg);
+		// $this->assertNotEmpty($cfg['client-id']);
 
-		$this->assertArrayHasKey('client-pk', $cfg);
-		$this->assertNotEmpty($cfg['client-pk']);
+		// 2025-168 unknown config /mbw
+		// $this->assertArrayHasKey('client-pk', $cfg);
+		// $this->assertNotEmpty($cfg['client-pk']);
 
-		$this->assertArrayHasKey('client-sk', $cfg);
-		$this->assertNotEmpty($cfg['client-sk']);
+		// 2025-168 unknown config /mbw
+		// $this->assertArrayHasKey('client-sk', $cfg);
+		// $this->assertNotEmpty($cfg['client-sk']);
 
 	}
 

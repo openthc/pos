@@ -13,7 +13,7 @@ class Base extends \OpenTHC\Test\Base {
 	function setup() : void
 	{
 		$this->client = $this->getGuzzleClient([
-			'base_uri' => OPENTHC_TEST_ORIGIN
+			'base_uri' => getenv('OPENTHC_TEST_ORIGIN')
 		]);
 	}
 
@@ -30,9 +30,9 @@ class Base extends \OpenTHC\Test\Base {
 		$box = json_encode([
 			'pk' => $cpk,
 			'ts' => time(),
-			'contact' => '',
-			'company' => '',
-			'license' => '',
+			'contact' => getenv('OPENTHC_POS_CONTACT0_ID'),
+			'company' => getenv('OPENTHC_POS_CONTACT0_COMPANY_ID'),
+			'license' => getenv('OPENTHC_POS_CONTACT0_COMPANY_LICENSE_ID'),
 		]);
 		$box = \OpenTHC\Sodium::encrypt($box, $csk, $spk);
 		$box = \OpenTHC\Sodium::b64encode($box);
