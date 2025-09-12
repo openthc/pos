@@ -1,0 +1,17 @@
+#
+# OpenTHC POS Server Docker
+#
+
+services:
+  pos:
+    container_name: openthc.pos
+    build: .
+    image: openthc/pos
+    pull_policy: never
+    ports:
+      - "42050:80"
+    volumes:
+      - type: bind
+        source: ../etc/pos/config.php
+        target: /opt/openthc/pos/etc/config.php
+        read_only: true
