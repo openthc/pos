@@ -14,7 +14,7 @@ RUN git clone https://github.com/openthc/pos.git /opt/openthc/pos \
 #
 # Copy
 COPY ./docker/rootfs/apache2.conf     /etc/apache2/sites-enabled/pos.conf
-COPY ./docker/rootfs/openthc-init.sh  /openthc-pos
+COPY ./docker/rootfs/openthc-init.sh  /init.sh
 # COPY ./rootfs/first-run.php    /openthc-config-init.php
 
 
@@ -28,4 +28,4 @@ VOLUME [ "/opt/openthc/gfs" ]
 ENV OPENTHC_SERVER_NAME="pos.docker.openthc.me"
 
 
-ENTRYPOINT [ "/openthc-pos" ]
+ENTRYPOINT [ "/init.sh" ]
