@@ -62,7 +62,8 @@ class Init extends \OpenTHC\Controller\Base
 		}
 
 		// Save the CRE Stuff?
-		$_SESSION['cre'] = \OpenTHC\CRE::getEngine($_SESSION['Company']['cre']);
+		$cre = \OpenTHC\CRE::getConfig($_SESSION['Company']['cre']);
+		$_SESSION['cre'] = $cre;
 
 		// Cleanup some legacy CRE data
 		if (empty($_SESSION['cre']['license']) && !empty($_SESSION['cre']['auth']['license'])) {

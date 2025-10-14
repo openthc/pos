@@ -37,7 +37,7 @@ class Ajax extends \OpenTHC\Controller\Base
 	{
 		$dbc = $this->_container->DB;
 
-		$cfg = \OpenTHC\CRE::getEngine($_SESSION['cre']['id']);
+		$cfg = \OpenTHC\CRE::getConfig($_SESSION['cre']['id']);
 		$cfg = array_merge($_SESSION['cre'], $cfg);
 		$cre = \OpenTHC\CRE::factory($cfg);
 		$cre->setLicense($_SESSION['License']);
