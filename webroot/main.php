@@ -112,6 +112,8 @@ $app->get('/contact/ajax', 'OpenTHC\POS\Controller\Contact')
 	->add('OpenTHC\POS\Middleware\Auth')
 	->add('OpenTHC\Middleware\Session');
 
+$app->get('/test/peripheral', 'OpenTHC\POS\Controller\Test:peripheral');
+
 // Vendor
 // $app->group('/vendor', 'OpenTHC\POS\Module\Vendor')
 // 	->add('OpenTHC\POS\Middleware\Auth')
