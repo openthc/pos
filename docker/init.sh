@@ -1,5 +1,6 @@
 #!/bin/bash
 #
+# OpenTHC POS Docker Init
 #
 
 set -o errexit
@@ -7,8 +8,8 @@ set -o errtrace
 set -o nounset
 set -o pipefail
 
-# printenv | sort
 
+#
 # PHP Debugger
 OPENTHC_DEBUG=${OPENTHC_DEBUG:-"false"}
 if [ "$OPENTHC_DEBUG" == "true" ]
@@ -17,19 +18,22 @@ then
 	phpenmod xdebug
 fi
 
-# if [ -f /first-run.php ]
-# then
-# 	echo "RUN0"
-# 	php /first-run.php
-# 	rm /first-run.php
-# else
-# 	echo "RUN1+"
-# fi
+
+#
+# Uses Environment to Create App
+/opt/openthc/pos/docker/init.php
 
 
-# The Service Init Script
-# php /opt/openthc/pos/init.php
+#
+# Unsets All OpenTHC Environment Variables
+# Except for OPENTHC_SERVICE and OPENTHC_SERVER_NAME
+for var in $(env | cut -d= -f1 | grep OPENTHC | grep -v OPENTHC_SER)
+do
+	# echo "unset $var"
+	unset "$var"
+done
 
 
-# Start Regular Way
+#
+# Start Apache
 exec /usr/sbin/apache2 -DFOREGROUND

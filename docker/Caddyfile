@@ -1,0 +1,66 @@
+#
+# OpenTHC POS Docker Caddyfile
+#
+
+{
+	auto_https off
+
+	log default {
+		output file /var/log/caddy/access.log
+		level info
+		include http.log.access admin.api
+	}
+
+	metrics {
+		per_host
+	}
+
+}
+
+# Fake a 404 for files that *are* in the webroot
+# we just don't want people to see them
+(common404) {
+	@fake404 {
+		path /.env
+		path /.git
+		path /.user.ini
+		path /info.php
+		path /main.php
+		path /wp-login.php
+		path /wp-admin/
+	}
+	respond @fake404 404
+}
+
+http:// {
+
+	root * /opt/openthc/pos/webroot/
+	log
+	encode
+	import common404
+	file_server
+
+	# Static only for /output
+	handle_path /output/* {
+			root * /opt/openthc/pos/webroot/output/
+	}
+
+	# Static only for /vendor
+	handle_path /vendor/* {
+			root * /opt/openthc/pos/webroot/vendor/
+			# import common404
+			# file_server
+	}
+
+	# PHP Everything Else
+	handle_path /* {
+			php_fastcgi unix//run/php/php7.4-fpm.sock {
+					try_files {path} {path}/index.php /main.php
+			}
+	}
+
+	handle_errors {
+			respond "{err.status_code} {err.status_text}"
+	}
+
+}
