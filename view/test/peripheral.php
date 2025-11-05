@@ -9,7 +9,7 @@
 ?>
 
 
-<div class="container mt-4">
+<div class="container mt-4" id="test-page-wrap">
 
 <section class="mb-4">
 	<h2>Keyboard</h2>
@@ -37,19 +37,17 @@
 	<h2>WebHID</h2>
 	<p>Activate this Test, Select your Device and choose Connect</p>
 	<button class="btn btn-primary" id="webhid-connect">Begin Test</button>
-	 <pre id="webhid-output"></pre>
+	<pre id="webhid-output"></pre>
 </section>
 
 <section class="mb-4">
 	<h2>Presentation</h2>
 	<p>Activate this Test, Select your Device and choose Connect</p>
-	<button class="btn btn-primary" id="presentation-connect">Begin Test</button>
-	 <pre id="presentation-output"></pre>
+	<button class="btn btn-primary" disabled id="presentation-test-init">Begin Test</button>
+	<button class="btn btn-secondary" disabled id="presentation-test-send">Send Message</button>
+	<button class="btn btn-danger" disabled id="presentation-test-stop">Stop</button>
+	<pre id="presentation-output"></pre>
 </section>
-
-<!-- <section class="mb-4">
-	<h2>Web-Somethign?</h2>
-</section> -->
 
 </div>
 
@@ -188,6 +186,7 @@ async function connectWebHID() {
 };
 </script>
 
+<!-- Keyboard Handler -->
 <script>
 if (!('keyboard' in navigator)) {
 	$('#keyboard-connect').removeClass('btn-primary');
@@ -195,8 +194,56 @@ if (!('keyboard' in navigator)) {
 	$('#keyboard-connect').attr('disabled', true);
 	$('#keyboard-output').append('<span class="text-danger">Keyboard API is not supported in this browser</span>');
 } else {
-	$('#keyboard-output').append('Keyboard Listener Attached');
-	navigator.keyboard.lock(["KeyW", "KeyA", "KeyS", "KeyD"]);
+	var kbd_hook = false;
+	var kbd_result = [];
+	var kbd_callback = function(e) {
+
+		console.log('keydown', e);
+
+		e.preventDefault();
+
+		var key = e.key;
+		switch (e.key) {
+			case 'Control':
+				key = 'CTRL';
+				break;
+			case 'Escape':
+				key = 'ESC';
+				break;
+			case 'Shift':
+				key = 'SHIFT';
+				break;
+		}
+
+		kbd_result.push(key);
+
+		return false;
+	};
+	document.getElementById('keyboard-connect').addEventListener('click', function(e) {
+		if (!kbd_hook) {
+			kbd_hook = true;
+			window.addEventListener('keydown', kbd_callback);
+			$('#keyboard-output').empty();
+			$('#keyboard-output').append("Keyboard listener attached\n");
+		} else {
+			window.removeEventListener('keydown', kbd_callback);
+			$('#keyboard-output').append(kbd_result.join('') + "\n");
+			$('#keyboard-output').append("Keyboard listener detached\n");
+			kbd_result = [];
+			kbd_hook = false;
+		}
+	});
+	// $('#keyboard-output').append('Keyboard Listener Attached');
+	// const kbd_result = navigator.keyboard.lock();
+	// kbd_result.then(function(a) {
+	// 	console.log('kbd_result', a);
+	// });
+	// console.log(kbd_result);
+
+	// document.getElementById('keyboard-connect').addEventListener('click', function(e) {
+	// 	console.log('unlock');
+	// 	navigator.keyboard.unlock();
+	// });
 
 }
 if (!('hid' in navigator)) {
@@ -225,9 +272,80 @@ if (!('usb' in navigator)) {
 }
 </script>
 
+<!-- Presentation Integration -->
+<script>
+function presentation_test()
+{
+	if (!('presentation' in navigator)) {
+		return;
+	}
+
+	$('#presentation-test-init').attr('disabled', false);
+	$('#presentation-test-send').attr('disabled', false);
+	$('#presentation-test-stop').attr('disabled', false);
+
+	if ('#presentation-test-client' == window.location.hash) {
+
+		$('#test-page-wrap').empty();
+		$('#test-page-wrap').append('<h1>Presentation Test Client</h1>');
+		$('#test-page-wrap').append('<pre id="presetnation-test-client-output"></pre>');
+
+		navigator.presentation.receiver.connectionList.then(list => {
+			list.connections.forEach(connection => {
+				connection.addEventListener('message', e => {
+					console.log('Presentation Test Client RX', e);
+					// document.getElementById('msg').textContent = e.data;
+					$('#presetnation-test-client-output').append(e.data);
+				});
+			});
+		});
+
+		return;
+
+	}
+
+	var ext_conn = null;
+	document.getElementById('presentation-test-init').addEventListener('click', async function() {
+		try {
+
+			const request = new PresentationRequest('https://pos.openthc.dev/test/peripheral#presentation-test-client');
+			// Optionally listen for connection events
+			request.addEventListener('connectionavailable', e => {
+				// const connection = e.connection;
+				console.log('Connected to presentation!');
+				// connection.send('Hello from controller!');
+			});
+			// Let the user choose a display
+			ext_conn = await request.start();
+
+			console.log("Connected to presentation:", ext_conn.id);
+
+			ext_conn.onmessage = event => {
+				console.log("Receiver says:", event.data);
+			};
+
+		} catch (err) {
+			console.error("Failed to start presentation:", err);
+		}
+	});
+	document.getElementById("presentation-test-send").onclick = () => {
+		console.log('Presentation Sending');
+		if (ext_conn) {
+			ext_conn.send("Hello from the controller!\n");
+		}
+	}
+
+	$('#presentation-test-stop').on('click', function() {
+		ext_conn.terminate();
+		ext_conn.close()
+		ext_conn = null;
+	});
+}
+presentation_test();
+</script>
+
 <script>
 async function listAll() {
-	console.log('listAll');
 	const serialPorts = (navigator.serial) ? await navigator.serial.getPorts() : [];
 	const usbDevices = (navigator.usb) ? await navigator.usb.getDevices() : [];
 	const hidDevices = (navigator.hid) ? await navigator.hid.getDevices() : [];
