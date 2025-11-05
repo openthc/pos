@@ -7,8 +7,8 @@
 
 define('APP_ROOT', __DIR__);
 define('APP_SALT', ''); // put 16 to 32 characters here
-define('APP_BUILD', '420.24.326');
-define('APP_VERSION', '420.24.326');
+define('APP_BUILD', '420.25.309');
+define('APP_VERSION', '420.25.309');
 
 openlog('openthc-pos', LOG_ODELAY|LOG_PID, LOG_LOCAL0);
 

@@ -2,7 +2,7 @@
 	"name": "openthc/pos",
 	"description": "Cannabis Retail Point of Sale",
 	"license": "GPL-3.0-only",
-	"version": "420.24.326",
+	"version": "420.25.309",
 	"autoload": {
 		"exclude-from-classmap": [
 			"vendor/erusev/parsedown-extra/test"

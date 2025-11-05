@@ -1,6 +1,6 @@
 {
 	"name": "pos",
-	"version": "420.24.326",
+	"version": "420.25.309",
 	"description": "Retail Point of Sale",
 	"main": "main.js",
 	"directories": {
@@ -12,7 +12,7 @@
 		"@fortawesome/fontawesome-free": "6.7.2",
 		"@zxing/browser": " 0.1.5",
 		"bootstrap": "5.3.3",
-		"chart.js": "^4.4.9",
+		"chart.js": "^4.5.1",
 		"datatables.net-dt": "^1.13.11",
 		"jquery": "3.7.1",
 		"jquery-ui": "1.14.1",
