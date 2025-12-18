@@ -21,8 +21,8 @@
 	<div class="collapse navbar-collapse" id="menu0">
 
 		<ul class="navbar-nav">
-			<li class="nav-item"><a class="nav-link" href="/pos"><i class="fas fa-cash-register"></i> POS</a></li>
-			<li class="nav-item"><a class="nav-link" href="/crm"><i class="fas fa-users"></i> CRM</a></li>
+			<li class="nav-item"><a class="nav-link" href="/pos" id="menu-pos"><i class="fas fa-cash-register"></i> POS</a></li>
+			<li class="nav-item"><a class="nav-link" href="/crm" id="menu-crm"><i class="fas fa-users"></i> CRM</a></li>
 		</ul>
 
 		<form action="/search" autocomplete="off" class="d-flex ms-auto" id="search-form">
