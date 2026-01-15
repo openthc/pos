@@ -37,8 +37,9 @@ class Init extends \OpenTHC\Controller\Base
 		$_SESSION['dsn'] = $Company0['dsn'];
 		unset($Company0['dsn']);
 
-		$_SESSION['Company'] = array_merge($Company0, $Company1);
-		$_SESSION['Company']['cre_meta'] = json_decode($_SESSION['Company']['cre_meta'], true);
+		$Company = array_merge($Company0, $Company1);
+		$cre_meta = json_decode($Company['cre_meta'], true);
+		unset($Company['cre_meta']);
 
 		// Load License
 		// Maybe offer a License Picker?
@@ -62,16 +63,9 @@ class Init extends \OpenTHC\Controller\Base
 		}
 
 		// Save the CRE Stuff?
-		$cre = \OpenTHC\CRE::getConfig($_SESSION['Company']['cre']);
+		$cre = \OpenTHC\CRE::getConfig($Company['cre']);
+		$cre['license-sk'] = $cre_meta['license-sk'] ?: $cre_meta['license-key'];
 		$_SESSION['cre'] = $cre;
-
-		// Cleanup some legacy CRE data
-		if (empty($_SESSION['cre']['license']) && !empty($_SESSION['cre']['auth']['license'])) {
-			$_SESSION['cre']['license'] = $_SESSION['cre']['auth']['license'];
-			unset($_SESSION['cre']['auth']['license']);
-		}
-
-		unset($_SESSION['cre']['auth']);
 
 		return $RES->withRedirect($ret);
 
