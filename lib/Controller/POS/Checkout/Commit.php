@@ -95,6 +95,7 @@ class Commit extends \OpenTHC\Controller\Base
 
 				$SI = new \OpenTHC\POS\B2C\Sale\Item($dbc);
 				$SI['id'] = ULID::create();
+				$SI['guid'] = $SI['id'];
 				$SI['b2c_sale_id'] = $Sale['id'];
 				$SI['inventory_id'] = $Inv['id'];
 				$SI['uom'] = $uom;
@@ -400,10 +401,11 @@ class Commit extends \OpenTHC\Controller\Base
 
 		$obj = [];
 		$obj['SalesDateTime'] = date(\DateTime::RFC3339);
-		$obj['SalesCustomerType'] = 'Patient'; // 'Consumer', 'Caregiver', 'ExternalPatient';
+		$obj['SalesCustomerType'] = 'Consumer'; // 'Consumer', 'Caregiver', 'ExternalPatient', 'Patient';
 
 		// 'Consumer', 'Caregiver'; 'ExternalPatient', 'Patient'
 		switch ($Cart->Contact->id) {
+			case '010PENTHC0C0NTACT000WALK1N':
 			case '018NY6XC00C0NTACT000WALK1N':
 				$obj['SalesCustomerType'] = 'Consumer';
 				break;
@@ -413,9 +415,11 @@ class Commit extends \OpenTHC\Controller\Base
 				break;
 		}
 		switch ($Cart->Contact->type) {
+			case '010PENTHC0C0NTACTTYPE000AC':
 			case '018NY6XC00C0NTACTTYPE000AC':
 				$obj['SalesCustomerType'] = 'Consumer';
 				break;
+			case '010PENTHC0C0NTACTTYPE000PA': // Well Known ULID
 			case '018NY6XC00C0NTACTTYPE000PA': // Well Known ULID
 				$obj['SalesCustomerType'] = 'Patient';
 				$obj['PatientLicenseNumber'] = $Cart->Contact->guid;
@@ -468,20 +472,12 @@ class Commit extends \OpenTHC\Controller\Base
 		switch ($res['code']) {
 			case 200:
 				// Great
+				$Sale['guid'] = $res['data']['Ids'][0];
 				break;
 			default:
 				Session::flash('warn', $cre->formatError($res));
 				break;
 		}
-		// if (200 == $res['code']) {
-			// This is not finding the transaction
-			// $cre->setTimeAlpha(date(\DateTime::ISO8601, $_SERVER['REQUEST_TIME'] - 60));
-			// $cre->setTimeOmega(date(\DateTime::ISO8601, $_SERVER['REQUEST_TIME'] + 60));
-			// $res = $api->search('active');
-			// foreach ($res['data'] as $chk_b2c) {
-			// 	$objB = $api->single($chk_b2c['Id']);
-			// }
-		// }
 
 		return $Sale;
 
@@ -492,24 +488,23 @@ class Commit extends \OpenTHC\Controller\Base
 	 */
 	function send_to_openthc($Sale)
 	{
-		throw new \Exception('Not Implemented');
-
 		$cfg = $_SESSION['cre'];
 		$cfg['contact'] = $_SESSION['Contact']['id'];
 		$cfg['company'] = $_SESSION['Company']['id'];
 		$cfg['license'] = $_SESSION['License']['id'];
+
 		$cre = \OpenTHC\CRE::factory($cfg);
 		$cre->setLicense($_SESSION['License']);
 		$res = $cre->auth([]);
 
-		// $res = $cre->b2c()->create($Sale);
+		$res = $cre->b2c()->create($Sale);
 
 		$b2c_item_list = $Sale->getItems();
 		foreach ($b2c_item_list as $b2c_item) {
-			// $cre->b2c($Sale['id'])->addItem($Sale['id'], $b2c_item);
+			$cre->b2c($Sale['id'])->addItem($Sale['id'], $b2c_item);
 		}
 
-		// $cre->b2c($Sale['id'])->commit();
+		$cre->b2c($Sale['id'])->commit();
 
 		return $Sale;
 

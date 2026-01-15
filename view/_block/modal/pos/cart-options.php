@@ -32,7 +32,7 @@ HTML;
 
 echo $this->block('modal.php', [
 	'modal_id' => 'pos-modal-cart-option',
-	'modal_title' => 'Cart :: Options',
+	'modal_title' => 'Checkout :: Options',
 	'body' => $body,
 	'foot' => $foot,
 ]);

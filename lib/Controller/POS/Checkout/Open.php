@@ -100,13 +100,13 @@ class Open extends \OpenTHC\Controller\Base
 	function contact_open($RES)
 	{
 		switch ($_SESSION['cre']['id']) {
-		case 'usa/ok':
+		case 'usa-ok':
 			// Has to Lookup on External Site
 			return $this->_contact_search_usa_ok($RES);
-		case 'usa/mt':
+		case 'usa-mt':
 			// Has to Lookup on External Site
 			return $this->_contact_search_usa_mt($RES);
-		case 'usa/nm':
+		case 'usa-nm':
 			switch ($_POST['pos-cart-type']) {
 			case 'MED':
 				return $this->_contact_search_usa_nm_med($RES);
