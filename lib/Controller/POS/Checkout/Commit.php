@@ -193,7 +193,7 @@ class Commit extends \OpenTHC\Controller\Base
 	function send_to_biotrack($Sale)
 	{
 		switch ($_SESSION['cre']['id']) {
-		case 'usa/nm':
+		case 'usa-nm':
 			return $this->send_to_biotrack_v2022($Sale);
 		default:
 			return $this->send_to_biotrack_v2014($Sale);

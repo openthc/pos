@@ -88,7 +88,7 @@ ob_start();
 <?php
 
 switch ($_SESSION['cre']['id']) {
-	case 'usa/ok':
+	case 'usa-ok':
 		_contact_verify_info_usa_ok($_SESSION['Cart']['Contact']);
 }
 

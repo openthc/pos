@@ -139,8 +139,8 @@ class Open extends \OpenTHC\Controller\Base
 		$res_contact = $this->contact_search($guid0, $guid1);
 
 		switch ($_SESSION['cre']['id']) {
-		case 'usa/mt':
-		case 'usa/or':
+		case 'usa-mt':
+		case 'usa-or':
 			$cre = \OpenTHC\CRE::factory($_SESSION['cre']);
 			$cre->setLicense($_SESSION['License']);
 			$res = $cre->contact()->single($guid1);
@@ -184,9 +184,9 @@ class Open extends \OpenTHC\Controller\Base
 			break;
 
 		case 'deu':
-		case 'usa/nm':
-		case 'usa/vt':
-		case 'usa/wa':
+		case 'usa-nm':
+		case 'usa-vt':
+		case 'usa-wa':
 
 			$Contact = new Contact($dbc); // , [ 'guid' => $res['data']['PatientId'] ]);
 			if ( ! $Contact->loadBy('guid', $guid0)) {
@@ -202,7 +202,18 @@ class Open extends \OpenTHC\Controller\Base
 			break;
 
 		default:
-			Session::flash('warn', sprintf('Unsupported CRE: %s', $_SESSION['cre']['id']));
+			// Session::flash('warn', sprintf('Unsupported CRE: %s', $_SESSION['cre']['id']));
+			$Contact = new Contact($dbc); // , [ 'guid' => $res['data']['PatientId'] ]);
+			if ( ! $Contact->loadBy('guid', $guid0)) {
+				$Contact['id'] = ULID::create();
+				$Contact['stat'] = 100;
+				$Contact['guid'] = $guid1;
+				$Contact['hash'] = '-';
+				$Contact['type'] = 'b2c-client';
+				$Contact['fullname'] = '';
+				$Contact->save('Contact/Create in POS by User');
+			}
+
 		}
 
 		if (empty($Contact['id'])) {
@@ -210,7 +221,7 @@ class Open extends \OpenTHC\Controller\Base
 			return $RES->withRedirect(sprintf('/pos?cart=%s', $Cart->id));
 		}
 
-		$Cart->type = 'REC';
+		$Cart->type = $_POST['pos-cart-type'];
 		$Cart->Contact = $Contact->toArray();
 		$Cart->save();
 
