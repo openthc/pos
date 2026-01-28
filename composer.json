@@ -23,6 +23,6 @@
 		"php-webdriver/webdriver": "1.15.2",
 		"phpmd/phpmd": "2.15.0",
 		"phpstan/phpstan": "2.1.11",
-		"phpunit/phpunit": "9.6.22"
+		"phpunit/phpunit": "9.6.33"
 	}
 }
