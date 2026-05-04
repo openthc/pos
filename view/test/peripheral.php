@@ -4,6 +4,9 @@
  * WebSerial, WebUSB, WebHID and ... ?
  *
  * SPDX-License-Identifier: MIT
+ *
+ * See chrome://usb-internals/
+ * See chrome://device-log
  */
 
 ?>
@@ -117,7 +120,7 @@ async function connectWebUSB() {
 	// Filter helps the device picker show relevant devices. Replace vendorId/productId if you know them.
 	const filters = [
 		// { vendorId: 0x05e0, productId: 0x1200 }, // example vendor/product (replace)
-		{ vendorId: 0x05e0, productId: 0x1200 }, //  Symbol Technologies Bar Code Scanner
+		// { vendorId: 0x05e0, productId: 0x1200 }, //  Symbol Technologies Bar Code Scanner
 	];
 
 	try {

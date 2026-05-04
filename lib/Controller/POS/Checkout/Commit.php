@@ -497,7 +497,7 @@ class Commit extends \OpenTHC\Controller\Base
 		$cre->setLicense($_SESSION['License']);
 		$res = $cre->auth([]);
 
-		$res = $cre->b2c()->create($Sale);
+		$res = $cre->b2c()->create($Sale->toArray());
 
 		$b2c_item_list = $Sale->getItems();
 		foreach ($b2c_item_list as $b2c_item) {

@@ -60,7 +60,7 @@ $foot = [];
 $foot[] = '<div class="d-flex justify-content-between">';
 $foot[] = '<div>';
 
-$foot[] = '<button class="btn btn-lg btn-primary" name="a" type="submit" value="client-contact-update"><i class="fa-regular fa-circle-check"></i> Next</button>';
+$foot[] = '<button class="btn btn-lg btn-primary" id="btn-cart-contact-next" name="a" type="submit" value="client-contact-update"><i class="fa-regular fa-circle-check"></i> Next</button>';
 
 if ($_SESSION['Cart']['contact-push']) {
 	unset($_SESSION['Cart']['contact-push']);
