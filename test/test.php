@@ -86,8 +86,6 @@ if ( ! empty($cli_args['--filter'])) {
 }
 $tc = new \OpenTHC\Test\Facade\PHPUnit($cfg);
 $res = $tc->execute();
-var_dump($res);
-
 
 // Output
 $res = $test_helper->index_create($res['data']);
