@@ -151,9 +151,6 @@ class Commit extends \OpenTHC\Controller\Base
 
 		Session::flash('info', sprintf('Sale Confirmed, Transaction #%s', $Sale['guid']));
 
-		// $key = sprintf('/%s/cart/%s', $_SESSION['License']['id'], $data['cart']['id']);
-		// $rdb->del($key);
-
 		$url = sprintf('/pos/checkout/receipt?s=%s', $Sale['id']);
 
 		// if (is_ajax()) {
@@ -400,6 +397,7 @@ class Commit extends \OpenTHC\Controller\Base
 		$Cart = new \OpenTHC\POS\Cart($this->_container->Redis, $_POST['cart-id']);
 
 		$obj = [];
+		$obj['ExternalReceiptNumber'] = $Sale['id'];
 		$obj['SalesDateTime'] = date(\DateTime::RFC3339);
 		$obj['SalesCustomerType'] = 'Consumer'; // 'Consumer', 'Caregiver', 'ExternalPatient', 'Patient';
 
@@ -447,8 +445,9 @@ class Commit extends \OpenTHC\Controller\Base
 				'InvoiceNumber' => $b2c_item['id'],
 				// 'MunicipalTax' => null,
 				'PackageLabel' => $inv['guid'],
-				// 'Price' => $b2c_item['unit_price'],
+				'Price' => $b2c_item['unit_price'],
 				'Quantity' => $b2c_item['unit_count'],
+				// 'QrCodes' => null,
 				// 'SalesTax' => null,
 				// 'SubTotal' => $b2c_item['unit_price'],
 				'TotalAmount' => ($b2c_item['unit_price'] * $b2c_item['unit_count']),
@@ -461,8 +460,7 @@ class Commit extends \OpenTHC\Controller\Base
 			];
 		}
 
-		$api = $cre->b2c();
-		$res = $api->create($obj);
+		$res = $cre->b2c()->create($obj);
 
 		$m = $Sale->getMeta();
 		$m['@cre']['result'] = $res;

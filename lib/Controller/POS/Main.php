@@ -49,9 +49,10 @@ class Main extends \OpenTHC\Controller\Base
 		}
 
 		// Page Data
-		$data = array(
-			'Page' => array('title' => sprintf('POS :: %s <code>%s</code>', $_SESSION['License']['name'], $_SESSION['License']['code']))
-		);
+		$data = [];
+		$data['Page'] = [];
+		$data['Page']['title'] = sprintf('POS :: %s <code>%s</code>', $_SESSION['License']['name'], $_SESSION['License']['code']);
+		$data['Page']['title'] = sprintf('POS :: %s <code>%s</code>', $_SESSION['License']['name'], $_SESSION['License']['code']);
 
 		$Cart = new \OpenTHC\POS\Cart($this->_container->Redis, $_GET['cart']);
 
@@ -82,19 +83,25 @@ class Main extends \OpenTHC\Controller\Base
 
 			$dbc = $this->_container->DB;
 
-			$Contact = $dbc->fetch_row('SELECT * FROM auth_contact WHERE auth_code = :a0', [
-				':a0' => $_POST['code'],
+			$sql = <<<SQL
+			SELECT *
+			FROM auth_contact
+			WHERE auth_code = :a0
+			SQL;
+			$Contact = $dbc->fetch_row($sql, [
+				':a0' => $code,
 			]);
-			if ( ! empty($Contact['id'])) {
-				__exit_text('Invalid Contact', 400);
+			if (empty($Contact['id'])) {
+				Session::flash('fail', 'Invalid Contact');
+				return $RES->withRedirect('/pos');
 			}
 
 			// Assign to Register Session
 			// Set Expiration in T minutes?
-			$R = $this->_container->Redis;
-			$k = sprintf('/%s/pos-terminal', $_SESSION['Contact']['id']);
-			$v = $_SESSION['Contact']['id'];
-			$R->set($k, $v, [ 'ex' => 600 ]);
+			// $R = $this->_container->Redis;
+			// $k = sprintf('/%s/pos-terminal', $_SESSION['Contact']['id']);
+			// $v = $_SESSION['Contact']['id'];
+			// $R->set($k, $v, [ 'ex' => 600 ]);
 
 			$_SESSION['pos-terminal-contact'] = $_SESSION['Contact']['id'];
 

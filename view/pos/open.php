@@ -104,7 +104,7 @@ $(function() {
 			btnBack.disabled = true;
 		}
 
-		if (code_auth.value.length >= 4) {
+		if (code_auth.value.length >= 6) {
 			btnNext.disabled = false;
 			btnNext.classList = 'btn btn-success';
 		} else {
