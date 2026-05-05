@@ -25,7 +25,7 @@
 
 	<php>
 
-		<!-- PHPUnit populates $_ENV with these -->
+		<!-- PHPUnit populates Environment (=getenv()) with these -->
 		<!-- And one can overwrite these values from standard process environment vars -->
 
 		<env name="OPENTHC_TEST_ORIGIN" value="https://pos.openthc.example.com" />
