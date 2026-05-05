@@ -73,7 +73,7 @@ $app->group('/api/v2018', 'OpenTHC\POS\Module\API');
 
 
 // Main Page
-$app->group('/dashboard', 'OpenTHC\POS\Module\Dashboard')
+$app->get('', 'OpenTHC\POS\Controller\Dashboard\Main')
 	->add('OpenTHC\POS\Middleware\Auth')
 	->add('OpenTHC\Middleware\Session');
 
