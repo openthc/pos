@@ -5,7 +5,26 @@
  * SPDX-License-Identifier: GPL-3.0-only
  */
 
-// $app_origin = \OpenTHC\Config::get('openthc/app/origin');
+if ( ! empty($this->data['menu-zero'])) {
+	if ('hide' == $this->data['menu-zero']) {
+		return '';
+	}
+	if ('mini' == $this->data['menu-zero']) {
+	?>
+	<nav class="navbar navbar-expand-md navbar-dark bg-dark sticky-top">
+		<div class="container-fluid">
+			<a class="navbar-brand" href="/dashboard"><img alt="OpenTHC Icon" src="https://cdn.openthc.com/img/icon/icon-w-32.png"></a>
+			<div class="collapse navbar-collapse" id="menu0">
+				<ul class="navbar-nav ms-auto">
+					<li class="nav-item"><a class="nav-link" href="/auth/shut"><i class="fas fa-power-off"></i></a></li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+	<?php
+		return;
+	}
+}
 
 ?>
 
