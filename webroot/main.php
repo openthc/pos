@@ -125,7 +125,9 @@ $app->group('/auth', function() {
 	$this->get('', 'OpenTHC\POS\Controller\Auth\oAuth2\Open');
 	$this->get('/open', 'OpenTHC\POS\Controller\Auth\oAuth2\Open');
 	$this->get('/back', 'OpenTHC\POS\Controller\Auth\oAuth2\Back');
-	$this->get('/init', 'OpenTHC\POS\Controller\Auth\Init')->setName('auth/init');
+	$this->get('/init', 'OpenTHC\POS\Controller\Auth\Init');
+	$this->get('/pick/license', 'OpenTHC\POS\Controller\Auth\Pick:license');
+	$this->post('/pick/license', 'OpenTHC\POS\Controller\Auth\Pick:license_post');
 	$this->get('/ping', 'OpenTHC\Controller\Auth\Ping');
 	$this->get('/shut', 'OpenTHC\POS\Controller\Auth\Shut');
 })
