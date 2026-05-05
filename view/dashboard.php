@@ -13,51 +13,66 @@
 <div class="row">
 	<div class="col-xl-4 col-sm-6 mb-3">
 		<div class="card border-primary h-100">
-		<div class="card-body">
-			<div class="card-body-icon">
-			<i class="fas fa-truck"></i> Retail Sales
+			<div class="card-header fs-2">
+				<i class="fa-solid fa-cash-register"></i> Retail Sales
 			</div>
-		</div>
-		<a class="card-footer text-white bg-primary small z-1" href="/pos">
-			<span class="float-left">View Details</span>
-			<span class="float-right">
-			<i class="fas fa-angle-right"></i>
-			</span>
-		</a>
+			<div class="card-body">
+				<p>Open the Register/Terminal for in-store checkout.</p>
+			</div>
+			<div class="card-footer">
+				<a class="btn btn-primary" href="/pos">
+					Open Register <i class="fas fa-angle-right"></i>
+				</a>
+			</div>
 		</div>
 	</div>
 
 	<div class="col-xl-4 col-sm-6 mb-3">
 		<div class="card border-warning h-100">
-		<div class="card-body">
-			<div class="card-body-icon">
-			<i class="fas fa-fw fa-shopping-cart"></i> Delivery
+			<div class="card-header fs-2">
+				<i class="fa-solid fa-truck-fast"></i> Delivery
 			</div>
-			<p>Delivery Management</p>
-		</div>
-		<a class="card-footer text-white bg-warning small z-1" href="/pos/delivery">
-			<span class="float-left">View Details</span>
-			<span class="float-right">
-			<i class="fas fa-angle-right"></i>
-			</span>
-		</a>
+			<div class="card-body">
+				<p>Delivery Management</p>
+			</div>
+			<div class="card-footer">
+				<a class="btn btn-warning" href="/pos/delivery">
+					View Details <i class="fas fa-angle-right"></i>
+				</a>
+			</div>
 		</div>
 	</div>
 
 	<div class="col-xl-4 col-sm-6 mb-3">
-		<div class="card border-success h-100">
-		<div class="card-body">
-			<div class="card-body-icon">
-			<i class="fas fa-fw fa-life-ring"></i> On-Line
+		<div class="card border h-100">
+			<div class="card-header fs-2">
+				<i class="fa-regular fa-cloud"></i> On-Line
 			</div>
-			<p>Online Sales</p>
-		</div>
-		<a class="card-footer text-white bg-success small z-1" href="/pos/online">
-			<span class="float-left">View Details</span>
-			<span class="float-right">
-			<i class="fas fa-angle-right"></i>
-			</span>
-		</a>
+			<div class="card-body">
+				<p>Online Sales</p>
+			</div>
+			<div class="card-footer">
+				<a class="btn btn-secondary" href="/pos/online">
+					View Details <i class="fas fa-angle-right"></i>
+				</a>
+			</div>
 		</div>
 	</div>
+
+	<div class="col-xl-4 col-sm-6 mb-3">
+		<div class="card border h-100">
+			<div class="card-header fs-2">
+				<i class="fa-solid fa-tablet-screen-button"></i> Kiosk
+			</div>
+			<div class="card-body">
+				<p>Enter Kiosk Mode</p>
+			</div>
+			<div class="card-footer">
+				<a class="btn btn-secondary" href="/kiosk">
+					Launch Kiosk <i class="fas fa-angle-right"></i>
+				</a>
+			</div>
+		</div>
+	</div>
+
 </div>
