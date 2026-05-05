@@ -5,11 +5,33 @@
  * SPDX-License-Identifier: GPL-3.0-only
  */
 
+// Contact Picker
+if (empty($_GET['c'])) {
+	?>
+	<div class="container mt-4">
+		<div class="card">
+			<div class="card-header fs-2">Select Cashier</div>
+			<div class="card-body">
+			<?php
+			foreach ($data['seller_contact_list'] as $c) {
+			?>
+				<div><a class="btn fs-3 w-100" href="/pos?c=<?= __h($c['id'])?>"><?= __h($c['fullname']) ?></a></div>
+			<?php
+			}
+			?>
+			</div>
+		</div>
+	</div>
+	<?php
+	return;
+}
+
 ?>
 
 <form autocomplete="off" method="post">
 
 <input name="CSRF" type="hidden" value="<?= $data['CSRF'] ?>">
+<input id="seller-contact-id" name="seller-contact-id" type="hidden" value="<?= __h($_GET['c']) ?>">
 <input id="auth-code" name="code" type="hidden">
 
 <div class="container mt-4">

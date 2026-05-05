@@ -45,7 +45,20 @@ class Main extends \OpenTHC\Controller\Base
 		if (empty($_SESSION['pos-terminal-contact'])) {
 			$data = [];
 			$data['Page'] = [ 'title' => 'Terminal Authentication'];
+
+			$contact_select_list = [];
+			$sql = <<<SQL
+			SELECT id, fullname
+			FROM contact
+			WHERE type IN ('root', 'EMPLOYEE')
+			AND stat = 200
+			-- AND ...
+			ORDER BY fullname
+			SQL;
+			$data['seller_contact_list'] = $dbc->fetchAll($sql);
+
 			return $RES->write( $this->render('pos/open.php', $data) );
+
 		}
 
 		// Page Data
@@ -78,18 +91,21 @@ class Main extends \OpenTHC\Controller\Base
 		switch ($_POST['a']) {
 		case 'auth-code':
 
-			// Lookup Contact by this Auth Code
-			$code = $_POST['code'];
+			if (empty($_POST['seller-contact-id'])) {
+				throw new \Exception('Invalid Request [CPM-095]', 500);
+			}
 
+			// Lookup Contact by this Auth Code
 			$dbc = $this->_container->DB;
 
 			$sql = <<<SQL
 			SELECT *
 			FROM auth_contact
-			WHERE auth_code = :a0
+			WHERE id = :c0 AND auth_code = :a0
 			SQL;
 			$Contact = $dbc->fetch_row($sql, [
-				':a0' => $code,
+				':c0' => $_POST['seller-contact-id'],
+				':a0' => $_POST['code'],
 			]);
 			if (empty($Contact['id'])) {
 				Session::flash('fail', 'Invalid Contact');
