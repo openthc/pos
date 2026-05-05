@@ -59,12 +59,13 @@ $(function() {
 
 	// Add Line Item
 	$('#pos-discount-apply').on('click', function() {
-		Cart_addItem({
+		OpenTHC.POS.Cart.insert({
 			id: window.ulid(),
-			qty: 1,
 			name: adj_note,
-			price: adj,      // v1
-			unit_price: adj  // v2
+			weight: 0,
+			unit_price: adj,
+			unit_count: 1,
+			unit_price_total: adj,
 		});
 	});
 
