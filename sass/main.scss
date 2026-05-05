@@ -2,7 +2,8 @@
  * Main
  */
 
-@import 'base', 'pos-terminal';
+@use 'base';
+@use 'pos-terminal';
 
 
 .numpad-wrap {

@@ -16,7 +16,14 @@ cd "$APP_ROOT"
 
 composer install --no-ansi --no-progress --classmap-authoritative
 
-npm install --no-audit --no-fund
+npm install --ignore-scripts --no-audit --no-fund
+
+# vendor/openthc/common/lib/make.sh bootstrap
+# vendor/openthc/common/lib/make.sh fontawesome
+# vendor/openthc/common/lib/make.sh jquery
+# vendor/openthc/common/lib/make.sh lodash
+# vendor/openthc/common/lib/make.sh htmx
+# vendor/openthc/common/lib/make.sh echarts
 
 php <<PHP
 <?php
@@ -47,18 +54,8 @@ cp node_modules/chart.js/dist/chart.umd.js.map webroot/vendor/chart.js/
 #
 # SASS
 ./node_modules/.bin/sass \
-	--fatal-deprecation 1.65.0 \
+	--fatal-deprecation 1.80.0 \
 	--no-charset \
-	--no-source-map \
 	--style=compressed \
 	--stop-on-error \
-	sass/main.scss webroot/css/main.css \
-	2>&1;
-
-#
-#
-php <<PHP
-<?php
-require_once(__DIR__ . '/boot.php');
-\OpenTHC\Make::create_homepage('pos');
-PHP
+	sass/main.scss webroot/css/main.css
