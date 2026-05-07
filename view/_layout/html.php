@@ -19,10 +19,24 @@ $body_class_list[] = sprintf('m1-%s', $m1_mode);
 <meta name="viewport" content="initial-scale=1, user-scalable=yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#069420">
+
+<link rel="preload" as="style" href="/vendor/fontawesome/css/all.min.css">
+<link rel="preload" as="style" href="/vendor/bootstrap/bootstrap.min.css">
+<link rel="preload" as="style" href="/css/main.css">
+
+<link rel="preload" as="script" href="/vendor/lodash/lodash.min.js">
+<link rel="preload" as="script" href="/vendor/jquery/jquery.min.js">
+<link rel="preload" as="script" href="/vendor/bootstrap/bootstrap.bundle.min.js">
+<link rel="preload" as="script" href="/vendor/htmx/htmx.min.js">
+<link rel="preload" as="script" href="/vendor/qrcodejs/qrcode.min.js">
+<link rel="preload" as="script" href="/vendor/chart.js/chart.min.js">
+<!-- <link rel="preload" as="script" href="/vendor/echarts/echarts.min.js"> -->
+<!-- <link rel="preload" as="script" href="/vendor/zxing/index.min.js"> -->
+
 <link rel="stylesheet" href="/vendor/fontawesome/css/all.min.css">
 <link rel="stylesheet" href="/vendor/bootstrap/bootstrap.min.css">
-<!-- <link rel="stylesheet" href="/vendor/datatables/css/dataTables.bootstrap4.min.css"> -->
 <link rel="stylesheet" href="/css/main.css">
+
 <title><?= __h(strip_tags($this->data['Page']['title'])) ?></title>
 </head>
 <body class="<?= implode(' ', $body_class_list) ?>" data-menu-left-mode="<?= $m1_mode ?>">
@@ -35,6 +49,7 @@ $body_class_list[] = sprintf('m1-%s', $m1_mode);
 <script src="/vendor/lodash/lodash.min.js"></script>
 <script src="/vendor/jquery/jquery.min.js"></script>
 <script src="/vendor/bootstrap/bootstrap.bundle.min.js"></script>
+<script src="/vendor/htmx/htmx.min.js"></script>
 <script src="/vendor/qrcodejs/qrcode.min.js"></script>
 <script src="/vendor/chart.js/chart.min.js"></script>
 <!-- <script src="https://app.openthc.com/js/app.js"></script> -->

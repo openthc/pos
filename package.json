@@ -13,7 +13,7 @@
 		"@zxing/browser": " 0.1.5",
 		"bootstrap": "5.3.8",
 		"chart.js": "^4.5.1",
-		"datatables.net-dt": "^1.13.11",
+		"htmx.org": "2.0.4",
 		"jquery": "3.7.1",
 		"jquery-ui": "1.14.1",
 		"lodash": "4.17.21",
