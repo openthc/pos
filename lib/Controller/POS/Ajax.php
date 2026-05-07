@@ -237,7 +237,7 @@ class Ajax extends \OpenTHC\Controller\Base
 			// $arg[':q0'] = $q;
 			$arg[':q1'] = sprintf('%%%s%%', $q);
 		}
-		$sql.= ' ORDER BY product_type_name, product_name, variety_name';
+		$sql.= ' ORDER BY product_type_name, product_name, variety_name, guid';
 		$res = $this->_container->DB->fetchAll($sql, $arg);
 
 		switch (count($res)) {
