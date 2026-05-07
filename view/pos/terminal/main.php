@@ -69,9 +69,9 @@ $this->layout_file = sprintf('%s/view/_layout/html-pos.php', APP_ROOT);
 <div class="pos-foot-wrap">
 	<div id="pos-terminal-sub-wrap">
 		<div class="sub-info-item-wrap"><h3>Items: #<span class="pos-checkout-item-count">0</span></h3></div>
-		<div class="sub-info-item-wrap"><h3>Total: $<span class="pos-checkout-sub">0.00</span></h3></div>
+		<!-- <div class="sub-info-item-wrap"><h3>Total: $<span class="pos-checkout-sub">0.00</span></h3></div> -->
 		<div class="sub-info-item-wrap"><h3>Taxes: $<span class="pos-checkout-tax-total">0.00</span></h3></div>
-		<div class="sub-info-item-wrap"><h3>Final: $<span class="pos-checkout-sum">0.00</span></h3></div>
+		<div class="sub-info-item-wrap"><h3>Total: $<span class="pos-checkout-sum">0.00</span></h3></div>
 	</div>
 	<div id="pos-terminal-cmd-wrap">
 		<!-- @deprecated this can be done by the Checkin or Camera feature now	-->
@@ -143,31 +143,33 @@ echo $this->block('modal/pos/payment-card.php');
 
 	<div class="row">
 		<div class="col-md-10" style="vertical-align:baseline;"><h4>{$obj->name}</h4></div>
-		<div class="col-md-2" style="text-align:right;">
-			<button class="btn b2c-item-remove" type="button">
-				<i class="fas fa-times text-danger"></i>
+		<div class="col-md-2 p-1 text-end">
+			<button class="btn btn-sm btn-outline-danger b2c-item-remove" type="button">
+				<i class="fas fa-times"></i>
 			</button>
 		</div>
 	</div>
 	<div class="row">
-		<div class="col-md-4">
+		<div class="col-md-3">
 			<div class="input-group">
-				<label class="input-group-text">Qty:</label>
-				<input class="form-control b2c-item-unit-count"
+				<label class="input-group-text">#:</label>
+				<input class="form-control text-end b2c-item-unit-count"
 					id="psi-item-{$obj->id}-unit-count"
 					name="item-{$obj->id}-unit-count" type="number" value="{$obj->unit_count}">
 			</div>
 		</div>
-		<div class="col-md-4">
+		<div class="col-md-3">
 			<div class="input-group">
-				<input class="form-control b2c-item-unit-price"
+				<span class="form-control text-end b2c-item-unit-price"
 					id="psi-item-{$obj->id}-unit-price"
-					name="item-{$obj->id}-unit-price"
-					type="number" value="{$obj->unit_price}">
+					name="item-{$obj->id}-unit-price">{$obj->unit_price}</span>
 				<label class="input-group-text">ea</label>
 			</div>
 		</div>
-		<div class="col-md-4" style="text-align:right;">
+		<div class="col-md-3">
+			<h2><span class="b2c-item-tax-amount" id="psi-item-{$obj->id}-tax-amount">{$obj->tax_amount}</span></h2>
+		</div>
+		<div class="col-md-3 text-end">
 			<h3><span class="b2c-item-unit-price-total" id="psi-item-{$obj->id}-full-price">{$obj->unit_price_total}</span></h3>
 		</div>
 	</div>

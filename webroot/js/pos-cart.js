@@ -47,17 +47,26 @@ OpenTHC.POS.Cart = {
 		row.setAttribute('id', `psi-item-${obj.id}`);
 		row.querySelector('h4').innerHTML = obj.name;
 
-		var tmp = row.querySelector('input.b2c-item-unit-count');
+		let tmp;
+
+		tmp = row.querySelector('input.b2c-item-unit-count');
 		tmp.setAttribute('id', `psi-item-${obj.id}-unit-count`);
 		tmp.setAttribute('name', `item-${obj.id}-unit-count`);
 		tmp.value = obj.unit_count;
 
-		var tmp = row.querySelector('input.b2c-item-unit-price');
+		tmp = row.querySelector('.b2c-item-unit-price');
 		tmp.setAttribute('id', `psi-item-${obj.id}-unit-price`);
 		tmp.setAttribute('name', `item-${obj.id}-unit-price`);
-		tmp.value = obj.unit_price;
+		// tmp.value = obj.unit_price;
+		tmp.textContent = obj.unit_price;
 
-		var tmp = row.querySelector('span.b2c-item-unit-price-total');
+		tmp = row.querySelector('.b2c-item-tax-amount');
+		tmp.setAttribute('id', `psi-item-${obj.id}-tax-amount`);
+		// tmp.setAttribute('name', `item-${obj.id}-tax-amount`);
+		// tmp.value = obj.tax_amount
+		tmp.textContent = obj.tax_amount;
+
+		tmp = row.querySelector('span.b2c-item-unit-price-total');
 		tmp.setAttribute('id', `psi-item-${obj.id}-full-price`);
 		tmp.innerHTML = '<X>' + obj.unit_price_total || '0.00';
 	},
@@ -182,9 +191,9 @@ OpenTHC.POS.Cart = {
 		Cart0.unit_price_total = Cart1.unit_price_total || 0;
 
 		$('.pos-checkout-item-count').html( Cart0.unit_count );
-		$('.pos-checkout-sub').html(Cart0.unit_price_total);
-		$('.pos-checkout-tax-total').html(Cart0.tax_total);
-		$('.pos-checkout-sum').html(Cart0.full_price);
+		$('.pos-checkout-sub').html(Cart0.unit_price_total.toFixed(2));
+		$('.pos-checkout-tax-total').html(Cart0.tax_total.toFixed(2));
+		$('.pos-checkout-sum').html(Cart0.full_price.toFixed(2));
 
 		if (Cart0.full_price <= 0) {
 			$('.pos-checkout-sum').parent().css('color', '');
@@ -222,7 +231,6 @@ $(function() {
 	$('#cart-list-wrap').on('click', '.b2c-item-remove', function() {
 		var oid = $(this).closest('.cart-item').data('id');
 		OpenTHC.POS.Cart.delete(oid);
-		OpenTHC.POS.Cart.update();
 	});
 
 	// If on-screen keyboard is muted, use this popup modal

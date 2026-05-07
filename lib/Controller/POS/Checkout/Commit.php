@@ -100,31 +100,29 @@ class Commit extends \OpenTHC\Controller\Base
 				$SI['inventory_id'] = $Inv['id'];
 				$SI['uom'] = $uom;
 				$SI['unit_count'] = $b2c_item->unit_count;
-				$SI['unit_price'] = floatval($Inv['sell']);
-				if (isset($b2c_item->unit_price)) {
-					$SI['unit_price'] = $b2c_item->unit_price;
-				}
-				$SI['base_price'] = ($SI['unit_price'] * $SI['unit_count']);
+				$SI['base_price'] = $b2c_item->base_price; // ($SI['unit_price'] * $SI['unit_count']);
+				$SI['unit_price'] = $b2c_item->unit_price;
 				// +Fees
 				// -Discount
 				// +/- Adjustment
 				// +Tax
 				$b2c_item_adjust_total = 0;
-				foreach ($b2c_item->tax_list as $tax_ulid => $tax_line) {
-					$b2c_item_adjust_total += $tax_line;
+				foreach ($b2c_item->tax_rate_data as $tax_ulid => $tax_line) {
+					$b2c_item_adjust_total += $tax_line->amount;
 				}
 				$SI['full_price'] = $SI['base_price'] + $b2c_item_adjust_total;
 				$SI->save('B2C/Sale/Item/Create');
 
 				// Add the Sale Item taxes Here
-				foreach ($b2c_item->tax_list as $tax_ulid => $tax_line) {
+				foreach ($b2c_item->tax_rate_data as $tax_ulid => $tax_line) {
 					$dbc->insert('b2c_sale_item_adjust', [
-						'id' => \Edoceo\Radix\ULID::create(),
+						'id' => ULID::create(),
 						'b2c_sale_id' => $Sale['id'],
 						'b2c_sale_item_id' => $SI['id'],
 						'adjust_id' => $tax_ulid,
-						'name' => 'Tax',
-						'amount' => $tax_line,
+						'name' => $tax_line->name,
+						'amount' => $tax_line->amount,
+						'meta' => json_encode($tax_line),
 					]);
 				}
 
@@ -396,61 +394,63 @@ class Commit extends \OpenTHC\Controller\Base
 
 		$Cart = new \OpenTHC\POS\Cart($this->_container->Redis, $_POST['cart-id']);
 
-		$obj = [];
-		$obj['ExternalReceiptNumber'] = $Sale['id'];
-		$obj['SalesDateTime'] = date(\DateTime::RFC3339);
-		$obj['SalesCustomerType'] = 'Consumer'; // 'Consumer', 'Caregiver', 'ExternalPatient', 'Patient';
+		$b2c_metrc = [];
+		$b2c_metrc['ExternalReceiptNumber'] = $Sale['id'];
+		$b2c_metrc['SalesDateTime'] = date(\DateTime::RFC3339);
+		$b2c_metrc['SalesCustomerType'] = 'Consumer'; // 'Consumer', 'Caregiver', 'ExternalPatient', 'Patient';
 
 		// 'Consumer', 'Caregiver'; 'ExternalPatient', 'Patient'
 		switch ($Cart->Contact->id) {
 			case '010PENTHC0C0NTACT000WALK1N':
 			case '018NY6XC00C0NTACT000WALK1N':
-				$obj['SalesCustomerType'] = 'Consumer';
+				$b2c_metrc['SalesCustomerType'] = 'Consumer';
 				break;
 			default:
-				$obj['SalesCustomerType'] = 'Patient';
-				$obj['PatientLicenseNumber'] = $Cart->Contact->guid;
+				$b2c_metrc['SalesCustomerType'] = 'Patient';
+				$b2c_metrc['PatientLicenseNumber'] = $Cart->Contact->guid;
 				break;
 		}
 		switch ($Cart->Contact->type) {
 			case '010PENTHC0C0NTACTTYPE000AC':
 			case '018NY6XC00C0NTACTTYPE000AC':
-				$obj['SalesCustomerType'] = 'Consumer';
+				$b2c_metrc['SalesCustomerType'] = 'Consumer';
 				break;
 			case '010PENTHC0C0NTACTTYPE000PA': // Well Known ULID
 			case '018NY6XC00C0NTACTTYPE000PA': // Well Known ULID
-				$obj['SalesCustomerType'] = 'Patient';
-				$obj['PatientLicenseNumber'] = $Cart->Contact->guid;
+				$b2c_metrc['SalesCustomerType'] = 'Patient';
+				$b2c_metrc['PatientLicenseNumber'] = $Cart->Contact->guid;
 				break;
 		}
 
 		// @todo Fix assumptions about Customer, add Patient/Caregiver UX
-		// $obj['PatientLicenseNumber'] = '12-345-678-DD'; //  $Sale['contact_list']['']; '000001';
-		// $obj['CaregiverLicenseNumber'] = 'CLN-DEF456'; // $Sale['contact_list']['']; '000001';
-		// $obj['IdentificationMethod'] = 'ID';
-		// $obj['PatientRegistrationLocationId'] = '';
+		// $b2c_metrc['PatientLicenseNumber'] = '12-345-678-DD'; //  $Sale['contact_list']['']; '000001';
+		// $b2c_metrc['CaregiverLicenseNumber'] = 'CLN-DEF456'; // $Sale['contact_list']['']; '000001';
+		// $b2c_metrc['IdentificationMethod'] = 'ID';
+		// $b2c_metrc['PatientRegistrationLocationId'] = '';
 
-		$obj['Transactions'] = [];
+		$b2c_metrc['Transactions'] = [];
 
 		$b2c_item_list = $Sale->getItems();
 		foreach ($b2c_item_list as $b2c_item) {
+
 			$inv = new \OpenTHC\POS\Inventory($dbc, $b2c_item['inventory_id']);
 			$uom = new \OpenTHC\UOM($b2c_item['uom']);
 			$uom = $uom->getName();
-			$obj['Transactions'][] = [
-				// 'CityTax' => null,
-				// 'CountyTax' => null,
-				// 'DiscountAmount' => null,
-				// 'ExciseTax' => null,
+
+			$txn_metrc = [
+				'CityTax' => null,
+				'CountyTax' => null,
+				'DiscountAmount' => null,
+				'ExciseTax' => null,
 				'InvoiceNumber' => $b2c_item['id'],
-				// 'MunicipalTax' => null,
+				'MunicipalTax' => null,
 				'PackageLabel' => $inv['guid'],
-				'Price' => $b2c_item['unit_price'],
+				'Price' => $b2c_item['base_price'],
 				'Quantity' => $b2c_item['unit_count'],
 				// 'QrCodes' => null,
-				// 'SalesTax' => null,
-				// 'SubTotal' => $b2c_item['unit_price'],
-				'TotalAmount' => ($b2c_item['unit_price'] * $b2c_item['unit_count']),
+				'SalesTax' => null,
+				'SubTotal' => $b2c_item['base_price'] * $b2c_item['unit_count'],
+				'TotalAmount' => ($b2c_item['full_price'] * $b2c_item['unit_count']),
 				'UnitOfMeasure' => $uom,
 				// 'UnitThcContent' => null,
 				// 'UnitThcContentUnitOfMeasure' => null,
@@ -458,9 +458,42 @@ class Commit extends \OpenTHC\Controller\Base
 				// 'UnitWeight' => null,
 				// 'UnitWeightUnitOfMeasure' => null,
 			];
+
+			// Taxes
+			$sql = <<<SQL
+			SELECT *
+			FROM b2c_sale_item_adjust
+			WHERE b2c_sale_id = :b1
+			  AND b2c_sale_item_id = :i2
+			SQL;
+			$res_adjust = $dbc->fetchAll($sql, [
+				':b1' => $Sale['id'],
+				':i2' => $b2c_item['id'],
+			]);
+			foreach ($res_adjust as $adj) {
+				switch ($adj['adjust_id']) {
+					case '010PENTHC00BIPA0SST03Q484J':
+						$txn_metrc['SalesTax'] = $adj['amount'];
+						break;
+					case '010PENTHC00BIPA0C0T620S2M2';
+						$txn_metrc['CountyTax'] = $adj['amount'];
+						break;
+					case '010PENTHC00BIPA0CIT5H9S6T3':
+						$txn_metrc['CityTax'] = $adj['amount'];
+						break;
+					case '010PENTHC00BIPA0MUT0FEEGCF':
+						$txn_metrc['MunicipalTax'] = $adj['amount'];
+						break;
+					case '010PENTHC00BIPA0ET0FNBCKMH':
+						$txn_metrc['ExciseTax'] = $adj['amount'];
+						break;
+				}
+			}
+
+			$b2c_metrc['Transactions'][] = $txn_metrc;
 		}
 
-		$res = $cre->b2c()->create($obj);
+		$res = $cre->b2c()->create($b2c_metrc);
 
 		$m = $Sale->getMeta();
 		$m['@cre']['result'] = $res;

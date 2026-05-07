@@ -14,6 +14,8 @@ use OpenTHC\Contact;
 
 class Open extends \OpenTHC\Controller\Base
 {
+	use \OpenTHC\POS\Feature\LoadTaxRateInfo;
+
 	/**
 	 *
 	 */
@@ -37,7 +39,9 @@ class Open extends \OpenTHC\Controller\Base
 			case 'client-contact-search':
 				return $this->contact_search($RES);
 			case 'client-contact-skip':
-				$Cart = new \OpenTHC\POS\Cart($this->_container->Redis, $_GET['cart']);
+				$Cart = new \OpenTHC\POS\Cart($this->_container->Redis); // , $_GET['cart']);
+				$Cart->type = $_POST['pos-cart-type'];
+				$Cart->setTaxRateData( $this->loadTaxRateInfo() );
 				$Cart->Contact = [
 					'id' => '018NY6XC00C0NTACT000WALK1N',
 					'stat' => 200,
@@ -64,7 +68,7 @@ class Open extends \OpenTHC\Controller\Base
 				return $RES->withRedirect(sprintf('/pos?cart=%s', $Cart->id));
 				break;
 			default:
-				Session::flash('fail', 'Invalid Requset [PCO-045]');
+				Session::flash('fail', 'Invalid Request [PCO-045]');
 				return $RES->withRedirect('/pos');
 		}
 	}
