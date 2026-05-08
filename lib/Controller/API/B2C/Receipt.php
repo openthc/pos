@@ -47,7 +47,7 @@ class Receipt extends \OpenTHC\POS\Controller\API\Base
 			]
 		];
 
-		$max = rand(1, 10);
+		$max = rand(2, 8);
 		$b2c_item_list = [];
 		for ($idx=0; $idx<$max; $idx++) {
 
@@ -79,11 +79,14 @@ class Receipt extends \OpenTHC\POS\Controller\API\Base
 		$pdf = new \OpenTHC\POS\PDF\Receipt();
 		$pdf->setCompany( new \OpenTHC\Company($dbc, $this->Company ));
 		$pdf->setLicense( new \OpenTHC\Company($dbc, $this->License ));
+
 		// Options
-		$pdf->head_text = json_decode($dbc->fetchOne('SELECT val FROM base_option WHERE key = :k', [ ':k' => sprintf('/%s/receipt/head', $this->License['id']) ]));
-		$pdf->foot_text = json_decode($dbc->fetchOne('SELECT val FROM base_option WHERE key = :k', [ ':k' => sprintf('/%s/receipt/foot', $this->License['id']) ]));
-		$pdf->foot_link = json_decode($dbc->fetchOne('SELECT val FROM base_option WHERE key = :k', [ ':k' => sprintf('/%s/receipt/link', $this->License['id']) ]));
-		$pdf->tail_text = json_decode($dbc->fetchOne('SELECT val FROM base_option WHERE key = :k', [ ':k' => sprintf('/%s/receipt/tail', $this->License['id']) ]));
+		if ('POST' == $_SERVER['REQUEST_METHOD']) {
+			$pdf->head_text = $_POST['head_text'];
+			$pdf->foot_text = $_POST['foot_text'];
+			$pdf->foot_link = $_POST['foot_link'];
+			$pdf->tail_text = $_POST['tail_text'];
+		}
 
 		$pdf->setSale($b2c);
 		$pdf->setItems($b2c_item_list);
