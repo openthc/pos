@@ -69,7 +69,26 @@ $con['Company'] = function($c0) {
 
 
 // API
-$app->group('/api/v2018', 'OpenTHC\POS\Module\API');
+$app->group('/api/v2018', function() {
+	$this->get('', 'OpenTHC\POS\Controller\API\Main');
+
+	// $this->post('/print', 'OpenTHC\POS\Controller\API\Print');
+
+	// Create Sale
+	$this->post('/b2c', 'OpenTHC\POS\Controller\API\B2C');
+
+	$this->get('/b2c/receipt/preview', 'OpenTHC\POS\Controller\API\B2C\Receipt:preview');
+	$this->post('/b2c/receipt/preview', 'OpenTHC\POS\Controller\API\B2C\Receipt:preview');
+
+	$this->get('/b2c/{id}', 'OpenTHC\POS\Controller\API\B2C\Single');
+
+	$this->post('/b2c/{id}', 'OpenTHC\POS\Controller\API\B2C\Single:post');
+	$this->post('/b2c/{id}/item', 'OpenTHC\POS\Controller\API\B2C\Item');
+
+	$this->post('/b2c/{id}/verify', 'OpenTHC\POS\Controller\API\B2C\Single:verify');
+	// $a->post('/b2c/{id}/payment', 'OpenTHC\POS\Controller\API\B2C\Single:post');
+	$this->post('/b2c/{id}/commit', 'OpenTHC\POS\Controller\API\B2C\Single:commit');
+});
 
 
 // Main Page
