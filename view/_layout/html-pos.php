@@ -16,6 +16,18 @@ header('content-type: text/html; charset=utf-8', true);
 <meta name="application-name" content="OpenTHC">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#247420">
+
+<link rel="preload" as="style" href="/vendor/fontawesome/css/all.min.css">
+<link rel="preload" as="style" href="/vendor/bootstrap/bootstrap.min.css">
+<link rel="preload" as="style" href="/css/main.css">
+
+<link rel="preload" as="script" href="/vendor/lodash/lodash.min.js">
+<link rel="preload" as="script" href="/vendor/jquery/jquery.min.js">
+<link rel="preload" as="script" href="/vendor/bootstrap/bootstrap.bundle.min.js">
+<link rel="preload" as="script" href="/vendor/htmx/htmx.min.js">
+<link rel="preload" as="script" href="/vendor/qrcodejs/qrcode.min.js">
+<link rel="preload" as="script" href="/vendor/chart.js/chart.min.js">
+
 <link rel="stylesheet" href="/vendor/fontawesome/css/all.min.css">
 <link rel="stylesheet" href="/vendor/jquery/jquery-ui.min.css">
 <link rel="stylesheet" href="/vendor/bootstrap/bootstrap.min.css">
@@ -69,16 +81,16 @@ header('content-type: text/html; charset=utf-8', true);
 <!-- <script src="https://unpkg.com/@zxing/library@latest"></script> -->
 <script src="/vendor/qrcodejs/qrcode.min.js"></script>
 <script src="https://unpkg.com/@zxing/library@0.19.2/umd/index.min.js" integrity="sha256-a0mo/OgjQ26D3n9JRYL4LMTeSx8PV3SYKv2My5wOdHE=" crossorigin="anonymous"></script>
-<script src="/js/pos.js"></script>
-<script src="/js/pos-scanner.js"></script>
-<script src="/js/pos-printer.js"></script>
-<script src="/js/pos-cart.js"></script>
+<script src="/js/pos.js?v=<?= APP_VERSION ?>"></script>
+<script src="/js/pos-scanner.js?v=<?= APP_VERSION ?>"></script>
+<script src="/js/pos-printer.js?v=<?= APP_VERSION ?>"></script>
+<script src="/js/pos-cart.js?v=<?= APP_VERSION ?>"></script>
 <!-- <script src="/js/pos-modal-contact.js"></script> -->
-<script src="/js/pos-modal-discount.js"></script>
-<script src="/js/pos-modal-loyalty.js"></script>
-<script src="/js/pos-modal-cart-options.js"></script>
-<script src="/js/pos-modal-payment.js"></script>
-<script src="/js/pos-camera.js"></script>
+<script src="/js/pos-modal-discount.js?v=<?= APP_VERSION ?>"></script>
+<script src="/js/pos-modal-loyalty.js?v=<?= APP_VERSION ?>"></script>
+<script src="/js/pos-modal-cart-options.js?v=<?= APP_VERSION ?>"></script>
+<script src="/js/pos-modal-payment.js?v=<?= APP_VERSION ?>"></script>
+<script src="/js/pos-camera.js?v=<?= APP_VERSION ?>"></script>
 <script>
 $(function () {
 	$('.menu-left-toggle').on('click', function() {
