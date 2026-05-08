@@ -13,14 +13,14 @@ class Receipt extends \OpenTHC\POS\PDF\Base
 	protected $Company;
 	protected $License;
 
-	protected $_width_full = 72;
+	protected $_width_full = 80;
 
 	private $_b2c_sale;
 	private $_item_list = [];
 
 	private $_init_x = 2;
-	private $_width_view = 68;
-	private $_width_half = 34;
+	private $_width_view = 76;
+	private $_width_half = 38;
 
 	public $head_text = '';
 	public $foot_text = '';
@@ -30,7 +30,7 @@ class Receipt extends \OpenTHC\POS\PDF\Base
 	/**
 	 * Defaults
 	 */
-	function __construct($orientation='P', $unit='mm', $format=array(72, 1000), $unicode=true, $encoding='UTF-8', $diskcache=false, $pdfa=false)
+	function __construct($orientation='P', $unit='mm', $format=array(80, 1000), $unicode=true, $encoding='UTF-8', $diskcache=false, $pdfa=false)
 	{
 		parent::__construct($orientation, $unit, $format, $unicode, $encoding, $diskcache, $pdfa);
 		$this->setAutoPageBreak(false);
@@ -50,6 +50,10 @@ class Receipt extends \OpenTHC\POS\PDF\Base
 	function setLicense($x)
 	{
 		$this->License = $x;
+		$this->head_text = $this->Company->getOption(sprintf('/%s/receipt/head', $this->License['id']));
+		$this->foot_text = $this->Company->getOption(sprintf('/%s/receipt/foot', $this->License['id']));
+		$this->tail_text = $this->Company->getOption(sprintf('/%s/receipt/tail', $this->License['id']));
+		$this->foot_link = $this->Company->getOption(sprintf('/%s/receipt/link', $this->License['id']));
 	}
 
 	/**
@@ -79,15 +83,17 @@ class Receipt extends \OpenTHC\POS\PDF\Base
 		$this->setFillColor(0x10, 0x10, 0x10);
 		$this->setTextColor(0xff, 0xff, 0xff);
 		$this->setXY($this->_init_x, 4);
-		$this->cell($this->_width_view, 4, $this->License['name'], null, null, 'C', true);
+		// $this->cell($this->_width_view, 4, $this->License['name'], null, null, 'C', $fill=true);
+		$this->multicell(76, 4, $this->License['name'], null, 'C', $fill=true);
+
+		$y = ceil($this->getY());
+		$y += 4;
+		$this->setXY($this->_init_x, $y);
 
 		// Reset Font
 		$this->setFont('freesans', '', 12);
 		$this->setFillColor(0xff, 0xff, 0xff);
 		$this->setTextColor(0x00, 0x00, 0x00);
-
-		$y = 12;
-		$this->setXY($this->_init_x, $y);
 		$this->cell($this->_width_view, 4, sprintf('B2C/%s', substr($this->_b2c_sale['id'], 0, 16)), null, null, 'C');
 
 		// Date/Time
@@ -147,6 +153,13 @@ class Receipt extends \OpenTHC\POS\PDF\Base
 		// 	$this->setXY($this->_width_half, $y);
 		// 	$this->cell($this->_width_half, 4, '$-.--', 0, 0, 'R');
 		// }
+
+		// $this->tax_info->tax_list->{'010PENTHC00BIPA0SST03Q484J'} = floatval($Company->getOption(sprintf('/%s/b2c-item-price-adjust/010PENTHC00BIPA0SST03Q484J', $License['id']))); // State
+		// $this->tax_info->tax_list->{'010PENTHC00BIPA0C0T620S2M2'} = floatval($Company->getOption(sprintf('/%s/b2c-item-price-adjust/010PENTHC00BIPA0C0T620S2M2', $License['id']))); // County
+		// $this->tax_info->tax_list->{'010PENTHC00BIPA0CIT5H9S6T3'} = floatval($Company->getOption(sprintf('/%s/b2c-item-price-adjust/010PENTHC00BIPA0CIT5H9S6T3', $License['id']))); // City
+		// $this->tax_info->tax_list->{'010PENTHC00BIPA0MUT0FEEGCF'} = floatval($Company->getOption(sprintf('/%s/b2c-item-price-adjust/010PENTHC00BIPA0MUT0FEEGCF', $License['id']))); // Regional
+		// $this->tax_info->tax_list->{'010PENTHC00BIPA0ET0FNBCKMH'} = floatval($Company->getOption(sprintf('/%s/b2c-item-price-adjust/010PENTHC00BIPA0ET0FNBCKMH', $License['id']))); // Excise
+
 
 		// Tax A
 		$y+= 6;
@@ -233,7 +246,7 @@ class Receipt extends \OpenTHC\POS\PDF\Base
 
 			$this->setXY($this->_init_x, $y);
 			$this->setFont('freesans', '', 10);
-			$this->multicell($this->_width_view, 5, $this->foot_text, null, 'L', null, 1);
+			$this->multicell($this->_width_view, 5, $this->foot_text, null, 'C', null, 1);
 
 		}
 
@@ -242,6 +255,8 @@ class Receipt extends \OpenTHC\POS\PDF\Base
 		if ( ! empty($this->foot_link)) {
 
 			$y = $this->getY();
+			$y += 2;
+			$this->line(0, $y, $this->_width_full, $y);
 
 			$link = sprintf('%s/feedback/%s', OPENTHC_SERVICE_ORIGIN, $this->_b2c_sale['id']);
 
@@ -263,6 +278,8 @@ class Receipt extends \OpenTHC\POS\PDF\Base
 
 			$this->write2DBarcode($link, 'QRCODE,L', $x, $y, $w, $h, $style, $align, $distort);
 
+			$y = $this->getY();
+			$this->setY($y + 4);
 		}
 
 	}
@@ -294,6 +311,7 @@ class Receipt extends \OpenTHC\POS\PDF\Base
 
 		$this->setFont('freesans', '', 12);
 		$this->setFillColor(0xff, 0xff, 0xff);
+		$this->setLineWidth(0.20);
 		$this->setTextColor(0x00, 0x00, 0x00);
 
 		$y = $this->getY();
@@ -306,7 +324,7 @@ class Receipt extends \OpenTHC\POS\PDF\Base
 			$this->colLeft($y, $txt);
 
 			$y += 6;
-			$txt = sprintf('%d @ $%s', $SI['unit_count'], number_format($SI['unit_price'], 2));
+			$txt = sprintf('%d @ $%s', $SI['unit_count'], number_format($SI['base_price'], 2));
 			$this->colLeft($y, $txt);
 			$this->colRight($y, number_format($SI['base_price'], 2));
 			// $this->setXY($this->_init_x, $y);
@@ -327,8 +345,15 @@ class Receipt extends \OpenTHC\POS\PDF\Base
 		$this->setY($y);
 
 		$this->drawSummary();
-		$this->drawTail();
 		$this->drawFoot();
+		$this->drawTail();
+
+		$y = $this->getY();
+		$w = $this->getLineWidth();
+		$this->setLineWidth(0.40);
+		$this->line(0, $y, $this->_width_full, $y);
+		$y += 1;
+		$this->line(0, $y, $this->_width_full, $y);
 
 		// $y = $this->getY();
 		// $y += 4;

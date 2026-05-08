@@ -119,7 +119,7 @@ class Receipt extends \OpenTHC\Controller\Base
 
 		$pdf = new \OpenTHC\POS\PDF\Receipt();
 		$pdf->setCompany( new \OpenTHC\Company($dbc, $_SESSION['Company'] ));
-		$pdf->setLicense( new \OpenTHC\Company($dbc, $_SESSION['License'] ));
+		$pdf->setLicense( new \OpenTHC\License($dbc, $_SESSION['License'] ));
 		$pdf->setSale($S);
 		$pdf->setItems($b2c_item_list);
 		$pdf->render();

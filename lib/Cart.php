@@ -124,7 +124,6 @@ class Cart
 				$b2c_item->tax_total += $trd_item->amount;
 			}
 
-			$b2c_item->tax_total = round($b2c_item->tax_total, 2);
 			$b2c_item->base_price = $total_price_want - $b2c_item->tax_total;
 
 			$b2c_item->full_price = ($b2c_item->base_price + $b2c_item->tax_total) * $b2c_item->unit_count;

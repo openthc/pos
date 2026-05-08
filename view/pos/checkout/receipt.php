@@ -98,17 +98,20 @@ $this->layout_file = sprintf('%s/view/_layout/html-pos.php', APP_ROOT);
 		-->
 
 		<?php
-		$src = '';
-		$src = '/loading.html?' . http_build_query([
-			'r' => '/pos/checkout/receipt?' . http_build_query([
+		// See https://issues.chromium.org/issues/40483153
+		// Has parameters for viewing the PDF
+		$url = '/pos/checkout/receipt?' . http_build_query([
 				'a' => 'pdf',
 				's' => $data['Sale']['id'],
-			])
+		]) . '#toolbar=0&view=fith';
+
+		$src = '/loading.html?' . http_build_query([
+			'r' => $url
 		]);
 		?>
 		<iframe id="print-frame" name="print-frame"
 			src="<?= $src ?>"
-			style="border: 1px solid #000; width:100%;"></iframe>
+			style="border: 1px solid #000; height: 30vh; width:100%;"></iframe>
 
 	</div>
 
