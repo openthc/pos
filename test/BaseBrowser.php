@@ -30,23 +30,16 @@ class BaseBrowser extends \OpenTHC\Test\BaseBrowser
 
 	public static function helperSignIn($company_id)
 	{
-		self::$wd->get(getenv('OPENTHC_TEST_SIGNIN_ORIGIN') . '/auth/open');
-
+		self::$wd->get(getenv('OPENTHC_TEST_ORIGIN') . '/auth/open');
 		$e = self::$wd->findElement(WebDriverBy::name('username'));
 		$e->clear();
 		$text = getenv('OPENTHC_TEST_CONTACT_USERNAME');
-		$text = str_split($text);
-		foreach ($text as $c) {
-			$e->sendKeys($c);
-		}
+		$e->sendKeys($text);
 
 		$e = self::$wd->findElement(WebDriverBy::name('password'));
-		$text = str_split('password');
+		$e->clear();
 		$text = getenv('OPENTHC_TEST_CONTACT_PASSWORD');
-		$text = str_split($text);
-		foreach ($text as $c) {
-			$e->sendKeys($c);
-		}
+		$e->sendKeys($text);
 
 		$e = self::$wd->findElement(WebDriverBy::cssSelector('button#btn-auth-open'));
 		$e->click();
@@ -60,14 +53,12 @@ class BaseBrowser extends \OpenTHC\Test\BaseBrowser
 
 	public static function helperSetLicense($license_id)
 	{
-		self::$wd->findElement(WebDriverBy::cssSelector('li[data-track-a="license-list"] a.nav-link'))->click();
-		self::$wd->findElement(WebDriverBy::cssSelector(sprintf('#btn-license-%s', $license_id)))->click();
+		// Identify a License by ID
+		$e = self::$wd->findElement(WebDriverBy::cssSelector(sprintf('[data-license-id="%s"]', $license_id)));
+		self::$wd->executeScript('arguments[0].scrollIntoView({ behavior: "instant", block: "center", inline: "center" });', [ $e ]);
+		$e->click();
 	}
 
-	public static function helperLaunchPOS()
-	{
-		self::$wd->get(getenv('OPENTHC_TEST_SIGNIN_ORIGIN') . '/settings/openthc?c=pos');
-	}
 
 	function assertTextExists(string $text)
 	{
