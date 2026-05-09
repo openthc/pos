@@ -15,8 +15,8 @@ window.ulid = function()
 	return u;
 }
 
-
 var OpenTHC = OpenTHC || {};
+let Scanner = null;
 
 OpenTHC.POS = {
 	Cart: { /** From pos-cart.js */ },
@@ -69,11 +69,13 @@ $(function() {
 	// https://github.com/zxing-js/library/blob/master/docs/examples/qr-camera/index.html
 	$('.pos-camera-input').on('click', function() {
 
-		debugger;
-
 		$btn = $(this);
+		if ( $btn.attr('data-running')) {
+			return;
+		}
+		$btn.attr('data-running', true);
 
-		window.OpenTHC.Camera.exists(function(good) {
+		window.OpenTHC.Camera.exists(async function(good) {
 
 			if ( ! good) {
 				$btn.removeClass('btn-primary');
@@ -99,38 +101,58 @@ $(function() {
 			html.push('</div>');
 			$(document.body).append(html.join(''));
 
+			// Attach Close Button
+			$('#pos-camera-preview-wrap .shut').one('click', function() {
+				$('#pos-camera-preview-wrap').remove();
+				// if (Scanner) {
+				// 	if (Scanner.controls) {
+				// 		Scanner.controls.stop();
+				// 	}
+				// }
+				// Scanner = null;
+				$btn.attr('data-running', false);
+			});
+
 			// @see https://github.com/zxing-js/library/issues/432
 			const hints = new Map();
 			const formats = [
-				ZXing.BarcodeFormat.CODE_128,
-				ZXing.BarcodeFormat.QR_CODE,
-				ZXing.BarcodeFormat.PDF_417
+				ZXingBrowser.BarcodeFormat.CODE_128,
+				ZXingBrowser.BarcodeFormat.QR_CODE,
+				ZXingBrowser.BarcodeFormat.PDF_417
 			];
-			hints.set(ZXing.DecodeHintType.POSSIBLE_FORMATS, formats);
-			hints.set(ZXing.DecodeHintType.CHARACTER_SET, 'utf-8');
-			//hints.set(ZXing.DecodeHintType.TRY_HARDER, true);
-			//hints.set(ZXing.DecodeHintType.PURE_BARCODE, true);
-			// var Scanner = new ZXing.BrowserMultiFormatReader(hints);
-			var Scanner = new ZXing.BrowserPDF417Reader(); // hints);
-			Scanner.decodeFromInputVideoDevice('', 'pos-camera-preview')
-			.then(function(res) {
+			hints.set('POSSIBLE_FORMATS', formats); // ZXing.DecodeHintType.POSSIBLE_FORMATS
+			hints.set('CHARACTER_SET', 'utf-8'); // ZXing.DecodeHintType.CHARACTER_SET
+			hints.set('TRY_HARDER', true); // ZXing.DecodeHintType.TRY_HARDER
+			// hints.set('PURE_BARCODE', true); // ZXing.DecodeHintType.PURE_BARCODE
+
+			Scanner = new ZXingBrowser.BrowserMultiFormatReader();
+			// Scanner = new ZXingBrowser.BrowserMultiFormatReader(hints, options);
+
+			const videoInputDevices = await ZXingBrowser.BrowserCodeReader.listVideoInputDevices();
+
+			Scanner.controls = Scanner.decodeFromVideoDevice(videoInputDevices[0].deviceId, 'pos-camera-preview', function(res, err, ctl) {
 				console.log(res);
-				$('#barcode-input').val(res);
-				$('#pos-camera-preview-wrap').remove();
-				Scanner.reset();
-				delete Scanner;
-			})
-			.catch((err) => { console.log(err); });
+				if (res) {
+					$('#barcode-input').val(res.text);
+					$('#pos-inventory-search').trigger('click');
+					$('#pos-camera-preview-wrap .shut').trigger('click');
+				}
+				// console.log(err);
+			});
+			setTimeout(function() {
+				$('#pos-camera-preview-wrap .shut').trigger('click');
+			}, 15000);
+			// .then(function(res) {
+			// 	console.log(res);
+			// 	$('#barcode-input').val(res);
+			// 	$('#pos-camera-preview-wrap').remove();
+			// 	Scanner = null;
+			// })
+			// .catch((err) => { console.log(err); });
 
 			// window.OpenTHC.Camera.scan(function() {
 			// 	alert('I Got a Scan!!');
 			// });
-
-			$('#pos-camera-preview-wrap .shut').one('click', function() {
-				Scanner.reset();
-				delete Scanner;
-				$('#pos-camera-preview-wrap').remove();
-			});
 
 		});
 	});
@@ -215,6 +237,7 @@ $(function() {
 		.then(res => res.json())
 		.then(json => {
 			json.data.forEach(function(v, i) {
+				/*
 				Cart_addItem({
 					id: v.id,
 					name: v.product.name,
@@ -222,6 +245,8 @@ $(function() {
 					price: v.unit_price,
 					qty: v.qty
 				});
+				*/
+
 			});
 		});
 

@@ -24,9 +24,10 @@ header('content-type: text/html; charset=utf-8', true);
 <link rel="preload" as="script" href="/vendor/lodash/lodash.min.js">
 <link rel="preload" as="script" href="/vendor/jquery/jquery.min.js">
 <link rel="preload" as="script" href="/vendor/bootstrap/bootstrap.bundle.min.js">
-<link rel="preload" as="script" href="/vendor/htmx/htmx.min.js">
+<!-- <link rel="preload" as="script" href="/vendor/htmx/htmx.min.js"> -->
 <link rel="preload" as="script" href="/vendor/qrcodejs/qrcode.min.js">
-<link rel="preload" as="script" href="/vendor/chart.js/chart.min.js">
+<link rel="preload" as="script" href="/vendor/zxing/zxing-browser.min.js">
+<!-- <link rel="preload" as="script" href="/vendor/chart.js/chart.min.js"> -->
 
 <link rel="stylesheet" href="/vendor/fontawesome/css/all.min.css">
 <link rel="stylesheet" href="/vendor/jquery/jquery-ui.min.css">
@@ -65,8 +66,10 @@ header('content-type: text/html; charset=utf-8', true);
 <?= $this->body ?>
 
 <div class="shut" id="menu-left">
-	<div class="menu-item">
-		<button class="btn btn-outline-secondary menu-left-toggle" type="button"><i class="fas fa-bars"></i></button>
+	<div class="menu-item text-end">
+		<button class="btn btn-outline-danger menu-left-toggle" type="button">
+			<i class="fas fa-times"></i>
+		</button>
 	</div>
 	<div class="menu-item">
 		<input class="form-control">
@@ -78,9 +81,8 @@ header('content-type: text/html; charset=utf-8', true);
 <script src="/vendor/jquery/jquery.min.js"></script>
 <script src="/vendor/jquery/jquery-ui.min.js"></script>
 <script src="/vendor/bootstrap/bootstrap.bundle.min.js"></script>
-<!-- <script src="https://unpkg.com/@zxing/library@latest"></script> -->
 <script src="/vendor/qrcodejs/qrcode.min.js"></script>
-<script src="https://unpkg.com/@zxing/library@0.19.2/umd/index.min.js" integrity="sha256-a0mo/OgjQ26D3n9JRYL4LMTeSx8PV3SYKv2My5wOdHE=" crossorigin="anonymous"></script>
+<script src="/vendor/zxing/zxing-browser.min.js"></script>
 <script src="/js/pos.js?v=<?= APP_VERSION ?>"></script>
 <script src="/js/pos-scanner.js?v=<?= APP_VERSION ?>"></script>
 <script src="/js/pos-printer.js?v=<?= APP_VERSION ?>"></script>
