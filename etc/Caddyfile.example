@@ -1,0 +1,20 @@
+
+pos.openthc.example.com {
+
+        root * /opt/openthc/pos/webroot/
+        log
+        encode
+        import common404
+        file_server
+
+        php_fastcgi unix//run/php/php7.4-fpm.sock {
+                try_files {path} {path}/index.html {path}/index.php /main.php
+        }
+
+	reverse_proxy /ws/* localhost:42040
+
+        handle_errors {
+                respond "{err.status_code} {err.status_text}"
+        }
+
+}
