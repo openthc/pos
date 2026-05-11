@@ -33,7 +33,7 @@ header('content-type: text/html; charset=utf-8', true);
 <link rel="stylesheet" href="/vendor/jquery/jquery-ui.min.css">
 <link rel="stylesheet" href="/vendor/bootstrap/bootstrap.min.css">
 <link rel="stylesheet" href="/css/main.css">
-<title><?= __h(strip_tags($this->data['Page']['title'])) ?></title>
+<title><?= __h(strip_tags($this->data['Page']['title'])) ?> || OpenTHC</title>
 </head>
 <body class="pos">
 <nav class="navbar navbar-expand-md navbar-dark bg-dark sticky-top">

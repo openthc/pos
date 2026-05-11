@@ -15,7 +15,7 @@ class Intent extends \OpenTHC\Controller\Base
 	function __invoke($REQ, $RES, $ARG)
 	{
 		$data = [
-			'Page' => [ 'title' => 'Intent' ],
+			'Page' => [ 'title' => 'POS / Intent' ],
 		];
 
 		switch ($_GET['a']) {

@@ -37,7 +37,7 @@ $body_class_list[] = sprintf('m1-%s', $m1_mode);
 <link rel="stylesheet" href="/vendor/bootstrap/bootstrap.min.css">
 <link rel="stylesheet" href="/css/main.css">
 
-<title><?= __h(strip_tags($this->data['Page']['title'])) ?></title>
+<title><?= __h(strip_tags($this->data['Page']['title'])) ?> || OpenTHC</title>
 </head>
 <body class="<?= implode(' ', $body_class_list) ?>" data-menu-left-mode="<?= $m1_mode ?>">
 <?= $this->block('body-head.php') ?>
@@ -52,8 +52,7 @@ $body_class_list[] = sprintf('m1-%s', $m1_mode);
 <script src="/vendor/htmx/htmx.min.js"></script>
 <script src="/vendor/qrcodejs/qrcode.min.js"></script>
 <script src="/vendor/chart.js/chart.min.js"></script>
-<!-- <script src="https://app.openthc.com/js/app.js"></script> -->
-<script src="/js/pos.js"></script>
+<script src="/js/pos.js?v=<?= APP_VERSION ?>""></script>
 <script>
 $(function() {
 

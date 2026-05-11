@@ -12,7 +12,7 @@ class Online extends \OpenTHC\Controller\Base
 	function __invoke($REQ, $RES, $ARG)
 	{
 		$data = [
-			'Page' => ['title' => 'POS :: Online' ],
+			'Page' => ['title' => 'POS / Online' ],
 		];
 		$data['b2c_sale_hold'] = [];
 

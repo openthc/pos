@@ -12,7 +12,7 @@ class Delivery extends \OpenTHC\Controller\Base
 	function __invoke($REQ, $RES, $ARG)
 	{
 		$data = [
-			'Page' => ['title' => 'POS :: Delivery' ],
+			'Page' => ['title' => 'POS / Delivery' ],
 			'b2c_sale_hold' => [],
 			'contact_list' => [], // Employee Contacts
 			'courier_list' => [], // Active Courier Contacts

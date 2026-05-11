@@ -28,7 +28,7 @@ class Shut extends \OpenTHC\Controller\Base
 
 		$data = [];
 		$data['Page'] = [
-			'title' => 'POS :: Terminal :: Shut',
+			'title' => 'POS / Terminal / Shut',
 		];
 
 		return $RES->write( $this->render('pos/terminal/shut.php', $data) );

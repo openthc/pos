@@ -17,7 +17,7 @@ class Shut extends \OpenTHC\Controller\Auth\Shut
 		}
 
 		$data = [];
-		$data['Page'] = [ 'title' => 'Session Closed' ];
+		$data['Page'] = [ 'title' => 'POS / Session Closed' ];
 		$data['body'] = '<p>Your session has been closed</p><p>';
 		$data['foot'] = '<a class="btn btn-outline-secondary" href="/auth/open">Sign In Again</a>';
 

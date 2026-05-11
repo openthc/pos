@@ -18,7 +18,7 @@ class Receipt extends \OpenTHC\Controller\Base
 	function __invoke($REQ, $RES, $ARG)
 	{
 		$data = array(
-			'Page' => array('title' => 'POS :: Checkout :: Receipt'),
+			'Page' => array('title' => 'POS / Checkout / Receipt'),
 			'Company' => $_SESSION['Company'],
 			'Sale' => array(
 				'id' => $_GET['s'],

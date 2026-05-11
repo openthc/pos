@@ -44,7 +44,7 @@ class Main extends \OpenTHC\Controller\Base
 
 		if (empty($_SESSION['pos-terminal-contact'])) {
 			$data = [];
-			$data['Page'] = [ 'title' => 'Terminal Authentication'];
+			$data['Page'] = [ 'title' => 'POS / Terminal Authentication'];
 
 			$contact_select_list = [];
 			$sql = <<<SQL
@@ -64,8 +64,7 @@ class Main extends \OpenTHC\Controller\Base
 		// Page Data
 		$data = [];
 		$data['Page'] = [];
-		$data['Page']['title'] = sprintf('POS :: %s <code>%s</code>', $_SESSION['License']['name'], $_SESSION['License']['code']);
-		$data['Page']['title'] = sprintf('POS :: %s <code>%s</code>', $_SESSION['License']['name'], $_SESSION['License']['code']);
+		$data['Page']['title'] = sprintf('POS / %s <code>%s</code>', $_SESSION['License']['name'], $_SESSION['License']['code']);
 
 		$Cart = new \OpenTHC\POS\Cart($this->_container->Redis, $_GET['cart']);
 

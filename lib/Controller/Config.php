@@ -22,7 +22,7 @@ class Config extends \OpenTHC\Controller\Base
 		}
 		$data = [];
 		$data['Page'] = [];
-		$data['Page']['title'] = 'Configuration';
+		$data['Page']['title'] = 'POS / Configuration';
 
 		$rdb = $this->_container->Redis;
 
@@ -34,8 +34,6 @@ class Config extends \OpenTHC\Controller\Base
 		$val = json_decode($val, true);
 		$data['pick-ticket-queue-id'] = $val['queue-id'];
 		$data['pick-ticket-printer-name'] = $val['printer-name'];
-
-
 
 		return $RES->write( $this->render('config.php', $data) );
 	}
