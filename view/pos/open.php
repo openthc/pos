@@ -15,7 +15,7 @@ if (empty($_GET['c'])) {
 			<?php
 			foreach ($data['seller_contact_list'] as $c) {
 			?>
-				<div><a class="btn fs-3 w-100" href="/pos?c=<?= __h($c['id'])?>"><?= __h($c['fullname']) ?></a></div>
+				<div><a class="btn fs-3 w-100" data-contact-id="<?= __h($c['id']) ?>" href="/pos?c=<?= __h($c['id'])?>"><?= __h($c['fullname']) ?></a></div>
 			<?php
 			}
 			?>

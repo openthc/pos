@@ -4,6 +4,8 @@
  * We should be able to switch context into a license and get the behavior we expect.
  */
 
+namespace OpenTHC\POS\Test\Browser;
+
 use Facebook\WebDriver\WebDriverBy;
 use Facebook\WebDriver\WebDriverSelect;
 use Facebook\WebDriver\WebDriverExpectedCondition;
@@ -14,17 +16,7 @@ class Metrc_B2C_Sale_Test extends \OpenTHC\POS\Test\BaseBrowser
 	{
 		parent::setUpBeforeClass();
 		self::helperSignIn(getenv('OPENTHC_TEST_COMPANY_A'));
-		self::$wd->wait()->until(
-			WebDriverExpectedCondition::urlContains(getenv('OPENTHC_TEST_SIGNIN_ORIGIN') . '/dashboard')
-		);
 		self::helperSetLicense(getenv('OPENTHC_TEST_LICENSE_A'));
-		self::$wd->wait()->until(
-			WebDriverExpectedCondition::urlContains(getenv('OPENTHC_TEST_SIGNIN_ORIGIN') . '/dashboard')
-		);
-		self::helperLaunchPOS();
-		self::$wd->wait()->until(
-			WebDriverExpectedCondition::urlContains(getenv('OPENTHC_TEST_ORIGIN') . '/dashboard')
-		);
 
 	}
 
@@ -35,6 +27,9 @@ class Metrc_B2C_Sale_Test extends \OpenTHC\POS\Test\BaseBrowser
 
 
 		$this->assertTextNotExists('Inventory Lots need to be present and priced for the POS to operate [CPH-020]');
+
+		// Click data-contact-id="010DEM0XXXC0NTACT0TEST0000"
+		$this->findElement(WebDriverBy::cssSelector(sprintf('[data-contact-id="%s"]', getenv('OPENTHC_TEST_CONTACT_ID'))))->click();
 
 		// Pin Pad
 		$this->findElement(WebDriverBy::cssSelector('button[value="5"]'))->click();
@@ -71,8 +66,8 @@ class Metrc_B2C_Sale_Test extends \OpenTHC\POS\Test\BaseBrowser
 		);
 
 		// name="item-01KCPQ8VECC2YYC5H2K2C87EQY-unit-price"
-		$e = $this->findElement(WebDriverBy::cssSelector(sprintf('input[name="item-%s-unit-price"]', $inventory_id)));
-		$unit_price = $e->getAttribute('value');
+		$e = $this->findElement(WebDriverBy::cssSelector(sprintf('[name="item-%s-unit-price"]', $inventory_id)));
+		$unit_price = $e->getText();
 		$this->assertEquals($unit_price0, $unit_price);
 
 		// id="pos-shop-next"
