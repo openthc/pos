@@ -92,6 +92,11 @@ $this->layout_file = sprintf('%s/view/_layout/html-pos.php', APP_ROOT);
 				<i class="fas fa-save"></i><span class="btn-text"> Save</span></button>
 		</div>
 		<div class="cmd-item">
+			<button class="btn btn-lg btn-secondary" disabled id="pos-print-pick-ticket" type="button">
+				<i class="fas fa-print"></i> Print
+			</button>
+		</div>
+		<div class="cmd-item">
 			<button class="btn btn-lg btn-secondary" data-bs-toggle="modal" data-bs-target="#pos-modal-discount" disabled type="button">
 				<i class="fas fa-percent"></i><span class="btn-text"> Discount</span>
 			</button>
@@ -253,6 +258,24 @@ $(function() {
 		$('#psi-form').append('<input name="name" type="hidden" value="' + $('#customer-name').val() + '">');
 		$('#psi-form').submit();
 		return false;
+	});
+
+	$('#pos-print-pick-ticket').on('click touchend', function(e) {
+
+		fetch('/pos/cart/print-pick-ticket', {
+			method: 'POST',
+			credentials: 'include',
+			headers: {
+				'content-type': 'application/json'
+			},
+			body: JSON.stringify( OpenTHC.POS.Cart )
+		});
+		// @todo use fetch() and FormData()
+		// $('#psi-form').attr('action', '/pos/cart/save');
+		// $('#psi-form').append('<input name="a" type="hidden" value="save">');
+		// $('#psi-form').append('<input name="name" type="hidden" value="' + $('#customer-name').val() + '">');
+		// $('#psi-form').submit();
+		// return false;
 	});
 
 	$('#pos-modal-scan-id').on('show.bs.modal', function() {

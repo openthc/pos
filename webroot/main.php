@@ -70,9 +70,10 @@ $con['Company'] = function($c0) {
 
 // API
 $app->group('/api/v2018', function() {
+
 	$this->get('', 'OpenTHC\POS\Controller\API\Main');
 
-	// $this->post('/print', 'OpenTHC\POS\Controller\API\Print');
+	$this->get('/print/queue', 'OpenTHC\POS\Controller\API\PrintQueue');
 
 	// Create Sale
 	$this->post('/b2c', 'OpenTHC\POS\Controller\API\B2C');
@@ -96,6 +97,13 @@ $app->get('/dashboard', 'OpenTHC\POS\Controller\Dashboard\Main')
 	->add('OpenTHC\POS\Middleware\Auth')
 	->add('OpenTHC\Middleware\Session');
 
+// Configuration
+$app->get('/config', 'OpenTHC\POS\Controller\Config')
+	->add('OpenTHC\POS\Middleware\Auth')
+	->add('OpenTHC\Middleware\Session');
+$app->post('/config', 'OpenTHC\POS\Controller\Config:post')
+	->add('OpenTHC\POS\Middleware\Auth')
+	->add('OpenTHC\Middleware\Session');
 
 // POS / Register
 $app->group('/pos', 'OpenTHC\POS\Module\POS')

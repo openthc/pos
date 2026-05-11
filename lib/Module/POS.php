@@ -19,11 +19,17 @@ class POS extends \OpenTHC\Module\Base
 
 		$a->get('/fast', 'OpenTHC\POS\Controller\POS\Fast');
 		$a->get('/open', function($REQ, $RES, $ARG) {
+			// unset($_SESSION['pos-terminal-contact']);
 			unset($_SESSION['Cart']);
 			return $RES->withRedirect('/pos');
 		});
 
 		$a->map([ 'GET', 'POST', 'DELETE' ], '/ajax', 'OpenTHC\POS\Controller\POS\Ajax');
+
+		$a->post('/cart/ajax', 'OpenTHC\POS\Controller\POS\Cart\Ajax');
+		$a->post('/cart/drop', 'OpenTHC\POS\Controller\POS\Cart\Drop');
+		$a->post('/cart/save', 'OpenTHC\POS\Controller\POS\Cart\Save');
+		$a->post('/cart/print-pick-ticket', 'OpenTHC\POS\Controller\POS\Cart\PickTicket');
 
 		$a->post('/checkout/commit', 'OpenTHC\POS\Controller\POS\Checkout\Commit');
 		$a->get('/checkout/done', 'OpenTHC\POS\Controller\POS\Checkout\Done');
@@ -33,9 +39,6 @@ class POS extends \OpenTHC\Module\Base
 
 		$a->map([ 'GET', 'POST' ], '/checkout/receipt', 'OpenTHC\POS\Controller\POS\Checkout\Receipt');
 
-		$a->post('/cart/ajax', 'OpenTHC\POS\Controller\POS\Cart\Ajax');
-		$a->post('/cart/drop', 'OpenTHC\POS\Controller\POS\Cart\Drop');
-		$a->post('/cart/save', 'OpenTHC\POS\Controller\POS\Cart\Save');
 
 		$a->get('/delivery', 'OpenTHC\POS\Controller\POS\Delivery');
 		$a->map([ 'GET', 'POST' ], '/delivery/ajax', 'OpenTHC\POS\Controller\POS\Delivery:ajax');
