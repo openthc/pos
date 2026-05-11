@@ -36,7 +36,7 @@
 				<p>Delivery Management</p>
 			</div>
 			<div class="card-footer">
-				<a class="btn btn-warning" href="/pos/delivery">
+				<a class="btn btn-warning disabled" disabled href="/pos/delivery">
 					View Details <i class="fas fa-angle-right"></i>
 				</a>
 			</div>
@@ -52,7 +52,7 @@
 				<p>Online Sales</p>
 			</div>
 			<div class="card-footer">
-				<a class="btn btn-secondary" href="/pos/online">
+				<a class="btn btn-secondary disabled" disabled href="/pos/online">
 					View Details <i class="fas fa-angle-right"></i>
 				</a>
 			</div>
@@ -68,8 +68,24 @@
 				<p>Enter Kiosk Mode</p>
 			</div>
 			<div class="card-footer">
-				<a class="btn btn-secondary" href="/kiosk">
+				<a class="btn btn-secondary disabled" disabled href="/kiosk">
 					Launch Kiosk <i class="fas fa-angle-right"></i>
+				</a>
+			</div>
+		</div>
+	</div>
+
+	<div class="col-xl-4 col-sm-6 mb-3">
+		<div class="card border h-100">
+			<div class="card-header fs-2">
+				<i class="fa-solid fa-gears"></i> Settings
+			</div>
+			<div class="card-body">
+				<p>System Settings and Terminal Configuration</p>
+			</div>
+			<div class="card-footer">
+				<a class="btn btn-secondary" href="/config">
+					Update Settings <i class="fas fa-angle-right"></i>
 				</a>
 			</div>
 		</div>
