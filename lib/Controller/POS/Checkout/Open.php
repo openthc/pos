@@ -22,7 +22,7 @@ class Open extends \OpenTHC\Controller\Base
 	function __invoke($REQ, $RES, $ARG)
 	{
 		$data = array(
-			'Page' => array('title' => 'POS :: Checkout :: Open')
+			'Page' => array('title' => 'POS / Checkout / Open')
 		);
 
 		return $RES->write( $this->render('pos/checkout/done.php', $data) );

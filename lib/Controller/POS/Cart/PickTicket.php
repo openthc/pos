@@ -14,17 +14,20 @@ class PickTicket extends \OpenTHC\Controller\Base
 	 */
 	function __invoke($REQ, $RES, $ARG)
 	{
-		$rdb = $this->_container->Redis;
-
 		$source_data = $this->parseJSON();
 
+		$rdb = $this->_container->Redis;
+		$key = sprintf('/%s/%s/pos/pick-ticket-queue', $_SESSION['Company']['id'], $_SESSION['License']['id']);
+		$val = $rdb->get($key);
+		$val = json_decode($val, true);
 
-		$pq_code = $_SESSION['printer']['pick-ticket'];
-		if (empty($pq_code)) {
+		if (empty($val)) {
 			__exit_json([
 				'data' => 'Invalid Pick Ticket Printer Selected',
 			], 400);
 		}
+
+		$pq_code = $val['queue-id'];
 
 		$key0 = sprintf('/global/print-queue/%s', $pq_code);
 		$key1 = _ulid();
@@ -37,7 +40,7 @@ class PickTicket extends \OpenTHC\Controller\Base
 		$res = $rdb->hset($key0, $key1, $val);
 
 		__exit_json([
-			'data' => $res,
+			'data' => $val,
 			'meta' => [],
 		], 201);
 
