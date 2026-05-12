@@ -21,34 +21,34 @@ $SumatraPath = "C:\Users\root\AppData\Local\SumatraPDF\SumatraPDF.exe"
 # %LOCALAPPDATA%\SumatraPDF\
 
 $queue_req_head = @{
-    Authorization = "Bearer v2018/print-queue/{{OPENTHC_PRINT_QUEUE_API_KEY}}"
+	Authorization = "Bearer v2018/print-queue/{{OPENTHC_PRINT_QUEUE_API_KEY}}"
 }
 while ($true) {
-    try {
+	try {
 
-        Invoke-WebRequest -Uri $queue_url -Headers $queue_req_head -OutFile $DownloadPath -UseBasicParsing
+		Invoke-WebRequest -Uri $queue_url -Headers $queue_req_head -OutFile $DownloadPath -UseBasicParsing
 
-        $newHash = (Get-FileHash $DownloadPath).Hash
+		$newHash = (Get-FileHash $DownloadPath).Hash
 
-        if (Test-Path $LastHashFile) {
-            $oldHash = Get-Content $LastHashFile
-        } else {
-            $oldHash = ""
-        }
+		if (Test-Path $LastHashFile) {
+			$oldHash = Get-Content $LastHashFile
+		} else {
+			$oldHash = ""
+		}
 
-        if ($newHash -ne $oldHash) {
-            Write-Host "New document detected. Printing..."
+		if ($newHash -ne $oldHash) {
+			Write-Host "New document detected. Printing..."
 
-            # & $SumatraPath -print-to "$PrinterName" -silent $DownloadPath
+			# & $SumatraPath -print-to "$PrinterName" -silent $DownloadPath
 
-            $newHash | Out-File $LastHashFile
-        } else {
-            Write-Host "No change."
-        }
-    } catch {
-        Write-Host "Error: $_"
-    }
+			$newHash | Out-File $LastHashFile
+		} else {
+			Write-Host "No change."
+		}
+	} catch {
+		Write-Host "Error: $_"
+	}
 
-    Start-Sleep -Seconds 4
+	Start-Sleep -Seconds 4
 
 }
