@@ -3,26 +3,58 @@
 # @deprends on SumatraPDF https://www.sumatrapdfreader.org/
 
 # Run with:
-# `powershell -ExecutionPolicy Bypass -File .\openthc-print-queue-poller.ps1`
+# `powershell -ExecutionPolicy Bypass -File .\openthc-print-queue.ps1`
 
 # Test With:
 # "C:\Program Files\SumatraPDF\SumatraPDF.exe" -print-to "Your Printer Name" test.pdf
 
-$queue_url = "{{OPENTHC_PRINT_QUEUE_URL}}"
-$DownloadPath = "$env:TEMP\openthc-print-job.pdf"
-$LastHashFile = "$env:TEMP\openthc-print-job-hash.txt"
 $PrinterName = "{{OPENTHC_PRINT_QUEUE_PRINTER_NAME}}"
-# $SumatraPath = "C:\Program Files\SumatraPDF\SumatraPDF.exe"
-$SumatraPath = "C:\Users\root\AppData\Local\SumatraPDF\SumatraPDF.exe"
 
-# Get-Command SumatraPDF.exe -ErrorAction SilentlyContinue
-# C:\Program Files\SumatraPDF\
-# C:\Program Files (x86)\SumatraPDF\
-# %LOCALAPPDATA%\SumatraPDF\
-
-$queue_req_head = @{
+$queue_url = "{{OPENTHC_PRINT_QUEUE_URL}}"
+$queue_req_auth = @{
 	Authorization = "Bearer v2018/print-queue/{{OPENTHC_PRINT_QUEUE_API_KEY}}"
 }
+
+#
+# Find the Executable
+#
+function Find-Sumatra {
+	[CmdletBinding()]
+	param()
+
+	# In the Path?
+	$cmd = Get-Command "SumatraPDF.exe" -ErrorAction SilentlyContinue
+	if ($cmd) {
+		return $cmd.Source
+	}
+
+	# Search
+	$path_list = @(
+		"$env:ProgramFiles\SumatraPDF\SumatraPDF.exe",
+		"$env:ProgramFiles(x86)\SumatraPDF\SumatraPDF.exe",
+		"$env:LOCALAPPDATA\SumatraPDF\SumatraPDF.exe",
+		"$env:APPDATA\SumatraPDF\SumatraPDF.exe",
+		"$PSScriptRoot\SumatraPDF.exe"
+	)
+
+	foreach ($path in $path_list) {
+
+		Write-Host "Checking: $path"
+
+		if (Test-Path $path) {
+			return (Resolve-Path $path).Path
+		}
+	}
+
+	return $null
+
+}
+$SumatraPath = Find-Sumatra
+
+$DownloadPath = "$env:TEMP\openthc-print-job.pdf"
+$LastHashFile = "$env:TEMP\openthc-print-job-hash.txt"
+
+
 while ($true) {
 	try {
 
@@ -39,7 +71,7 @@ while ($true) {
 		if ($newHash -ne $oldHash) {
 			Write-Host "New document detected. Printing..."
 
-			# & $SumatraPath -print-to "$PrinterName" -silent $DownloadPath
+			& $SumatraPath -print-to "$PrinterName" -silent $DownloadPath
 
 			$newHash | Out-File $LastHashFile
 		} else {
