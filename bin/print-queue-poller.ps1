@@ -1,12 +1,21 @@
 #
 # OpenTHC Print Queue Poller
-# @deprends on SumatraPDF https://www.sumatrapdfreader.org/
+#
+# SPDX-License-Identifier: GPL-3.0-only
+#
+# @depends on SumatraPDF https://www.sumatrapdfreader.org/
+#
 
 # Run with:
 # `powershell -ExecutionPolicy Bypass -File .\openthc-print-queue.ps1`
 
+# Find Printers
+# `Get-Printer`
+# `Get-Printer | Select-Object Name, PrinterStatus`
+# `Rename-Printer -Name "HP LaserJet P1102" -NewName "Office Printer"`
+
 # Test With:
-# "C:\Program Files\SumatraPDF\SumatraPDF.exe" -print-to "Your Printer Name" test.pdf
+# `"C:\Program Files\SumatraPDF\SumatraPDF.exe" -print-to "Printer Name" printme.pdf`
 
 $PrinterName = "{{OPENTHC_PRINT_QUEUE_PRINTER_NAME}}"
 
@@ -74,6 +83,7 @@ while ($true) {
 			& $SumatraPath -print-to "$PrinterName" -silent $DownloadPath
 
 			$newHash | Out-File $LastHashFile
+
 		} else {
 			Write-Host "No change."
 		}
