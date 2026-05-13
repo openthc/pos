@@ -34,6 +34,13 @@ mkdir -p webroot/vendor/chart.js
 cp node_modules/chart.js/dist/chart.umd.js webroot/vendor/chart.js/
 cp node_modules/chart.js/dist/chart.umd.js.map webroot/vendor/chart.js/
 
+output_path="webroot/vendor/zxing"
+mkdir -p "$output_path/"
+cp node_modules/@zxing/browser/umd/zxing-browser.min.js "$output_path/"
+cp node_modules/@zxing/browser/umd/zxing-browser.min.js.gz "$output_path/"
+cp node_modules/@zxing/browser/umd/zxing-browser.min.js.map "$output_path/"
+
+
 # SASS
 ./node_modules/.bin/sass \
 	--fatal-deprecation 1.80.0 \
