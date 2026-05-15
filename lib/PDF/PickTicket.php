@@ -17,10 +17,10 @@ class PickTicket extends \OpenTHC\POS\PDF\Base
 	private $_b2c_sale;
 	private $_item_list = [];
 
-	private $_init_x = 0;
-	private $_width_full = 72;
-	private $_width_view = 68;
-	private $_width_half = 34;
+	private $_init_x = 2;
+	private $_width_full = 80;
+	private $_width_view = 76;
+	private $_width_half = 38;
 
 	public $head_text = '';
 	public $foot_text = '';
@@ -34,6 +34,11 @@ class PickTicket extends \OpenTHC\POS\PDF\Base
 	{
 		parent::__construct($orientation, $unit, $format, $unicode, $encoding, $diskcache, $pdfa);
 		$this->setAutoPageBreak(false);
+	}
+
+	function my_line($y)
+	{
+		parent::line($this->_init_x, $y, $this->_width_view, $y);
 	}
 
 	/**
@@ -63,12 +68,15 @@ class PickTicket extends \OpenTHC\POS\PDF\Base
 	{
 		$this->_b2c_sale = $d;
 		$this->_doc_title = sprintf('Pick Ticket #%s', substr($d->id, -8));
-		$this->_item_list = $d->item_list;
+		$this->_item_list = (array)$d->item_list;
 		$this->setTitle($this->_doc_title);
 	}
 
 	/**
-	 *
+	 * License Name
+	 * "Pick Ticket"
+	 * Order ID (or part of it)
+	 * Date Time in Human Format
 	 */
 	function drawHead()
 	{
@@ -78,68 +86,49 @@ class PickTicket extends \OpenTHC\POS\PDF\Base
 		$this->setTextColor(0xff, 0xff, 0xff);
 		$this->setXY($this->_init_x, 0);
 		// $this->cell($this->_width_view, 4, $this->License['name'], null, null, 'C', $fill=true);
-		$this->multicell($this->_width_full, 4, $this->License['name'], null, 'C', $fill=true);
+		$this->multicell($this->_width_view, 4, $this->License['name'], null, 'C', $fill=true);
 
-		$y = ceil($this->getY());
-		$y += 4;
+		$y = ceil($this->getY()) + 2;
 		$this->setXY($this->_init_x, $y);
 
 		// Reset Font
-		$this->setFont('freesans', '', 12);
+		$this->setFont('freesans', '', 14);
 		$this->setFillColor(0xff, 0xff, 0xff);
 		$this->setTextColor(0x00, 0x00, 0x00);
 		$this->cell($this->_width_view, 4, $this->_doc_title, null, null, 'C');
 
 		// Date/Time
+		$y = $this->getY() + 8;
 		$dtC = new \DateTime();
 		if ( ! empty($this->Company['tz'])) {
 			$dtC->setTimezone(new \DateTimezone($this->Company['tz']));
 		}
-
-		$y += 6;
 		$this->setXY($this->_init_x, $y);
 		$this->cell($this->_width_view, 4, $dtC->format('Y-m-d H:i'), 0, null, 'C');
 
+		// Item Count
+		$y = $this->getY() + 8;
+		$this->setXY($this->_init_x, $y);
+		$this->cell($this->_width_view, 4, sprintf('Item Count: %d', count($this->_item_list)), 0, null, 'C');
+
+
+		$y = $this->getY() + 8;
+		$this->my_line($y);
+		$y += 2;
+
+		// $this->head_text = "HEAD TEXT\n----";
 		if ( ! empty($this->head_text)) {
-
-			$y = $this->getY();
-			$y += 8;
-
-			// Line
-			$this->line(0, $y, $this->_width_full, $y);
-			$y += 2;
-
 			$this->setXY($this->_init_x, $y);
 			$this->setFont('freesans', '', 10);
 			$this->multicell($this->_width_view, 5, $this->head_text, null, 'C', null, 1);
-
 			$y = $this->getY();
-			$y += 2;
-
+			// $y += 6;
+			$this->my_line($y);
 		}
 
-		$y += 6;
-		$this->line(0, $y, $this->_width_full, $y);
+		// $y += 6;
+		// $this->my_line($y);
 		$this->setY($y);
-
-	}
-
-	/**
-	 *
-	 */
-	function drawSummary()
-	{
-		$y = $this->getY();
-
-		$y += 4;
-		$this->line(0, $y, $this->_width_full, $y);
-
-		$y += 2;
-		$this->colLeft($y, 'Items:');
-		$this->colRight($y, number_format($this->_b2c_sale['base_price'], 2));
-
-		$y += 7;
-		$this->line(0, $y, $this->_width_full, $y);
 
 	}
 
@@ -154,6 +143,7 @@ class PickTicket extends \OpenTHC\POS\PDF\Base
 		$this->_renderPrintable();
 		$y = $this->getY();
 		$y = ceil($y + 5);
+		$y = max($y, 80);
 
 		// Clear and render correct height
 		$this->deletePage(1);
@@ -170,22 +160,41 @@ class PickTicket extends \OpenTHC\POS\PDF\Base
 
 		$this->setFont('freesans', '', 12);
 		$this->setFillColor(0xff, 0xff, 0xff);
-		$this->setLineWidth(0.20);
 		$this->setTextColor(0x00, 0x00, 0x00);
 
 		$y = $this->getY();
 
+		/**
+		 * Item # and Metrc Tag "#1 ABC123....N"
+		 * Product Name
+		 * Unit Weight  |  Unit Price
+		 * ---
+		 */
+
+		$idx = 0;
 		foreach ($this->_item_list as $li_ulid => $li_data) {
 
-			$y += 8;
+			$idx++;
+
+			if (is_array($li_data)) {
+				$li_data = (object)$li_data;
+			}
 
 			// $txt = trim(sprintf('%s %s', $SI['Product']['name'], $SI['Variety']['name']));
-			$this->colLeft($y, $li_ulid);
+			$txt = sprintf('#%d %s', $idx, $li_data->id);
+			// $this->colLeft($y, $txt);
+			$this->setXY($this->_init_x, $y);
+			$this->multicell($this->_width_view, 4, $txt, 0, 'L');
 
-			$y += 6;
-			$txt = sprintf('%d @ $%s', $SI['unit_count'], number_format($SI['base_price'], 2));
-			$this->colLeft($y, $txt);
-			$this->colRight($y, number_format($SI['base_price'], 2));
+			$y = $this->getY();
+			$y += 1;
+			// $txt = sprintf('%d @ $%s', $SI['unit_count'], number_format($SI['base_price'], 2));
+			$txt = $li_data->name;
+			$this->setXY($this->_init_x, $y);
+			$this->multicell($this->_width_view, 4, $txt, 0, 'L');
+
+			$y = $this->getY();
+			$this->colRight($y, sprintf('$%0.2f', $li_data->unit_price, 2));
 			// $this->setXY($this->_init_x, $y);
 			// $this->cell($this->_width_view, 4, $txt, 0, 0, 'R');
 
@@ -197,28 +206,28 @@ class PickTicket extends \OpenTHC\POS\PDF\Base
 			// 	$this->colRight($y, number_format($SI['full_price'] - $SI['base_price'], 2));
 			// }
 
+			$y += 8;
+
 		}
 
 		$y += 8;
 
 		$this->setY($y);
 
-		// $this->drawSummary();
-		// $this->drawFoot();
-		// $this->drawTail();
+		// Summary ID
+		$y = $this->getY();
+		// $y += 4;
+		$this->setXY($this->_init_x, $y);
+		$this->setFont('freesans', '', 10);
+		$this->cell($this->_width_view, 4, sprintf('PT:%s', \Edoceo\Radix\ULID::create()), null, 1, 'C');
+		// $this->my_line($y);
 
 		$y = $this->getY();
 		$w = $this->getLineWidth();
 		$this->setLineWidth(0.40);
-		$this->line(0, $y, $this->_width_full, $y);
+		$this->my_line($y);
 		$y += 1;
-		$this->line(0, $y, $this->_width_full, $y);
-
-		// $y = $this->getY();
-		// $y += 4;
-
-		// $this->line(0, $y, $this->_width_full, $y);
-
+		$this->my_line($y);
 
 	}
 
@@ -232,45 +241,6 @@ class PickTicket extends \OpenTHC\POS\PDF\Base
 	{
 		$this->setXY($this->_width_half, $y);
 		$this->cell($this->_width_half + 2, 4, $txt, 0, 0, $alignment);
-	}
-
-	function lineExperiment()
-	{
-		// Line Experiment
-		$y = $this->getY();
-
-		// $y += 2;
-		// $this->line(0, $y, $this->_width_full, $y);
-
-		// $y+= 2;
-		// $this->line(0, $y, 80, $y);
-		// $y+= 2;
-		// $this->line(0, $y, 72, $y);
-		// $y+= 2;
-		// $this->line(0, $y, 68, $y);
-		// $y+= 2;
-		// $this->line(0, $y, 36, $y);
-
-		// $y+= 2;
-		// $this->line(1, $y, 80, $y);
-		// $y+= 2;
-		// $this->line(1, $y, 72, $y);
-		// $y+= 2;
-		// $this->line(1, $y, 68, $y);
-		// $y+= 2;
-		// $this->line(1, $y, 36, $y);
-
-		// $y+= 2;
-		// $this->line(2, $y, 80, $y);
-		// $y+= 2;
-		// $this->line(2, $y, 72, $y);
-		$y+= 2;
-		$this->line(2, $y, 70, $y);
-		// $y+= 2;
-		// $this->line(2, $y, 36, $y);
-
-		$this->setY($y);
-
 	}
 
 }

@@ -16,6 +16,25 @@ class PickTicket extends \OpenTHC\Controller\Base
 	{
 		$source_data = $this->parseJSON();
 
+		// Accept: text/html,application/xhtml+xml,application/xml;q=0.9,application/json;q=0.8,*/*;q=0.5
+		$want_type = $_SERVER['HTTP_ACCEPT'];
+		$want_type = explode(',', $want_type);
+		switch ($want_type[0]) {
+			case 'application/pdf':
+
+				$pdf = new \OpenTHC\POS\PDF\PickTicket();
+				$pdf->setCompany( new \OpenTHC\Company(null, $_SESSION['Company'] ));
+				$pdf->setLicense( new \OpenTHC\License(null, $_SESSION['License'] ));
+				$pdf->setData((object)$source_data);
+				$pdf->render();
+				$name = sprintf('PickTicket_%s.pdf', 'TEST');
+				$pdf->Output($name, 'I');
+				exit;
+
+				break;
+		}
+		// $want_type = $REQ->wantType();
+
 		$rdb = $this->_container->Redis;
 		$key = sprintf('/%s/%s/pos/pick-ticket-queue', $_SESSION['Company']['id'], $_SESSION['License']['id']);
 		$val = $rdb->get($key);

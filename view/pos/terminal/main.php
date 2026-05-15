@@ -262,6 +262,24 @@ $(function() {
 
 	$('#pos-print-pick-ticket').on('click touchend', function(e) {
 
+		if (e.ctrlKey) {
+			fetch('/pos/cart/print-pick-ticket', {
+				method: 'POST',
+				credentials: 'include',
+				headers: {
+					'accept': 'application/pdf',
+					'content-type': 'application/json'
+				},
+				body: JSON.stringify( OpenTHC.POS.Cart )
+			}).then(function(res) {
+				console.log('Then 1');
+				return res.blob();
+			}).then(function(res) {
+				console.log('Then 2');
+			});
+			return;
+		}
+
 		fetch('/pos/cart/print-pick-ticket', {
 			method: 'POST',
 			credentials: 'include',
@@ -270,12 +288,7 @@ $(function() {
 			},
 			body: JSON.stringify( OpenTHC.POS.Cart )
 		});
-		// @todo use fetch() and FormData()
-		// $('#psi-form').attr('action', '/pos/cart/save');
-		// $('#psi-form').append('<input name="a" type="hidden" value="save">');
-		// $('#psi-form').append('<input name="name" type="hidden" value="' + $('#customer-name').val() + '">');
-		// $('#psi-form').submit();
-		// return false;
+
 	});
 
 	$('#pos-modal-scan-id').on('show.bs.modal', function() {
