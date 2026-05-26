@@ -109,8 +109,12 @@ class PickTicket extends \OpenTHC\POS\PDF\Base
 		// Item Count
 		$y = $this->getY() + 8;
 		$this->setXY($this->_init_x, $y);
-		$this->cell($this->_width_view, 4, sprintf('Item Count: %d', count($this->_item_list)), 0, null, 'C');
+		$this->cell($this->_width_view, 4, sprintf('Item Count: %d', $this->_b2c_sale->item_count), 0, null, 'C');
 
+		// Unit Count
+		$y = $this->getY() + 8;
+		$this->setXY($this->_init_x, $y);
+		$this->cell($this->_width_view, 4, sprintf('Unit Count: %d', $this->_b2c_sale->unit_count), 0, null, 'C');
 
 		$y = $this->getY() + 8;
 		$this->my_line($y);
@@ -181,7 +185,7 @@ class PickTicket extends \OpenTHC\POS\PDF\Base
 			}
 
 			// $txt = trim(sprintf('%s %s', $SI['Product']['name'], $SI['Variety']['name']));
-			$txt = sprintf('#%d %s', $idx, $li_data->id);
+			$txt = sprintf('#%d %s', $idx, $li_data->name);
 			// $this->colLeft($y, $txt);
 			$this->setXY($this->_init_x, $y);
 			$this->multicell($this->_width_view, 4, $txt, 0, 'L');
@@ -189,12 +193,17 @@ class PickTicket extends \OpenTHC\POS\PDF\Base
 			$y = $this->getY();
 			$y += 1;
 			// $txt = sprintf('%d @ $%s', $SI['unit_count'], number_format($SI['base_price'], 2));
-			$txt = $li_data->name;
-			$this->setXY($this->_init_x, $y);
-			$this->multicell($this->_width_view, 4, $txt, 0, 'L');
+			// $txt = $li_data->name;
+			// $this->setXY($this->_init_x, $y);
+			// $this->multicell($this->_width_view, 4, $txt, 0, 'L');
 
-			$y = $this->getY();
-			$this->colRight($y, sprintf('$%0.2f', $li_data->unit_price, 2));
+			// $y = $this->getY();
+			$this->colLeft($y, sprintf('Pick: %d @ $%0.2f', $li_data->unit_count, $li_data->unit_price));
+			if (empty($li_data->full_price)) {
+				// throw ...
+				$li_data->full_price = $li_data->unit_count * $li_data->unit_price;
+			}
+			$this->colRight($y, sprintf('$%0.2f', $li_data->full_price, 2));
 			// $this->setXY($this->_init_x, $y);
 			// $this->cell($this->_width_view, 4, $txt, 0, 0, 'R');
 

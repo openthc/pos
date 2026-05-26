@@ -170,9 +170,23 @@ class Commit extends \OpenTHC\Controller\Base
 
 				$b2c_item_list = $Sale->getItems();
 				foreach ($b2c_item_list as $b2c_item) {
+
+					// No Nice Objects in POS Code Base :(
+					$arg = [];
+					$arg[':i0'] = $b2c_item[''];
+					$sql = <<<SQL
+					SELECT id, guid, product_name, variety_name
+					FROM inventory_full
+					WHERE id = :i0
+					SQL;
+					$inv = $dbc->fetchRow($sql, $arg);
+
+					$name = sprintf('%s: %s / %s', substr($inv['guid'], -4), $inv['product_name'], $inv['variety_name']);
+					$name = trim($name, '/');
+
 					$source_data['item_list'][] = [
 						'id' => $b2c_item['id'],
-						// 'name' => $Cart
+						'name' => $name, // substr($rec['guid'], -4) . ': ' . $rec['product_name'] . '/' . $rec['variety_name']
 						'weight' => '',
 						'unit_price' => $b2c_item['unit_price'],
 						'unit_count' => $b2c_item['unit_count'],
@@ -188,8 +202,6 @@ class Commit extends \OpenTHC\Controller\Base
 				$res = $rdb->hset($key0, $key1, $val);
 
 			}
-
-
 
 		} catch (\Exception $e) {
 			_exit_html_fail(sprintf('<h1>Failed to Execute the Sale [PCC-123]</h1><pre>%s</pre>', __h($e->getMessage())), 500);
