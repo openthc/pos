@@ -28,6 +28,8 @@ class Commit extends \OpenTHC\Controller\Base
 		}
 		$tz0 = new \DateTimezone($_SESSION['Company']['tz']);
 		$dt0 = new \DateTime('now', $tz0);
+		$dt0->setTimezone($tz0);
+
 		if (( ! empty($_POST['cart-date'])) && ( ! empty($_POST['cart-time'])) ) {
 			$dtX = sprintf('%sT%s', $_POST['cart-date'], $_POST['cart-time']);
 			$dt0 = new \DateTime($dtX, $tz0);
@@ -137,6 +139,57 @@ class Commit extends \OpenTHC\Controller\Base
 			$Sale['base_price'] = $b2c_base_price;
 			$Sale['full_price'] = $b2c_full_price; // $Sale['base_price'] + $b2c_item_adjust_total;
 			$Sale->save('B2C/Sale/Commit');
+
+			// Send Pick Ticket for This Item
+			// $Printer = new \PrintQueue('pick-ticket');
+			// $Printer->send($Sale);
+
+			$rdb = $this->_container->Redis;
+			$key = sprintf('/%s/%s/pos/pick-ticket-queue', $_SESSION['Company']['id'], $_SESSION['License']['id']);
+			$val = $rdb->get($key);
+			$val = json_decode($val, true);
+			if ( ! empty($val)) {
+
+				$qid = $val['queue-id'];
+
+				$key0 = sprintf('/global/print-queue/%s', $qid);
+				$key1 = _ulid();
+
+				$source_data = [];
+				$source_data['id'] = $Sale['id'];
+				$source_data['type'] = $Sale['type'];
+				$source_data['date'] = '';
+				$source_data['time'] = '';
+				$source_data['item_count'] = $Sale['item_count'];
+				$source_data['unit_count'] = $b2c_item_count;
+				$source_data['unit_price_total'] = $Sale['full_price'];
+				// $source_data = array (
+				// tax_total => 2.3,
+				// full_price => 10,
+				$source_data['item_list'] = [];
+
+				$b2c_item_list = $Sale->getItems();
+				foreach ($b2c_item_list as $b2c_item) {
+					$source_data['item_list'][] = [
+						'id' => $b2c_item['id'],
+						// 'name' => $Cart
+						'weight' => '',
+						'unit_price' => $b2c_item['unit_price'],
+						'unit_count' => $b2c_item['unit_count'],
+						'unit_price_total' => $b2c_item['full_price'],
+					];
+				}
+
+				$val = json_encode([
+					'type' => 'pick-ticket',
+					'data' => $source_data,
+				]);
+
+				$res = $rdb->hset($key0, $key1, $val);
+
+			}
+
+
 
 		} catch (\Exception $e) {
 			_exit_html_fail(sprintf('<h1>Failed to Execute the Sale [PCC-123]</h1><pre>%s</pre>', __h($e->getMessage())), 500);
@@ -396,7 +449,10 @@ class Commit extends \OpenTHC\Controller\Base
 
 		$b2c_metrc = [];
 		$b2c_metrc['ExternalReceiptNumber'] = $Sale['id'];
-		$b2c_metrc['SalesDateTime'] = date(\DateTime::RFC3339);
+		$tz0 = new \DateTimezone($_SESSION['Company']['tz']);
+		$dt0 = new \DateTime($Sale['created_at'], $tz0);
+		$dt0->setTimezone($tz0);
+		$b2c_metrc['SalesDateTime'] = $dt0->format(\DateTime::RFC3339);
 		$b2c_metrc['SalesCustomerType'] = 'Consumer'; // 'Consumer', 'Caregiver', 'ExternalPatient', 'Patient';
 
 		// 'Consumer', 'Caregiver'; 'ExternalPatient', 'Patient'

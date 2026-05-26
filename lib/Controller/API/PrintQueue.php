@@ -36,6 +36,8 @@ class PrintQueue extends \OpenTHC\POS\Controller\API\Base
 		$License = json_decode($License, true);
 
 		foreach ($key_list as $key1) {
+
+			// Filter for PrintJob looking keys
 			if ( ! preg_match('/^0\w{25}$/', $key1)) {
 				continue;
 			}
@@ -83,7 +85,7 @@ class PrintQueue extends \OpenTHC\POS\Controller\API\Base
 		}
 
 		return $RES->withJSON([
-			'data' => $pq_data,
+			'data' => date('Y-m-d H:i:s'),
 			'meta' => [ 'note' => 'No Print Jobs Found' ]
 		], 404);
 
