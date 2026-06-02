@@ -35,6 +35,7 @@ class PickTicket extends \OpenTHC\Controller\Base
 		}
 		// $want_type = $REQ->wantType();
 
+		// Send Pick Ticket for This Item
 		$rdb = $this->_container->Redis;
 		$key = sprintf('/%s/%s/pos/pick-ticket-queue', $_SESSION['Company']['id'], $_SESSION['License']['id']);
 		$val = $rdb->get($key);

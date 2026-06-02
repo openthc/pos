@@ -173,7 +173,7 @@ class Commit extends \OpenTHC\Controller\Base
 
 					// No Nice Objects in POS Code Base :(
 					$arg = [];
-					$arg[':i0'] = $b2c_item[''];
+					$arg[':i0'] = $b2c_item['inventory_id'];
 					$sql = <<<SQL
 					SELECT id, guid, product_name, variety_name
 					FROM inventory_full
@@ -186,7 +186,7 @@ class Commit extends \OpenTHC\Controller\Base
 
 					$source_data['item_list'][] = [
 						'id' => $b2c_item['id'],
-						'name' => $name, // substr($rec['guid'], -4) . ': ' . $rec['product_name'] . '/' . $rec['variety_name']
+						'name' => $name,
 						'weight' => '',
 						'unit_price' => $b2c_item['unit_price'],
 						'unit_count' => $b2c_item['unit_count'],
