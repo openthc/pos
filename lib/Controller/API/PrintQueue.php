@@ -25,8 +25,6 @@ class PrintQueue extends \OpenTHC\POS\Controller\API\Base
 		$rdb = $this->_container->Redis;
 		$key0 = sprintf('/global/print-queue/%s', $pq_code);
 
-		$key_list = $rdb->hkeys($key0);
-
 		// $Contact = $this->findContact($dbc_auth, $act->contact);
 
 		$Company = $rdb->hget($key0, 'Company');
@@ -35,7 +33,8 @@ class PrintQueue extends \OpenTHC\POS\Controller\API\Base
 		$License = $rdb->hget($key0, 'License');
 		$License = json_decode($License, true);
 
-		foreach ($key_list as $key1) {
+		$job_list = $rdb->hkeys($key0);
+		foreach ($job_list as $key1) {
 
 			// Filter for PrintJob looking keys
 			if ( ! preg_match('/^0\w{25}$/', $key1)) {
@@ -64,17 +63,33 @@ class PrintQueue extends \OpenTHC\POS\Controller\API\Base
 
 					case 'receipt':
 
-						// Needs Data from Database for this
-						// $b2c = new \Sale($dbc, $id);
+						$rdb->hdel($key0, $key1);
 
-						$pdf = new \OpenTHC\POS\PDF\Receipt();
-						$pdf->setCompany( new \OpenTHC\Company(null, $Company ));
-						$pdf->setLicense( new \OpenTHC\License(null, $License ));
-						// $pdf->setSale($S);
-						// $pdf->setItems($b2c_item_list);
-						$pdf->render();
-						$name = sprintf('Receipt_%s.pdf', $S['id']);
-						$pdf->Output($name, 'I');
+						// It's a PDF Blob in Redis
+						$pdf_data = base64_decode($job->data);
+
+						header('cache-control: no-store, private'); // , post-check=0, pre-check=0, max-age=1');
+						// header('cache-control: must-revalidate, no-cache, no-store, private'); // , post-check=0, pre-check=0, max-age=1');
+						//header('Cache-Control: public, must-revalidate, max-age=0'); // HTTP/1.1
+
+						header('content-disposition: inline; filename="%s"', rawurlencode(basename($job->name)));
+						// header('Content-Disposition: inline; filename="' . rawurlencode(basename($name)) . '"; ' .
+								// 'filename*=UTF-8\'\'' . rawurlencode(basename($name)));
+						header('content-length: %d', strlen($pdf_data));
+						header('content-type: application/pdf');
+
+						// Force Download
+						// header('Content-Description: File Transfer');
+						// Sets a Bunch of Headers?
+						// header('Content-Type: application/force-download');
+						// header('Content-Type: application/octet-stream', false);
+						// header('Content-Type: application/download', false);
+						// header('Content-Type: application/pdf', false);
+						// header('Content-Disposition: attachment; filename="' . rawurlencode(basename($name)) . '"; ' .
+						// 		'filename*=UTF-8\'\'' . rawurlencode(basename($name)));
+						// header('Content-Transfer-Encoding: binary');
+
+						echo $pdf_data;
 
 						exit;
 

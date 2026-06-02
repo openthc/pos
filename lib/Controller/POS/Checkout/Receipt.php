@@ -124,6 +124,28 @@ class Receipt extends \OpenTHC\Controller\Base
 		$pdf->setItems($b2c_item_list);
 		$pdf->render();
 		$name = sprintf('Receipt_%s.pdf', $S['id']);
+
+		$rdb = $this->_container->Redis;
+		$key = sprintf('/%s/%s/pos/receipt-queue', $_SESSION['Company']['id'], $_SESSION['License']['id']);
+		$val = $rdb->get($key);
+		$val = json_decode($val, true);
+		if ( ! empty($val)) {
+
+			$qid = $val['queue-id'];
+			$key0 = sprintf('/global/print-queue/%s', $qid);
+			$key1 = _ulid();
+
+			$source_data = $pdf->Output($name, 'S');
+
+			$val = json_encode([
+				'type' => 'receipt',
+				'name' => $name,
+				'data' => base64_encode($source_data),
+			]);
+
+			$res = $rdb->hset($key0, $key1, $val);
+		}
+
 		$pdf->Output($name, 'I');
 
 		exit(0);
