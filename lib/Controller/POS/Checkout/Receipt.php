@@ -299,8 +299,8 @@ EOM;
 			$ghc = new \GuzzleHttp\Client([
 				'base_uri' => 'https://openthc.pub',
 				'headers' => [
-					'user-agent' => 'OpenTHC/420.20.040',
-					'authorization' => sprintf('Bearer %s', $this->_api_auth),
+					'user-agent' => 'OpenTHC',
+					'authorization' => sprintf('Bearer v2021/%s', $this->_api_auth),
 				],
 				'http_errors' => false
 			]);

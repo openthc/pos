@@ -53,10 +53,6 @@ class Open extends \OpenTHC\Controller\Auth\oAuth2
 			__exit_text('Invalid Request [AOO-050]', 400);
 		}
 
-		if ( ! empty($_GET['jwt'])) {
-			throw new \Exception('@deprecated');
-		}
-
 		$p = $this->getProvider($ret_path);
 		$url = $p->getAuthorizationUrl([
 			'scope' => 'contact company license pos',

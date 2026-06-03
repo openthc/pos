@@ -2,7 +2,7 @@
 	"name": "openthc/pos",
 	"description": "Cannabis Retail Point of Sale",
 	"license": "GPL-3.0-only",
-	"version": "420.26.123",
+	"version": "420.26.154",
 	"autoload": {
 		"psr-4": {
 			"OpenTHC\\POS\\": "./lib",

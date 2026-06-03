@@ -1,6 +1,6 @@
 {
 	"name": "pos",
-	"version": "420.26.123",
+	"version": "420.26.154",
 	"description": "Retail Point of Sale",
 	"main": "main.js",
 	"directories": {
@@ -9,16 +9,16 @@
 		"test": "test"
 	},
 	"dependencies": {
-		"@fortawesome/fontawesome-free": "7.1.0",
-		"@zxing/browser": "^0.1.5",
+		"@fortawesome/fontawesome-free": "7.2.0",
+		"@zxing/browser": "0.2.0",
 		"bootstrap": "5.3.8",
-		"chart.js": "^4.5.1",
-		"htmx.org": "2.0.4",
+		"echarts": "6.1.0",
+		"htmx.org": "2.0.10",
 		"jquery": "3.7.1",
 		"jquery-ui": "1.14.1",
-		"lodash": "4.17.21",
-		"qrcodejs": "^1.0.0",
-		"sass": "1.94.2"
+		"lodash": "4.18.1",
+		"qrcodejs": "1.0.0",
+		"sass": "1.100.0"
 	},
 	"scripts": {
 		"test": "test.js"
