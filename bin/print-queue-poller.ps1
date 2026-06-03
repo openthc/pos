@@ -17,14 +17,21 @@
 # Test With:
 # `"C:\Program Files\SumatraPDF\SumatraPDF.exe" -print-to "Printer Name" printme.pdf`
 
-# Printer Configurations
-$PrinterName = "{{OPENTHC_PRINT_QUEUE_PRINTER_NAME}}"
+param(
+	[string]$WorkPath = "$env:TEMP",
+	[string]$PrintDeviceName = "{{OPENTHC_PRINT_QUEUE_PRINTER_NAME}}",
+	[string]$PrintQueueID = "{{OPENTHC_PRINT_QUEUE_API_KEY}}",
+	[string]$PrintQueueURL = "{{OPENTHC_PRINT_QUEUE_URL}}",
+	[switch]$Register,
+	[string]$RegisterMode,
+	[int]$SleepTime = 4
+)
 
-$queue_url = "{{OPENTHC_PRINT_QUEUE_URL}}"
-$queue_req_head = @{
-	Authorization = "Bearer v2018/print-queue/{{OPENTHC_PRINT_QUEUE_API_KEY}}"
-}
+$Host.UI.RawUI.WindowTitle = "Print Queue | OpenTHC"
 
+# $PSBoundParameters.GetEnumerator() |
+# 	Sort-Object Key |
+# 	Format-Table Key, Value
 
 # Monitor for Sleep or Shutdown to Exit Script
 $null = Register-WmiEvent `
@@ -121,9 +128,38 @@ function Register-Auto-Start-Via-Registry {
 # }
 
 #
+# Find the Printer
+#
+function Find-Printer {
+
+	param(
+		[Parameter(Mandatory)]
+		[string]$PrinterName
+	)
+
+	$printer = Get-Printer -Name $PrinterName -ErrorAction SilentlyContinue
+
+	if (-not $printer) {
+		throw "Printer '$PrinterName' not found."
+	}
+
+	if ($printer.PrinterStatus -ne 'Normal') {
+		throw "Printer '$PrinterName' status is '$($printer.PrinterStatus)'."
+	}
+
+	if ($printer.WorkOffline) {
+		Write-Warning "Printer '$PrinterName' is configured to work offline."
+	}
+
+	return $printer
+
+}
+
+#
 # Find the Executable
 #
 function Find-Sumatra {
+
 	[CmdletBinding()]
 	param()
 
@@ -155,38 +191,59 @@ function Find-Sumatra {
 	return $null
 
 }
-$SumatraPath = Find-Sumatra
 
-$DownloadPath = "$env:TEMP\openthc-print-job.pdf"
-$LastHashFile = "$env:TEMP\openthc-print-job-hash.txt"
+#
+# Main
+#
+function Main {
 
+	$SumatraPath = Find-Sumatra
+	# try {
+		$PrintDevice = Find-Printer $PrintDeviceName
+	    # Write-Host "Ready to print to $($printer.Name)"
+	# }
+	# catch {
+	    # Write-Error $_
+	# }
+	#
 
-while ($true) {
-	try {
+	$job_file = "$WorkPath\openthc-print-job-$PID.pdf"
+	$job_hash_file = "$WorkPath\openthc-print-job-hash-$PID.txt"
 
-		Invoke-WebRequest -Uri $queue_url -Headers $queue_req_head -OutFile $DownloadPath -UseBasicParsing
-
-		$newHash = (Get-FileHash $DownloadPath).Hash
-
-		$oldHash = ""
-		if (Test-Path $LastHashFile) {
-			$oldHash = Get-Content $LastHashFile
-		}
-
-		if ($newHash -ne $oldHash) {
-			Write-Host "New document detected. Printing..."
-
-			& $SumatraPath -print-to "$PrinterName" -silent $DownloadPath
-
-			$newHash | Out-File $LastHashFile
-
-		} else {
-			Write-Host "No change."
-		}
-	} catch {
-		Write-Host "Error: $_"
+	$req_head = @{
+		Authorization = "Bearer v2018/print-queue/$PrintQueueID"
 	}
 
-	Start-Sleep -Seconds 4
+	while ($true) {
+		try {
+
+			Invoke-WebRequest -Uri $PrintQueueURL -Headers $req_head -OutFile $DownloadPath -UseBasicParsing
+
+			$oldHash = ""
+			if (Test-Path $LastHashFile) {
+				$oldHash = Get-Content $LastHashFile
+			}
+
+			$newHash = (Get-FileHash $DownloadPath).Hash
+
+			if ($newHash -ne $oldHash) {
+				Write-Host "New document detected. Printing..."
+
+				& $SumatraPath -print-to "$PrintDeviceName" -silent $DownloadPath
+
+				$newHash | Out-File $LastHashFile
+
+			} else {
+				Write-Host "No change."
+			}
+		} catch {
+			Write-Host "Error: $_"
+		}
+
+		Start-Sleep -Seconds $SleepTime
+
+	}
 
 }
+
+Main
