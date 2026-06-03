@@ -1,6 +1,8 @@
 <?php
 /**
  * Set POS Terminal Options
+ *
+ * SPDX-License-Identifier: GPL-3.0-only
  */
 
 namespace OpenTHC\POS\Controller;
@@ -24,10 +26,30 @@ class Config extends \OpenTHC\Controller\Base
 		$data['Page'] = [];
 		$data['Page']['title'] = 'POS / Configuration';
 
+		// Database Print Queue
+		$sql = <<<SQL
+		SELECT *
+		FROM auth_company_option
+		WHERE key LIKE 'print-queue%'
+		SQL;
+
+		$dbc = $this->_container->DB;
+		$res = $dbc->fetchAll($sql);
+		$data['print_queue_list'] = []; //$res_print_queue;
+		foreach ($res as $rec) {
+			$pq0 = json_decode($rec['val']);
+			$pq0->id = str_replace('print-queue-', '', $rec['key']);
+			$pq0->key = $rec['key'];
+			$data['print_queue_list'][] = $pq0;
+		}
+
 		$rdb = $this->_container->Redis;
 
 		$key = sprintf('/%s/%s/pos/receipt-queue', $_SESSION['Company']['id'], $_SESSION['License']['id']);
-		$data['receipt-queue-id'] = $rdb->get($key);
+		$val = $rdb->get($key);
+		$val = json_decode($val, true);
+		$data['receipt-queue-id'] = $val['queue-id'];
+		$data['receipt-printer-name'] = $val['printer-name'];
 
 		$key = sprintf('/%s/%s/pos/pick-ticket-queue', $_SESSION['Company']['id'], $_SESSION['License']['id']);
 		$val = $rdb->get($key);
@@ -35,32 +57,58 @@ class Config extends \OpenTHC\Controller\Base
 		$data['pick-ticket-queue-id'] = $val['queue-id'];
 		$data['pick-ticket-printer-name'] = $val['printer-name'];
 
-		return $RES->write( $this->render('config.php', $data) );
+		return $RES->write( $this->render('config/main.php', $data) );
 	}
 
 	function post($REQ, $RES, $ARG)
 	{
-		// __exit_text($_POST);
 		switch ($_POST['a']) {
 			case 'print-queue-receipt-update':
+
+				$qid = $_POST['print-queue-id'];
+
+				$dbc = $this->_container->DB;
+
+				$pq1 = [];
+				$res = $dbc->fetchRow('SELECT * FROM auth_company_option WHERE key = :k0', [
+					':k0' => sprintf('print-queue-%s', $qid)
+				]);
+				$res['val'] = json_decode($res['val'], true);
+				$pq1['id'] = $qid;
+				$pq1['queue-id'] = $qid;
+				$pq1['device-name'] = $res['val']['printer-name'];
+				$pq1['printer-name'] = $res['val']['printer-name'];
+
 				$rdb = $this->_container->Redis;
 				$key = sprintf('/%s/%s/pos/receipt-queue', $_SESSION['Company']['id'], $_SESSION['License']['id']);
 				$rdb->del($key);
-				$val = json_encode([
-					'queue-id' => $_POST['print-queue-code'],
-					'printer-name' => $_POST['printer-name'],
-				]);
+				$val = json_encode($pq1);
 				$rdb->set($key, $val);
+
 				break;
+
 			case 'print-queue-pick-ticket-update':
+
+				$qid = $_POST['print-queue-id'];
+
+				$dbc = $this->_container->DB;
+
+				$pq1 = [];
+				$res = $dbc->fetchRow('SELECT * FROM auth_company_option WHERE key = :k0', [
+					':k0' => sprintf('print-queue-%s', $qid)
+				]);
+				$res['val'] = json_decode($res['val'], true);
+				$pq1['id'] = $qid;
+				$pq1['queue-id'] = $qid;
+				$pq1['device-name'] = $res['val']['printer-name'];
+				$pq1['printer-name'] = $res['val']['printer-name'];
+
 				$rdb = $this->_container->Redis;
 				$key = sprintf('/%s/%s/pos/pick-ticket-queue', $_SESSION['Company']['id'], $_SESSION['License']['id']);
 				$rdb->del($key);
-				$val = json_encode([
-					'queue-id' => $_POST['print-queue-code'],
-					'printer-name' => $_POST['printer-name'],
-				]);
+				$val = json_encode($pq1);
 				$rdb->set($key, $val);
+
 				break;
 
 		}
@@ -72,7 +120,18 @@ class Config extends \OpenTHC\Controller\Base
 	{
 		$rdb = $this->_container->Redis;
 
-		$key = sprintf('/%s/%s/pos/pick-ticket-queue', $_SESSION['Company']['id'], $_SESSION['License']['id']);
+		$pq_type = $_GET['s'];
+		switch ($pq_type) {
+			case 'pick-ticket':
+				break;
+			case 'receipt':
+				break;
+			default:
+				__exit_text('Invalid Request [LCC-130]', 400);
+		}
+
+
+		$key = sprintf('/%s/%s/pos/%s-queue', $_SESSION['Company']['id'], $_SESSION['License']['id'], $pq_type);
 		$val = $rdb->get($key);
 		$val = json_decode($val, true);
 
@@ -90,7 +149,7 @@ class Config extends \OpenTHC\Controller\Base
 		// header('content-type: text/plain');
 		// header('content-type: application/x-powershell');
 		header('content-type: application/octet-stream');
-		header('content-disposition: attachment; filename="openthc-print-queue.ps1"');
+		header(sprintf('content-disposition: attachment; filename="openthc-print-queue-%s.ps1"', $pq_type));
 
 		echo $out_code;
 
