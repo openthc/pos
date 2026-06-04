@@ -9,6 +9,9 @@ namespace OpenTHC\POS\PDF;
 
 class Base extends \TCPDF
 {
+	protected $Company;
+	protected $License;
+
 	/**
 	 * Default TCPDF Constructor
 	 */
@@ -70,6 +73,26 @@ class Base extends \TCPDF
 		$this->setViewerPreferences($arg);
 		$this->SetDisplayMode('fullwidth');
 
+	}
+
+	/**
+	 *
+	 */
+	function setCompany($x)
+	{
+		$this->Company = $x;
+	}
+
+	/**
+	 *
+	 */
+	function setLicense($x)
+	{
+		$this->License = $x;
+		$this->head_text = $this->Company->getOption(sprintf('/%s/receipt/head', $this->License['id']));
+		$this->foot_text = $this->Company->getOption(sprintf('/%s/receipt/foot', $this->License['id']));
+		$this->tail_text = $this->Company->getOption(sprintf('/%s/receipt/tail', $this->License['id']));
+		$this->foot_link = $this->Company->getOption(sprintf('/%s/receipt/link', $this->License['id']));
 	}
 
 }

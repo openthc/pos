@@ -8,54 +8,8 @@
 
 namespace OpenTHC\POS\PDF;
 
-class Receipt extends \OpenTHC\POS\PDF\Base
+class Receipt extends \OpenTHC\POS\PDF\Base\Receipt
 {
-	protected $Company;
-	protected $License;
-
-	protected $_width_full = 80;
-
-	private $_b2c_sale;
-	private $_item_list = [];
-
-	private $_init_x = 2;
-	private $_width_view = 76;
-	private $_width_half = 38;
-
-	public $head_text = '';
-	public $foot_text = '';
-	public $tail_text = '';
-	public $link_text = '';
-
-	/**
-	 * Defaults
-	 */
-	function __construct($orientation='P', $unit='mm', $format=array(80, 1000), $unicode=true, $encoding='UTF-8', $diskcache=false, $pdfa=false)
-	{
-		parent::__construct($orientation, $unit, $format, $unicode, $encoding, $diskcache, $pdfa);
-		$this->setAutoPageBreak(false);
-	}
-
-	/**
-	 *
-	 */
-	function setCompany($x)
-	{
-		$this->Company = $x;
-	}
-
-	/**
-	 *
-	 */
-	function setLicense($x)
-	{
-		$this->License = $x;
-		$this->head_text = $this->Company->getOption(sprintf('/%s/receipt/head', $this->License['id']));
-		$this->foot_text = $this->Company->getOption(sprintf('/%s/receipt/foot', $this->License['id']));
-		$this->tail_text = $this->Company->getOption(sprintf('/%s/receipt/tail', $this->License['id']));
-		$this->foot_link = $this->Company->getOption(sprintf('/%s/receipt/link', $this->License['id']));
-	}
-
 	/**
 	 *
 	 */
@@ -78,17 +32,9 @@ class Receipt extends \OpenTHC\POS\PDF\Base
 	 */
 	function drawHead()
 	{
-		// Black Banner
-		$this->setFont('freesans', 'B', 18);
-		$this->setFillColor(0x10, 0x10, 0x10);
-		$this->setTextColor(0xff, 0xff, 0xff);
-		$this->setXY($this->_init_x, 4);
-		// $this->cell($this->_width_view, 4, $this->License['name'], null, null, 'C', $fill=true);
-		$this->multicell(76, 4, $this->License['name'], null, 'C', $fill=true);
-
-		$y = ceil($this->getY());
-		$y += 4;
-		$this->setXY($this->_init_x, $y);
+		// Thi is zero but the banner for the Receipt starts lower than the one for PickTicket. Why?
+		$y = $this->getY();
+		$this->drawBanner();
 
 		// Reset Font
 		$this->setFont('freesans', '', 12);
@@ -102,6 +48,7 @@ class Receipt extends \OpenTHC\POS\PDF\Base
 			$dtC->setTimezone(new \DateTimezone($this->Company['tz']));
 		}
 
+		$y = $this->getY();
 		$y += 6;
 		$this->setXY($this->_init_x, $y);
 		$this->cell($this->_width_view, 4, $dtC->format('Y-m-d H:i'), 0, null, 'C');
@@ -112,11 +59,11 @@ class Receipt extends \OpenTHC\POS\PDF\Base
 			$y += 8;
 
 			// Line
-			$this->line(0, $y, $this->_width_full, $y);
+			$this->drawLine($y);
 			$y += 2;
 
 			$this->setXY($this->_init_x, $y);
-			$this->setFont('freesans', '', 10);
+			$this->setFont('freesans', '', 12);
 			$this->multicell($this->_width_view, 5, $this->head_text, null, 'C', null, 1);
 
 			$y = $this->getY();
@@ -125,7 +72,7 @@ class Receipt extends \OpenTHC\POS\PDF\Base
 		}
 
 		$y += 6;
-		$this->line(0, $y, $this->_width_full, $y);
+		$this->drawLine($y);
 		$this->setY($y);
 
 		// $this->lineExperiment();
@@ -140,7 +87,7 @@ class Receipt extends \OpenTHC\POS\PDF\Base
 		$y = $this->getY();
 
 		$y += 4;
-		$this->line(0, $y, $this->_width_full, $y);
+		$this->drawLine($y);
 
 		$y += 2;
 		$this->colLeft($y, 'Subtotal:');
@@ -177,13 +124,13 @@ class Receipt extends \OpenTHC\POS\PDF\Base
 		// $this->colRight($y, number_format($this->b2c_tax1_total, 2));
 
 		$y += 7;
-		$this->line(0, $y, $this->_width_full, $y);
+		$this->drawLine($y);
 
 		$y += 2;
-		$this->setFont('', 'B');
+		$this->setFont('freesans', 'B', 12);
 		$this->colLeft($y, 'Total:');
 		$this->colRight($y, number_format($this->_b2c_sale['full_price'], 2));
-		$this->setFont('', '');
+		$this->setFont('freesans', '', 12);
 
 		$y += 7;
 		$this->setY($y);
@@ -217,7 +164,7 @@ class Receipt extends \OpenTHC\POS\PDF\Base
 		}
 
 		$y = $this->getY();
-		$this->line(0, $y, $this->_width_full, $y);
+		$this->drawLine($y);
 		$y += 2;
 
 		$this->setXY($this->_init_x, $y);
@@ -241,7 +188,7 @@ class Receipt extends \OpenTHC\POS\PDF\Base
 
 			$y = $this->getY();
 			// $y += 2;
-			$this->line(0, $y, $this->_width_full, $y);
+			$this->drawLine($y);
 			$y += 2;
 
 			$this->setXY($this->_init_x, $y);
@@ -256,7 +203,7 @@ class Receipt extends \OpenTHC\POS\PDF\Base
 
 			$y = $this->getY();
 			$y += 2;
-			$this->line(0, $y, $this->_width_full, $y);
+			$this->drawLine($y);
 
 			$link = sprintf('%s/feedback/%s', OPENTHC_SERVICE_ORIGIN, $this->_b2c_sale['id']);
 
@@ -282,24 +229,6 @@ class Receipt extends \OpenTHC\POS\PDF\Base
 			$this->setY($y + 4);
 		}
 
-	}
-
-	/**
-	 *
-	 */
-	function render()
-	{
-		$this->addPage('P', [ $this->_width_full, 5000 ]);
-
-		// First render to discover height
-		$this->_renderPrintable();
-		$y = $this->getY();
-		$y = ceil($y + 5);
-
-		// Clear and render correct height
-		$this->deletePage(1);
-		$this->addPage('P', [ $this->_width_full, $y ]);
-		$this->_renderPrintable();
 	}
 
 	/**
@@ -351,66 +280,14 @@ class Receipt extends \OpenTHC\POS\PDF\Base
 		$y = $this->getY();
 		$w = $this->getLineWidth();
 		$this->setLineWidth(0.40);
-		$this->line(0, $y, $this->_width_full, $y);
+		$this->drawLine($y);
 		$y += 1;
-		$this->line(0, $y, $this->_width_full, $y);
+		$this->drawLine($y);
 
 		// $y = $this->getY();
 		// $y += 4;
 
-		// $this->line(0, $y, $this->_width_full, $y);
-
-
-	}
-
-	function colLeft($y, $txt, $alignment='L')
-	{
-		$this->setXY($this->_init_x, $y);
-		$this->cell($this->_width_half, 4, $txt, 0, 0, $alignment);
-	}
-
-	function colRight($y, $txt, $alignment='R')
-	{
-		$this->setXY($this->_width_half, $y);
-		$this->cell($this->_width_half + 2, 4, $txt, 0, 0, $alignment);
-	}
-
-	function lineExperiment()
-	{
-		// Line Experiment
-		$y = $this->getY();
-
-		// $y += 2;
-		// $this->line(0, $y, $this->_width_full, $y);
-
-		// $y+= 2;
-		// $this->line(0, $y, 80, $y);
-		// $y+= 2;
-		// $this->line(0, $y, 72, $y);
-		// $y+= 2;
-		// $this->line(0, $y, 68, $y);
-		// $y+= 2;
-		// $this->line(0, $y, 36, $y);
-
-		// $y+= 2;
-		// $this->line(1, $y, 80, $y);
-		// $y+= 2;
-		// $this->line(1, $y, 72, $y);
-		// $y+= 2;
-		// $this->line(1, $y, 68, $y);
-		// $y+= 2;
-		// $this->line(1, $y, 36, $y);
-
-		// $y+= 2;
-		// $this->line(2, $y, 80, $y);
-		// $y+= 2;
-		// $this->line(2, $y, 72, $y);
-		$y+= 2;
-		$this->line(2, $y, 70, $y);
-		// $y+= 2;
-		// $this->line(2, $y, 36, $y);
-
-		$this->setY($y);
+		// $this->drawLine($y);
 
 	}
 

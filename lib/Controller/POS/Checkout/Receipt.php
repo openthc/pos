@@ -214,35 +214,35 @@ class Receipt extends \OpenTHC\Controller\Base
 		$all_total = number_format($sub_total + $tax_total + $ext_total, 2);
 
 		$body = <<<EOB
-A receipt for your items purchased from {$_SESSION['Company']['name']}
+		A receipt for your items purchased from {$_SESSION['Company']['name']}
 
-{% for ci in cart_item_list %}
-	Item: {{ ci.name }}
-	Cost: {{ ci.unit_price }}
+		{% for ci in cart_item_list %}
+			Item: {{ ci.name }}
+			Cost: {{ ci.unit_price }}
 
-{% endfor %}
+		{% endfor %}
 
-Sub-Total:                                               {$sub_total}
-Sales Tax:                                               {$tax_total}
-Excise Tax:                                              {$ext_total}
-                                                         ------------
-                                                         {$all_total}
----
-Thank you for shopping at {$_SESSION['Company']['name']}
-EOB;
+		Sub-Total:                                               {$sub_total}
+		Sales Tax:                                               {$tax_total}
+		Excise Tax:                                              {$ext_total}
+																------------
+																{$all_total}
+		---
+		Thank you for shopping at {$_SESSION['Company']['name']}
+		EOB;
 
 		$hash = md5($rcpt.$subj.$body);
 
 		$mail = <<<EOM
-From: "{$_SESSION['Company']['name']}" <null@openthc.com>
-To: <$rcpt>
-Subject: $subj
-Message-Id: <$hash@openthc.com>
-MIME-Version: 1.0
-Content-Type: text/plain; boundary="$hash"; charset="utf-8"
+		From: "{$_SESSION['Company']['name']}" <null@openthc.com>
+		To: <$rcpt>
+		Subject: $subj
+		Message-Id: <$hash@openthc.com>
+		MIME-Version: 1.0
+		Content-Type: text/plain; boundary="$hash"; charset="utf-8"
 
-$body
-EOM;
+		$body
+		EOM;
 
 		$smtp = new \Net_SMTP($cfg['host'], $cfg['port'], $cfg['helo']);
 		$smtp->setDebug(true);

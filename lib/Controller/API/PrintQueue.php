@@ -45,7 +45,7 @@ class PrintQueue extends \OpenTHC\POS\Controller\API\Base
 			if ( ! empty($job)) {
 				$job = json_decode($job);
 				switch ($job->type) {
-					case 'pick-ticket':
+					case 'pick-ticket': // @deprecated
 
 						$rdb->hdel($key0, $key1);
 
@@ -61,6 +61,7 @@ class PrintQueue extends \OpenTHC\POS\Controller\API\Base
 
 						break;
 
+					case 'pick-ticket-pdf':
 					case 'receipt':
 
 						$rdb->hdel($key0, $key1);

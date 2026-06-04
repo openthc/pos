@@ -141,67 +141,7 @@ class Commit extends \OpenTHC\Controller\Base
 			$Sale->save('B2C/Sale/Commit');
 
 			// Send Pick Ticket for This Item
-			// $Printer = new \PrintQueue('pick-ticket');
-			// $Printer->send($Sale);
-
-			$rdb = $this->_container->Redis;
-			$key = sprintf('/%s/%s/pos/pick-ticket-queue', $_SESSION['Company']['id'], $_SESSION['License']['id']);
-			$val = $rdb->get($key);
-			$val = json_decode($val, true);
-			if ( ! empty($val)) {
-
-				$qid = $val['queue-id'];
-
-				$key0 = sprintf('/global/print-queue/%s', $qid);
-				$key1 = _ulid();
-
-				$source_data = [];
-				$source_data['id'] = $Sale['id'];
-				$source_data['type'] = $Sale['type'];
-				$source_data['date'] = '';
-				$source_data['time'] = '';
-				$source_data['item_count'] = $Sale['item_count'];
-				$source_data['unit_count'] = $b2c_item_count;
-				$source_data['unit_price_total'] = $Sale['full_price'];
-				// $source_data = array (
-				// tax_total => 2.3,
-				// full_price => 10,
-				$source_data['item_list'] = [];
-
-				$b2c_item_list = $Sale->getItems();
-				foreach ($b2c_item_list as $b2c_item) {
-
-					// No Nice Objects in POS Code Base :(
-					$arg = [];
-					$arg[':i0'] = $b2c_item['inventory_id'];
-					$sql = <<<SQL
-					SELECT id, guid, product_name, variety_name
-					FROM inventory_full
-					WHERE id = :i0
-					SQL;
-					$inv = $dbc->fetchRow($sql, $arg);
-
-					$name = sprintf('%s: %s / %s', substr($inv['guid'], -4), $inv['product_name'], $inv['variety_name']);
-					$name = trim($name, '/');
-
-					$source_data['item_list'][] = [
-						'id' => $b2c_item['id'],
-						'name' => $name,
-						'weight' => '',
-						'unit_price' => $b2c_item['unit_price'],
-						'unit_count' => $b2c_item['unit_count'],
-						'unit_price_total' => $b2c_item['full_price'],
-					];
-				}
-
-				$val = json_encode([
-					'type' => 'pick-ticket',
-					'data' => $source_data,
-				]);
-
-				$res = $rdb->hset($key0, $key1, $val);
-
-			}
+			$this->sendPickTicket($dbc, $Sale);
 
 		} catch (\Exception $e) {
 			_exit_html_fail(sprintf('<h1>Failed to Execute the Sale [PCC-123]</h1><pre>%s</pre>', __h($e->getMessage())), 500);
@@ -224,6 +164,83 @@ class Commit extends \OpenTHC\Controller\Base
 		}
 
 		return $RES->withRedirect($url);
+
+	}
+
+	/**
+	 *
+	 */
+	function sendPickTicket($dbc, $Sale)
+	{
+		// $Printer = new \PrintQueue('pick-ticket');
+		// $Printer->send($Sale);
+
+		$rdb = $this->_container->Redis;
+		$key = sprintf('/%s/%s/pos/pick-ticket-queue', $_SESSION['Company']['id'], $_SESSION['License']['id']);
+		$val = $rdb->get($key);
+		$val = json_decode($val, true);
+		if (empty($val)) {
+			return;
+		}
+
+		$qid = $val['queue-id'];
+
+		$key0 = sprintf('/global/print-queue/%s', $qid);
+		$key1 = _ulid();
+
+		$b2c_item_list = $Sale->getItems();
+
+		$source_data = [];
+		$source_data['id'] = $Sale['id'];
+		$source_data['type'] = $Sale['type'];
+		$source_data['date'] = '';
+		$source_data['time'] = '';
+		$source_data['item_count'] = $Sale['item_count'];
+		$source_data['unit_count'] = count($b2c_item_list); // $b2c_item_count;
+		$source_data['unit_price_total'] = $Sale['full_price'];
+		$source_data['item_list'] = [];
+
+		foreach ($b2c_item_list as $b2c_item) {
+
+			// No Nice Objects in POS Code Base :(
+			$arg = [];
+			$arg[':i0'] = $b2c_item['inventory_id'];
+			$sql = <<<SQL
+			SELECT id, guid, product_name, variety_name
+			FROM inventory_full
+			WHERE id = :i0
+			SQL;
+			$inv = $dbc->fetchRow($sql, $arg);
+
+			$name = sprintf('%s: %s / %s', substr($inv['guid'], -4), $inv['product_name'], $inv['variety_name']);
+			$name = trim($name, '/');
+
+			$source_data['item_list'][] = [
+				'id' => $b2c_item['id'],
+				'name' => $name,
+				'weight' => '',
+				'unit_price' => $b2c_item['unit_price'],
+				'unit_count' => $b2c_item['unit_count'],
+				'unit_price_total' => $b2c_item['full_price'],
+			];
+		}
+
+		/// HERE
+		$pdf = new \OpenTHC\POS\PDF\PickTicket();
+		$pdf->setCompany( new \OpenTHC\Company($dbc, $_SESSION['Company'] ));
+		$pdf->setLicense( new \OpenTHC\License($dbc, $_SESSION['License'] ));
+		$pdf->setData((object)$source_data);
+		$pdf->render();
+		$pdf_name = sprintf('PickTicket_%s.pdf', 'TEST');
+		$pdf_data = $pdf->Output($pdf_name, 'S');
+
+		$val = json_encode([
+			'type' => 'pick-ticket-pdf',
+			'name' => $pdf_name,
+			'data' => base64_encode($pdf_data),
+		]);
+
+		$res = $rdb->hset($key0, $key1, $val);
 
 	}
 

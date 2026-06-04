@@ -8,59 +8,8 @@
 
 namespace OpenTHC\POS\PDF;
 
-class PickTicket extends \OpenTHC\POS\PDF\Base
+class PickTicket extends \OpenTHC\POS\PDF\Base\Receipt
 {
-	protected $Company;
-	protected $License;
-
-
-	private $_b2c_sale;
-	private $_item_list = [];
-
-	private $_init_x = 2;
-	private $_width_full = 80;
-	private $_width_view = 76;
-	private $_width_half = 38;
-
-	public $head_text = '';
-	public $foot_text = '';
-	public $tail_text = '';
-	public $link_text = '';
-
-	/**
-	 * Defaults
-	 */
-	function __construct($orientation='P', $unit='mm', $format=array(80, 1000), $unicode=true, $encoding='UTF-8', $diskcache=false, $pdfa=false)
-	{
-		parent::__construct($orientation, $unit, $format, $unicode, $encoding, $diskcache, $pdfa);
-		$this->setAutoPageBreak(false);
-	}
-
-	function my_line($y)
-	{
-		parent::line($this->_init_x, $y, $this->_width_view, $y);
-	}
-
-	/**
-	 *
-	 */
-	function setCompany($x)
-	{
-		$this->Company = $x;
-	}
-
-	/**
-	 *
-	 */
-	function setLicense($x)
-	{
-		$this->License = $x;
-		// $this->head_text = $this->Company->getOption(sprintf('/%s/receipt/head', $this->License['id']));
-		// $this->foot_text = $this->Company->getOption(sprintf('/%s/receipt/foot', $this->License['id']));
-		// $this->tail_text = $this->Company->getOption(sprintf('/%s/receipt/tail', $this->License['id']));
-		// $this->foot_link = $this->Company->getOption(sprintf('/%s/receipt/link', $this->License['id']));
-	}
-
 	/**
 	 *
 	 */
@@ -80,16 +29,8 @@ class PickTicket extends \OpenTHC\POS\PDF\Base
 	 */
 	function drawHead()
 	{
-		// Black Banner
-		$this->setFont('freesans', 'B', 18);
-		$this->setFillColor(0x10, 0x10, 0x10);
-		$this->setTextColor(0xff, 0xff, 0xff);
-		$this->setXY($this->_init_x, 0);
-		// $this->cell($this->_width_view, 4, $this->License['name'], null, null, 'C', $fill=true);
-		$this->multicell($this->_width_view, 4, $this->License['name'], null, 'C', $fill=true);
-
-		$y = ceil($this->getY()) + 2;
-		$this->setXY($this->_init_x, $y);
+		$y = $this->getY();
+		$this->drawBanner();
 
 		// Reset Font
 		$this->setFont('freesans', '', 14);
@@ -117,7 +58,7 @@ class PickTicket extends \OpenTHC\POS\PDF\Base
 		$this->cell($this->_width_view, 4, sprintf('Unit Count: %d', $this->_b2c_sale->unit_count), 0, null, 'C');
 
 		$y = $this->getY() + 8;
-		$this->my_line($y);
+		$this->drawLine($y);
 		$y += 2;
 
 		// $this->head_text = "HEAD TEXT\n----";
@@ -127,32 +68,13 @@ class PickTicket extends \OpenTHC\POS\PDF\Base
 			$this->multicell($this->_width_view, 5, $this->head_text, null, 'C', null, 1);
 			$y = $this->getY();
 			// $y += 6;
-			$this->my_line($y);
+			$this->drawLine($y);
 		}
 
 		// $y += 6;
 		// $this->my_line($y);
 		$this->setY($y);
 
-	}
-
-	/**
-	 *
-	 */
-	function render()
-	{
-		$this->addPage('P', [ $this->_width_full, 5000 ]);
-
-		// First render to discover height
-		$this->_renderPrintable();
-		$y = $this->getY();
-		$y = ceil($y + 5);
-		$y = max($y, 80);
-
-		// Clear and render correct height
-		$this->deletePage(1);
-		$this->addPage('P', [ $this->_width_full, $y ]);
-		$this->_renderPrintable();
 	}
 
 	/**
@@ -167,13 +89,6 @@ class PickTicket extends \OpenTHC\POS\PDF\Base
 		$this->setTextColor(0x00, 0x00, 0x00);
 
 		$y = $this->getY();
-
-		/**
-		 * Item # and Metrc Tag "#1 ABC123....N"
-		 * Product Name
-		 * Unit Weight  |  Unit Price
-		 * ---
-		 */
 
 		$idx = 0;
 		foreach ($this->_item_list as $li_ulid => $li_data) {
@@ -229,27 +144,15 @@ class PickTicket extends \OpenTHC\POS\PDF\Base
 		$this->setXY($this->_init_x, $y);
 		$this->setFont('freesans', '', 10);
 		$this->cell($this->_width_view, 4, sprintf('PT:%s', \Edoceo\Radix\ULID::create()), null, 1, 'C');
-		// $this->my_line($y);
+		// $this->drawLine($y);
 
 		$y = $this->getY();
 		$w = $this->getLineWidth();
 		$this->setLineWidth(0.40);
-		$this->my_line($y);
+		$this->drawLine($y);
 		$y += 1;
-		$this->my_line($y);
+		$this->drawLine($y);
 
-	}
-
-	function colLeft($y, $txt, $alignment='L')
-	{
-		$this->setXY($this->_init_x, $y);
-		$this->cell($this->_width_half, 4, $txt, 0, 0, $alignment);
-	}
-
-	function colRight($y, $txt, $alignment='R')
-	{
-		$this->setXY($this->_width_half, $y);
-		$this->cell($this->_width_half + 2, 4, $txt, 0, 0, $alignment);
 	}
 
 }
