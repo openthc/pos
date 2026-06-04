@@ -26,6 +26,7 @@ class POS extends \OpenTHC\Module\Base
 
 		$a->map([ 'GET', 'POST', 'DELETE' ], '/ajax', 'OpenTHC\POS\Controller\POS\Ajax');
 
+		$a->get('/cart/open', 'OpenTHC\POS\Controller\POS\Cart\Open');
 		$a->post('/cart/ajax', 'OpenTHC\POS\Controller\POS\Cart\Ajax');
 		$a->post('/cart/drop', 'OpenTHC\POS\Controller\POS\Cart\Drop');
 		$a->post('/cart/save', 'OpenTHC\POS\Controller\POS\Cart\Save');

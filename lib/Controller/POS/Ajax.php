@@ -38,7 +38,7 @@ class Ajax extends \OpenTHC\Controller\Base
 
 			$res = $this->_container->DB->fetchAll('SELECT * FROM b2c_sale_hold ORDER BY created_at');
 			if (empty($res)) {
-				_exit_html('<h4>No Holds</h4>');
+				_exit_html('<h4 class="text-center">No Holds</h4>');
 			}
 
 			ob_start();
@@ -50,9 +50,10 @@ class Ajax extends \OpenTHC\Controller\Base
 					$rec['meta']['name'] = '-unknown-';
 				}
 
-				echo '<div class="sale-hold-list-item" style="display: flex; justify-content: space-between; margin-bottom: 0.50rem;">';
-				printf('<h4><a href="#%s">%s</a></h4>', $rec['id'], $rec['meta']['name']);
-				printf('<button class="btn btn-sm btn-danger" type="button" value="%s"><i class="fas fa-times"></i></button>', $rec['id']);
+				echo '<div class="d-flex justify-content-between mb-2 sale-hold-list-item">';
+				printf('<div><h4><a href="/pos/cart/open?hold=%s">%s</a></h4></div>', $rec['id'], $rec['meta']['name']);
+				printf('<div>%d Items</div>', count($rec['meta']['item_list']));
+				printf('<div><button class="btn btn-sm btn-danger" type="button" value="%s"><i class="fa-regular fa-trash-can"></i></button></div>', $rec['id']);
 				echo '</div>';
 			}
 

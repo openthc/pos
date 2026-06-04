@@ -15,6 +15,9 @@ use Edoceo\Radix\Session;
 
 class Save extends \OpenTHC\Controller\Base
 {
+	/**
+	 *
+	 */
 	function __invoke($REQ, $RES, $ARG)
 	{
 		switch ($_POST['a']) {
@@ -22,10 +25,22 @@ class Save extends \OpenTHC\Controller\Base
 
 			$dbc = $this->_container->DB;
 
+			$Cart = [];
+			$Cart['id'] = '';
+			$Cart['name'] = $_POST['name'];
+			$Cart['name'] = trim($Cart['name']);
+			$Cart['item_list'] = [];
+
 			$idx_item = 0;
 			foreach ($_POST as $k => $v) {
-				if (preg_match('/^qty\-(\w{26})$/', $k, $m)) {
+				if (preg_match('/^item\-(\w{26})\-unit\-count$/', $k, $m)) {
 					$idx_item++;
+					$Cart['item_list'][] = [
+						// 'id' => $m[1],
+						'inventory_id' => $m[1],
+						'unit_count' => $v,
+						// unit_price and all that?
+					];
 				}
 			}
 			if ($idx_item == 0) {
@@ -36,7 +51,7 @@ class Save extends \OpenTHC\Controller\Base
 			$arg = [
 				':c0' => $_SESSION['Contact']['id'],
 				// ':t1' => 'general',
-				':m1' => json_encode($_POST),
+				':m1' => json_encode($Cart),
 			];
 			$hid = $dbc->fetchOne($sql, $arg);
 			if (empty($hid)) {
@@ -45,7 +60,7 @@ class Save extends \OpenTHC\Controller\Base
 			}
 			Session::flash('info', sprintf('Hold #%d Confirmed', $hid));
 
-			if ($auto_print_ticket) {
+			if ($auto_print_ticket = false) {
 				// @todo Fire & Forget and HTTP Print Request to ... ?
 				// HTTP::post('/api/print', array('object' => 'hold', 'object-id' => $hid));
 			}

@@ -43,16 +43,21 @@ OpenTHC.POS = {
 	}
 };
 
+function clearToLoading()
+{
+	$(document.body).empty();
+	$(document.body).css({
+		'background': '#101010',
+		'color': '#eeeeee',
+	});
+	$(document.body).html('<h1 style="margin:5em; text-align:center;"><i class="fas fa-sync fa-spin"></i> Loading...</h1>');
+}
+
 $(function() {
 
 	// Click the Cancel Button
 	$('.pos-checkout-reopen').on('click touchend', function(e) {
-		$(document.body).empty();
-		$(document.body).css({
-			'background': '#101010',
-			'color': '#eeeeee',
-		});
-		$(document.body).html('<h1 style="margin:5em; text-align:center;"><i class="fas fa-sync fa-spin"></i> Loading...</h1>');
+		clearToLoading();
 	});
 
 	// Shop SHUT?
@@ -229,26 +234,24 @@ $(function() {
 
 	// Load the Sale Ticket
 	$('#sale-hold-list').on('click', 'a', function() {
-		console.log('sale-hold-list a!click');
-		alert('Not Implemented (yet)');
-		return;
-		$('#menu-left').removeClass('open');
-		fetch(`/pos/ajax?a=hold-open&id=${this.hash.replace('#', '')}`)
-		.then(res => res.json())
-		.then(json => {
-			json.data.forEach(function(v, i) {
-				/*
-				Cart_addItem({
-					id: v.id,
-					name: v.product.name,
-					weight: v.package.name,
-					price: v.unit_price,
-					qty: v.qty
-				});
-				*/
 
-			});
-		});
+		// Blank the Screen?
+		clearToLoading();
+
+		// $('#menu-left').removeClass('open');
+		// fetch(`/pos/ajax?a=hold-open&id=${this.hash.replace('#', '')}`)
+		// .then(res => res.json())
+		// .then(json => {
+		// 	json.data.forEach(function(v, i) {
+		// 		Cart_addItem({
+		// 			id: v.id,
+		// 			name: v.product.name,
+		// 			weight: v.package.name,
+		// 			price: v.unit_price,
+		// 			qty: v.qty
+		// 		});
+		// 	});
+		// });
 
 	});
 
