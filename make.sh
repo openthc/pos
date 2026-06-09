@@ -29,11 +29,6 @@ vendor/openthc/common/lib/make.sh install_htmx
 mkdir -p webroot/vendor/qrcodejs
 cp node_modules/qrcodejs/qrcode.min.js webroot/vendor/qrcodejs/
 
-# chart.js
-mkdir -p webroot/vendor/chart.js
-cp node_modules/chart.js/dist/chart.umd.js webroot/vendor/chart.js/
-cp node_modules/chart.js/dist/chart.umd.js.map webroot/vendor/chart.js/
-
 output_path="webroot/vendor/zxing"
 mkdir -p "$output_path/"
 cp node_modules/@zxing/browser/umd/zxing-browser.min.js "$output_path/"

@@ -29,7 +29,6 @@ $body_class_list[] = sprintf('m1-%s', $m1_mode);
 <link rel="preload" as="script" href="/vendor/bootstrap/bootstrap.bundle.min.js">
 <link rel="preload" as="script" href="/vendor/htmx/htmx.min.js">
 <link rel="preload" as="script" href="/vendor/qrcodejs/qrcode.min.js">
-<link rel="preload" as="script" href="/vendor/chart.js/chart.min.js">
 <!-- <link rel="preload" as="script" href="/vendor/echarts/echarts.min.js"> -->
 <!-- <link rel="preload" as="script" href="/vendor/zxing/index.min.js"> -->
 
@@ -51,7 +50,6 @@ $body_class_list[] = sprintf('m1-%s', $m1_mode);
 <script src="/vendor/bootstrap/bootstrap.bundle.min.js"></script>
 <script src="/vendor/htmx/htmx.min.js"></script>
 <script src="/vendor/qrcodejs/qrcode.min.js"></script>
-<script src="/vendor/chart.js/chart.min.js"></script>
 <script src="/js/pos.js?v=<?= APP_VERSION ?>""></script>
 <script>
 $(function() {

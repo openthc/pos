@@ -27,7 +27,6 @@ header('content-type: text/html; charset=utf-8', true);
 <!-- <link rel="preload" as="script" href="/vendor/htmx/htmx.min.js"> -->
 <link rel="preload" as="script" href="/vendor/qrcodejs/qrcode.min.js">
 <link rel="preload" as="script" href="/vendor/zxing/zxing-browser.min.js">
-<!-- <link rel="preload" as="script" href="/vendor/chart.js/chart.min.js"> -->
 
 <link rel="stylesheet" href="/vendor/fontawesome/css/all.min.css">
 <link rel="stylesheet" href="/vendor/jquery/jquery-ui.min.css">
