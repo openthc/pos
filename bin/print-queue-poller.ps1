@@ -27,7 +27,7 @@ param(
 	[int]$SleepTime = 4
 )
 
-$Host.UI.RawUI.WindowTitle = "Print Queue v420.26.160| OpenTHC"
+$Host.UI.RawUI.WindowTitle = "Print Queue v420.26.160 | OpenTHC"
 
 # $PSBoundParameters.GetEnumerator() |
 # 	Sort-Object Key |
@@ -217,21 +217,21 @@ function Main {
 	while ($true) {
 		try {
 
-			Invoke-WebRequest -Uri $PrintQueueURL -Headers $req_head -OutFile $DownloadPath -UseBasicParsing
+			Invoke-WebRequest -Uri $PrintQueueURL -Headers $req_head -OutFile $job_file -UseBasicParsing
 
 			$oldHash = ""
-			if (Test-Path $LastHashFile) {
-				$oldHash = Get-Content $LastHashFile
+			if (Test-Path $job_hash_file) {
+				$oldHash = Get-Content $job_hash_file
 			}
 
-			$newHash = (Get-FileHash $DownloadPath).Hash
+			$newHash = (Get-FileHash $job_file).Hash
 
 			if ($newHash -ne $oldHash) {
 				Write-Host "New document detected. Printing..."
 
-				& $SumatraPath -print-to "$PrintDeviceName" -silent $DownloadPath
+				& $SumatraPath -print-to "$PrintDeviceName" -silent $job_file
 
-				$newHash | Out-File $LastHashFile
+				$newHash | Out-File $job_hash_file
 
 			} else {
 				Write-Host "No change."

@@ -361,7 +361,7 @@ class Open extends \OpenTHC\Controller\Base
 		if (empty($sid)) {
 
 			// This provides a JWT in the Session
-			// It inidicates it's valid for like 7 days
+			// It indicates it's valid for like 7 days
 			//
 			$res = $ghc->post('v1/login', [ 'json' => [
 				'UBI' => $_SESSION['Company']['cre_meta']['company'],

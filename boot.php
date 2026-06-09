@@ -6,7 +6,6 @@
  */
 
 define('APP_ROOT', __DIR__);
-define('APP_SALT', ''); // put 16 to 32 characters here
 define('APP_BUILD', '420.26.160');
 define('APP_VERSION', '420.26.160');
 
