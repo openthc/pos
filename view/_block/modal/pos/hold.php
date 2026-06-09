@@ -2,7 +2,7 @@
 /**
  * Modal for Saving the Current Sale
  *
- * SPDX-License-Identifier: GPL-3.0-only
+ * SPDX-License-Identifier: MIT
  */
 
 

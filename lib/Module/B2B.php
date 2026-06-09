@@ -2,7 +2,7 @@
 /**
  * Wraps all the Routing for the B2B Module
  *
- * SPDX-License-Identifier: GPL-3.0-only
+ * SPDX-License-Identifier: MIT
  */
 
 namespace OpenTHC\POS\Module;

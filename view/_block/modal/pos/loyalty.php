@@ -2,7 +2,7 @@
 /**
  * Modal for Loyalty Program
  *
- * SPDX-License-Identifier: GPL-3.0-only
+ * SPDX-License-Identifier: MIT
  *
  * @todo Maybe just one input box for any/all codes?
  */

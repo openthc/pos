@@ -2,7 +2,7 @@
 /**
  * Cart Ajax Helper
  *
- * SPDX-License-Identifier: GPL-3.0-only
+ * SPDX-License-Identifier: MIT
  */
 
 namespace OpenTHC\POS\Controller\POS\Cart;

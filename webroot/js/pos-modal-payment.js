@@ -1,7 +1,7 @@
 /**
  * JavaScript Handlers for the POS Payment Modal
  *
- * SPDX-License-Identifier: GPL-3.0-only
+ * SPDX-License-Identifier: MIT
  */
 
 var ppCashPaid_List = new Array();

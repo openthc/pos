@@ -2,7 +2,7 @@
 /**
  * Main Terminal View v2018
  *
- * SPDX-License-Identifier: GPL-3.0-only
+ * SPDX-License-Identifier: MIT
  */
 
 $this->layout_file = sprintf('%s/view/_layout/html-pos.php', APP_ROOT);

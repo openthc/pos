@@ -2,7 +2,7 @@
 /**
  * Pick the License
  *
- * SPDX-License-Identifier: GPL-3.0-only
+ * SPDX-License-Identifier: MIT
  */
 
 // __exit_text($data);

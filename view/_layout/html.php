@@ -2,7 +2,7 @@
 /**
  * OpenTHC HTML Layout
  *
- * SPDX-License-Identifier: GPL-3.0-only
+ * SPDX-License-Identifier: MIT
  */
 
 header('content-type: text/html; charset=utf-8', true);

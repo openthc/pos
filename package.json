@@ -1,6 +1,6 @@
 {
 	"name": "pos",
-	"version": "420.26.154",
+	"version": "420.26.160",
 	"description": "Retail Point of Sale",
 	"main": "main.js",
 	"directories": {

@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with OpenTHC POS.  If not, see <https://www.gnu.org/licenses/>.
  *
- * SPDX-License-Identifier: GPL-3.0-only
+ * SPDX-License-Identifier: MIT
  */
 
 require_once(dirname(dirname(__FILE__)) . '/boot.php');

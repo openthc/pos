@@ -3,7 +3,7 @@
  * PDF Receipt
  * "72xReceipt" size, which is really 80mm wide paper w/72mm wide print region
  *
- * SPDX-License-Identifier: GPL-3.0-only
+ * SPDX-License-Identifier: MIT
  */
 
 namespace OpenTHC\POS\PDF;

@@ -2,7 +2,7 @@
 /**
  * Save a Cart
  *
- * SPDX-License-Identifier: GPL-3.0-only
+ * SPDX-License-Identifier: MIT
  *
  * Saves the Posted Data as a HOLD in the database, Triggers Printing
  * @see https://github.com/minciue/cloudprint/pull/6

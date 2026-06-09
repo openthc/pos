@@ -1,7 +1,7 @@
 #
 # OpenTHC Print Queue Poller
 #
-# SPDX-License-Identifier: GPL-3.0-only
+# SPDX-License-Identifier: MIT
 #
 # @depends on SumatraPDF https://www.sumatrapdfreader.org/
 #
@@ -27,7 +27,7 @@ param(
 	[int]$SleepTime = 4
 )
 
-$Host.UI.RawUI.WindowTitle = "Print Queue | OpenTHC"
+$Host.UI.RawUI.WindowTitle = "Print Queue v420.26.160| OpenTHC"
 
 # $PSBoundParameters.GetEnumerator() |
 # 	Sort-Object Key |

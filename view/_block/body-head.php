@@ -2,7 +2,7 @@
 /**
  * POS Menu Zero
  *
- * SPDX-License-Identifier: GPL-3.0-only
+ * SPDX-License-Identifier: MIT
  */
 
 if ( ! empty($this->data['menu-zero'])) {

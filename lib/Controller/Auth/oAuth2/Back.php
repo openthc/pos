@@ -2,7 +2,7 @@
 /**
  * oAuth2 Returns Here
  *
- * SPDX-License-Identifier: GPL-3.0-only
+ * SPDX-License-Identifier: MIT
  */
 
 namespace OpenTHC\POS\Controller\Auth\oAuth2;
