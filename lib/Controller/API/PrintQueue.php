@@ -45,22 +45,6 @@ class PrintQueue extends \OpenTHC\POS\Controller\API\Base
 			if ( ! empty($job)) {
 				$job = json_decode($job);
 				switch ($job->type) {
-					case 'pick-ticket': // @deprecated
-
-						$rdb->hdel($key0, $key1);
-
-						$pdf = new \OpenTHC\POS\PDF\PickTicket();
-						$pdf->setCompany( new \OpenTHC\Company(null, $Company ));
-						$pdf->setLicense( new \OpenTHC\License(null, $License ));
-						$pdf->setData($job->data);
-						$pdf->render();
-						$name = sprintf('PickTicket_%s.pdf', $job->data->id);
-						$pdf->Output($name, 'I');
-
-						exit;
-
-						break;
-
 					case 'pick-ticket-pdf':
 					case 'receipt':
 
@@ -70,25 +54,22 @@ class PrintQueue extends \OpenTHC\POS\Controller\API\Base
 						$pdf_data = base64_decode($job->data);
 
 						header('cache-control: no-store, private'); // , post-check=0, pre-check=0, max-age=1');
-						// header('cache-control: must-revalidate, no-cache, no-store, private'); // , post-check=0, pre-check=0, max-age=1');
+						// header('cache-control: must-revalidate, no-cache, no-store, private');
 						//header('Cache-Control: public, must-revalidate, max-age=0'); // HTTP/1.1
 
-						header('content-disposition: inline; filename="%s"', rawurlencode(basename($job->name)));
-						// header('Content-Disposition: inline; filename="' . rawurlencode(basename($name)) . '"; ' .
-								// 'filename*=UTF-8\'\'' . rawurlencode(basename($name)));
-						header('content-length: %d', strlen($pdf_data));
-						header('content-type: application/pdf');
-
-						// Force Download
 						// header('Content-Description: File Transfer');
-						// Sets a Bunch of Headers?
-						// header('Content-Type: application/force-download');
-						// header('Content-Type: application/octet-stream', false);
-						// header('Content-Type: application/download', false);
-						// header('Content-Type: application/pdf', false);
-						// header('Content-Disposition: attachment; filename="' . rawurlencode(basename($name)) . '"; ' .
-						// 		'filename*=UTF-8\'\'' . rawurlencode(basename($name)));
-						// header('Content-Transfer-Encoding: binary');
+
+						if ( ! empty($job->name)) {
+							$n = rawurlencode(basename($job->name));
+							header(sprintf('content-disposition: inline; filename="%s"', $n));
+							// header('Content-Disposition: inline; filename="' . rawurlencode(basename($name)) . '"; ' .
+									// 'filename*=UTF-8\'\'' . rawurlencode(basename($name)));
+							// header('Content-Disposition: attachment; filename="' . rawurlencode(basename($name)) . '"; ' .
+							// 		'filename*=UTF-8\'\'' . rawurlencode(basename($name)));
+						}
+
+						header(sprintf('content-length: %d', strlen($pdf_data)));
+						header('content-type: application/pdf');
 
 						echo $pdf_data;
 

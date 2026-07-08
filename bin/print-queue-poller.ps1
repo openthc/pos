@@ -29,6 +29,11 @@ param(
 
 $Host.UI.RawUI.WindowTitle = "Print Queue v420.26.160 | OpenTHC"
 
+# Global Variables
+$job_data_file = "$WorkPath\openthc-print-job-$PID.pdf"
+$job_hash_file = "$WorkPath\openthc-print-job-hash-$PID.txt"
+
+
 # $PSBoundParameters.GetEnumerator() |
 # 	Sort-Object Key |
 # 	Format-Table Key, Value
@@ -53,6 +58,13 @@ $null = Register-WmiEvent `
 		}
 	}
 
+# Cleanup Files?
+# Register-EngineEvent -SourceIdentifier PowerShell.Exiting -Action {
+# 	if (Test-Path $TargetDir) {
+#		Remove-Item $job_data_file
+#		Remove-Item $job_hash_file
+# 	}
+# } | Out-Null
 
 #
 # Registers with the Task Scheduler
@@ -207,9 +219,6 @@ function Main {
 	# }
 	#
 
-	$job_file = "$WorkPath\openthc-print-job-$PID.pdf"
-	$job_hash_file = "$WorkPath\openthc-print-job-hash-$PID.txt"
-
 	$req_head = @{
 		Authorization = "Bearer v2018/print-queue/$PrintQueueID"
 	}
@@ -217,19 +226,19 @@ function Main {
 	while ($true) {
 		try {
 
-			Invoke-WebRequest -Uri $PrintQueueURL -Headers $req_head -OutFile $job_file -UseBasicParsing
+			Invoke-WebRequest -Uri $PrintQueueURL -Headers $req_head -OutFile $job_data_file -UseBasicParsing
 
 			$oldHash = ""
 			if (Test-Path $job_hash_file) {
 				$oldHash = Get-Content $job_hash_file
 			}
 
-			$newHash = (Get-FileHash $job_file).Hash
+			$newHash = (Get-FileHash $job_data_file).Hash
 
 			if ($newHash -ne $oldHash) {
 				Write-Host "New document detected. Printing..."
 
-				& $SumatraPath -print-to "$PrintDeviceName" -silent $job_file
+				& $SumatraPath -print-to "$PrintDeviceName" -silent $job_data_file
 
 				$newHash | Out-File $job_hash_file
 
@@ -246,4 +255,9 @@ function Main {
 
 }
 
-Main
+try {
+	Main
+} finally {
+	Remove-Item $job_data_file
+	Remove-Item $job_hash_file
+}
