@@ -22,6 +22,7 @@ Usage:
 	test <command> [options]
 	test phpunit
 	test phpstan
+	test phpmd
 	test phplint
 
 Options:
@@ -34,12 +35,6 @@ $res = \Docopt::handle($doc, [
 	'optionsFirst' => false,
 ]);
 $cli_args = $res->args;
-// if (empty($cli_args)) {
-// 	echo $res->output;
-// 	echo "\n";
-// 	exit(1);
-// }
-// var_dump($cli_args);
 
 
 // Test Config
@@ -58,6 +53,12 @@ if ($cli_args['phplint']) {
 	var_dump($res);
 }
 
+// PHPMD
+if ($cli_args['phpmd']) {
+	$tf = new \OpenTHC\Test\Facade\PHPMD($cfg);
+	$res = $tf->execute();
+	var_dump($res);
+}
 
 // PHPStan
 if ($cli_args['phpstan']) {
