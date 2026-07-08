@@ -16,7 +16,7 @@ cd "$APP_ROOT"
 
 composer install --no-ansi --no-progress --classmap-authoritative
 
-npm install --ignore-scripts --no-audit --no-fund
+npm ci --ignore-scripts --no-audit --no-fund --no-progress --omit=dev
 
 vendor/openthc/common/lib/make.sh install_bootstrap
 vendor/openthc/common/lib/make.sh install_fontawesome
