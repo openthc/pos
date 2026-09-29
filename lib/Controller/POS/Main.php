@@ -98,19 +98,31 @@ class Main extends \OpenTHC\Controller\Base
 			$dbc = $this->_container->DB;
 
 			$sql = <<<SQL
-			SELECT *
+			SELECT id, meta
 			FROM auth_contact
-			WHERE id = :c0 AND auth_code = :a0
+			WHERE id = :c0
 			SQL;
 			$Contact = $dbc->fetch_row($sql, [
 				':c0' => $_POST['seller-contact-id'],
-				':a0' => $_POST['code'],
+				// ':a0' => $_POST['code'],
 			]);
 			if (empty($Contact['id'])) {
 				Session::flash('fail', 'Invalid Contact');
 				return $RES->withRedirect('/pos');
 			}
-
+			if (empty($Contact['meta'])) {
+				Session::flash('fail', 'Invalid Contact');
+				return $RES->withRedirect('/pos');
+			}
+			$m = json_decode($Contact['meta'], true);
+			if (empty($m['auth_code'])) {
+				Session::flash('fail', 'Invalid Contact');
+				return $RES->withRedirect('/pos');
+			}
+			if ($_POST['code'] != $m['auth_code']) {
+				Session::flash('fail', 'Invalid Contact');
+				return $RES->withRedirect('/pos');
+			}
 			// Assign to Register Session
 			// Set Expiration in T minutes?
 			// $R = $this->_container->Redis;
