@@ -35,7 +35,7 @@ done
 
 
 # Start PHP
-/etc/init.d/php8.4-fpm start
+/etc/init.d/php7.4-fpm start
 
 # Start Caddy
 exec caddy run --config /etc/caddy/Caddyfile --adapter caddyfile
