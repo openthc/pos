@@ -23,6 +23,9 @@ fi
 # Uses Environment to Create App
 # /opt/openthc/pos/docker/init.php
 
+php -l /opt/openthc/pos/etc/config.php
+
+/opt/openthc/pos/test/test.php --testsuite=Docker
 
 #
 # Unsets All OpenTHC Environment Variables
